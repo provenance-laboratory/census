@@ -38,6 +38,11 @@
       "id": "pythia-12b",
       "kind": "fully-open",
       "note": "the census's positive control: if the release that publishes the most cannot score well, the instrument is wrong"
+    },
+    {
+      "id": "olmo-2-13b",
+      "kind": "fully-open",
+      "note": "second fully-open reference point; the stratum is taken whole"
     }
   ],
   "cells": [
@@ -270,6 +275,237 @@
       "axis": 22,
       "score": null,
       "na_reason": "pythia-12b is a base model released without an instruction-tuned, preference-tuned or safety-tuned variant; there is no post-training stage whose data or procedure could be disclosed. N/A here is a property of the release, not a withholding."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 1,
+      "score": 2,
+      "check": "read the retrieved dataset card's component table: DCLM-Baseline, Arxiv, pes2o, starcoder, Algebraic-stack, OpenWebMath and Wiki, each with token count, uncompressed bytes, document count and licence; total 3.90T tokens / 22.4TB",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/datasets/allenai/olmo-mix-1124/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "8a0a0c243be08a014bb85062f1117c4fbe97d6caeb22a69545ffdf58c3a49ae5"
+        }
+      ],
+      "note": "An enumeration with quantities and per-component licences, not a list of names."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 2,
+      "score": 0,
+      "note": "No per-file or aggregate digest for the corpus was found on the dataset card or in the training config, which lists paths without checksums. Searched: dataset card, training config, project README."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 4,
+      "score": 2,
+      "check": "the training config lists 1,122 data paths, all public http://olmo-data.org URLs; requested the first (proof-pile-2 .../part-00-00000.npy) with a range header and received HTTP 206 -- the preprocessed token files themselves are retrievable",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+          "retrieved": "2026-08-28",
+          "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+        }
+      ],
+      "note": "Compare pythia-12b axis 4 (scored 1): its config points at a private /fsx/ mount and the original distribution host is dead. Same stratum, opposite outcome."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 5,
+      "score": 0,
+      "note": "No published mechanism for deciding membership of an arbitrary document was found."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 6,
+      "score": 2,
+      "check": "retrieved the OLMo repository README, which gives a 'Steps to reproduce' invocation (torchrun scripts/train.py {config}) against the published configs",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
+        }
+      ]
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 7,
+      "score": 2,
+      "check": "retrieved OLMo2-13B-stage1.yaml (164,084 bytes, 1,365 lines) and read the values: learning_rate 3.0e-4, global_train_batch_size 2048, max_duration 1ep, precision amp_bf16",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+          "retrieved": "2026-08-28",
+          "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+        }
+      ]
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 8,
+      "score": 2,
+      "check": "read 'seed: 6198' on line 2 of the retrieved training config; the repository additionally publishes seed-named stage-2 variants (seed42, seed42069, seed666, seed1110)",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+          "retrieved": "2026-08-28",
+          "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
+        }
+      ],
+      "note": "The seed is IN the config here. In pythia-12b it appears only in prose in the README."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 9,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+          "retrieved": "2026-08-28",
+          "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+        }
+      ],
+      "note": "The config specifies precision (amp_bf16, and 'mixed' for the optimizer), which bears on reproducibility, but no TF32/cuDNN flags and no reduction order were found. A precision mode is not a determinism specification."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 10,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/pyproject.toml",
+          "retrieved": "2026-08-28",
+          "sha256": "61f25b6a00bf6dff289016beaab73886c19b8a135e7218c28836a256ff736ca6"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
+        }
+      ],
+      "note": "pyproject.toml constrains dependencies with RANGES (torch>=2.1, ai2-olmo-core>=1.8.0, cached_path>=1.6.2), and the README installs with pip. No container digest and no exact version set were found. A range is not a pin: two installs a month apart resolve differently."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 11,
+      "score": 2,
+      "check": "counted 1,122 explicit data-file paths enumerated in order in the retrieved training config, each a public URL",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+          "retrieved": "2026-08-28",
+          "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+        }
+      ],
+      "note": "This is the axis most releases cannot satisfy at all."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 12,
+      "score": 2,
+      "check": "requested the weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/main/model-00001-of-00012.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "8d4164aa8db49ae67e32493c8a2a04b118bde44f52f06de35733250fb6e2801e"
+        }
+      ],
+      "note": "The full shard was not downloaded; what was checked is that it is served ungated."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 13,
+      "score": 2,
+      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:d98857...' for model-00001-of-00012.safetensors",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/main/model-00001-of-00012.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "8d4164aa8db49ae67e32493c8a2a04b118bde44f52f06de35733250fb6e2801e"
+        }
+      ]
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights digest was found."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card, project README, training config only. The bound is stated rather than implied."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16. The repository documents the authors training the 1B model three times with different data order, which is not an independent reproduction."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 18,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
+        }
+      ],
+      "note": "The README points to a public evaluation repository (OLMo-Eval), but its GitHub releases API returns an EMPTY list: the harness is published and NOT versioned by release. Compare pythia-12b axis 18 (scored 2): lm-evaluation-harness publishes tagged releases, latest v0.4.12."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 19,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+          "retrieved": "2026-08-28",
+          "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+        }
+      ],
+      "note": "The data paths are labelled 'v0_decontaminated', so decontamination is asserted in the artifact itself, but no disjointness mechanism a third party could run and no contamination report was found. Asserted decontamination is a claim."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "OLMo-2-1124-13B is the base model; the instruction-tuned and preference-tuned variants are separately named releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "OLMo-2-1124-13B is the base model; the instruction-tuned and preference-tuned variants are separately named releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "OLMo-2-1124-13B is the base model; the instruction-tuned and preference-tuned variants are separately named releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
     }
   ]
 }
