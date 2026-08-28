@@ -80,12 +80,25 @@ def main():
     reordered = order(base) != order(coll)
     print()
     print("      largest movement %.3f; ordering changes: %s" % (biggest, reordered))
+    # The verdict is COMPUTED. An earlier version asserted "moves every subject" while its
+    # own numbers showed two subjects moving 0.000 -- prose disagreeing with the table it sat
+    # under, which is the defect this whole repository is arranged against.
+    unmoved = [s for s in base if abs(coll[s] - base[s]) < 1e-9]
     if biggest < 0.05:
         print("      " + chr(0x26D4) + " FATAL: crediting claims as checks barely moves the")
         print("      picture. The instrument is not measuring what it says it measures.")
     else:
-        print("      the distinction is load-bearing: treating claims as checks moves every")
-        print("      subject materially, so the axis scores are not a proxy for 'documented'.")
+        print("      the distinction is LOAD-BEARING WHERE IT APPLIES: largest movement",
+              "%.3f," % biggest)
+        print("      so the scores are not a proxy for what a release merely documents.")
+    if unmoved:
+        print()
+        print("      " + chr(0x26A0) + " %d subject(s) move 0.000: %s"
+              % (len(unmoved), ", ".join(sorted(unmoved))))
+        print("      They hold NO cell scored 1. For those releases the CHECKED/CLAIMED")
+        print("      distinction does no work: everything published is either checkable or")
+        print("      absent, with nothing merely asserted in between. That is a finding")
+        print("      about them, not a weakness of the test.")
 
     # ── C ─────────────────────────────────────────────────────────────────────────────
     print()
