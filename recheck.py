@@ -75,9 +75,24 @@ def main():
             same += 1
             print("  ok     %s" % label)
 
+    # Leave EVIDENCE that the run happened. The paper says "all N artifacts were re-fetched and
+    # none had drifted", which is a claim about a PROCESS: without a record it is unfalsifiable,
+    # and an unfalsifiable sentence in a paper about checkability is the wrong kind of sentence.
+    import datetime as _dt
+    log = HERE / "recheck-log.json"
+    prev = json.loads(log.read_text(encoding="utf-8")) if log.exists() else {"runs": []}
+    prev["runs"].append({
+        "at": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "artifacts": len(by_url), "unchanged": same, "drifted": drift, "unretrievable": gone,
+        "subject_filter": only,
+    })
+    prev["runs"] = prev["runs"][-50:]
+    log.write_text(json.dumps(prev, indent=2) + NL, encoding="utf-8", newline=NL)
+
     print()
     print("=" * 78)
     print("  %d unchanged · %d DRIFTED · %d unretrievable" % (same, drift, gone))
+    print("  recorded in recheck-log.json")
     if findings:
         print()
         print("  " + chr(0x26D4) + " THESE ARE FINDINGS, NOT CHORES. The cells below are now")

@@ -1,0 +1,12 @@
+{
+  "runs": [
+    {
+      "at": "2026-08-28T18:33:11Z",
+      "artifacts": 40,
+      "unchanged": 40,
+      "drifted": 0,
+      "unretrievable": 0,
+      "subject_filter": null
+    }
+  ]
+}
