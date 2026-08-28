@@ -158,7 +158,58 @@ def main():
         print("      effective-axis count computed from it would be a fabricated number.")
         print("      NOT REPORTED. Re-run when the census is complete.")
     else:
-        print("      (implement once n >= 8)")
+        subs = sorted(cells)
+        # N/A is treated as absent for this test, and that choice is stated: a correlation
+        # cannot consume a null, and dropping the subject instead would change the axis pairs
+        # under comparison from one pair to the next.
+        vec = {a: [(cells[s].get(a) or 0) for s in subs] for a in sorted(A.BY_ID)}
+
+        def corr(x, y):
+            m = len(x)
+            mx, my = sum(x) / m, sum(y) / m
+            sxy = sum((x[i] - mx) * (y[i] - my) for i in range(m))
+            sxx = sum((x[i] - mx) ** 2 for i in range(m))
+            syy = sum((y[i] - my) ** 2 for i in range(m))
+            if sxx <= 1e-12 or syy <= 1e-12:
+                return None                       # one of them never varies
+            return sxy / ((sxx ** 0.5) * (syy ** 0.5))
+
+        constant = [a for a in vec if max(vec[a]) == min(vec[a])]
+        varying = [a for a in vec if a not in constant]
+        print("      %d of %d axes NEVER VARY across the census: %s"
+              % (len(constant), len(vec), constant))
+        print("      A constant axis discriminates nothing here. It is not necessarily a bad")
+        print("      axis -- it may be one nobody satisfies -- but it carries no information")
+        print("      about THESE subjects and the effective count below excludes it.")
+        print()
+        pairs = []
+        for i, a in enumerate(varying):
+            for b in varying[i + 1:]:
+                r = corr(vec[a], vec[b])
+                if r is not None and abs(r) >= 0.9:
+                    pairs.append((abs(r), a, b))
+        pairs.sort(reverse=True)
+        print("      %d varying axes; %d pair(s) correlate at |r| >= 0.9:"
+              % (len(varying), len(pairs)))
+        for r, a, b in pairs[:12]:
+            print("        r=%.2f  axis %2d (%s)  ~  axis %2d (%s)"
+                  % (r, a, A.BY_ID[a][2], b, A.BY_ID[b][2]))
+        if len(pairs) > 12:
+            print("        ... and %d more" % (len(pairs) - 12))
+
+        # Effective count: collapse each group of mutually >=0.9 axes to one, greedily.
+        merged, seen_ax = 0, set()
+        for _r, a, b in pairs:
+            if a not in seen_ax and b not in seen_ax:
+                seen_ax.add(a)
+                seen_ax.add(b)
+                merged += 1
+        eff = len(varying) - merged
+        print()
+        print("      EFFECTIVE AXIS COUNT: ~%d, against %d nominal." % (eff, len(vec)))
+        print("      Reported because a rubric that says 22 and behaves like %d is" % eff)
+        print("      overstating its own resolution, and a referee will find that faster")
+        print("      than the author will.")
 
     # ── F ─────────────────────────────────────────────────────────────────────────────
     print()

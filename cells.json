@@ -83,6 +83,16 @@
       "id": "gemini-1.5-pro",
       "kind": "api-only",
       "note": "api-only stratum: frontier text model with a published technical report"
+    },
+    {
+      "id": "bert-base-uncased",
+      "kind": "historical-control",
+      "note": "historical control, 2018: pre-2020 release with weights published at release time"
+    },
+    {
+      "id": "gpt-2-1.5b",
+      "kind": "historical-control",
+      "note": "historical control, 2019: pre-2020 release with weights published (staged release completed November 2019)"
     }
   ],
   "cells": [
@@ -1929,6 +1939,373 @@
         }
       ],
       "note": "The system card / model card describes the safety-training approach in prose. That is an assertion in a document with no artifact a third party could use to reproduce or contest it, which is a 1 and not a 2."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 1,
+      "score": 2,
+      "check": "read the retrieved card and repository README: the corpus is NAMED as BookCorpus (unpublished books) and English Wikipedia, excluding lists, tables and headers",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "9187b6018ea0010d884e78e098e328faa1b88b301570d0cce606bb35e4067e17"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/google-research/bert/master/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756"
+        }
+      ],
+      "note": "⚠️ Two named sources, in 2018. Every 2024 open-weights release in this census scores 0 here, describing its corpus only by token count."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 4,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "9187b6018ea0010d884e78e098e328faa1b88b301570d0cce606bb35e4067e17"
+        }
+      ],
+      "note": "English Wikipedia is obtainable, but not the 2018 snapshot actually used, and BookCorpus was never distributed by the publisher and has since been withdrawn from its original host. Named is not obtainable."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 6,
+      "score": 2,
+      "check": "read the retrieved repository README: it ships create_pretraining_data.py and run_pretraining.py, i.e. the code that produces the pretraining data and runs pretraining",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/google-research/bert/master/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756"
+        }
+      ],
+      "note": "⚠️ Pretraining code, in 2018. Every 2024 open-weights release in this census scores 0 here."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 7,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/google-research/bert/master/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756"
+        },
+        {
+          "url": "https://arxiv.org/abs/1810.04805",
+          "retrieved": "2026-08-28",
+          "sha256": "ffa5d3591fa543ce7b833bea05f1455d40a6be8680417720f09da8807ada6abe"
+        }
+      ],
+      "note": "The paper and README give the headline settings (1M steps, batch, sequence length) and the README documents the flags, but no single complete run configuration was retrieved."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 10,
+      "score": 0,
+      "note": "No environment specification was found; the repository predates the practice of pinning one."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found; create_pretraining_data.py generates data but the shipped shuffle is not reconstructible from a published seed."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 12,
+      "score": 2,
+      "check": "requested the weights and received a Git-LFS pointer over HTTP 200 with no gate",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/model.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "6d60194d86a0856f50cb18251d129b9f41ca69bfbe24f33ffa3fe6e1048660e6"
+        }
+      ]
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 13,
+      "score": 2,
+      "check": "read the publisher-committed LFS pointer for model.safetensors",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/model.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "6d60194d86a0856f50cb18251d129b9f41ca69bfbe24f33ffa3fe6e1048660e6"
+        }
+      ]
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights was found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights was found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card, repository README and paper."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 18,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/google-research/bert/master/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756"
+        }
+      ],
+      "note": "The repository ships fine-tuning and evaluation scripts for specific tasks, but no released, versioned harness tied to the reported numbers was found."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 19,
+      "score": 0,
+      "note": "The corpus is named but not obtainable as used, so overlap cannot be tested."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 20,
+      "score": null,
+      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 21,
+      "score": null,
+      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 22,
+      "score": null,
+      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 1,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/openai-community/gpt2/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0fcd631078093c2aa1d93438b898320b8a1167784e2a1ab37b8016e9de8b3c2e"
+        }
+      ],
+      "note": "The card states the corpus is called WebText, describes how it was built (outbound Reddit links with >=3 karma, Wikipedia excluded) and notes that a list of the top 1,000 domains is available. A construction rule plus a domain-frequency list is more than a token count and less than a source list: nothing here lets a third party enumerate what was in it."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 4,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/openai-community/gpt2/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0fcd631078093c2aa1d93438b898320b8a1167784e2a1ab37b8016e9de8b3c2e"
+        }
+      ],
+      "note": "The card states plainly: the training data 'has not been released as a dataset one can browse' and WebText 'has not been publicly released'. An explicit non-release, recorded as such."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/openai/gpt-2/master/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "cd6e0dd0636dd0cb6af5e15477caff74adc161d724cf59716113095bd358c8a3"
+        }
+      ],
+      "note": "The public repository ships model and sampling code; no pretraining code was found. ⚠️ Contrast bert-base-uncased, released a year earlier, which does ship it."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/openai/gpt-2/master/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "cd6e0dd0636dd0cb6af5e15477caff74adc161d724cf59716113095bd358c8a3"
+        }
+      ],
+      "note": "No training configuration was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 10,
+      "score": 0,
+      "note": "No environment specification was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 12,
+      "score": 2,
+      "check": "requested the weights and received a Git-LFS pointer over HTTP 200 with no gate",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/openai-community/gpt2/raw/main/model.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "f5edb0ac3822162e6de183caa8fae2b0a595128ffd3a08f2ca7fdfa063e9914c"
+        }
+      ]
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 13,
+      "score": 2,
+      "check": "read the publisher-committed LFS pointer for model.safetensors",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/openai-community/gpt2/raw/main/model.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "f5edb0ac3822162e6de183caa8fae2b0a595128ffd3a08f2ca7fdfa063e9914c"
+        }
+      ]
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card and repository README."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16. ⚠️ OpenWebText and related efforts reconstructed a SIMILAR corpus and trained similar models; that is a re-creation, not a reproduction of this release, and it is not counted here."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 18,
+      "score": 0,
+      "note": "No released, versioned evaluation harness tied to the reported numbers was found."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 19,
+      "score": 0,
+      "note": "With the corpus unreleased, overlap cannot be tested."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
     }
   ]
 }
