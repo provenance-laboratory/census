@@ -43,6 +43,11 @@
       "id": "olmo-2-13b",
       "kind": "fully-open",
       "note": "second fully-open reference point; the stratum is taken whole"
+    },
+    {
+      "id": "bloom-176b",
+      "kind": "fully-open",
+      "note": "completes the fully-open stratum, which is taken whole"
     }
   ],
   "cells": [
@@ -506,6 +511,225 @@
       "axis": 22,
       "score": null,
       "na_reason": "OLMo-2-1124-13B is the base model; the instruction-tuned and preference-tuned variants are separately named releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 1,
+      "score": 2,
+      "check": "retrieved the training dataset ratios catalogue (7,945 bytes) enumerating the constituent datasets and their sampling ratios",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json",
+          "retrieved": "2026-08-28",
+          "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60"
+        },
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
+        }
+      ]
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 2,
+      "score": 0,
+      "note": "No per-file or aggregate digest for the corpus was found. Searched: model card, training record, ratios catalogue."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 4,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
+        }
+      ],
+      "note": "ROOTS is SPLIT: component datasets resolve (bigscience-data/roots_en_wikipedia returns HTTP 200) while the aggregate bigscience/roots returns HTTP 401 -- authorization required. Partly obtainable, and the part that would let a third party assemble the whole is gated."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 5,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
+        }
+      ],
+      "note": "BLOOM is the ONLY release in this stratum to publish a membership mechanism at all: the ROOTS search tool at huggingface.co/spaces/bigscience-data/roots-search. Its page answers HTTP 200 -- and the Spaces API reports stage RUNTIME_ERROR, last modified 2023-04-03. The mechanism was published and DOES NOT RUN, so membership cannot presently be demonstrated. Scoring this axis from the HTTP 200 would have recorded a 2."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 6,
+      "score": 2,
+      "check": "retrieved the tr11-176B-ml training record (37,047 bytes), which gives the launch command against the public Megatron-DeepSpeed fork",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
+        }
+      ]
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 7,
+      "score": 2,
+      "check": "read the launch command in the retrieved training record: --lr 6e-5, --global-batch-size, --train-samples with rampup",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
+        }
+      ]
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 8,
+      "score": 0,
+      "note": "No --seed appears in the launch command and no seed value was found. SEARCH SCOPE: training record and model card. Compare olmo-2-13b, where the seed is line 2 of the config, and pythia-12b, where it is stated in the project README."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found in the training record."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 10,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
+        }
+      ],
+      "note": "The training record names specific dependency BRANCHES rather than versions -- deepspeed on 'olruwase/bf16-updates', tokenizers on a 'bigscience_fork' requiring manual building, and 'pytorch-1.11-to-be (using a release candidate)'. More specific than a version range, and still not a pin: a branch moves, and the record says so ('hopefully it should be merged')."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 11,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json",
+          "retrieved": "2026-08-28",
+          "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
+        }
+      ],
+      "note": "The dataset RATIOS are public and retrievable, but the split manifests the launch command consumes are not: data/train-splits.txt in the Megatron-DeepSpeed repository returns HTTP 404. Ratios constrain composition; they do not determine example order."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 12,
+      "score": 2,
+      "check": "requested a weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/model_00001-of-00072.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "0738a2c29ca75924aef4f824a5c8aa05cdee010818811ac544a93a6d79002b7b"
+        }
+      ]
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 13,
+      "score": 2,
+      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:069a00...' for model_00001-of-00072.safetensors",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/model_00001-of-00072.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "0738a2c29ca75924aef4f824a5c8aa05cdee010818811ac544a93a6d79002b7b"
+        }
+      ]
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights was found."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights digest was found."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card and training record."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 18,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
+        }
+      ],
+      "note": "The training record states that lm-eval is run on 29 tasks every 10k iterations, so a harness is named, but the results are written to an internal filesystem path and no pinned public harness version was found for this release."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 19,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
+        }
+      ],
+      "note": "Contamination is testable in principle through the ROOTS search tool, which is exactly the tool recorded as not running under axis 5. A mechanism that does not execute cannot support a check."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "bigscience/bloom is the base model; BLOOMZ and mT0 are separately named instruction-tuned releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "bigscience/bloom is the base model; BLOOMZ and mT0 are separately named instruction-tuned releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "bigscience/bloom is the base model; BLOOMZ and mT0 are separately named instruction-tuned releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
     }
   ]
 }
