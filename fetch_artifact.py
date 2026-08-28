@@ -52,11 +52,21 @@ def fetch(url, timeout=90):
     return status, body, None
 
 
+# Small artifacts that are legitimately small. A Git-LFS pointer is ~130 bytes and is THE
+# publisher-committed digest of a weights file -- exactly the evidence axis 13 needs.
+SMALL_BUT_REAL = (b"version https://git-lfs.github.com/spec/v1",)
+
+
 def looks_like_a_wall(body, status):
     if status != "200":
         return f"HTTP {status}"
-    if len(body) < 512:
-        return f"only {len(body)} bytes -- too small to be the document"
+    if any(body.lstrip().startswith(m) for m in SMALL_BUT_REAL):
+        return None                    # small on purpose, and the thing we came for
+    if len(body) < 64:
+        # 512 was the first threshold and it REFUSED A VALID LFS POINTER on the first real
+        # run. A rule that cries wolf sometimes is a rule someone switches off in a hurry,
+        # so the floor now catches only genuinely empty replies.
+        return f"only {len(body)} bytes -- too small to be any document"
     head = body[:20000].decode("utf-8", "replace").lower()
     for m in WALL_MARKERS:
         if m in head:

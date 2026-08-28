@@ -31,8 +31,245 @@
     "invalidates a cell, so every evidence record is re-fetched and re-hashed before submission",
     "and any digest that moved is a finding, not a maintenance chore."
   ],
-  "as_of": null,
-  "selection_rule": null,
-  "subjects": [],
-  "cells": []
+  "as_of": "2026-08-28",
+  "selection_rule": "SELECTION-RULE.md, committed and OpenTimestamped before any cell existed",
+  "subjects": [
+    {
+      "id": "pythia-12b",
+      "kind": "fully-open",
+      "note": "the census's positive control: if the release that publishes the most cannot score well, the instrument is wrong"
+    }
+  ],
+  "cells": [
+    {
+      "subject": "pythia-12b",
+      "axis": 1,
+      "score": 2,
+      "check": "grepped the retrieved dataset card for named constituents; PubMed Central, arXiv, GitHub and USPTO among others are named, not merely categorised",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/datasets/EleutherAI/pile/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938"
+        },
+        {
+          "url": "https://arxiv.org/abs/2304.01373",
+          "retrieved": "2026-08-28",
+          "sha256": "a4ed5e7d70ff9ae90237a5421aabea072396346e2f70406e23257078d28eddf1"
+        }
+      ],
+      "note": "The corpus is a named, documented dataset with its own datasheet."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 2,
+      "score": 0,
+      "note": "No per-item or aggregate digest for the corpus was found on the dataset card or in the paper. Searched: dataset card, project README, paper abstract page."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found. This axis is satisfied by almost nothing in the field; it is not a Pythia-specific absence."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 4,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/datasets/EleutherAI/pile/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938"
+        }
+      ],
+      "note": "The HF dataset record resolves (HTTP 200) but the original distribution host the-eye.eu returns 000 (dead). Obtainability is ASSERTED by a live record; bulk retrieval of the same bytes was NOT performed, so this is a 1 rather than a 2."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 5,
+      "score": 0,
+      "note": "No published mechanism for deciding membership of an arbitrary document was found."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 6,
+      "score": 2,
+      "check": "retrieved the GPT-NeoX repository README and the Pythia repository README; the training library is public and the release names it as the code that produced the weights",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/EleutherAI/gpt-neox/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "109d01c252722a45edf38170866e45c5a91caae17dad13c81f26be06c6852d60"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
+        }
+      ]
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 7,
+      "score": 2,
+      "check": "retrieved models/12B/pythia-12b.yml and read the values: lr 0.00012, min_lr 0.000012, cosine decay, train-iters 143000, micro-batch 8 on 256 GPUs",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/models/12B/pythia-12b.yml",
+          "retrieved": "2026-08-28",
+          "sha256": "bac012070f553a9659ff1980d82ad773824a51388635345baf2e38c0f2df6e1d"
+        }
+      ],
+      "note": "A complete run configuration, not a prose description of one."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 8,
+      "score": 2,
+      "check": "grepped the retrieved README: 'The random seed used to train the Pythia models is the GPT-NeoX default: 1234'",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
+        }
+      ],
+      "note": "NOTE: the seed is NOT in the run config; scoring this axis from pythia-12b.yml alone would have recorded a 0. One artifact is not the release."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 9,
+      "score": 0,
+      "note": "No TF32/cuDNN/reduction-order settings appear in the run config. Searched pythia-12b.yml for determinism keys; none present."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 10,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
+        }
+      ],
+      "note": "The reproduction instructions pin the training library by tag (git checkout v1.0), which pins CODE but not an ENVIRONMENT: no container digest or exact library versions were found. Pinning the code is not pinning the environment."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 11,
+      "score": 2,
+      "check": "retrieved utils/batch_viewer.py, the published tool for viewing the exact portions of the training dataloader used by all models during training",
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/utils/batch_viewer.py",
+          "retrieved": "2026-08-28",
+          "sha256": "aa0fc5a5d67f305e3d6db748e262cee4b201604cb742535600d6658122ed5229"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
+        }
+      ],
+      "note": "Unusual: most releases publish no way to reconstruct example order at all."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 12,
+      "score": 2,
+      "check": "requested the weights path and received a Git-LFS pointer over HTTP 200 with no gate; contrast Llama-3.1-8B, whose config returns HTTP 401 on the same kind of request",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/EleutherAI/pythia-12b/raw/main/pytorch_model-00001-of-00003.bin",
+          "retrieved": "2026-08-28",
+          "sha256": "26e90d89f1775a543b95b7f2cfe8097126e8370e369320b7b485b58469ce3b81"
+        }
+      ],
+      "note": "The full 9.8 GB was not downloaded; what was checked is that the artifact is served ungated."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 13,
+      "score": 2,
+      "check": "read the publisher-committed LFS pointer: 'oid sha256:9d21715462588073675eca9c65ba55a47d911da460a6083938d04acd4589f542', size 9811493183",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/EleutherAI/pythia-12b/raw/main/pytorch_model-00001-of-00003.bin",
+          "retrieved": "2026-08-28",
+          "sha256": "26e90d89f1775a543b95b7f2cfe8097126e8370e369320b7b485b58469ce3b81"
+        }
+      ],
+      "note": "The digest is committed by the publisher into the repository, not computed by a mirror."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights digest was found."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found in the artifacts retrieved. SEARCH SCOPE: project README, model card, paper abstract page only -- this is a 0 on a bounded search, and the bound is stated rather than implied."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16. The README documents a rerun BY THE AUTHORS after a training inconsistency, which is not an independent reproduction."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 18,
+      "score": 2,
+      "check": "queried the GitHub releases API for lm-evaluation-harness and read the latest tag: v0.4.12, published 2026-05-11 -- a public harness at a pinned version",
+      "evidence": [
+        {
+          "url": "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/releases/latest",
+          "retrieved": "2026-08-28",
+          "sha256": "7ee1752d7056bd59f906ebcd9080a231b47a37daa74d7918319467bb4a7bbf87"
+        }
+      ]
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 19,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/datasets/EleutherAI/pile/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938"
+        }
+      ],
+      "note": "The corpus is public and documented, so contamination is testable IN PRINCIPLE, but no published disjointness mechanism or contamination report was found. Testable-in-principle is a claim, not a check."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "pythia-12b is a base model released without an instruction-tuned, preference-tuned or safety-tuned variant; there is no post-training stage whose data or procedure could be disclosed. N/A here is a property of the release, not a withholding."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "pythia-12b is a base model released without an instruction-tuned, preference-tuned or safety-tuned variant; there is no post-training stage whose data or procedure could be disclosed. N/A here is a property of the release, not a withholding."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "pythia-12b is a base model released without an instruction-tuned, preference-tuned or safety-tuned variant; there is no post-training stage whose data or procedure could be disclosed. N/A here is a property of the release, not a withholding."
+    }
+  ]
 }
