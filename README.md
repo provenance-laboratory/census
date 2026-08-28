@@ -58,6 +58,25 @@ python fetch_artifact.py <url>    # cell-ready evidence, or a refusal with its r
 looked"* and *"we looked and found nothing"* are different claims, and a census that writes them
 identically is an opinion.
 
+## ⛔ Before committing a subject: run `recheck.py`
+
+`validate()` cannot detect a fabricated digest. It checks that a digest is *well-formed* — 64 hex
+characters — and a well-formed digest can be invented. **Only re-fetching the artifact and
+comparing bytes can catch that**, which is what `recheck.py` does.
+
+This is not hypothetical. While entering the open-weights stratum, two evidence digests were
+written into a staging script as plausible-looking hex because the real values had been filtered
+out of a terminal, and they were caught by re-reading the script rather than by any control. Luck
+is not a control. So:
+
+```bash
+python mp_metric.py --check     # the census is internally consistent
+python recheck.py               # every digest matches bytes fetched now
+git commit                      # only then
+```
+
+A digest that cannot be reproduced by re-fetching is not evidence, whatever it looks like.
+
 ## Scope
 
 This repository is **code and measurement**. Papers are written elsewhere and published as

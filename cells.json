@@ -53,6 +53,21 @@
       "id": "llama-3.1-8b",
       "kind": "open-weights",
       "note": "highest-download open-weights release in the stratum's rank order; download rank is a selection device only and enters no score"
+    },
+    {
+      "id": "mistral-7b-v0.3",
+      "kind": "open-weights",
+      "note": "open-weights stratum, selected by download rank"
+    },
+    {
+      "id": "qwen2.5-7b",
+      "kind": "open-weights",
+      "note": "open-weights stratum, selected by download rank"
+    },
+    {
+      "id": "gemma-2-9b",
+      "kind": "open-weights",
+      "note": "open-weights stratum, selected by download rank"
     }
   ],
   "cells": [
@@ -907,6 +922,520 @@
       "axis": 22,
       "score": null,
       "na_reason": "Llama-3.1-8B is the base model; Llama-3.1-8B-Instruct is a separately named release and is a separate subject under the selection rule. This release has no post-training stage whose data or procedure could be disclosed. ⚠️ N/A here RAISES the as-coded score by shrinking the denominator, which is why the N/A→0 column is reported beside it."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "d5f3bf07f3062380b2c26b22a5dc9d462d2a1417040f182775de5102f10b2a28"
+        }
+      ],
+      "note": "The model card is 3,580 bytes and is almost entirely usage instructions; it names no training source. SEARCH SCOPE: model card and the Mistral 7B paper."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2310.06825",
+          "retrieved": "2026-08-28",
+          "sha256": "ef5fab750f82f531c6070f473e10cee1085fa3aa765a6ab8764353fb82bf2f1b"
+        }
+      ],
+      "note": "No training code release was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2310.06825",
+          "retrieved": "2026-08-28",
+          "sha256": "ef5fab750f82f531c6070f473e10cee1085fa3aa765a6ab8764353fb82bf2f1b"
+        }
+      ],
+      "note": "The paper describes ARCHITECTURE (sliding-window attention, GQA) rather than a training configuration. An architecture is not a hyperparameter set."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 12,
+      "score": 2,
+      "check": "requested a weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/main/model-00001-of-00003.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "7715c61373137261712ba3f4e11fa3c1c4c8128d400eab1336ef4fe010ba976b"
+        }
+      ],
+      "note": "Contrast llama-3.1-8b and gemma-2-9b in this same stratum, which return HTTP 401."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 13,
+      "score": 2,
+      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:2d7de8...'",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/main/model-00001-of-00003.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "7715c61373137261712ba3f4e11fa3c1c4c8128d400eab1336ef4fe010ba976b"
+        }
+      ]
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 18,
+      "score": 0,
+      "note": "No released, versioned evaluation harness was found. SEARCH SCOPE: model card and paper."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 10,
+      "score": 0,
+      "note": "No environment specification for training was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found, and with corpus and training code unpublished there is no procedure such a report could follow."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 20,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 21,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 22,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2412.15115",
+          "retrieved": "2026-08-28",
+          "sha256": "0f8c331e73817eefeb222aa5be49c515aed4c3ab74829555f8e0b2cde03c5be1"
+        }
+      ],
+      "note": "The technical report states the pre-training data was scaled 'from the previous 7 trillion tokens to 18 trillion tokens'. That is a SIZE, not an enumeration: no source is named, so nothing can be checked or contested."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
+        }
+      ],
+      "note": "The public repository is inference and deployment tooling; no pretraining code was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2412.15115",
+          "retrieved": "2026-08-28",
+          "sha256": "0f8c331e73817eefeb222aa5be49c515aed4c3ab74829555f8e0b2cde03c5be1"
+        }
+      ],
+      "note": "The report describes the model series and architecture; no training configuration was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 12,
+      "score": 2,
+      "check": "requested a weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/Qwen/Qwen2.5-7B/raw/main/model-00001-of-00004.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "6837909d0194850ce6e03cbb197e7de4048ed2b787d84cfc388eb414de5ee827"
+        }
+      ]
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 13,
+      "score": 2,
+      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:b6d4b6...'",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/Qwen/Qwen2.5-7B/raw/main/model-00001-of-00004.safetensors",
+          "retrieved": "2026-08-28",
+          "sha256": "6837909d0194850ce6e03cbb197e7de4048ed2b787d84cfc388eb414de5ee827"
+        }
+      ]
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 18,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
+        }
+      ],
+      "note": "Benchmarks are reported; no released, versioned harness for reproducing them was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 10,
+      "score": 0,
+      "note": "No environment specification for training was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found, and with corpus and training code unpublished there is no procedure such a report could follow."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2408.00118",
+          "retrieved": "2026-08-28",
+          "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
+        }
+      ],
+      "note": "The paper describes the training mixture by size and broad type rather than naming sources. SEARCH SCOPE: the Gemma 2 paper and the DeepMind repository README, both retrieved; the Hugging Face card is gated."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/google-deepmind/gemma/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "cf4afaef8cda5451e970065df35adf895107b468e7217f3e3d024a7144906611"
+        }
+      ],
+      "note": "The public DeepMind repository is an inference and fine-tuning library; no pretraining code was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2408.00118",
+          "retrieved": "2026-08-28",
+          "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
+        }
+      ],
+      "note": "No training configuration was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 12,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/google-deepmind/gemma/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "cf4afaef8cda5451e970065df35adf895107b468e7217f3e3d024a7144906611"
+        },
+        {
+          "url": "https://arxiv.org/abs/2408.00118",
+          "retrieved": "2026-08-28",
+          "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
+        }
+      ],
+      "note": "The weights are published and NOT retrievable by a third party without first being granted access: The Hugging Face repository returns HTTP 401 to an unauthenticated request for both the model card and the weights shards; access is granted per requester after accepting terms. Scored 1 on the same rule applied to llama-3.1-8b."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 13,
+      "score": 0,
+      "note": "A publisher digest may exist behind the gate; it cannot be read without accepting terms, so nothing here is checkable by an arbitrary third party."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 18,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2408.00118",
+          "retrieved": "2026-08-28",
+          "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
+        }
+      ],
+      "note": "Benchmarks are reported; no released, versioned harness was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 10,
+      "score": 0,
+      "note": "No environment specification for training was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found, and with corpus and training code unpublished there is no procedure such a report could follow."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     }
   ]
 }
