@@ -48,6 +48,11 @@
       "id": "bloom-176b",
       "kind": "fully-open",
       "note": "completes the fully-open stratum, which is taken whole"
+    },
+    {
+      "id": "llama-3.1-8b",
+      "kind": "open-weights",
+      "note": "highest-download open-weights release in the stratum's rank order; download rank is a selection device only and enters no score"
     }
   ],
   "cells": [
@@ -730,6 +735,178 @@
       "axis": 22,
       "score": null,
       "na_reason": "bigscience/bloom is the base model; BLOOMZ and mT0 are separately named instruction-tuned releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "The card states pretraining used '~15 trillion tokens of data from publicly available sources' with a December 2023 cutoff. That is a description of a corpus, not a list of sources: no source is named, so nothing here could be checked or contested."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest of any kind was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found. Compare bloom-176b, which published one (and it no longer runs)."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "The card states: 'We used custom training libraries, Meta's custom built GPU cluster, and production infrastructure.' The training code is stated to be internal, so this is an explicit non-release rather than an omission."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "The card reports training COMPUTE (39.3M GPU hours on H100-80GB) but no learning rate, batch size, schedule or duration in steps. Compute spent is not a hyperparameter set."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 10,
+      "score": 0,
+      "note": "No environment specification was found; the training stack is stated to be internal."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 12,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "The weights are published, and NOT retrievable by a third party without first being granted access: The Hugging Face repository returns HTTP 401 to an unauthenticated request for both the model card and config.json; access is granted per requester after accepting terms. The axis is satisfied by retrievable weights, 'not gated access granted case by case', so this is a 1. It is an availability condition, not a judgement about the condition."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 13,
+      "score": 0,
+      "note": "A publisher digest may well exist behind the gate; it cannot be read without accepting terms, so nothing here is checkable by an arbitrary third party. Compare pythia-12b and olmo-2-13b, whose LFS pointers are served ungated."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over the weights was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found, and with the corpus and training code unpublished there is no procedure such a report could follow. SEARCH SCOPE: model card and repository README."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 18,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "The card reports results on standard automatic benchmarks but names no released, versioned harness for reproducing them. Compare pythia-12b, scored 2 on this axis."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested. Contamination here can be denied but not checked."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "Llama-3.1-8B is the base model; Llama-3.1-8B-Instruct is a separately named release and is a separate subject under the selection rule. This release has no post-training stage whose data or procedure could be disclosed. ⚠️ N/A here RAISES the as-coded score by shrinking the denominator, which is why the N/A→0 column is reported beside it."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "Llama-3.1-8B is the base model; Llama-3.1-8B-Instruct is a separately named release and is a separate subject under the selection rule. This release has no post-training stage whose data or procedure could be disclosed. ⚠️ N/A here RAISES the as-coded score by shrinking the denominator, which is why the N/A→0 column is reported beside it."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "Llama-3.1-8B is the base model; Llama-3.1-8B-Instruct is a separately named release and is a separate subject under the selection rule. This release has no post-training stage whose data or procedure could be disclosed. ⚠️ N/A here RAISES the as-coded score by shrinking the denominator, which is why the N/A→0 column is reported beside it."
     }
   ]
 }
