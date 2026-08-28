@@ -1,0 +1,35 @@
+{
+  "_readme": [
+    "Named facts a paper may cite that are NOT derivable from cells.json -- counts and sizes read",
+    "out of a retrieved artifact rather than out of the ledger.",
+    "",
+    "They live here, with their evidence, so that a manuscript can cite them by NAME and never by",
+    "typing the digit. build_paper.py resolves {{F:name}} from this file and fails if a name is",
+    "missing, which is the same discipline the emitted tables enforce for scores.",
+    "",
+    "Each fact carries how it was obtained. A fact whose `check` does not say what was counted is",
+    "not a fact, it is a number somebody remembered."
+  ],
+  "facts": {
+    "olmo_data_paths": {
+      "value": 1122,
+      "unit": "data-file paths",
+      "check": "counted lines matching '^    - ' in the retrieved training config; all 1122 are http://olmo-data.org URLs",
+      "evidence": {
+        "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+        "retrieved": "2026-08-28",
+        "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+      }
+    },
+    "llama_readme_bytes": {
+      "value": 10065,
+      "unit": "bytes",
+      "check": "byte length of the retrieved document; the gate detector refused it on a soft marker, which is the defect reported in the paper",
+      "evidence": {
+        "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md",
+        "retrieved": "2026-08-28",
+        "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e"
+      }
+    }
+  }
+}
