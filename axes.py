@@ -9,9 +9,20 @@ because the difference between 2 and 1 is the whole instrument, and leaving that
 judgement is how a rubric becomes an opinion. `satisfied_by` is the sentence a reviewer holds the
 cell against.
 
-`na_permitted` marks the axes where "not applicable" can ever be honest. An API-only release has
-no weights to sign, so axis 14 may be N/A; every release was made from *something*, so axis 1
-never can be. ⚠️ N/A is the escape hatch that will quietly do all the work if it is not policed --
+`na_permitted` marks the axes where "not applicable" can ever be honest -- every release was
+made from *something*, so axis 1 never can be.
+
+⛔ SETTLED 2026-08-28, WHILE SCORING THE FIRST API-ONLY RELEASE: an absence of published
+weights makes axes 13, 14 and 15 score ZERO, not N/A.
+The tempting reading is that a release with no public weights has no weights to content-address,
+sign or timestamp, so those axes do not apply. That reading is wrong here, and dangerously so:
+this instrument measures WHAT A THIRD PARTY CAN CHECK, and a third party can check nothing about
+weights that were never published. Marking them N/A would remove them from the DENOMINATOR and
+so RAISE the score of a release for publishing less -- the precise hazard the N/A policing
+exists to prevent. N/A is for a property that cannot exist, never for one that was not provided.
+
+The flags below therefore stay permissive so that a genuine future case can be argued per cell,
+with its reason; they are not a licence to withdraw Group 3 for an API-only release. ⚠️ N/A is the escape hatch that will quietly do all the work if it is not policed --
 see NOT-A-RANKING.md and the referee's re-coding test.
 """
 

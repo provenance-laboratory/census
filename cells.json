@@ -68,6 +68,21 @@
       "id": "gemma-2-9b",
       "kind": "open-weights",
       "note": "open-weights stratum, selected by download rank"
+    },
+    {
+      "id": "gpt-4o",
+      "kind": "api-only",
+      "note": "api-only stratum: frontier text model with a published system card"
+    },
+    {
+      "id": "claude-3.5-sonnet",
+      "kind": "api-only",
+      "note": "api-only stratum. ⚠️ Published by the organisation whose model assisted this work; scored by the same rule as every other subject, per the pre-registered disclosure in SELECTION-RULE.md"
+    },
+    {
+      "id": "gemini-1.5-pro",
+      "kind": "api-only",
+      "note": "api-only stratum: frontier text model with a published technical report"
     }
   ],
   "cells": [
@@ -1436,6 +1451,484 @@
       "axis": 22,
       "score": null,
       "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2410.21276",
+          "retrieved": "2026-08-28",
+          "sha256": "508f052338146352b46e96076ef713aaabd3c2d3f4de909ed178404a441daad7"
+        }
+      ],
+      "note": "No list of training sources was found; the release documentation describes capability and evaluation rather than provenance."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 6,
+      "score": 0,
+      "note": "No training code was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 7,
+      "score": 0,
+      "note": "No training configuration was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 10,
+      "score": 0,
+      "note": "No training environment specification was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 12,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2410.21276",
+          "retrieved": "2026-08-28",
+          "sha256": "508f052338146352b46e96076ef713aaabd3c2d3f4de909ed178404a441daad7"
+        }
+      ],
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 13,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 14,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 15,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found, and with no published weights, corpus or code there is no procedure such a report could follow."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 18,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://api.github.com/repos/openai/simple-evals",
+          "retrieved": "2026-08-28",
+          "sha256": "83ac437c868702efc771231caeec8271db8eb3dd9f6e25352113322a475d8367"
+        }
+      ],
+      "note": "openai/simple-evals is a public repository, so a harness exists. The axis requires the harness at THE VERSION the reported numbers came from; no such pinning was found between the system card's benchmark results and a tagged harness version. Published, not pinned."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 20,
+      "score": 0,
+      "note": "No fine-tuning or instruction data was disclosed. ⚠️ This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 21,
+      "score": 0,
+      "note": "No preference or reward data was disclosed. This axis applies for the same reason."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 22,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2410.21276",
+          "retrieved": "2026-08-28",
+          "sha256": "508f052338146352b46e96076ef713aaabd3c2d3f4de909ed178404a441daad7"
+        }
+      ],
+      "note": "The system card / model card describes the safety-training approach in prose. That is an assertion in a document with no artifact a third party could use to reproduce or contest it, which is a 1 and not a 2."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
+          "retrieved": "2026-08-28",
+          "sha256": "dbd090316d47a1173f029e5d39b8c58bdf7a3e5878d3a2aa9c44383829a64384"
+        },
+        {
+          "url": "https://assets.anthropic.com/m/61e7d27f8c8f5919/original/Claude-3-Model-Card.pdf",
+          "retrieved": "2026-08-28",
+          "sha256": "88ae851f53c3034d436816164ce49a876b333fa9b550fb7ef29838182b59ba7d"
+        }
+      ],
+      "note": "No list of training sources was found; the release documentation describes capability and evaluation rather than provenance."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 6,
+      "score": 0,
+      "note": "No training code was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 7,
+      "score": 0,
+      "note": "No training configuration was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 10,
+      "score": 0,
+      "note": "No training environment specification was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 12,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
+          "retrieved": "2026-08-28",
+          "sha256": "dbd090316d47a1173f029e5d39b8c58bdf7a3e5878d3a2aa9c44383829a64384"
+        }
+      ],
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 13,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 14,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 15,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found, and with no published weights, corpus or code there is no procedure such a report could follow."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 18,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://api.github.com/repos/anthropics/evals",
+          "retrieved": "2026-08-28",
+          "sha256": "34acd8b5d3e2d69c7f0becaea90d92e065b9025d04032a5c7552b279779cc24e"
+        }
+      ],
+      "note": "anthropics/evals is a public repository, so a harness exists. No pinning was found between the reported benchmark numbers and a tagged version. Published, not pinned. ⚠️ The retrieved model card is the Claude 3 family card; a 3.5-Sonnet-specific card was not retrieved, and that limit is stated rather than papered over."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 20,
+      "score": 0,
+      "note": "No fine-tuning or instruction data was disclosed. ⚠️ This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 21,
+      "score": 0,
+      "note": "No preference or reward data was disclosed. This axis applies for the same reason."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 22,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://assets.anthropic.com/m/61e7d27f8c8f5919/original/Claude-3-Model-Card.pdf",
+          "retrieved": "2026-08-28",
+          "sha256": "88ae851f53c3034d436816164ce49a876b333fa9b550fb7ef29838182b59ba7d"
+        }
+      ],
+      "note": "The system card / model card describes the safety-training approach in prose. That is an assertion in a document with no artifact a third party could use to reproduce or contest it, which is a 1 and not a 2."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2403.05530",
+          "retrieved": "2026-08-28",
+          "sha256": "7cf955d4a1316886536abde3a5f5c7479f6e524b14fbb6d546e7f2b09f4d4780"
+        }
+      ],
+      "note": "No list of training sources was found; the release documentation describes capability and evaluation rather than provenance."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 3,
+      "score": 0,
+      "note": "No timestamp predating training was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 6,
+      "score": 0,
+      "note": "No training code was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 7,
+      "score": 0,
+      "note": "No training configuration was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 10,
+      "score": 0,
+      "note": "No training environment specification was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 12,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2403.05530",
+          "retrieved": "2026-08-28",
+          "sha256": "7cf955d4a1316886536abde3a5f5c7479f6e524b14fbb6d546e7f2b09f4d4780"
+        }
+      ],
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 13,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 14,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 15,
+      "score": 0,
+      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found, and with no published weights, corpus or code there is no procedure such a report could follow."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 17,
+      "score": 0,
+      "note": "Same scope as axis 16."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 18,
+      "score": 0,
+      "note": "No public, versioned evaluation harness tied to this release was found. SEARCH SCOPE: the technical report and the DeepMind repositories reachable from it."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 20,
+      "score": 0,
+      "note": "No fine-tuning or instruction data was disclosed. ⚠️ This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 21,
+      "score": 0,
+      "note": "No preference or reward data was disclosed. This axis applies for the same reason."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 22,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2403.05530",
+          "retrieved": "2026-08-28",
+          "sha256": "7cf955d4a1316886536abde3a5f5c7479f6e524b14fbb6d546e7f2b09f4d4780"
+        }
+      ],
+      "note": "The system card / model card describes the safety-training approach in prose. That is an assertion in a document with no artifact a third party could use to reproduce or contest it, which is a 1 and not a 2."
     }
   ]
 }
