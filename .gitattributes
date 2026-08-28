@@ -1,0 +1,36 @@
+# Everything in this repository is hash-anchored, so the one thing git must never do is change a
+# byte on the way in or out of a checkout. Line-ending translation does exactly that, silently and
+# per-platform: with core.autocrlf=true a Windows clone rewrites every text file to CRLF, which
+# changes its sha256 and puts a stray \r on the end of every filename inside a checksum manifest.
+# The symptom is bewildering rather than obvious -- `sha256sum -c` reports
+#
+#     sha256sum: 'src/script.cpp'$'\r': No such file or directory
+#
+# for a file plainly sitting right there. Every EVIDENCE_MANIFEST, every SHA256SUMS and
+# MANIFEST.sha256 were affected, so none of the R3/R4 evidence verified on a Windows clone even
+# though all of it is correct and every stored blob is LF.
+#
+# Hence: translate nothing by default. The repo's bytes are the repo's bytes.
+* -text
+
+# The exception is executable scripts, normalised the other way -- forced to LF -- because a CRLF
+# shell script does not merely hash differently, it fails to run: bash never matches a heredoc
+# terminator written as `TXT\r` and reports only "unexpected end of file". Pinning them means a
+# script committed from Windows still runs when it lands on a droplet, and pins them identically
+# on every platform so the checksums above stay stable either way.
+*.sh   text eol=lf
+*.py   text eol=lf
+
+# Belt and braces for formats that must never be touched even if the default above is relaxed:
+# the evidence images, the archives, the binaries, the signatures, the block data.
+*.exe    binary
+*.dll    binary
+*.pdf    binary
+*.png    binary
+*.jpg    binary
+*.gz     binary
+*.zip    binary
+*.dat    binary
+*.asc    binary
+*.sig    binary
+*.bundle binary
