@@ -130,6 +130,35 @@ must_catch("a score outside 2/1/0/null", led, "not 2/1/0")
 # ── the positive control ──────────────────────────────────────────────────────────────
 must_pass("an honest, complete census validates", full_census(score=1))
 
+# ── the wall detector: a gate versus a document that describes one ─────────────────────
+print()
+print("  --- fetch_artifact: is it a gate, or a manual about one? ---")
+import fetch_artifact as FA
+
+long_doc = (b"# Downloading the weights" + b" filler." * 2000 +
+            b" Visit the website, read and accept the license, then download.")
+tiny_gate = b"<html><body>You need to agree to share your contact information</body></html>"
+challenge = b"<html>" + b"x" * 9000 + b"checking your browser before accessing</html>"
+
+cases = [
+    ("10 KB manual that MENTIONS accepting a licence is NOT a gate", long_doc, None),
+    ("a short page that only says 'you need to agree' IS a gate", tiny_gate, "gate"),
+    ("a long page containing a browser challenge IS a gate", challenge, "challenge"),
+]
+for name, body, want in cases:
+    got = FA.looks_like_a_wall(body, "200")
+    ok = (got is None) if want is None else (got is not None)
+    print(("  ok    " if ok else "  FAIL  ") + name)
+    passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
+    if not ok:
+        print("          got: %r" % got)
+
+# a Git-LFS pointer is ~130 bytes and is exactly the artifact axis 13 needs
+lfs = b"version https://git-lfs.github.com/spec/v1" + bytes([10]) + b"oid sha256:" + b"a" * 64
+ok = FA.looks_like_a_wall(lfs, "200") is None
+print(("  ok    " if ok else "  FAIL  ") + "a 130-byte Git-LFS pointer is accepted, not refused")
+passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
+
 # ── the arithmetic that makes N/A dangerous ───────────────────────────────────────────
 print()
 print("  --- the N/A property, demonstrated rather than asserted ---")

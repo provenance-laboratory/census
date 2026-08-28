@@ -29,16 +29,29 @@ import subprocess
 import sys
 
 
-# Phrases that mean "you did not get the document". Matched case-insensitively on a decoded
-# prefix. Deliberately over-broad: refusing wrongly costs a manual look; accepting wrongly
-# corrupts a cell that will then be cited.
-WALL_MARKERS = [
-    "enable javascript", "checking your browser", "verify you are human",
-    "just a moment", "cf-browser-verification", "captcha", "anubis",
+# ⛔ A RESPONSE THAT *IS* A GATE, VERSUS A DOCUMENT THAT *DESCRIBES* ONE.
+# The first version of this list refused meta-llama/llama-models/README.md -- 10 KB of ordinary
+# documentation whose download instructions say "read and accept the license". That phrase is
+# content there, not a challenge. Refusing it would have systematically under-scored the entire
+# open-weights stratum, which is exactly the stratum whose releases are documented that way.
+#
+# So markers are split by how much they can mean on their own:
+HARD_MARKERS = [          # these occur only in challenge pages, at any length
+    "checking your browser", "cf-browser-verification", "verify you are human",
+    "just a moment...", "anubis", "enable javascript and cookies to continue",
+]
+SOFT_MARKERS = [          # these occur freely in real documentation ABOUT access
     "sign in to continue", "log in to continue", "please log in", "access denied",
     "you need to agree", "accept the license", "gated repo", "authorization required",
-    "request access", "403 forbidden", "rate limit",
+    "request access", "403 forbidden", "rate limit", "captcha",
 ]
+# A soft marker only means a gate in a body too small to be the document itself. A real gate page
+# is short and says little else; a manual that mentions a licence is long and says a great deal.
+SOFT_MAX_BYTES = 4096
+
+# Small artifacts that are legitimately small. A Git-LFS pointer is ~130 bytes and is THE
+# publisher-committed digest of a weights file -- exactly the evidence axis 13 needs.
+SMALL_BUT_REAL = (b"version https://git-lfs.github.com/spec/v1",)
 
 
 def fetch(url, timeout=90):
@@ -68,9 +81,14 @@ def looks_like_a_wall(body, status):
         # so the floor now catches only genuinely empty replies.
         return f"only {len(body)} bytes -- too small to be any document"
     head = body[:20000].decode("utf-8", "replace").lower()
-    for m in WALL_MARKERS:
+    for m in HARD_MARKERS:
         if m in head:
-            return f"body contains {m!r} -- this is a gate, not the artifact"
+            return f"body contains {m!r} -- a challenge page, not the artifact"
+    if len(body) <= SOFT_MAX_BYTES:
+        for m in SOFT_MARKERS:
+            if m in head:
+                return (f"body is {len(body)} B and contains {m!r} -- too short to be"
+                        f" the document, so this reads as a gate")
     return None
 
 
