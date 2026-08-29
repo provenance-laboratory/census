@@ -280,8 +280,15 @@ def foreign_evidence(cell, ctx, _unused=None):
         _chk2 = cell.get("check")
         got = sorted((_chk2.get("expect") if isinstance(_chk2, dict) else None) or [])
         if got != want_lit:
-            bad.append("axis %d looks for %s; this subject declares %s for it"
-                       % (cell["axis"], got[:2], want_lit[:2]))
+            # ⛔ THIS TRUNCATED BOTH LISTS AT [:2], so a mismatch in a later element printed
+            # "looks for [A, B]; declares [A, B]" -- a diagnostic identical on both sides of the
+            # thing it is diagnosing. Show the DIFFERENCE.
+            _extra = [x for x in got if x not in want_lit]
+            _absent = [x for x in want_lit if x not in got]
+            bad.append("axis %d literals disagree with the declared policy%s%s"
+                       % (cell["axis"],
+                          "; not declared: %s" % _extra if _extra else "",
+                          "; declared but absent: %s" % _absent if _absent else ""))
     return bad
 
 

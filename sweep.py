@@ -123,11 +123,30 @@ def main():
         total += t["n"]
         surv += t["survived"]
 
+    # ⛔ THIS LINE AGGREGATED THE POLICY-MOVED FAMILY, which the paper deliberately reports
+    # separately -- so a reviewer running the tool read a total that appears nowhere in the
+    # manuscript and contradicts the figure printed beside it. The families are summed the way
+    # they are reported.
+    held_n = sum(t2["n"] for b, t2 in tally.items() if "policy" not in b)
+    held_s = sum(t2["survived"] for b, t2 in tally.items() if "policy" not in b)
+    moved_n = sum(t2["n"] for b, t2 in tally.items() if "policy" in b)
+    moved_s = sum(t2["survived"] for b, t2 in tally.items() if "policy" in b)
     print()
-    print("  %d of %d transplants survive end to end." % (surv, total))
+    print("  WITH THE POLICY HELD FIXED : %d of %d survive" % (held_s, held_n))
+    print("  WITH THE POLICY MOVED TOO  : %d of %d survive  -- reported separately, because"
+          % (moved_s, moved_n))
+    print("                               moving both operands is outside what a policy inside")
+    print("                               the ledger can prevent")
     if show and survivors:
-        for bd, a, b, c2, d2 in survivors[:40]:
-            print("      [%s] %s/axis%d <- %s/axis%d" % (bd, a, b, c2, d2))
+        # ⚠️ THE CAP EMITTED THE POLICY-MOVED SURVIVORS FIRST, so the ones the paper actually
+        # reports never appeared in the listing. A count without a cover is the defect section 6.5
+        # repairs in recheck.py; the same fault reached this tool's own output.
+        print()
+        held = [s2 for s2 in survivors if "policy" not in s2[0]]
+        for bd, a, b, c2, d2 in held:
+            print("      [%s] %s/axis%d carries %s/axis%d's material" % (bd, a, b, c2, d2))
+        if moved_s:
+            print("      ... and %d more with the policy moved too, not listed" % moved_s)
     print("=" * 78)
     # ⚠️ Reported, and NOT asserted to be zero forever. If a legitimate shared source is ever
     # declared, a transplant between the two subjects sharing it may survive and should -- the
