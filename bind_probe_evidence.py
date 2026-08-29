@@ -183,8 +183,7 @@ def main():
                  "note": "the first %d bytes of the RESOLVED weight object -- tensor bytes, not a "
                          "Git-LFS pointer. Re-issue the same range to check the digest."
                          % RANGE_BYTES},
-                {"url": g["api"]["url"], "retrieved": _today(), "sha256": g["api"]["sha256"],
-                 "pinned_commit": g["revision"]},
+                _api_record(g),
             ]
             c["check"]["observed"] = (
                 "HTTP %s, %d bytes of the resolved object at revision %s, is_pointer=False. "
@@ -194,8 +193,7 @@ def main():
             c["check"]["expect_range_bytes"] = RANGE_BYTES
         elif meth == "hf_probe.all_shard_digests":
             c["evidence"] = (
-                [{"url": g["api"]["url"], "retrieved": _today(), "sha256": g["api"]["sha256"],
-                  "pinned_commit": g["revision"]}] +
+                [_api_record(g)] +
                 [{"url": s["url"], "retrieved": _today(), "sha256": s["sha256"],
                   "pinned_commit": g["revision"], "lfs_oid": s["oid"]}
                  for s in g["shards"]])
@@ -211,6 +209,17 @@ def main():
     print()
     print("  ledger rewritten: every probe cell now cites the artifacts its claim rests on")
     return 0
+
+
+def _api_record(g):
+    """⛔ THE VOLATILE FLAG BELONGS HERE, WHERE THE RECORD IS BORN. It was applied to the ledger
+    afterwards and then silently dropped the next time this script rewrote the evidence -- so a
+    later recheck reported two API responses as DRIFT when their volatility was already known and
+    recorded. A property attached after the fact is a property that survives until the next
+    writer."""
+    return {"url": g["api"]["url"], "retrieved": _today(), "sha256": g["api"]["sha256"],
+            "pinned_commit": g["revision"], "volatile": True,
+            "volatile_reason": 'the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. ⚠ THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept.'}
 
 
 def _today():

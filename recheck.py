@@ -57,7 +57,23 @@ def main():
 
     same = drift = gone = volatile_drift = limited = 0
     findings = []
+    # ⚠️ 226 ARTIFACTS, MOST FROM ONE HOST. Re-fetching them back to back is what met Hugging
+    # Face's limiter and produced the two 429s a reviewer asked about. A short per-host pause
+    # costs a few minutes and keeps the sweep COMPLETE, which matters because the paper's sentence
+    # is "all N were re-fetched" -- sampling would be a different and weaker claim.
+    import time as _time
+    _last_host = {}
+
+    def _be_polite(u):
+        host = u.split("//", 1)[-1].split("/", 1)[0]
+        prev = _last_host.get(host)
+        now = _time.time()
+        if prev is not None and now - prev < 0.7:
+            _time.sleep(0.7 - (now - prev))
+        _last_host[host] = _time.time()
+
     for url in sorted(by_url):
+        _be_polite(url)
         want = by_url[url]["sha256"]
         cells = by_url[url]["cells"]
         # ⛔ A CELL MAY CITE A BYTE RANGE OF AN OBJECT TOO LARGE TO HOLD. The OLMo corpus object

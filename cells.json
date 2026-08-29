@@ -375,7 +375,9 @@
           "url": "https://huggingface.co/api/models/EleutherAI/pythia-12b/revision/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
           "retrieved": "2026-08-29",
           "sha256": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71",
-          "pinned_commit": "bb1e3e710cdf6b524461d543cfb5ba773f0a81b6"
+          "pinned_commit": "bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         }
       ],
       "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
@@ -395,7 +397,9 @@
           "url": "https://huggingface.co/api/models/EleutherAI/pythia-12b/revision/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
           "retrieved": "2026-08-29",
           "sha256": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71",
-          "pinned_commit": "bb1e3e710cdf6b524461d543cfb5ba773f0a81b6"
+          "pinned_commit": "bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         },
         {
           "url": "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors",
@@ -721,7 +725,9 @@
           "url": "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
           "retrieved": "2026-08-29",
           "sha256": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3",
-          "pinned_commit": "3fefddc1bf18a30e1d9b91000271630718f2aa8b"
+          "pinned_commit": "3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         }
       ],
       "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
@@ -741,7 +747,9 @@
           "url": "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
           "retrieved": "2026-08-29",
           "sha256": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3",
-          "pinned_commit": "3fefddc1bf18a30e1d9b91000271630718f2aa8b"
+          "pinned_commit": "3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         },
         {
           "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00001-of-00012.safetensors",
@@ -1073,7 +1081,9 @@
           "url": "https://huggingface.co/api/models/bigscience/bloom/revision/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
           "retrieved": "2026-08-29",
           "sha256": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29",
-          "pinned_commit": "7f10a99ce7c08f03c7719a586cb2cbda1433ac05"
+          "pinned_commit": "7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         }
       ],
       "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
@@ -1093,7 +1103,9 @@
           "url": "https://huggingface.co/api/models/bigscience/bloom/revision/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
           "retrieved": "2026-08-29",
           "sha256": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29",
-          "pinned_commit": "7f10a99ce7c08f03c7719a586cb2cbda1433ac05"
+          "pinned_commit": "7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         },
         {
           "url": "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00001-of-00072.safetensors",
@@ -2271,7 +2283,9 @@
           "url": "https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/revision/caa1feb0e54d415e2df31207e5f4e273e33509b1",
           "retrieved": "2026-08-29",
           "sha256": "65652618c2c1d9fcb19dfaf3c1b9e0ff46ce6e21490a53c6f34fea852171b4bd",
-          "pinned_commit": "caa1feb0e54d415e2df31207e5f4e273e33509b1"
+          "pinned_commit": "caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         }
       ],
       "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
@@ -2291,7 +2305,9 @@
           "url": "https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/revision/caa1feb0e54d415e2df31207e5f4e273e33509b1",
           "retrieved": "2026-08-29",
           "sha256": "65652618c2c1d9fcb19dfaf3c1b9e0ff46ce6e21490a53c6f34fea852171b4bd",
-          "pinned_commit": "caa1feb0e54d415e2df31207e5f4e273e33509b1"
+          "pinned_commit": "caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         },
         {
           "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/consolidated.safetensors",
@@ -2497,7 +2513,9 @@
           "url": "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796",
           "retrieved": "2026-08-29",
           "sha256": "c12581151f4234bd051e16831c3dcd782f5ff623e9a0213dfe7d55b7a8fc15d9",
-          "pinned_commit": "d149729398750b98c0af14eb82c78cfe92750796"
+          "pinned_commit": "d149729398750b98c0af14eb82c78cfe92750796",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         }
       ],
       "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
@@ -2517,7 +2535,9 @@
           "url": "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796",
           "retrieved": "2026-08-29",
           "sha256": "c12581151f4234bd051e16831c3dcd782f5ff623e9a0213dfe7d55b7a8fc15d9",
-          "pinned_commit": "d149729398750b98c0af14eb82c78cfe92750796"
+          "pinned_commit": "d149729398750b98c0af14eb82c78cfe92750796",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         },
         {
           "url": "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00001-of-00004.safetensors",
@@ -3573,7 +3593,9 @@
           "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/86b5e0934494bd15c9632b12f734a8a67f723594",
           "retrieved": "2026-08-29",
           "sha256": "7ee96aab76282c64d70436d1344b749d0721975f2e57cd801f726b0cf8c97715",
-          "pinned_commit": "86b5e0934494bd15c9632b12f734a8a67f723594"
+          "pinned_commit": "86b5e0934494bd15c9632b12f734a8a67f723594",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         }
       ],
       "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
@@ -3780,7 +3802,9 @@
           "url": "https://huggingface.co/api/models/openai-community/gpt2-xl/revision/15ea56dee5df4983c59b2538573817e1667135e2",
           "retrieved": "2026-08-29",
           "sha256": "0c993bc7336e2cd0330036b4da9c6bd8ce9d6cccd2b7f26dccb3abc9a8e5df0f",
-          "pinned_commit": "15ea56dee5df4983c59b2538573817e1667135e2"
+          "pinned_commit": "15ea56dee5df4983c59b2538573817e1667135e2",
+          "volatile": true,
+          "volatile_reason": "the response is pinned to a REVISION, but its body carries download and like counters that move independently of the claim, so no digest of it is stable. \u26a0 THE ENUMERATION INSIDE IT IS STABLE, and replay.py recomputes the shard list from the ARCHIVED copy rather than from a live fetch -- which is the whole reason the bytes are kept."
         }
       ],
       "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
