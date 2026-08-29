@@ -40,6 +40,10 @@ NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
 LEDGER = HERE / "cells.json"
 TABLES = HERE / "tables"
+# Methods replay.py actually re-executes against archived bytes. Kept here so the
+# volatility exception cannot be claimed for a method nobody replays.
+REPLAYABLE = {"grep_retrieved", "count_in_retrieved", "http_range",
+              "hf_probe.weight_object", "hf_probe.all_shard_digests"}
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -113,8 +117,18 @@ def validate(led):
                 # is what stops "volatile" from becoming a way to launder an unstable artifact
                 # into a 2.
                 if e.get("volatile"):
-                    if val == 2:
-                        d.append(f"{w2}: marked volatile, so it cannot support a VERIFIED cell")
+                    # ⛔ THE BAR EXISTS TO STOP A MOVING TARGET LAUNDERING INTO A 2, and it still
+                    # does. The narrow exception: a record whose cell is checked by REPLAYING a
+                    # registered method against ARCHIVED BYTES is not a moving target, because the
+                    # check never touches the live endpoint. The Hugging Face API responses are
+                    # pinned to a revision and still carry download counters -- two drifted
+                    # between consecutive recheck runs -- but the shard ENUMERATION inside the
+                    # archived copy is what the check reads, and replay.py recomputes it there.
+                    _replayed = str((c.get("check") or {}).get("method", "")) in REPLAYABLE
+                    if val == 2 and not _replayed:
+                        d.append(f"{w2}: marked volatile, so it cannot support a VERIFIED cell "
+                                 f"unless the cell's check is replayed against ARCHIVED bytes "
+                                 f"(method {(c.get('check') or {}).get('method')!r} is not)")
                     if not str(e.get("volatile_reason", "")).strip():
                         d.append(f"{w2}: volatile with no stated reason")
                 if not SHA256_RE.match(str(e.get("sha256", ""))):

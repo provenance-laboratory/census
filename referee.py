@@ -64,6 +64,30 @@ def strict_inversions(a, b):
     return n
 
 
+def order_transitions(base, coll):
+    """Every way the PARTIAL ORDER changes, not one direction of it.
+
+    ⛔ THE TIE ASYMMETRY HAS NOW BEEN WRONG THREE TIMES, each in a different direction: round 1
+    over-counted ties as reversals; round 2 compared total orders and missed collapses entirely;
+    round 3 counted collapses and MISSED SEPARATIONS -- pairs level in the census that become
+    strictly ordered under the test. Reporting one direction of a partial-order change is what
+    keeps producing the error, so all three are computed together.
+    """
+    t = 1e-12
+    ks = sorted(base)
+    collapsed, separated, reversed_ = [], [], []
+    for i, x in enumerate(ks):
+        for y in ks[i + 1:]:
+            b, c = base[x] - base[y], coll[x] - coll[y]
+            if abs(b) > t and abs(c) < t:
+                collapsed.append((x, y, base[x], base[y], coll[x]))
+            elif abs(b) < t and abs(c) > t:
+                separated.append((x, y, base[x], coll[x], coll[y]))
+            elif abs(b) > t and abs(c) > t and (b > 0) != (c > 0):
+                reversed_.append((x, y))
+    return collapsed, separated, reversed_
+
+
 def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     led = M.load()
@@ -96,17 +120,14 @@ def main():
     # ⛔ ORDER-EQUALITY IS NOT ORDER-PRESERVATION. order() is a stable sort, so a strictly-ordered
     # pair that collapses to an exact TIE keeps its sequence and this comparison stays False.
     # Round-2 review found three such collapses, one of them inside the positive control.
-    collapsed = []
-    _ss = sorted(base)
-    for _i, _x in enumerate(_ss):
-        for _y in _ss[_i + 1:]:
-            if base[_x] != base[_y] and abs(coll[_x] - coll[_y]) < 1e-12:
-                collapsed.append((_x, _y, coll[_x]))
+    collapsed, separated, flipped = order_transitions(base, coll)
     reordered = order(base) != order(coll)
-    changed = reordered or bool(collapsed)
+    changed = reordered or bool(collapsed) or bool(separated) or bool(flipped)
     print()
-    print("      largest movement %.3f; sequence changes: %s; strict pairs collapsing to a tie: %d"
-          % (biggest, reordered, len(collapsed)))
+    print("      largest movement %.3f; sequence changes: %s" % (biggest, reordered))
+    print("      partial-order changes: %d strict pair(s) collapse to a tie, %d tied pair(s) "
+          "SEPARATE," % (len(collapsed), len(separated)))
+    print("      %d reverse." % len(flipped))
     # The verdict is COMPUTED. An earlier version asserted "moves every subject" while its
     # own numbers showed two subjects moving 0.000 -- prose disagreeing with the table it sat
     # under, which is the defect this whole repository is arranged against.
@@ -120,12 +141,15 @@ def main():
         # above it -- the identical defect the comment above warns about, reintroduced in the fix
         # for it. It now prints from `changed`.
         if changed:
-            print("      " + chr(0x26D4) + " AND IT DOES CHANGE THE ORDERING: %d strictly-ordered"
-                  % len(collapsed))
-            print("      pair(s) become EXACT TIES under claims-as-checks --")
-            for _x, _y, _v in collapsed:
-                print("          %-18s %.3f  vs  %-18s %.3f   ->  both %.3f"
-                      % (_x, base[_x], _y, base[_y], _v))
+            print("      " + chr(0x26D4) + " AND IT DOES CHANGE THE ORDERING.")
+            for _x, _y, _bx, _by, _v in collapsed:
+                print("        collapse  %-18s %.3f  vs %-18s %.3f  ->  both %.3f"
+                      % (_x, _bx, _y, _by, _v))
+            for _x, _y, _b, _cx, _cy in separated:
+                print("        SEPARATE  %-18s and %-18s both %.3f  ->  %.3f vs %.3f"
+                      % (_x, _y, _b, _cx, _cy))
+            for _x, _y in flipped:
+                print("        REVERSE   %-18s and %-18s" % (_x, _y))
             print("      A pair ordered in the census and unordered under the test is a change in")
             print("      the ordering on any reading a reviewer will apply. What survives is")
             print("      narrower: no pair REVERSES, and the STRATUM separation is untouched")
