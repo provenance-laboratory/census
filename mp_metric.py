@@ -373,7 +373,25 @@ def ledger_fingerprint(led):
     """
     rows = sorted("%s|%d|%s" % (c["subject"], c["axis"], c.get("score"))
                   for c in led.get("cells", []))
-    return hashlib.sha256(NL.join(rows).encode("utf-8")).hexdigest()
+    # ⛔ AND THE POLICY, WHICH NOTHING COVERED. The declarations that judge these cells --
+    # sources, axis_sources, axis_documents, axis_method, axis_literals -- live in this same file,
+    # beside the cells, written in the same pass. This fingerprint covered (subject, axis, score);
+    # the drift fingerprint covers (url, digest); the OpenTimestamps anchor covers the selection
+    # rule. NONE covered the policy. So the coverage sweep held one operand of a two-operand
+    # comparison fixed by convention rather than by any mechanism: move a cell AND its declaration
+    # together and 1,680 of 2,842 mutations survive. A round-8 reviewer measured exactly that.
+    #
+    # ⚠️ WHAT THIS FIXES AND WHAT IT DOES NOT. Hashing the policy here means a policy edit
+    # invalidates every emitted table and the build refuses until they are regenerated -- so the
+    # edit is loud rather than silent. It does NOT make the policy externally anchored: it is
+    # still the same repository, and moving evidence plus its declaration is two edits rather than
+    # one. What makes the second visible is review of a diff, not a control in this toolchain.
+    pol = sorted(json.dumps({k: s.get(k) for k in
+                             ("id", "repo", "sources", "axis_sources", "axis_documents",
+                              "axis_method", "axis_literals")},
+                            sort_keys=True)
+                 for s in led.get("subjects", []))
+    return hashlib.sha256(NL.join(rows + pol).encode("utf-8")).hexdigest()
 
 
 def emit_tables(led, sc):

@@ -256,15 +256,27 @@ def foreign_evidence(cell, ctx, _unused=None):
     # And the METHOD, so a check block transplanted between two axes resting on ONE document is
     # visible. An ASSERTED cell names no mechanical check by definition -- but one legitimately
     # carries a block documenting its demotion, so the rule is "the declared one", not "none".
+    # ⛔ THE PER-AXIS CHECKS WERE CONDITIONAL ON THE DECLARATION EXISTING, so deleting a key
+    # DISABLED the rule instead of failing the cell: removing axis_method for one cell gave zero
+    # defects and a passing gate. That is the optional-guard failure mode for the FOURTH round
+    # running, and the rule is now explicit -- every scored cell carries a COMPLETE policy, and a
+    # missing key is a defect rather than an exemption. An axis with no literals declares [].
     am = dec.get("axis_method") or {}
+    al = dec.get("axis_literals") or {}
+    if cell.get("score"):
+        for _name, _map in (("axis_method", am), ("axis_literals", al)):
+            if cell["axis"] not in _map:
+                bad.append("axis %d has no declared %s; a missing key is a defect, not an "
+                           "exemption (declare [] or null where there is genuinely none)"
+                           % (cell["axis"], _name))
     if cell.get("score") and cell["axis"] in am:
         _chk = cell.get("check")
         got_m = _chk.get("method") if isinstance(_chk, dict) else None
         if got_m != am[cell["axis"]]:
             bad.append("axis %d carries method %r; this subject declares %r for it"
                        % (cell["axis"], got_m, am[cell["axis"]]))
-    want_lit = (dec.get("axis_literals") or {}).get(cell["axis"])
-    if want_lit is not None:
+    want_lit = al.get(cell["axis"])
+    if cell.get("score") and cell["axis"] in al:
         _chk2 = cell.get("check")
         got = sorted((_chk2.get("expect") if isinstance(_chk2, dict) else None) or [])
         if got != want_lit:
@@ -695,9 +707,19 @@ def selftest():
              "evidence", copy.deepcopy(_find(d, "pythia-12b", 6)["evidence"])),
              _find(d, "pythia-12b", 1).__setitem__(
                  "check", copy.deepcopy(_find(d, "pythia-12b", 6)["check"])))),
-        ("two axes resting on ONE document, their check blocks exchanged",
-         lambda d: _find(d, "olmo-2-13b", 7).__setitem__(
-             "check", copy.deepcopy(_find(d, "olmo-2-13b", 9)["check"]))),
+        ("two axes of one subject, their check blocks exchanged",
+         lambda d: _find(d, "olmo-2-13b", 6).__setitem__(
+             "check", copy.deepcopy(_find(d, "olmo-2-13b", 1)["check"]))),
+        ("a subject's axis_method policy DELETED for one axis",
+         lambda d: [s["axis_method"].pop("1", None) for s in d["subjects"]
+                    if s["id"] == "pythia-12b"]),
+        ("a subject's axis_literals policy DELETED, then the literal weakened",
+         lambda d: ([s.get("axis_literals", {}).pop("6", None) for s in d["subjects"]
+                     if s["id"] == "bert-base-uncased"],
+                    _find(d, "bert-base-uncased", 6)["check"].__setitem__("expect", ["data"]))),
+        ("a check block copied between two subjects' cells",
+         lambda d: _find(d, "olmo-2-13b", 11).__setitem__(
+             "check", copy.deepcopy(_find(d, "pythia-12b", 1)["check"]))),
         ("a subject's source declaration DELETED, then foreign evidence transplanted in",
          lambda d: ([s.pop("sources", None) for s in d["subjects"]
                      if s["id"] == "pythia-12b"],
@@ -721,12 +743,37 @@ def selftest():
     print()
     bad = 0
     for name, mut in attacks:
+        # ⛔ AN ATTACK THAT NEVER RAN WAS REPORTED AS "CORRECTLY REJECTED". This loop caught broad
+        # Exception and treated it as a rejection, so a mutation raising KeyError -- because the
+        # cell it targeted had no `check` block at all -- came back green. That is a vacuous
+        # control INSIDE the mechanism built to prove controls are not vacuous, which is the
+        # sharpest form this project's recurring defect has taken. Round-8 review found it.
+        #
+        # A setup failure is now a HARD FAILURE, and every mutation must PROVE it changed the
+        # ledger before the verdict counts for anything.
+        before = json.dumps(led, sort_keys=True)
+        d0 = copy.deepcopy(led)
+        try:
+            mut(d0)
+        except Exception as exc:                                    # noqa: BLE001
+            print("  " + chr(0x26D4) + " BROKEN  %s" % name)
+            print("            the mutation itself raised %r -- it never ran, so its green was "
+                  "meaningless" % (exc,))
+            bad += 1
+            continue
+        if json.dumps(d0, sort_keys=True) == before:
+            print("  " + chr(0x26D4) + " INERT   %s" % name)
+            print("            the mutation changed nothing, so rejecting it proves nothing")
+            bad += 1
+            continue
         try:
             survived = run_one(mut)
-        except Exception:                                       # noqa: BLE001
-            survived = False
-        print(("  ok    " if not survived else "  " + chr(0x26D4) + " PASSES ")
-              + "%s" % name)
+        except Exception as exc:                                    # noqa: BLE001
+            print("  " + chr(0x26D4) + " BROKEN  %s" % name)
+            print("            evaluating it raised %r" % (exc,))
+            bad += 1
+            continue
+        print(("  ok    " if not survived else "  " + chr(0x26D4) + " PASSES ") + "%s" % name)
         if survived:
             bad += 1
     print()

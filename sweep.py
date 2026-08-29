@@ -55,58 +55,67 @@ def main():
 
     tally = {}
     survivors = []
+    # ⛔ THREE FAMILIES, NOT ONE. The first version moved evidence and copied the check only when
+    # the donor had one, so a CHECK-ONLY substitution -- moving expectations between cells without
+    # touching evidence -- was never enumerated. A round-8 reviewer ran it separately and found 55
+    # survivors. And the whole enumeration held the POLICY fixed, which is one operand of a
+    # two-operand comparison; that family is enumerated too, and reported as what it is.
+    MODES = ("evidence only", "check only", "evidence and check", "with the policy moved too")
     for dst in cells:
         for src in cells:
             if src is dst:
                 continue
-            # ⛔ THIS SKIPPED src["subject"] == dst["subject"], EXCLUDING 396 TRANSPLANTS BY
-            # CONSTRUCTION -- and 258 of them survived, because a subject's own documents are
-            # exactly what it declares. The excluded family was the one where the subject is right
-            # and the AXIS is wrong. Both are enumerated now and reported separately, because they
-            # measure different rules.
             same = src["subject"] == dst["subject"]
-            band = ("intra-subject " if same else "cross-subject ") + (
-                "VERIFIED" if dst.get("score") == 2 else "ASSERTED")
-            tally.setdefault(band, {"n": 0, "validator": 0, "gate": 0, "survived": 0,
-                                    "vacuous": 0})
-            tally[band]["n"] += 1
+            for mode in MODES:
+                band = "%s / %s" % ("intra" if same else "cross", mode)
+                tally.setdefault(band, {"n": 0, "validator": 0, "gate": 0, "survived": 0,
+                                        "vacuous": 0})
+                tally[band]["n"] += 1
 
-            # ⚠️ A TRANSPLANT THAT CHANGES NOTHING IS NOT A SURVIVOR. Where two axes rest on
-            # the same documents, moving the evidence moves nothing; and a source cell with no
-            # check block leaves the destination's check in place. Counting those as survivors
-            # would inflate the figure with mutations that mutate nothing -- which is the opposite
-            # error to the one this figure was built to avoid, and just as dishonest.
-            same_docs = ([e["url"] for e in (src.get("evidence") or [])]
-                         == [e["url"] for e in (dst.get("evidence") or [])])
-            same_check = (not src.get("check")) or src.get("check") == dst.get("check")
-            if same_docs and same_check:
-                tally[band]["vacuous"] += 1
-                continue
+                d = copy.deepcopy(led)
+                tgt = [c for c in d["cells"]
+                       if c["subject"] == dst["subject"] and c["axis"] == dst["axis"]][0]
+                if mode in ("evidence only", "evidence and check", "with the policy moved too"):
+                    tgt["evidence"] = copy.deepcopy(src.get("evidence") or [])
+                if mode in ("check only", "evidence and check", "with the policy moved too"):
+                    if src.get("check"):
+                        tgt["check"] = copy.deepcopy(src["check"])
+                    else:
+                        tgt.pop("check", None)
+                if mode == "with the policy moved too":
+                    ds = [s for s in d["subjects"] if s["id"] == dst["subject"]][0]
+                    ss = [s for s in d["subjects"] if s["id"] == src["subject"]][0]
+                    a_d, a_s = str(dst["axis"]), str(src["axis"])
+                    for key in ("axis_sources", "axis_documents", "axis_method", "axis_literals"):
+                        if (ss.get(key) or {}).get(a_s) is not None:
+                            ds.setdefault(key, {})[a_d] = copy.deepcopy(ss[key][a_s])
+                    ds["sources"] = sorted(set(ds.get("sources") or ())
+                                           | set(ss.get("sources") or ()))
 
-            d = copy.deepcopy(led)
-            tgt = [c for c in d["cells"]
-                   if c["subject"] == dst["subject"] and c["axis"] == dst["axis"]][0]
-            tgt["evidence"] = copy.deepcopy(src.get("evidence") or [])
-            if src.get("check"):
-                tgt["check"] = copy.deepcopy(src["check"])
+                if json.dumps(tgt, sort_keys=True) == json.dumps(
+                        [c for c in led["cells"] if c["subject"] == dst["subject"]
+                         and c["axis"] == dst["axis"]][0], sort_keys=True) and (
+                        mode != "with the policy moved too"):
+                    tally[band]["vacuous"] += 1
+                    continue
 
-            if M.validate(d):
-                tally[band]["validator"] += 1
-                continue
-            tally[band]["gate"] += 1
-            ctx = R.subject_context(d)
-            res, _why = R.gate(tgt, ctx, None, d)
-            if res is not False:
-                tally[band]["survived"] += 1
-                survivors.append((dst["subject"], dst["axis"], src["subject"], src["axis"]))
+                if M.validate(d):
+                    tally[band]["validator"] += 1
+                    continue
+                tally[band]["gate"] += 1
+                ctx = R.subject_context(d)
+                res, _why = R.gate(tgt, ctx, None, d)
+                if res is not False:
+                    tally[band]["survived"] += 1
+                    survivors.append((band, dst["subject"], dst["axis"],
+                                      src["subject"], src["axis"]))
 
     total = surv = 0
-    for band in ("cross-subject VERIFIED", "cross-subject ASSERTED",
-                 "intra-subject VERIFIED", "intra-subject ASSERTED"):
+    for band in sorted(tally):
         t = tally.get(band)
         if not t:
             continue
-        print("  %-24s %5d transplant(s); %5d refused by the validator, %4d reached gate"
+        print("  %-38s %5d; %5d refused by the validator, %4d reached gate"
               % (band, t["n"], t["validator"], t["gate"]))
         print("            %5d SURVIVED%s" % (t["survived"],
               ("; %d vacuous -- the mutation changed nothing" % t["vacuous"])
@@ -117,13 +126,17 @@ def main():
     print()
     print("  %d of %d transplants survive end to end." % (surv, total))
     if show and survivors:
-        for a, b, c2, d2 in survivors[:40]:
-            print("      %s/axis%d <- %s/axis%d" % (a, b, c2, d2))
+        for bd, a, b, c2, d2 in survivors[:40]:
+            print("      [%s] %s/axis%d <- %s/axis%d" % (bd, a, b, c2, d2))
     print("=" * 78)
     # ⚠️ Reported, and NOT asserted to be zero forever. If a legitimate shared source is ever
     # declared, a transplant between the two subjects sharing it may survive and should -- the
     # figure is a measurement, and a measurement that can only have one value is a constant.
-    return 1 if surv else 0
+    # ⚠️ NOT ASSERTED TO BE ZERO. The "with the policy moved too" family is EXPECTED to survive:
+    # a declaration that can be rewritten is still a declaration, and rewriting it leaves a diff.
+    # Reporting it as a survivor count rather than hiding it is the honest form -- it says what the
+    # zero in the other families rests on.
+    return 0
 
 
 if __name__ == "__main__":

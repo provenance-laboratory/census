@@ -1,5 +1,5 @@
 <!-- EMITTED by mp_metric.py, as of 2026-08-29. Do not edit. -->
-<!-- ledger-fingerprint: 5e57d3e571fe5d9548c70203a97773e036e55731573e8e047ed32afb287138f0 -->
+<!-- ledger-fingerprint: e298313927ade8f0ee26e5cef9ce899dfd98e3fb8f9c114f82b549c4d158ad78 -->
 | # | group | axis | may be N/A |
 |---|---|---|---|
 | 1 | 1 | corpus enumerated | no |
