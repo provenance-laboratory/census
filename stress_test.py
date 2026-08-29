@@ -44,13 +44,18 @@ def full_census(subject="s1", score=0, cell_over=None, **over):
         if c["score"] and c["score"] > 0:
             c["evidence"] = list(EV)
             if c["score"] == 2:
+                # An axis that REQUIRES a method gets it; otherwise prefer grep. A valid
+                # census must satisfy the instrument's own requirements, not merely its
+                # permissions -- which is the distinction round-6 review turned into a defect.
+                req = A.required_method(ax)
                 valid = sorted(A.methods_for(ax))
-                meth = "grep_retrieved" if "grep_retrieved" in valid else (
-                    valid[0] if valid else "grep_retrieved")
+                meth = (sorted(req)[0] if req else
+                        ("grep_retrieved" if "grep_retrieved" in valid else
+                         (valid[0] if valid else "grep_retrieved")))
                 c["check"] = {"method": meth, "asserts": "the material is present",
                               "observed": "it is present"}
-                if meth in ("grep_retrieved", "count_in_retrieved"):
-                    c["check"]["expect"] = ["something"]
+                for f in A.required_fields(meth):
+                    c["check"][f] = ["something"] if f == "expect" else 1
             if cell_over:
                 c.update({k: dict(v) if isinstance(v, dict) else v
                           for k, v in cell_over.items()})
@@ -254,6 +259,21 @@ must_catch("a replayable method carrying nothing to replay",
 
 must_pass("the score-2 fixture itself is valid under the new method rules",
           full_census(score=2))
+
+# ── the two round-6 routes AROUND the identity checks ────────────────────────────────────────
+# ⛔ BOTH WERE REGISTERED, AXIS-LEGAL AND SILENT. A weights cell moved to `http_range` bypassed
+# every identity check by a route axes.py approved; and deleting the field its method needs demoted
+# the cell to "unreplayable", after which its evidence was unconstrained and the count was printed
+# into the paper as though nothing were wrong.
+must_catch("a weights cell moved to a registered, axis-legal method that does not bind identity",
+           full_census(score=2, cell_over={"check": {
+               "method": "http_range", "asserts": "a range", "observed": "2048 B"}}),
+           "does not bind this axis's identity")
+
+must_catch("a cell whose method is missing the field it cannot run without",
+           full_census(score=2, cell_over={"check": {
+               "method": "grep_retrieved", "asserts": "x", "observed": "y"}}),
+           "requires `expect`")
 
 # ── the drift run must be bound to the evidence SET, not to its size ─────────────────────────
 # The paper says every artifact was re-fetched. That was confirmed by comparing a COUNT, which a
