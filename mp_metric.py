@@ -106,6 +106,17 @@ def validate(led):
                 except ValueError:
                     d.append(f"{w2}: retrieved must be a real YYYY-MM-DD date "
                              f"(got {e.get('retrieved')!r}); a regex accepted 2026-99-99")
+                # ⛔ A VOLATILE ENDPOINT CANNOT SUPPORT A VERIFIED CELL.
+                # Some provenance material exists only behind live APIs whose bodies carry
+                # counters -- stars, download totals -- that change independently of the claim.
+                # Such a record is admissible as ASSERTED evidence and never as VERIFIED, which
+                # is what stops "volatile" from becoming a way to launder an unstable artifact
+                # into a 2.
+                if e.get("volatile"):
+                    if val == 2:
+                        d.append(f"{w2}: marked volatile, so it cannot support a VERIFIED cell")
+                    if not str(e.get("volatile_reason", "")).strip():
+                        d.append(f"{w2}: volatile with no stated reason")
                 if not SHA256_RE.match(str(e.get("sha256", ""))):
                     d.append(f"{w2}: sha256 of the RETRIEVED BYTES is required "
                              f"-- an HTTP 200 is not an artifact")

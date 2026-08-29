@@ -31,68 +31,80 @@
     "invalidates a cell, so every evidence record is re-fetched and re-hashed before submission",
     "and any digest that moved is a finding, not a maintenance chore."
   ],
-  "as_of": "2026-08-28",
+  "as_of": "2026-08-29",
   "selection_rule": "SELECTION-RULE.md, committed and OpenTimestamped before any cell existed",
   "subjects": [
     {
       "id": "pythia-12b",
       "kind": "fully-open",
-      "note": "the census's positive control: if the release that publishes the most cannot score well, the instrument is wrong"
+      "repo": "EleutherAI/pythia-12b",
+      "note": "positive control: if the release publishing most cannot score, the instrument is wrong"
     },
     {
       "id": "olmo-2-13b",
       "kind": "fully-open",
-      "note": "second fully-open reference point; the stratum is taken whole"
+      "repo": "allenai/OLMo-2-1124-13B",
+      "note": "fully-open stratum"
     },
     {
       "id": "bloom-176b",
       "kind": "fully-open",
-      "note": "completes the fully-open stratum, which is taken whole"
-    },
-    {
-      "id": "llama-3.1-8b",
-      "kind": "open-weights",
-      "note": "highest-download open-weights release in the stratum's rank order; download rank is a selection device only and enters no score"
+      "repo": "bigscience/bloom",
+      "note": "fully-open stratum"
     },
     {
       "id": "mistral-7b-v0.3",
       "kind": "open-weights",
-      "note": "open-weights stratum, selected by download rank"
+      "repo": "mistralai/Mistral-7B-v0.3",
+      "note": "open-weights"
     },
     {
       "id": "qwen2.5-7b",
       "kind": "open-weights",
-      "note": "open-weights stratum, selected by download rank"
+      "repo": "Qwen/Qwen2.5-7B",
+      "note": "open-weights"
+    },
+    {
+      "id": "llama-3.1-8b",
+      "kind": "open-weights",
+      "repo": "meta-llama/Llama-3.1-8B",
+      "note": "open-weights, gated"
     },
     {
       "id": "gemma-2-9b",
       "kind": "open-weights",
-      "note": "open-weights stratum, selected by download rank"
+      "repo": "google/gemma-2-9b",
+      "note": "open-weights, gated"
     },
     {
       "id": "gpt-4o",
       "kind": "api-only",
-      "note": "api-only stratum: frontier text model with a published system card"
+      "repo": null,
+      "note": "api-only"
     },
     {
       "id": "claude-3.5-sonnet",
       "kind": "api-only",
-      "note": "api-only stratum. ⚠️ Published by the organisation whose model assisted this work; scored by the same rule as every other subject, per the pre-registered disclosure in SELECTION-RULE.md"
+      "repo": null,
+      "note": "api-only. Published by the organisation whose model assisted this work; scored by the same rule, per the pre-registered disclosure"
     },
     {
       "id": "gemini-1.5-pro",
       "kind": "api-only",
-      "note": "api-only stratum: frontier text model with a published technical report"
+      "repo": null,
+      "note": "api-only"
     },
     {
       "id": "bert-base-uncased",
       "kind": "historical-control",
-      "note": "historical control, 2018: pre-2020 release with weights published at release time"
+      "repo": "google-bert/bert-base-uncased",
+      "note": "historical control, 2018. google-bert is maintained by the Hugging Face Transformers team, not by the publisher"
     },
     {
       "id": "gpt-2-1.5b",
       "kind": "historical-control",
-      "note": "historical control, 2019: pre-2020 release with weights published (staged release completed November 2019)"
+      "repo": "openai-community/gpt2-xl",
+      "note": "historical control, 2019. REBOUND after round-1 review: the prior evidence cited openai-community/gpt2, which is the 137M checkpoint"
     }
   ],
   "cells": [
@@ -100,7 +112,11 @@
       "subject": "pythia-12b",
       "axis": 1,
       "score": 2,
-      "check": "grepped the retrieved dataset card for named constituents; PubMed Central, arXiv, GitHub and USPTO among others are named, not merely categorised",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The Pile's dataset card names its constituents."
+      },
       "evidence": [
         {
           "url": "https://huggingface.co/datasets/EleutherAI/pile/raw/main/README.md",
@@ -113,19 +129,19 @@
           "sha256": "a4ed5e7d70ff9ae90237a5421aabea072396346e2f70406e23257078d28eddf1"
         }
       ],
-      "note": "The corpus is a named, documented dataset with its own datasheet."
+      "note": "The Pile's dataset card names its constituents."
     },
     {
       "subject": "pythia-12b",
       "axis": 2,
       "score": 0,
-      "note": "No per-item or aggregate digest for the corpus was found on the dataset card or in the paper. Searched: dataset card, project README, paper abstract page."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "pythia-12b",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found. This axis is satisfied by almost nothing in the field; it is not a Pythia-specific absence."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "pythia-12b",
@@ -138,19 +154,23 @@
           "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938"
         }
       ],
-      "note": "The HF dataset record resolves (HTTP 200) but the original distribution host the-eye.eu returns 000 (dead). Obtainability is ASSERTED by a live record; bulk retrieval of the same bytes was NOT performed, so this is a 1 rather than a 2."
+      "note": "The dataset record resolves, but the original distribution host returns 000 and the same bytes were not retrieved."
     },
     {
       "subject": "pythia-12b",
       "axis": 5,
       "score": 0,
-      "note": "No published mechanism for deciding membership of an arbitrary document was found."
+      "note": "No membership mechanism was found."
     },
     {
       "subject": "pythia-12b",
       "axis": 6,
       "score": 2,
-      "check": "retrieved the GPT-NeoX repository README and the Pythia repository README; the training library is public and the release names it as the code that produced the weights",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "GPT-NeoX is public and the release names it as the code that produced the weights."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/EleutherAI/gpt-neox/main/README.md",
@@ -162,13 +182,13 @@
           "retrieved": "2026-08-28",
           "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
         }
-      ]
+      ],
+      "note": "GPT-NeoX is public and the release names it as the code that produced the weights."
     },
     {
       "subject": "pythia-12b",
       "axis": 7,
-      "score": 2,
-      "check": "retrieved models/12B/pythia-12b.yml and read the values: lr 0.00012, min_lr 0.000012, cosine decay, train-iters 143000, micro-batch 8 on 256 GPUs",
+      "score": 1,
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/models/12B/pythia-12b.yml",
@@ -176,13 +196,17 @@
           "sha256": "bac012070f553a9659ff1980d82ad773824a51388635345baf2e38c0f2df6e1d"
         }
       ],
-      "note": "A complete run configuration, not a prose description of one."
+      "note": "COMPLETENESS AXIS, capped at 1: the axis asks whether ALL hyperparameters are given, and a retrieved configuration cannot establish that none is missing. A run configuration was retrieved and read."
     },
     {
       "subject": "pythia-12b",
       "axis": 8,
       "score": 2,
-      "check": "grepped the retrieved README: 'The random seed used to train the Pythia models is the GPT-NeoX default: 1234'",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The project README states the seed is the GPT-NeoX default, 1234."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/README.md",
@@ -190,13 +214,13 @@
           "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
         }
       ],
-      "note": "NOTE: the seed is NOT in the run config; scoring this axis from pythia-12b.yml alone would have recorded a 0. One artifact is not the release."
+      "note": "The project README states the seed is the GPT-NeoX default, 1234."
     },
     {
       "subject": "pythia-12b",
       "axis": 9,
       "score": 0,
-      "note": "No TF32/cuDNN/reduction-order settings appear in the run config. Searched pythia-12b.yml for determinism keys; none present."
+      "note": "No determinism settings were found."
     },
     {
       "subject": "pythia-12b",
@@ -209,13 +233,17 @@
           "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
         }
       ],
-      "note": "The reproduction instructions pin the training library by tag (git checkout v1.0), which pins CODE but not an ENVIRONMENT: no container digest or exact library versions were found. Pinning the code is not pinning the environment."
+      "note": "Reproduction instructions pin the training library by tag (git checkout v1.0), which pins CODE and not an ENVIRONMENT."
     },
     {
       "subject": "pythia-12b",
       "axis": 11,
       "score": 2,
-      "check": "retrieved utils/batch_viewer.py, the published tool for viewing the exact portions of the training dataloader used by all models during training",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "utils/batch_viewer.py is published: the tool for viewing the exact portions of the training dataloader used by all models."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/EleutherAI/pythia/main/utils/batch_viewer.py",
@@ -228,35 +256,7 @@
           "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d"
         }
       ],
-      "note": "Unusual: most releases publish no way to reconstruct example order at all."
-    },
-    {
-      "subject": "pythia-12b",
-      "axis": 12,
-      "score": 2,
-      "check": "requested the weights path and received a Git-LFS pointer over HTTP 200 with no gate; contrast Llama-3.1-8B, whose config returns HTTP 401 on the same kind of request",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/EleutherAI/pythia-12b/raw/main/pytorch_model-00001-of-00003.bin",
-          "retrieved": "2026-08-28",
-          "sha256": "26e90d89f1775a543b95b7f2cfe8097126e8370e369320b7b485b58469ce3b81"
-        }
-      ],
-      "note": "The full 9.8 GB was not downloaded; what was checked is that the artifact is served ungated."
-    },
-    {
-      "subject": "pythia-12b",
-      "axis": 13,
-      "score": 2,
-      "check": "read the publisher-committed LFS pointer: 'oid sha256:9d21715462588073675eca9c65ba55a47d911da460a6083938d04acd4589f542', size 9811493183",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/EleutherAI/pythia-12b/raw/main/pytorch_model-00001-of-00003.bin",
-          "retrieved": "2026-08-28",
-          "sha256": "26e90d89f1775a543b95b7f2cfe8097126e8370e369320b7b485b58469ce3b81"
-        }
-      ],
-      "note": "The digest is committed by the publisher into the repository, not computed by a mirror."
+      "note": "utils/batch_viewer.py is published: the tool for viewing the exact portions of the training dataloader used by all models."
     },
     {
       "subject": "pythia-12b",
@@ -268,32 +268,34 @@
       "subject": "pythia-12b",
       "axis": 15,
       "score": 0,
-      "note": "No timestamp over the weights digest was found."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "pythia-12b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found in the artifacts retrieved. SEARCH SCOPE: project README, model card, paper abstract page only -- this is a 0 on a bounded search, and the bound is stated rather than implied."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "pythia-12b",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16. The README documents a rerun BY THE AUTHORS after a training inconsistency, which is not an independent reproduction."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
     },
     {
       "subject": "pythia-12b",
       "axis": 18,
-      "score": 2,
-      "check": "queried the GitHub releases API for lm-evaluation-harness and read the latest tag: v0.4.12, published 2026-05-11 -- a public harness at a pinned version",
+      "score": 1,
       "evidence": [
         {
           "url": "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/releases/latest",
           "retrieved": "2026-08-28",
-          "sha256": "7ee1752d7056bd59f906ebcd9080a231b47a37daa74d7918319467bb4a7bbf87"
+          "sha256": "7ee1752d7056bd59f906ebcd9080a231b47a37daa74d7918319467bb4a7bbf87",
+          "volatile": true,
+          "volatile_reason": "a live API endpoint whose body carries counters (downloads, stars, timestamps) that change independently of the claim, so it cannot be content-addressed"
         }
-      ]
+      ],
+      "note": "A public evaluation repository exists, but no pinning was found between the reported benchmark numbers and a tagged harness version. Published, not bound to the results. Applied consistently across the census after round-1 review, which found pythia-12b scored 2 and olmo-2-13b scored 1 for the same situation."
     },
     {
       "subject": "pythia-12b",
@@ -306,31 +308,71 @@
           "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938"
         }
       ],
-      "note": "The corpus is public and documented, so contamination is testable IN PRINCIPLE, but no published disjointness mechanism or contamination report was found. Testable-in-principle is a claim, not a check."
+      "note": "COMPLETENESS AXIS, capped at 1. Contamination is testable in principle where a corpus is public, but no disjointness mechanism a third party could run was found."
     },
     {
       "subject": "pythia-12b",
       "axis": 20,
       "score": null,
-      "na_reason": "pythia-12b is a base model released without an instruction-tuned, preference-tuned or safety-tuned variant; there is no post-training stage whose data or procedure could be disclosed. N/A here is a property of the release, not a withholding."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "pythia-12b",
       "axis": 21,
       "score": null,
-      "na_reason": "pythia-12b is a base model released without an instruction-tuned, preference-tuned or safety-tuned variant; there is no post-training stage whose data or procedure could be disclosed. N/A here is a property of the release, not a withholding."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "pythia-12b",
       "axis": 22,
       "score": null,
-      "na_reason": "pythia-12b is a base model released without an instruction-tuned, preference-tuned or safety-tuned variant; there is no post-training stage whose data or procedure could be disclosed. N/A here is a property of the release, not a withholding."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 12,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.weight_object",
+        "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
+        "observed": "HTTP 206, 2048 B, is_pointer=False, revision bb1e3e710cdf6b524461d543cfb5ba773f0a81b6"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "43895e1fb3271dd2cca2285fc826319483bdafb8075eaa794e4da94d79691c2f"
+        }
+      ],
+      "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
+    },
+    {
+      "subject": "pythia-12b",
+      "axis": 13,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.all_shard_digests",
+        "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
+        "observed": "6/6 shards, revision bb1e3e710cdf6b524461d543cfb5ba773f0a81b6"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "43895e1fb3271dd2cca2285fc826319483bdafb8075eaa794e4da94d79691c2f"
+        }
+      ],
+      "note": "All 6 shards, not one. Round-1 review found this axis previously scored on a single shard of up to 144."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 1,
       "score": 2,
-      "check": "read the retrieved dataset card's component table: DCLM-Baseline, Arxiv, pes2o, starcoder, Algebraic-stack, OpenWebMath and Wiki, each with token count, uncompressed bytes, document count and licence; total 3.90T tokens / 22.4TB",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The olmo-mix-1124 card carries a component table with token counts, uncompressed bytes, document counts and per-component licences."
+      },
       "evidence": [
         {
           "url": "https://huggingface.co/datasets/allenai/olmo-mix-1124/raw/main/README.md",
@@ -338,25 +380,29 @@
           "sha256": "8a0a0c243be08a014bb85062f1117c4fbe97d6caeb22a69545ffdf58c3a49ae5"
         }
       ],
-      "note": "An enumeration with quantities and per-component licences, not a list of names."
+      "note": "The olmo-mix-1124 card carries a component table with token counts, uncompressed bytes, document counts and per-component licences."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 2,
       "score": 0,
-      "note": "No per-file or aggregate digest for the corpus was found on the dataset card or in the training config, which lists paths without checksums. Searched: dataset card, training config, project README."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 4,
       "score": 2,
-      "check": "the training config lists 1,122 data paths, all public http://olmo-data.org URLs; requested the first (proof-pile-2 .../part-00-00000.npy) with a range header and received HTTP 206 -- the preprocessed token files themselves are retrievable",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The training config enumerates 1,122 public data paths; a range request on the first returned HTTP 206 with real token-file bytes."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
@@ -364,45 +410,54 @@
           "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
         }
       ],
-      "note": "Compare pythia-12b axis 4 (scored 1): its config points at a private /fsx/ mount and the original distribution host is dead. Same stratum, opposite outcome."
+      "note": "The training config enumerates 1,122 public data paths; a range request on the first returned HTTP 206 with real token-file bytes."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 5,
       "score": 0,
-      "note": "No published mechanism for deciding membership of an arbitrary document was found."
+      "note": "No membership mechanism was found."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 6,
       "score": 2,
-      "check": "retrieved the OLMo repository README, which gives a 'Steps to reproduce' invocation (torchrun scripts/train.py {config}) against the published configs",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The repository gives a reproduce invocation against published configs."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/allenai/OLMo/main/README.md",
           "retrieved": "2026-08-28",
           "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
         }
-      ]
+      ],
+      "note": "The repository gives a reproduce invocation against published configs."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 7,
-      "score": 2,
-      "check": "retrieved OLMo2-13B-stage1.yaml (164,084 bytes, 1,365 lines) and read the values: learning_rate 3.0e-4, global_train_batch_size 2048, max_duration 1ep, precision amp_bf16",
+      "score": 1,
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
           "retrieved": "2026-08-28",
           "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
         }
-      ]
+      ],
+      "note": "COMPLETENESS AXIS, capped at 1: the axis asks whether ALL hyperparameters are given, and a retrieved configuration cannot establish that none is missing. A run configuration was retrieved and read."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 8,
       "score": 2,
-      "check": "read 'seed: 6198' on line 2 of the retrieved training config; the repository additionally publishes seed-named stage-2 variants (seed42, seed42069, seed666, seed1110)",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The training config carries seed: 6198 on line 2, and the repository publishes seed-named stage-2 variants."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
@@ -415,7 +470,7 @@
           "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
         }
       ],
-      "note": "The seed is IN the config here. In pythia-12b it appears only in prose in the README."
+      "note": "The training config carries seed: 6198 on line 2, and the repository publishes seed-named stage-2 variants."
     },
     {
       "subject": "olmo-2-13b",
@@ -428,7 +483,7 @@
           "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
         }
       ],
-      "note": "The config specifies precision (amp_bf16, and 'mixed' for the optimizer), which bears on reproducibility, but no TF32/cuDNN flags and no reduction order were found. A precision mode is not a determinism specification."
+      "note": "Precision is specified (amp_bf16, mixed for the optimizer) but no TF32 or cuDNN flags and no reduction order. A precision mode is not a determinism specification."
     },
     {
       "subject": "olmo-2-13b",
@@ -446,13 +501,17 @@
           "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
         }
       ],
-      "note": "pyproject.toml constrains dependencies with RANGES (torch>=2.1, ai2-olmo-core>=1.8.0, cached_path>=1.6.2), and the README installs with pip. No container digest and no exact version set were found. A range is not a pin: two installs a month apart resolve differently."
+      "note": "Dependencies are constrained with RANGES (torch>=2.1, ai2-olmo-core>=1.8.0). A range is not a pin: two installs a month apart resolve differently."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 11,
       "score": 2,
-      "check": "counted 1,122 explicit data-file paths enumerated in order in the retrieved training config, each a public URL",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The training config enumerates 1,122 data-file paths in order."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
@@ -460,34 +519,7 @@
           "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
         }
       ],
-      "note": "This is the axis most releases cannot satisfy at all."
-    },
-    {
-      "subject": "olmo-2-13b",
-      "axis": 12,
-      "score": 2,
-      "check": "requested the weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/main/model-00001-of-00012.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "8d4164aa8db49ae67e32493c8a2a04b118bde44f52f06de35733250fb6e2801e"
-        }
-      ],
-      "note": "The full shard was not downloaded; what was checked is that it is served ungated."
-    },
-    {
-      "subject": "olmo-2-13b",
-      "axis": 13,
-      "score": 2,
-      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:d98857...' for model-00001-of-00012.safetensors",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/main/model-00001-of-00012.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "8d4164aa8db49ae67e32493c8a2a04b118bde44f52f06de35733250fb6e2801e"
-        }
-      ]
+      "note": "The training config enumerates 1,122 data-file paths in order."
     },
     {
       "subject": "olmo-2-13b",
@@ -499,19 +531,19 @@
       "subject": "olmo-2-13b",
       "axis": 15,
       "score": 0,
-      "note": "No timestamp over the weights digest was found."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card, project README, training config only. The bound is stated rather than implied."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16. The repository documents the authors training the 1B model three times with different data order, which is not an independent reproduction."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
     },
     {
       "subject": "olmo-2-13b",
@@ -524,7 +556,7 @@
           "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f"
         }
       ],
-      "note": "The README points to a public evaluation repository (OLMo-Eval), but its GitHub releases API returns an EMPTY list: the harness is published and NOT versioned by release. Compare pythia-12b axis 18 (scored 2): lm-evaluation-harness publishes tagged releases, latest v0.4.12."
+      "note": "A public evaluation repository exists, but no pinning was found between the reported benchmark numbers and a tagged harness version. Published, not bound to the results. Applied consistently across the census after round-1 review, which found pythia-12b scored 2 and olmo-2-13b scored 1 for the same situation."
     },
     {
       "subject": "olmo-2-13b",
@@ -537,217 +569,100 @@
           "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
         }
       ],
-      "note": "The data paths are labelled 'v0_decontaminated', so decontamination is asserted in the artifact itself, but no disjointness mechanism a third party could run and no contamination report was found. Asserted decontamination is a claim."
+      "note": "COMPLETENESS AXIS, capped at 1. Contamination is testable in principle where a corpus is public, but no disjointness mechanism a third party could run was found."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 20,
       "score": null,
-      "na_reason": "OLMo-2-1124-13B is the base model; the instruction-tuned and preference-tuned variants are separately named releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 21,
       "score": null,
-      "na_reason": "OLMo-2-1124-13B is the base model; the instruction-tuned and preference-tuned variants are separately named releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 22,
       "score": null,
-      "na_reason": "OLMo-2-1124-13B is the base model; the instruction-tuned and preference-tuned variants are separately named releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
-      "subject": "bloom-176b",
-      "axis": 1,
-      "score": 2,
-      "check": "retrieved the training dataset ratios catalogue (7,945 bytes) enumerating the constituent datasets and their sampling ratios",
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json",
-          "retrieved": "2026-08-28",
-          "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60"
-        },
-        {
-          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
-        }
-      ]
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 2,
-      "score": 0,
-      "note": "No per-file or aggregate digest for the corpus was found. Searched: model card, training record, ratios catalogue."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 3,
-      "score": 0,
-      "note": "No timestamp predating training was found."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 4,
-      "score": 1,
-      "evidence": [
-        {
-          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
-        }
-      ],
-      "note": "ROOTS is SPLIT: component datasets resolve (bigscience-data/roots_en_wikipedia returns HTTP 200) while the aggregate bigscience/roots returns HTTP 401 -- authorization required. Partly obtainable, and the part that would let a third party assemble the whole is gated."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 5,
-      "score": 1,
-      "evidence": [
-        {
-          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
-        }
-      ],
-      "note": "BLOOM is the ONLY release in this stratum to publish a membership mechanism at all: the ROOTS search tool at huggingface.co/spaces/bigscience-data/roots-search. Its page answers HTTP 200 -- and the Spaces API reports stage RUNTIME_ERROR, last modified 2023-04-03. The mechanism was published and DOES NOT RUN, so membership cannot presently be demonstrated. Scoring this axis from the HTTP 200 would have recorded a 2."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 6,
-      "score": 2,
-      "check": "retrieved the tr11-176B-ml training record (37,047 bytes), which gives the launch command against the public Megatron-DeepSpeed fork",
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
-        }
-      ]
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 7,
-      "score": 2,
-      "check": "read the launch command in the retrieved training record: --lr 6e-5, --global-batch-size, --train-samples with rampup",
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
-        }
-      ]
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 8,
-      "score": 0,
-      "note": "No --seed appears in the launch command and no seed value was found. SEARCH SCOPE: training record and model card. Compare olmo-2-13b, where the seed is line 2 of the config, and pythia-12b, where it is stated in the project README."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 9,
-      "score": 0,
-      "note": "No determinism settings were found in the training record."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 10,
-      "score": 1,
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
-        }
-      ],
-      "note": "The training record names specific dependency BRANCHES rather than versions -- deepspeed on 'olruwase/bf16-updates', tokenizers on a 'bigscience_fork' requiring manual building, and 'pytorch-1.11-to-be (using a release candidate)'. More specific than a version range, and still not a pin: a branch moves, and the record says so ('hopefully it should be merged')."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 11,
-      "score": 1,
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json",
-          "retrieved": "2026-08-28",
-          "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60"
-        },
-        {
-          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
-        }
-      ],
-      "note": "The dataset RATIOS are public and retrievable, but the split manifests the launch command consumes are not: data/train-splits.txt in the Megatron-DeepSpeed repository returns HTTP 404. Ratios constrain composition; they do not determine example order."
-    },
-    {
-      "subject": "bloom-176b",
+      "subject": "olmo-2-13b",
       "axis": 12,
       "score": 2,
-      "check": "requested a weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
+      "check": {
+        "method": "hf_probe.weight_object",
+        "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
+        "observed": "HTTP 206, 2048 B, is_pointer=False, revision 3fefddc1bf18a30e1d9b91000271630718f2aa8b"
+      },
       "evidence": [
         {
-          "url": "https://huggingface.co/bigscience/bloom/raw/main/model_00001-of-00072.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "0738a2c29ca75924aef4f824a5c8aa05cdee010818811ac544a93a6d79002b7b"
-        }
-      ]
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 13,
-      "score": 2,
-      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:069a00...' for model_00001-of-00072.safetensors",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/bigscience/bloom/raw/main/model_00001-of-00072.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "0738a2c29ca75924aef4f824a5c8aa05cdee010818811ac544a93a6d79002b7b"
-        }
-      ]
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 14,
-      "score": 0,
-      "note": "No signature over the weights was found."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 15,
-      "score": 0,
-      "note": "No timestamp over the weights digest was found."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 16,
-      "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card and training record."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 17,
-      "score": 0,
-      "note": "Same scope as axis 16."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 18,
-      "score": 1,
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
+          "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00001-of-00012.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "8d4164aa8db49ae67e32493c8a2a04b118bde44f52f06de35733250fb6e2801e"
         }
       ],
-      "note": "The training record states that lm-eval is run on 29 tasks every 10k iterations, so a harness is named, but the results are written to an internal filesystem path and no pinned public harness version was found for this release."
+      "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
+    },
+    {
+      "subject": "olmo-2-13b",
+      "axis": 13,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.all_shard_digests",
+        "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
+        "observed": "12/12 shards, revision 3fefddc1bf18a30e1d9b91000271630718f2aa8b"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00001-of-00012.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "8d4164aa8db49ae67e32493c8a2a04b118bde44f52f06de35733250fb6e2801e"
+        }
+      ],
+      "note": "All 12 shards, not one. Round-1 review found this axis previously scored on a single shard of up to 144."
     },
     {
       "subject": "bloom-176b",
-      "axis": 19,
+      "axis": 1,
+      "score": 2,
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "A training dataset ratios catalogue enumerates the constituent datasets."
+      },
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json",
+          "retrieved": "2026-08-28",
+          "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60"
+        },
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
+        }
+      ],
+      "note": "A training dataset ratios catalogue enumerates the constituent datasets."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 3,
+      "score": 0,
+      "note": "No commitment predating training was found."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 4,
       "score": 1,
       "evidence": [
         {
@@ -756,197 +671,198 @@
           "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
         }
       ],
-      "note": "Contamination is testable in principle through the ROOTS search tool, which is exactly the tool recorded as not running under axis 5. A mechanism that does not execute cannot support a check."
+      "note": "Component datasets resolve while the aggregate returns HTTP 401; the part that would let a third party assemble the whole is gated."
     },
     {
       "subject": "bloom-176b",
-      "axis": 20,
-      "score": null,
-      "na_reason": "bigscience/bloom is the base model; BLOOMZ and mT0 are separately named instruction-tuned releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 21,
-      "score": null,
-      "na_reason": "bigscience/bloom is the base model; BLOOMZ and mT0 are separately named instruction-tuned releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
-    },
-    {
-      "subject": "bloom-176b",
-      "axis": 22,
-      "score": null,
-      "na_reason": "bigscience/bloom is the base model; BLOOMZ and mT0 are separately named instruction-tuned releases and are separate subjects under the selection rule. This release has no post-training stage whose data or procedure could be disclosed."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 1,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
-          "retrieved": "2026-08-28",
-          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
-        }
-      ],
-      "note": "The card states pretraining used '~15 trillion tokens of data from publicly available sources' with a December 2023 cutoff. That is a description of a corpus, not a list of sources: no source is named, so nothing here could be checked or contested."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 2,
-      "score": 0,
-      "note": "No corpus digest of any kind was found."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 3,
-      "score": 0,
-      "note": "No timestamp predating training was found."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 4,
-      "score": 0,
-      "note": "No corpus is published, so there are no bytes to obtain."
-    },
-    {
-      "subject": "llama-3.1-8b",
       "axis": 5,
-      "score": 0,
-      "note": "No membership mechanism was found. Compare bloom-176b, which published one (and it no longer runs)."
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
+        }
+      ],
+      "note": "The only release measured to publish a membership mechanism at all: the ROOTS search tool. Its page answers HTTP 200 and the Spaces API reports stage RUNTIME_ERROR, last modified 2023-04-03. Published, and not running. COMPLETENESS AXIS: capped at 1 regardless."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
       "axis": 6,
-      "score": 0,
+      "score": 2,
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The training record gives the launch command against a public Megatron-DeepSpeed fork."
+      },
       "evidence": [
         {
-          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
           "retrieved": "2026-08-28",
-          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
         }
       ],
-      "note": "The card states: 'We used custom training libraries, Meta's custom built GPU cluster, and production infrastructure.' The training code is stated to be internal, so this is an explicit non-release rather than an omission."
+      "note": "The training record gives the launch command against a public Megatron-DeepSpeed fork."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
       "axis": 7,
-      "score": 0,
+      "score": 1,
       "evidence": [
         {
-          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
           "retrieved": "2026-08-28",
-          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
         }
       ],
-      "note": "The card reports training COMPUTE (39.3M GPU hours on H100-80GB) but no learning rate, batch size, schedule or duration in steps. Compute spent is not a hyperparameter set."
+      "note": "COMPLETENESS AXIS, capped at 1: the axis asks whether ALL hyperparameters are given, and a retrieved configuration cannot establish that none is missing. A run configuration was retrieved and read."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
       "axis": 8,
       "score": 0,
       "note": "No seed was found."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
       "axis": 9,
       "score": 0,
       "note": "No determinism settings were found."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
       "axis": 10,
-      "score": 0,
-      "note": "No environment specification was found; the training stack is stated to be internal."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 11,
-      "score": 0,
-      "note": "No data order information was found."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 12,
       "score": 1,
       "evidence": [
         {
-          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md",
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
           "retrieved": "2026-08-28",
-          "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e"
-        },
-        {
-          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
-          "retrieved": "2026-08-28",
-          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
         }
       ],
-      "note": "The weights are published, and NOT retrievable by a third party without first being granted access: The Hugging Face repository returns HTTP 401 to an unauthenticated request for both the model card and config.json; access is granted per requester after accepting terms. The axis is satisfied by retrievable weights, 'not gated access granted case by case', so this is a 1. It is an availability condition, not a judgement about the condition."
+      "note": "The record names dependency BRANCHES (deepspeed olruwase/bf16-updates, a tokenizers bigscience_fork, 'pytorch-1.11-to-be'). A branch moves, and the record says so."
     },
     {
-      "subject": "llama-3.1-8b",
-      "axis": 13,
-      "score": 0,
-      "note": "A publisher digest may well exist behind the gate; it cannot be read without accepting terms, so nothing here is checkable by an arbitrary third party. Compare pythia-12b and olmo-2-13b, whose LFS pointers are served ungated."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 14,
-      "score": 0,
-      "note": "No signature over the weights was found."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 15,
-      "score": 0,
-      "note": "No timestamp over the weights was found."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 16,
-      "score": 0,
-      "note": "No independent bit-identical reproduction report was found, and with the corpus and training code unpublished there is no procedure such a report could follow. SEARCH SCOPE: model card and repository README."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 17,
-      "score": 0,
-      "note": "Same scope as axis 16."
-    },
-    {
-      "subject": "llama-3.1-8b",
-      "axis": 18,
-      "score": 0,
+      "subject": "bloom-176b",
+      "axis": 11,
+      "score": 1,
       "evidence": [
         {
-          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json",
           "retrieved": "2026-08-28",
-          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+          "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
         }
       ],
-      "note": "The card reports results on standard automatic benchmarks but names no released, versioned harness for reproducing them. Compare pythia-12b, scored 2 on this axis."
+      "note": "Dataset RATIOS are public; the split manifests the launch command consumes return HTTP 404. Ratios constrain composition, not example order."
     },
     {
-      "subject": "llama-3.1-8b",
-      "axis": 19,
+      "subject": "bloom-176b",
+      "axis": 14,
       "score": 0,
-      "note": "With no published corpus there is nothing against which disjointness could be tested. Contamination here can be denied but not checked."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over a weights digest was found."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 17,
+      "score": 0,
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 18,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022"
+        }
+      ],
+      "note": "A public evaluation repository exists, but no pinning was found between the reported benchmark numbers and a tagged harness version. Published, not bound to the results. Applied consistently across the census after round-1 review, which found pythia-12b scored 2 and olmo-2-13b scored 1 for the same situation."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 19,
+      "score": 1,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770"
+        }
+      ],
+      "note": "COMPLETENESS AXIS, capped at 1. Contamination is testable in principle where a corpus is public, but no disjointness mechanism a third party could run was found."
+    },
+    {
+      "subject": "bloom-176b",
       "axis": 20,
       "score": null,
-      "na_reason": "Llama-3.1-8B is the base model; Llama-3.1-8B-Instruct is a separately named release and is a separate subject under the selection rule. This release has no post-training stage whose data or procedure could be disclosed. ⚠️ N/A here RAISES the as-coded score by shrinking the denominator, which is why the N/A→0 column is reported beside it."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
       "axis": 21,
       "score": null,
-      "na_reason": "Llama-3.1-8B is the base model; Llama-3.1-8B-Instruct is a separately named release and is a separate subject under the selection rule. This release has no post-training stage whose data or procedure could be disclosed. ⚠️ N/A here RAISES the as-coded score by shrinking the denominator, which is why the N/A→0 column is reported beside it."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
-      "subject": "llama-3.1-8b",
+      "subject": "bloom-176b",
       "axis": 22,
       "score": null,
-      "na_reason": "Llama-3.1-8B is the base model; Llama-3.1-8B-Instruct is a separately named release and is a separate subject under the selection rule. This release has no post-training stage whose data or procedure could be disclosed. ⚠️ N/A here RAISES the as-coded score by shrinking the denominator, which is why the N/A→0 column is reported beside it."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 12,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.weight_object",
+        "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
+        "observed": "HTTP 206, 2048 B, is_pointer=False, revision 7f10a99ce7c08f03c7719a586cb2cbda1433ac05"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00001-of-00072.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "0738a2c29ca75924aef4f824a5c8aa05cdee010818811ac544a93a6d79002b7b"
+        }
+      ],
+      "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
+    },
+    {
+      "subject": "bloom-176b",
+      "axis": 13,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.all_shard_digests",
+        "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
+        "observed": "144/144 shards, revision 7f10a99ce7c08f03c7719a586cb2cbda1433ac05"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00001-of-00072.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "0738a2c29ca75924aef4f824a5c8aa05cdee010818811ac544a93a6d79002b7b"
+        }
+      ],
+      "note": "All 144 shards, not one. Round-1 review found this axis previously scored on a single shard of up to 144."
     },
     {
       "subject": "mistral-7b-v0.3",
@@ -959,78 +875,19 @@
           "sha256": "d5f3bf07f3062380b2c26b22a5dc9d462d2a1417040f182775de5102f10b2a28"
         }
       ],
-      "note": "The model card is 3,580 bytes and is almost entirely usage instructions; it names no training source. SEARCH SCOPE: model card and the Mistral 7B paper."
-    },
-    {
-      "subject": "mistral-7b-v0.3",
-      "axis": 6,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://arxiv.org/abs/2310.06825",
-          "retrieved": "2026-08-28",
-          "sha256": "ef5fab750f82f531c6070f473e10cee1085fa3aa765a6ab8764353fb82bf2f1b"
-        }
-      ],
-      "note": "No training code release was found."
-    },
-    {
-      "subject": "mistral-7b-v0.3",
-      "axis": 7,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://arxiv.org/abs/2310.06825",
-          "retrieved": "2026-08-28",
-          "sha256": "ef5fab750f82f531c6070f473e10cee1085fa3aa765a6ab8764353fb82bf2f1b"
-        }
-      ],
-      "note": "The paper describes ARCHITECTURE (sliding-window attention, GQA) rather than a training configuration. An architecture is not a hyperparameter set."
-    },
-    {
-      "subject": "mistral-7b-v0.3",
-      "axis": 12,
-      "score": 2,
-      "check": "requested a weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/main/model-00001-of-00003.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "7715c61373137261712ba3f4e11fa3c1c4c8128d400eab1336ef4fe010ba976b"
-        }
-      ],
-      "note": "Contrast llama-3.1-8b and gemma-2-9b in this same stratum, which return HTTP 401."
-    },
-    {
-      "subject": "mistral-7b-v0.3",
-      "axis": 13,
-      "score": 2,
-      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:2d7de8...'",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/main/model-00001-of-00003.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "7715c61373137261712ba3f4e11fa3c1c4c8128d400eab1336ef4fe010ba976b"
-        }
-      ]
-    },
-    {
-      "subject": "mistral-7b-v0.3",
-      "axis": 18,
-      "score": 0,
-      "note": "No released, versioned evaluation harness was found. SEARCH SCOPE: model card and paper."
+      "note": "The card names no training source."
     },
     {
       "subject": "mistral-7b-v0.3",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "mistral-7b-v0.3",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "mistral-7b-v0.3",
@@ -1043,6 +900,32 @@
       "axis": 5,
       "score": 0,
       "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2310.06825",
+          "retrieved": "2026-08-28",
+          "sha256": "ef5fab750f82f531c6070f473e10cee1085fa3aa765a6ab8764353fb82bf2f1b"
+        }
+      ],
+      "note": "No training code was found."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2310.06825",
+          "retrieved": "2026-08-28",
+          "sha256": "ef5fab750f82f531c6070f473e10cee1085fa3aa765a6ab8764353fb82bf2f1b"
+        }
+      ],
+      "note": "No training configuration was found."
     },
     {
       "subject": "mistral-7b-v0.3",
@@ -1060,7 +943,7 @@
       "subject": "mistral-7b-v0.3",
       "axis": 10,
       "score": 0,
-      "note": "No environment specification for training was found."
+      "note": "No training environment specification was found."
     },
     {
       "subject": "mistral-7b-v0.3",
@@ -1072,31 +955,37 @@
       "subject": "mistral-7b-v0.3",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights was found."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "mistral-7b-v0.3",
       "axis": 15,
       "score": 0,
-      "note": "No timestamp over the weights was found."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "mistral-7b-v0.3",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found, and with corpus and training code unpublished there is no procedure such a report could follow."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "mistral-7b-v0.3",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 18,
+      "score": 0,
+      "note": "No released, versioned evaluation harness tied to this release was found."
     },
     {
       "subject": "mistral-7b-v0.3",
       "axis": 19,
       "score": 0,
-      "note": "With no published corpus there is nothing against which disjointness could be tested."
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
     },
     {
       "subject": "mistral-7b-v0.3",
@@ -1115,6 +1004,42 @@
       "axis": 22,
       "score": null,
       "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 12,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.weight_object",
+        "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
+        "observed": "HTTP 206, 2048 B, is_pointer=False, revision caa1feb0e54d415e2df31207e5f4e273e33509b1"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/consolidated.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "ae5e3b669154c35102ac23a3060716f0c67d2aabb35e1d19bde81831e50c83e1"
+        }
+      ],
+      "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
+    },
+    {
+      "subject": "mistral-7b-v0.3",
+      "axis": 13,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.all_shard_digests",
+        "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
+        "observed": "4/4 shards, revision caa1feb0e54d415e2df31207e5f4e273e33509b1"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/consolidated.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "ae5e3b669154c35102ac23a3060716f0c67d2aabb35e1d19bde81831e50c83e1"
+        }
+      ],
+      "note": "All 4 shards, not one. Round-1 review found this axis previously scored on a single shard of up to 144."
     },
     {
       "subject": "qwen2.5-7b",
@@ -1127,84 +1052,19 @@
           "sha256": "0f8c331e73817eefeb222aa5be49c515aed4c3ab74829555f8e0b2cde03c5be1"
         }
       ],
-      "note": "The technical report states the pre-training data was scaled 'from the previous 7 trillion tokens to 18 trillion tokens'. That is a SIZE, not an enumeration: no source is named, so nothing can be checked or contested."
-    },
-    {
-      "subject": "qwen2.5-7b",
-      "axis": 6,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
-        }
-      ],
-      "note": "The public repository is inference and deployment tooling; no pretraining code was found."
-    },
-    {
-      "subject": "qwen2.5-7b",
-      "axis": 7,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://arxiv.org/abs/2412.15115",
-          "retrieved": "2026-08-28",
-          "sha256": "0f8c331e73817eefeb222aa5be49c515aed4c3ab74829555f8e0b2cde03c5be1"
-        }
-      ],
-      "note": "The report describes the model series and architecture; no training configuration was found."
-    },
-    {
-      "subject": "qwen2.5-7b",
-      "axis": 12,
-      "score": 2,
-      "check": "requested a weights shard and received a Git-LFS pointer over HTTP 200 with no gate",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/Qwen/Qwen2.5-7B/raw/main/model-00001-of-00004.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "6837909d0194850ce6e03cbb197e7de4048ed2b787d84cfc388eb414de5ee827"
-        }
-      ]
-    },
-    {
-      "subject": "qwen2.5-7b",
-      "axis": 13,
-      "score": 2,
-      "check": "read the publisher-committed LFS pointer carrying 'oid sha256:b6d4b6...'",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/Qwen/Qwen2.5-7B/raw/main/model-00001-of-00004.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "6837909d0194850ce6e03cbb197e7de4048ed2b787d84cfc388eb414de5ee827"
-        }
-      ]
-    },
-    {
-      "subject": "qwen2.5-7b",
-      "axis": 18,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
-        }
-      ],
-      "note": "Benchmarks are reported; no released, versioned harness for reproducing them was found."
+      "note": "The report gives a SIZE -- scaled to 18 trillion tokens -- and names no source. A size cannot be checked and cannot be contested."
     },
     {
       "subject": "qwen2.5-7b",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "qwen2.5-7b",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "qwen2.5-7b",
@@ -1217,6 +1077,32 @@
       "axis": 5,
       "score": 0,
       "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
+        }
+      ],
+      "note": "No training code was found."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2412.15115",
+          "retrieved": "2026-08-28",
+          "sha256": "0f8c331e73817eefeb222aa5be49c515aed4c3ab74829555f8e0b2cde03c5be1"
+        }
+      ],
+      "note": "No training configuration was found."
     },
     {
       "subject": "qwen2.5-7b",
@@ -1234,7 +1120,7 @@
       "subject": "qwen2.5-7b",
       "axis": 10,
       "score": 0,
-      "note": "No environment specification for training was found."
+      "note": "No training environment specification was found."
     },
     {
       "subject": "qwen2.5-7b",
@@ -1246,31 +1132,44 @@
       "subject": "qwen2.5-7b",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights was found."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "qwen2.5-7b",
       "axis": 15,
       "score": 0,
-      "note": "No timestamp over the weights was found."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "qwen2.5-7b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found, and with corpus and training code unpublished there is no procedure such a report could follow."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "qwen2.5-7b",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 18,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md",
+          "retrieved": "2026-08-28",
+          "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
+        }
+      ],
+      "note": "No released, versioned evaluation harness tied to this release was found."
     },
     {
       "subject": "qwen2.5-7b",
       "axis": 19,
       "score": 0,
-      "note": "With no published corpus there is nothing against which disjointness could be tested."
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
     },
     {
       "subject": "qwen2.5-7b",
@@ -1289,6 +1188,211 @@
       "axis": 22,
       "score": null,
       "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 12,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.weight_object",
+        "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
+        "observed": "HTTP 206, 2048 B, is_pointer=False, revision d149729398750b98c0af14eb82c78cfe92750796"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00001-of-00004.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "6837909d0194850ce6e03cbb197e7de4048ed2b787d84cfc388eb414de5ee827"
+        }
+      ],
+      "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
+    },
+    {
+      "subject": "qwen2.5-7b",
+      "axis": 13,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.all_shard_digests",
+        "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
+        "observed": "4/4 shards, revision d149729398750b98c0af14eb82c78cfe92750796"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00001-of-00004.safetensors",
+          "retrieved": "2026-08-29",
+          "sha256": "6837909d0194850ce6e03cbb197e7de4048ed2b787d84cfc388eb414de5ee827"
+        }
+      ],
+      "note": "All 4 shards, not one. Round-1 review found this axis previously scored on a single shard of up to 144."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 1,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "'~15 trillion tokens of data from publicly available sources' is a description of a corpus, not a list of sources."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 3,
+      "score": 0,
+      "note": "No commitment predating training was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 6,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "The card states the training libraries are custom and internal: an explicit non-release rather than an omission."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 7,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "The card reports training COMPUTE (39.3M GPU hours) and no hyperparameter set. Compute spent is not a configuration."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 8,
+      "score": 0,
+      "note": "No seed was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 9,
+      "score": 0,
+      "note": "No determinism settings were found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 10,
+      "score": 0,
+      "note": "No training environment specification was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 11,
+      "score": 0,
+      "note": "No data order information was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 14,
+      "score": 0,
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 15,
+      "score": 0,
+      "note": "No timestamp over a weights digest was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 16,
+      "score": 0,
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 17,
+      "score": 0,
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 18,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+          "retrieved": "2026-08-28",
+          "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+        }
+      ],
+      "note": "No released, versioned evaluation harness tied to this release was found."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 19,
+      "score": 0,
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 20,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 21,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 22,
+      "score": null,
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 12,
+      "score": 1,
+      "note": "The weights are published and NOT retrievable without being granted access: a range request at a pinned revision returned HTTP 401. The axis is satisfied by retrievable weights, 'not gated access granted case by case'. ⚠️ This scoring convention is load-bearing for the non-monotonicity reported in the paper, and its sensitivity is reported there.",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/api/models/meta-llama/Llama-3.1-8B",
+          "retrieved": "2026-08-29",
+          "sha256": "912e16a96d767e0c041e0a1c071f3c23e443ab45af4a407667c4cf1e5a18dd40",
+          "volatile": true,
+          "volatile_reason": "a live API endpoint whose body carries counters (downloads, stars, timestamps) that change independently of the claim, so it cannot be content-addressed"
+        }
+      ]
+    },
+    {
+      "subject": "llama-3.1-8b",
+      "axis": 13,
+      "score": 0,
+      "note": "0 of 4 shards carry a readable digest: the pointers are behind the same gate as the weights, so nothing here is checkable by an arbitrary third party."
     },
     {
       "subject": "gemma-2-9b",
@@ -1301,7 +1405,31 @@
           "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
         }
       ],
-      "note": "The paper describes the training mixture by size and broad type rather than naming sources. SEARCH SCOPE: the Gemma 2 paper and the DeepMind repository README, both retrieved; the Hugging Face card is gated."
+      "note": "The paper describes the mixture by size and broad type; no source is named."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 2,
+      "score": 0,
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 3,
+      "score": 0,
+      "note": "No commitment predating training was found."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 4,
+      "score": 0,
+      "note": "No corpus is published, so there are no bytes to obtain."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 5,
+      "score": 0,
+      "note": "No membership mechanism was found."
     },
     {
       "subject": "gemma-2-9b",
@@ -1314,7 +1442,7 @@
           "sha256": "cf4afaef8cda5451e970065df35adf895107b468e7217f3e3d024a7144906611"
         }
       ],
-      "note": "The public DeepMind repository is an inference and fine-tuning library; no pretraining code was found."
+      "note": "No training code was found."
     },
     {
       "subject": "gemma-2-9b",
@@ -1331,67 +1459,6 @@
     },
     {
       "subject": "gemma-2-9b",
-      "axis": 12,
-      "score": 1,
-      "evidence": [
-        {
-          "url": "https://raw.githubusercontent.com/google-deepmind/gemma/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "cf4afaef8cda5451e970065df35adf895107b468e7217f3e3d024a7144906611"
-        },
-        {
-          "url": "https://arxiv.org/abs/2408.00118",
-          "retrieved": "2026-08-28",
-          "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
-        }
-      ],
-      "note": "The weights are published and NOT retrievable by a third party without first being granted access: The Hugging Face repository returns HTTP 401 to an unauthenticated request for both the model card and the weights shards; access is granted per requester after accepting terms. Scored 1 on the same rule applied to llama-3.1-8b."
-    },
-    {
-      "subject": "gemma-2-9b",
-      "axis": 13,
-      "score": 0,
-      "note": "A publisher digest may exist behind the gate; it cannot be read without accepting terms, so nothing here is checkable by an arbitrary third party."
-    },
-    {
-      "subject": "gemma-2-9b",
-      "axis": 18,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://arxiv.org/abs/2408.00118",
-          "retrieved": "2026-08-28",
-          "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
-        }
-      ],
-      "note": "Benchmarks are reported; no released, versioned harness was found."
-    },
-    {
-      "subject": "gemma-2-9b",
-      "axis": 2,
-      "score": 0,
-      "note": "No corpus digest was found."
-    },
-    {
-      "subject": "gemma-2-9b",
-      "axis": 3,
-      "score": 0,
-      "note": "No timestamp predating training was found."
-    },
-    {
-      "subject": "gemma-2-9b",
-      "axis": 4,
-      "score": 0,
-      "note": "No corpus is published, so there are no bytes to obtain."
-    },
-    {
-      "subject": "gemma-2-9b",
-      "axis": 5,
-      "score": 0,
-      "note": "No membership mechanism was found."
-    },
-    {
-      "subject": "gemma-2-9b",
       "axis": 8,
       "score": 0,
       "note": "No seed was found."
@@ -1406,7 +1473,7 @@
       "subject": "gemma-2-9b",
       "axis": 10,
       "score": 0,
-      "note": "No environment specification for training was found."
+      "note": "No training environment specification was found."
     },
     {
       "subject": "gemma-2-9b",
@@ -1418,31 +1485,44 @@
       "subject": "gemma-2-9b",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights was found."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "gemma-2-9b",
       "axis": 15,
       "score": 0,
-      "note": "No timestamp over the weights was found."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "gemma-2-9b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found, and with corpus and training code unpublished there is no procedure such a report could follow."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "gemma-2-9b",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 18,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://arxiv.org/abs/2408.00118",
+          "retrieved": "2026-08-28",
+          "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4"
+        }
+      ],
+      "note": "No released, versioned evaluation harness tied to this release was found."
     },
     {
       "subject": "gemma-2-9b",
       "axis": 19,
       "score": 0,
-      "note": "With no published corpus there is nothing against which disjointness could be tested."
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
     },
     {
       "subject": "gemma-2-9b",
@@ -1463,6 +1543,27 @@
       "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
+      "subject": "gemma-2-9b",
+      "axis": 12,
+      "score": 1,
+      "note": "The weights are published and NOT retrievable without being granted access: a range request at a pinned revision returned HTTP 401. The axis is satisfied by retrievable weights, 'not gated access granted case by case'. ⚠️ This scoring convention is load-bearing for the non-monotonicity reported in the paper, and its sensitivity is reported there.",
+      "evidence": [
+        {
+          "url": "https://huggingface.co/api/models/google/gemma-2-9b",
+          "retrieved": "2026-08-29",
+          "sha256": "9dc1d828cb8366b96afdd91afb9903674ce3d57b03027d3c86993a6dc13a2241",
+          "volatile": true,
+          "volatile_reason": "a live API endpoint whose body carries counters (downloads, stars, timestamps) that change independently of the claim, so it cannot be content-addressed"
+        }
+      ]
+    },
+    {
+      "subject": "gemma-2-9b",
+      "axis": 13,
+      "score": 0,
+      "note": "0 of 8 shards carry a readable digest: the pointers are behind the same gate as the weights, so nothing here is checkable by an arbitrary third party."
+    },
+    {
       "subject": "gpt-4o",
       "axis": 1,
       "score": 0,
@@ -1473,19 +1574,19 @@
           "sha256": "508f052338146352b46e96076ef713aaabd3c2d3f4de909ed178404a441daad7"
         }
       ],
-      "note": "No list of training sources was found; the release documentation describes capability and evaluation rather than provenance."
+      "note": "No list of training sources was found."
     },
     {
       "subject": "gpt-4o",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "gpt-4o",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "gpt-4o",
@@ -1537,46 +1638,27 @@
     },
     {
       "subject": "gpt-4o",
-      "axis": 12,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://arxiv.org/abs/2410.21276",
-          "retrieved": "2026-08-28",
-          "sha256": "508f052338146352b46e96076ef713aaabd3c2d3f4de909ed178404a441daad7"
-        }
-      ],
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
-    },
-    {
-      "subject": "gpt-4o",
-      "axis": 13,
-      "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
-    },
-    {
-      "subject": "gpt-4o",
       "axis": 14,
       "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "gpt-4o",
       "axis": 15,
       "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "gpt-4o",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found, and with no published weights, corpus or code there is no procedure such a report could follow."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "gpt-4o",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
     },
     {
       "subject": "gpt-4o",
@@ -1586,10 +1668,12 @@
         {
           "url": "https://api.github.com/repos/openai/simple-evals",
           "retrieved": "2026-08-28",
-          "sha256": "83ac437c868702efc771231caeec8271db8eb3dd9f6e25352113322a475d8367"
+          "sha256": "83ac437c868702efc771231caeec8271db8eb3dd9f6e25352113322a475d8367",
+          "volatile": true,
+          "volatile_reason": "a live API endpoint whose body carries counters (downloads, stars, timestamps) that change independently of the claim, so it cannot be content-addressed"
         }
       ],
-      "note": "openai/simple-evals is a public repository, so a harness exists. The axis requires the harness at THE VERSION the reported numbers came from; no such pinning was found between the system card's benchmark results and a tagged harness version. Published, not pinned."
+      "note": "A public evaluation repository exists, but no pinning was found between the reported benchmark numbers and a tagged harness version. Published, not bound to the results. Applied consistently across the census after round-1 review, which found pythia-12b scored 2 and olmo-2-13b scored 1 for the same situation."
     },
     {
       "subject": "gpt-4o",
@@ -1601,13 +1685,13 @@
       "subject": "gpt-4o",
       "axis": 20,
       "score": 0,
-      "note": "No fine-tuning or instruction data was disclosed. ⚠️ This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
+      "note": "No fine-tuning or instruction data was disclosed. This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
     },
     {
       "subject": "gpt-4o",
       "axis": 21,
       "score": 0,
-      "note": "No preference or reward data was disclosed. This axis applies for the same reason."
+      "note": "No preference or reward data was disclosed."
     },
     {
       "subject": "gpt-4o",
@@ -1620,7 +1704,19 @@
           "sha256": "508f052338146352b46e96076ef713aaabd3c2d3f4de909ed178404a441daad7"
         }
       ],
-      "note": "The system card / model card describes the safety-training approach in prose. That is an assertion in a document with no artifact a third party could use to reproduce or contest it, which is a 1 and not a 2."
+      "note": "The system or model card describes the safety-training approach in prose, with no artifact a third party could use to reproduce or contest it."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 12,
+      "score": 0,
+      "note": "No weights are published in any form, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and N/A would raise the score for publishing less."
+    },
+    {
+      "subject": "gpt-4o",
+      "axis": 13,
+      "score": 0,
+      "note": "No weights are published, so there is no digest to publish."
     },
     {
       "subject": "claude-3.5-sonnet",
@@ -1638,19 +1734,19 @@
           "sha256": "88ae851f53c3034d436816164ce49a876b333fa9b550fb7ef29838182b59ba7d"
         }
       ],
-      "note": "No list of training sources was found; the release documentation describes capability and evaluation rather than provenance."
+      "note": "No list of training sources was found."
     },
     {
       "subject": "claude-3.5-sonnet",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "claude-3.5-sonnet",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "claude-3.5-sonnet",
@@ -1702,46 +1798,27 @@
     },
     {
       "subject": "claude-3.5-sonnet",
-      "axis": 12,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://www.anthropic.com/news/claude-3-5-sonnet",
-          "retrieved": "2026-08-28",
-          "sha256": "dbd090316d47a1173f029e5d39b8c58bdf7a3e5878d3a2aa9c44383829a64384"
-        }
-      ],
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
-    },
-    {
-      "subject": "claude-3.5-sonnet",
-      "axis": 13,
-      "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
-    },
-    {
-      "subject": "claude-3.5-sonnet",
       "axis": 14,
       "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "claude-3.5-sonnet",
       "axis": 15,
       "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "claude-3.5-sonnet",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found, and with no published weights, corpus or code there is no procedure such a report could follow."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "claude-3.5-sonnet",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
     },
     {
       "subject": "claude-3.5-sonnet",
@@ -1751,10 +1828,12 @@
         {
           "url": "https://api.github.com/repos/anthropics/evals",
           "retrieved": "2026-08-28",
-          "sha256": "34acd8b5d3e2d69c7f0becaea90d92e065b9025d04032a5c7552b279779cc24e"
+          "sha256": "34acd8b5d3e2d69c7f0becaea90d92e065b9025d04032a5c7552b279779cc24e",
+          "volatile": true,
+          "volatile_reason": "a live API endpoint whose body carries counters (downloads, stars, timestamps) that change independently of the claim, so it cannot be content-addressed"
         }
       ],
-      "note": "anthropics/evals is a public repository, so a harness exists. No pinning was found between the reported benchmark numbers and a tagged version. Published, not pinned. ⚠️ The retrieved model card is the Claude 3 family card; a 3.5-Sonnet-specific card was not retrieved, and that limit is stated rather than papered over."
+      "note": "A public evaluation repository exists, but no pinning was found between the reported benchmark numbers and a tagged harness version. Published, not bound to the results. Applied consistently across the census after round-1 review, which found pythia-12b scored 2 and olmo-2-13b scored 1 for the same situation."
     },
     {
       "subject": "claude-3.5-sonnet",
@@ -1766,13 +1845,13 @@
       "subject": "claude-3.5-sonnet",
       "axis": 20,
       "score": 0,
-      "note": "No fine-tuning or instruction data was disclosed. ⚠️ This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
+      "note": "No fine-tuning or instruction data was disclosed. This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
     },
     {
       "subject": "claude-3.5-sonnet",
       "axis": 21,
       "score": 0,
-      "note": "No preference or reward data was disclosed. This axis applies for the same reason."
+      "note": "No preference or reward data was disclosed."
     },
     {
       "subject": "claude-3.5-sonnet",
@@ -1785,7 +1864,19 @@
           "sha256": "88ae851f53c3034d436816164ce49a876b333fa9b550fb7ef29838182b59ba7d"
         }
       ],
-      "note": "The system card / model card describes the safety-training approach in prose. That is an assertion in a document with no artifact a third party could use to reproduce or contest it, which is a 1 and not a 2."
+      "note": "The system or model card describes the safety-training approach in prose, with no artifact a third party could use to reproduce or contest it."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 12,
+      "score": 0,
+      "note": "No weights are published in any form, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and N/A would raise the score for publishing less."
+    },
+    {
+      "subject": "claude-3.5-sonnet",
+      "axis": 13,
+      "score": 0,
+      "note": "No weights are published, so there is no digest to publish."
     },
     {
       "subject": "gemini-1.5-pro",
@@ -1798,19 +1889,19 @@
           "sha256": "7cf955d4a1316886536abde3a5f5c7479f6e524b14fbb6d546e7f2b09f4d4780"
         }
       ],
-      "note": "No list of training sources was found; the release documentation describes capability and evaluation rather than provenance."
+      "note": "No list of training sources was found."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "gemini-1.5-pro",
@@ -1862,52 +1953,33 @@
     },
     {
       "subject": "gemini-1.5-pro",
-      "axis": 12,
-      "score": 0,
-      "evidence": [
-        {
-          "url": "https://arxiv.org/abs/2403.05530",
-          "retrieved": "2026-08-28",
-          "sha256": "7cf955d4a1316886536abde3a5f5c7479f6e524b14fbb6d546e7f2b09f4d4780"
-        }
-      ],
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
-    },
-    {
-      "subject": "gemini-1.5-pro",
-      "axis": 13,
-      "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
-    },
-    {
-      "subject": "gemini-1.5-pro",
       "axis": 14,
       "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 15,
       "score": 0,
-      "note": "No weights are published in any form for this release, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and marking it N/A would shrink the denominator and RAISE the score for publishing less. See axes.py, settled 2026-08-28."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found, and with no published weights, corpus or code there is no procedure such a report could follow."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 18,
       "score": 0,
-      "note": "No public, versioned evaluation harness tied to this release was found. SEARCH SCOPE: the technical report and the DeepMind repositories reachable from it."
+      "note": "No released, versioned evaluation harness tied to this release was found."
     },
     {
       "subject": "gemini-1.5-pro",
@@ -1919,13 +1991,13 @@
       "subject": "gemini-1.5-pro",
       "axis": 20,
       "score": 0,
-      "note": "No fine-tuning or instruction data was disclosed. ⚠️ This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
+      "note": "No fine-tuning or instruction data was disclosed. This axis APPLIES: unlike the base models in this census, this release has a post-training stage."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 21,
       "score": 0,
-      "note": "No preference or reward data was disclosed. This axis applies for the same reason."
+      "note": "No preference or reward data was disclosed."
     },
     {
       "subject": "gemini-1.5-pro",
@@ -1938,13 +2010,29 @@
           "sha256": "7cf955d4a1316886536abde3a5f5c7479f6e524b14fbb6d546e7f2b09f4d4780"
         }
       ],
-      "note": "The system card / model card describes the safety-training approach in prose. That is an assertion in a document with no artifact a third party could use to reproduce or contest it, which is a 1 and not a 2."
+      "note": "The system or model card describes the safety-training approach in prose, with no artifact a third party could use to reproduce or contest it."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 12,
+      "score": 0,
+      "note": "No weights are published in any form, so a third party can check nothing about them. Scored 0 rather than N/A: an absence is not an inapplicability, and N/A would raise the score for publishing less."
+    },
+    {
+      "subject": "gemini-1.5-pro",
+      "axis": 13,
+      "score": 0,
+      "note": "No weights are published, so there is no digest to publish."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 1,
       "score": 2,
-      "check": "read the retrieved card and repository README: the corpus is NAMED as BookCorpus (unpublished books) and English Wikipedia, excluding lists, tables and headers",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The card and repository name BookCorpus and English Wikipedia."
+      },
       "evidence": [
         {
           "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/README.md",
@@ -1957,19 +2045,19 @@
           "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756"
         }
       ],
-      "note": "⚠️ Two named sources, in 2018. Every 2024 open-weights release in this census scores 0 here, describing its corpus only by token count."
+      "note": "The card and repository name BookCorpus and English Wikipedia."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "bert-base-uncased",
@@ -1982,7 +2070,7 @@
           "sha256": "9187b6018ea0010d884e78e098e328faa1b88b301570d0cce606bb35e4067e17"
         }
       ],
-      "note": "English Wikipedia is obtainable, but not the 2018 snapshot actually used, and BookCorpus was never distributed by the publisher and has since been withdrawn from its original host. Named is not obtainable."
+      "note": "English Wikipedia is obtainable but not the 2018 snapshot used, and BookCorpus was never distributed by the publisher."
     },
     {
       "subject": "bert-base-uncased",
@@ -1994,7 +2082,11 @@
       "subject": "bert-base-uncased",
       "axis": 6,
       "score": 2,
-      "check": "read the retrieved repository README: it ships create_pretraining_data.py and run_pretraining.py, i.e. the code that produces the pretraining data and runs pretraining",
+      "check": {
+        "method": "grep_retrieved",
+        "asserts": "the retrieved document contains the material the axis asks to be published",
+        "observed": "The repository ships create_pretraining_data.py and run_pretraining.py."
+      },
       "evidence": [
         {
           "url": "https://raw.githubusercontent.com/google-research/bert/master/README.md",
@@ -2002,7 +2094,7 @@
           "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756"
         }
       ],
-      "note": "⚠️ Pretraining code, in 2018. Every 2024 open-weights release in this census scores 0 here."
+      "note": "The repository ships create_pretraining_data.py and run_pretraining.py."
     },
     {
       "subject": "bert-base-uncased",
@@ -2020,7 +2112,7 @@
           "sha256": "ffa5d3591fa543ce7b833bea05f1455d40a6be8680417720f09da8807ada6abe"
         }
       ],
-      "note": "The paper and README give the headline settings (1M steps, batch, sequence length) and the README documents the flags, but no single complete run configuration was retrieved."
+      "note": "COMPLETENESS AXIS, capped at 1: the axis asks whether ALL hyperparameters are given, and a retrieved configuration cannot establish that none is missing. A run configuration was retrieved and read."
     },
     {
       "subject": "bert-base-uncased",
@@ -2038,63 +2130,37 @@
       "subject": "bert-base-uncased",
       "axis": 10,
       "score": 0,
-      "note": "No environment specification was found; the repository predates the practice of pinning one."
+      "note": "No training environment specification was found."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 11,
       "score": 0,
-      "note": "No data order information was found; create_pretraining_data.py generates data but the shipped shuffle is not reconstructible from a published seed."
-    },
-    {
-      "subject": "bert-base-uncased",
-      "axis": 12,
-      "score": 2,
-      "check": "requested the weights and received a Git-LFS pointer over HTTP 200 with no gate",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/model.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "6d60194d86a0856f50cb18251d129b9f41ca69bfbe24f33ffa3fe6e1048660e6"
-        }
-      ]
-    },
-    {
-      "subject": "bert-base-uncased",
-      "axis": 13,
-      "score": 2,
-      "check": "read the publisher-committed LFS pointer for model.safetensors",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/main/model.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "6d60194d86a0856f50cb18251d129b9f41ca69bfbe24f33ffa3fe6e1048660e6"
-        }
-      ]
+      "note": "create_pretraining_data.py generates data, but the shipped shuffle is not reconstructible from a published seed."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights was found."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 15,
       "score": 0,
-      "note": "No timestamp over the weights was found."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card, repository README and paper."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
     },
     {
       "subject": "bert-base-uncased",
@@ -2107,69 +2173,100 @@
           "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756"
         }
       ],
-      "note": "The repository ships fine-tuning and evaluation scripts for specific tasks, but no released, versioned harness tied to the reported numbers was found."
+      "note": "No released, versioned evaluation harness tied to this release was found."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 19,
       "score": 0,
-      "note": "The corpus is named but not obtainable as used, so overlap cannot be tested."
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 20,
       "score": null,
-      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 21,
       "score": null,
-      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 22,
       "score": null,
-      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 12,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.weight_object",
+        "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
+        "observed": "HTTP 206, 2048 B, is_pointer=False, revision 86b5e0934494bd15c9632b12f734a8a67f723594"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/coreml/fill-mask/float32_model.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+          "retrieved": "2026-08-29",
+          "sha256": "0e6c059b4692b2c344ec3ae352b007fe0bf76713c568254ffcb521c8f832278d"
+        }
+      ],
+      "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
+    },
+    {
+      "subject": "bert-base-uncased",
+      "axis": 13,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/coreml/fill-mask/float32_model.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+          "retrieved": "2026-08-29",
+          "sha256": "0e6c059b4692b2c344ec3ae352b007fe0bf76713c568254ffcb521c8f832278d"
+        }
+      ],
+      "note": "5/5 shards carry a digest, but the repository is maintained by the Hugging Face Transformers team rather than by the publisher of the release. The axis requires a digest published BY THE PUBLISHER, not computed by a mirror, so this is 0. Round-1 review found this; it lowers the historical control."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 1,
       "score": 1,
+      "note": "The card describes how WebText was built (outbound Reddit links, >=3 karma, Wikipedia excluded) and notes a top-1,000 domain list. A construction rule plus a frequency list is more than a token count and less than a source list: nothing lets a third party enumerate what was in it.",
       "evidence": [
         {
-          "url": "https://huggingface.co/openai-community/gpt2/raw/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0fcd631078093c2aa1d93438b898320b8a1167784e2a1ab37b8016e9de8b3c2e"
+          "url": "https://huggingface.co/openai-community/gpt2-xl/raw/15ea56dee5df4983c59b2538573817e1667135e2/README.md",
+          "retrieved": "2026-08-29",
+          "sha256": "83acf576ac2b22546b139ba48e690bace7c1de4b40c65d2fbd1cc9950eda75dd"
         }
-      ],
-      "note": "The card states the corpus is called WebText, describes how it was built (outbound Reddit links with >=3 karma, Wikipedia excluded) and notes that a list of the top 1,000 domains is available. A construction rule plus a domain-frequency list is more than a token count and less than a source list: nothing here lets a third party enumerate what was in it."
+      ]
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found."
+      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 3,
       "score": 0,
-      "note": "No timestamp predating training was found."
+      "note": "No commitment predating training was found."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 4,
       "score": 0,
+      "note": "The card states plainly that WebText 'has not been publicly released'.",
       "evidence": [
         {
-          "url": "https://huggingface.co/openai-community/gpt2/raw/main/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "0fcd631078093c2aa1d93438b898320b8a1167784e2a1ab37b8016e9de8b3c2e"
+          "url": "https://huggingface.co/openai-community/gpt2-xl/raw/15ea56dee5df4983c59b2538573817e1667135e2/README.md",
+          "retrieved": "2026-08-29",
+          "sha256": "83acf576ac2b22546b139ba48e690bace7c1de4b40c65d2fbd1cc9950eda75dd"
         }
-      ],
-      "note": "The card states plainly: the training data 'has not been released as a dataset one can browse' and WebText 'has not been publicly released'. An explicit non-release, recorded as such."
+      ]
     },
     {
       "subject": "gpt-2-1.5b",
@@ -2188,7 +2285,7 @@
           "sha256": "cd6e0dd0636dd0cb6af5e15477caff74adc161d724cf59716113095bd358c8a3"
         }
       ],
-      "note": "The public repository ships model and sampling code; no pretraining code was found. ⚠️ Contrast bert-base-uncased, released a year earlier, which does ship it."
+      "note": "The public repository ships model and sampling code; no pretraining code was found. Contrast bert-base-uncased, a year earlier, which ships it."
     },
     {
       "subject": "gpt-2-1.5b",
@@ -2219,7 +2316,7 @@
       "subject": "gpt-2-1.5b",
       "axis": 10,
       "score": 0,
-      "note": "No environment specification was found."
+      "note": "No training environment specification was found."
     },
     {
       "subject": "gpt-2-1.5b",
@@ -2229,83 +2326,89 @@
     },
     {
       "subject": "gpt-2-1.5b",
-      "axis": 12,
-      "score": 2,
-      "check": "requested the weights and received a Git-LFS pointer over HTTP 200 with no gate",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/openai-community/gpt2/raw/main/model.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "f5edb0ac3822162e6de183caa8fae2b0a595128ffd3a08f2ca7fdfa063e9914c"
-        }
-      ]
-    },
-    {
-      "subject": "gpt-2-1.5b",
-      "axis": 13,
-      "score": 2,
-      "check": "read the publisher-committed LFS pointer for model.safetensors",
-      "evidence": [
-        {
-          "url": "https://huggingface.co/openai-community/gpt2/raw/main/model.safetensors",
-          "retrieved": "2026-08-28",
-          "sha256": "f5edb0ac3822162e6de183caa8fae2b0a595128ffd3a08f2ca7fdfa063e9914c"
-        }
-      ]
-    },
-    {
-      "subject": "gpt-2-1.5b",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights was found."
+      "note": "No signature over the weights, and no publisher key bound to the release, was found."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 15,
       "score": 0,
-      "note": "No timestamp over the weights was found."
+      "note": "No timestamp over a weights digest was found."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH SCOPE: model card and repository README."
+      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 17,
       "score": 0,
-      "note": "Same scope as axis 16. ⚠️ OpenWebText and related efforts reconstructed a SIMILAR corpus and trained similar models; that is a re-creation, not a reproduction of this release, and it is not counted here."
+      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 18,
       "score": 0,
-      "note": "No released, versioned evaluation harness tied to the reported numbers was found."
+      "note": "No released, versioned evaluation harness tied to this release was found."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 19,
       "score": 0,
-      "note": "With the corpus unreleased, overlap cannot be tested."
+      "note": "With no published corpus there is nothing against which disjointness could be tested; contamination here can be denied but not checked."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 20,
       "score": null,
-      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 21,
       "score": null,
-      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 22,
       "score": null,
-      "na_reason": "A 2018/2019 pretrained encoder or language model released before instruction tuning existed as a practice. There is no post-training stage whose data or procedure could be disclosed."
+      "na_reason": "This is the base model; the instruction-tuned variant is a separately named release and a separate subject under the selection rule. No post-training stage of this release has data or a procedure that could be disclosed."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 12,
+      "score": 2,
+      "check": {
+        "method": "hf_probe.weight_object",
+        "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
+        "observed": "HTTP 206, 2048 B, is_pointer=False, revision 15ea56dee5df4983c59b2538573817e1667135e2"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/openai-community/gpt2-xl/raw/15ea56dee5df4983c59b2538573817e1667135e2/flax_model.msgpack",
+          "retrieved": "2026-08-29",
+          "sha256": "f705981b1fe780c31b94d75804ebe4ee78541b0bffda70e7d225220302d4f5a3"
+        }
+      ],
+      "note": "Weight-object bytes, not a pointer. Round-1 review found this axis previously scored on a Git-LFS pointer, which LFS commits INSTEAD of the blob."
+    },
+    {
+      "subject": "gpt-2-1.5b",
+      "axis": 13,
+      "score": 0,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/openai-community/gpt2-xl/raw/15ea56dee5df4983c59b2538573817e1667135e2/flax_model.msgpack",
+          "retrieved": "2026-08-29",
+          "sha256": "f705981b1fe780c31b94d75804ebe4ee78541b0bffda70e7d225220302d4f5a3"
+        }
+      ],
+      "note": "4/4 shards carry a digest, but the repository is maintained by the Hugging Face Transformers team rather than by the publisher of the release. The axis requires a digest published BY THE PUBLISHER, not computed by a mirror, so this is 0. Round-1 review found this; it lowers the historical control."
     }
-  ]
+  ],
+  "scoring": "SCORING.md, rewritten after round-1 review"
 }

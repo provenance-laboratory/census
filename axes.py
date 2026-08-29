@@ -50,7 +50,9 @@ AXES = [
      False),
     (4, 1, "corpus obtainable",
      "Can a third party actually acquire the same bytes?",
-     "A retrieval path that yields bytes matching the published digests.",
+     "A retrieval path that yields the corpus bytes, verified by retrieving some of them. "
+     "It does NOT require a published digest -- that is axis 2, which is absent for every "
+     "release measured, so requiring it here made this axis unsatisfiable by construction.",
      False),
     (5, 1, "membership decidable",
      "For an arbitrary document, can in-or-out be demonstrated?",

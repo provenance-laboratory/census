@@ -45,7 +45,8 @@ def main():
     # faster and, more importantly, guarantees every cell sees the SAME bytes.
     by_url = {}
     for s, a, e in records:
-        by_url.setdefault(e["url"], {"sha256": e["sha256"], "cells": []})["cells"].append((s, a))
+        by_url.setdefault(e["url"], {"sha256": e["sha256"], "cells": [],
+                                     "volatile": bool(e.get("volatile"))})["cells"].append((s, a))
 
     print("=" * 78)
     print("  retrieval drift — %d evidence record(s), %d distinct artifact(s)"
@@ -53,7 +54,7 @@ def main():
     print("=" * 78)
     print()
 
-    same = drift = gone = 0
+    same = drift = gone = volatile_drift = 0
     findings = []
     for url in sorted(by_url):
         want = by_url[url]["sha256"]
@@ -65,6 +66,12 @@ def main():
             print("  GONE   %s" % label)
             print("         %s" % why)
             findings.append((url, "unretrievable: %s" % why, cells))
+        elif rec["sha256"] != want and by_url[url]["volatile"]:
+            volatile_drift += 1
+            print("  vol    %s" % label)
+            print("         digest moved, as a volatile endpoint is expected to. Not a finding "
+                  "about the artifact; it is a finding ABOUT THE ENDPOINT, and the cell it backs "
+                  "is capped at ASSERTED for exactly this reason.")
         elif rec["sha256"] != want:
             drift += 1
             print("  DRIFT  %s" % label)
@@ -83,7 +90,7 @@ def main():
     prev = json.loads(log.read_text(encoding="utf-8")) if log.exists() else {"runs": []}
     prev["runs"].append({
         "at": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "artifacts": len(by_url), "unchanged": same, "drifted": drift, "unretrievable": gone,
+        "artifacts": len(by_url), "unchanged": same, "drifted": drift, "unretrievable": gone, "volatile": volatile_drift,
         "subject_filter": only,
     })
     prev["runs"] = prev["runs"][-50:]
@@ -91,7 +98,8 @@ def main():
 
     print()
     print("=" * 78)
-    print("  %d unchanged · %d DRIFTED · %d unretrievable" % (same, drift, gone))
+    print("  %d unchanged · %d DRIFTED · %d unretrievable · %d volatile"
+          % (same, drift, gone, volatile_drift))
     print("  recorded in recheck-log.json")
     if findings:
         print()

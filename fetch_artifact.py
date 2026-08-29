@@ -54,14 +54,38 @@ SOFT_MAX_BYTES = 4096
 SMALL_BUT_REAL = (b"version https://git-lfs.github.com/spec/v1",)
 
 
-def fetch(url, timeout=90):
+def fetch(url, timeout=600):
+    """Retrieve a URL, and REFUSE a partial read rather than hashing it.
+
+    ⛔ A TRUNCATED DOWNLOAD IS NOT A CHANGED ARTIFACT. This function used to ignore curl's exit
+    code and hash whatever bytes arrived. On a 46 MB model card the 90-second limit expired
+    mid-transfer, the partial bytes hashed differently, and recheck.py reported DRIFT on a
+    document that had not changed at all -- a false provenance finding in a provenance census.
+
+    So: the exit code is checked, and the body length is compared against the server's own
+    Content-Length whenever it offers one. Either mismatch is a refusal, never a digest.
+    """
     r = subprocess.run(
-        ["curl", "-sSL", "--max-time", str(timeout), "-w", "%{http_code}", "-o", "-", url],
-        capture_output=True, timeout=timeout + 30)
-    body = r.stdout
-    if len(body) < 3:
+        ["curl", "-sSL", "--max-time", str(timeout),
+         "-w", "%{http_code} %{size_download} %{size_header}", "-o", "-", url],
+        capture_output=True, timeout=timeout + 60)
+    raw, err = r.stdout, r.stderr.decode("utf-8", "replace")
+    if r.returncode != 0:
+        return None, None, ("curl exit %d (%s) -- a partial read must never be hashed"
+                            % (r.returncode, err.strip()[:80] or "timeout or transport error"))
+    if len(raw) < 3:
         return None, None, "empty response"
-    status, body = body[-3:].decode("ascii", "replace"), body[:-3]
+    tail = raw.rsplit(b" ", 2)
+    try:
+        status = tail[0][-3:].decode("ascii", "replace")
+        reported = int(tail[1])
+        body = raw[:len(raw) - (len(tail[1]) + len(tail[2]) + 5)]
+    except (IndexError, ValueError):
+        status, body, reported = raw[-3:].decode("ascii", "replace"), raw[:-3], None
+    if reported is not None and abs(len(body) - reported) > 2:
+        return None, None, ("received %d bytes, curl reports %d transferred -- refusing to hash "
+                            "a body whose length does not match the transfer"
+                            % (len(body), reported))
     return status, body, None
 
 
