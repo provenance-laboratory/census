@@ -52,6 +52,16 @@
       "volatile": 2,
       "covered": "d7a54f2badad98194c58dac3bf2fc9687790ff87d69142bd8a77d9faa35d85cc",
       "subject_filter": null
+    },
+    {
+      "at": "2026-08-29T07:58:19Z",
+      "artifacts": 42,
+      "unchanged": 39,
+      "drifted": 0,
+      "unretrievable": 0,
+      "volatile": 3,
+      "covered": "3a6a9790c7aed93878cb70622847730c6c340179ef40c1db97618b885113daf9",
+      "subject_filter": null
     }
   ]
 }

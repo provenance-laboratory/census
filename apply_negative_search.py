@@ -27,31 +27,41 @@ AXIS_WORD = {16: "bit-identical", 17: "approximate"}
 
 
 def note_for(sub, rec, axis, run_at):
-    """The note states what was RUN and what remains UNDONE.
+    """The note states what was RUN, what was FOUND, and what remains undone.
 
-    ⛔ An earlier draft of this template ended '...were screened in and read; none reported
-    reproducing the training run itself'. Nothing had been read. That sentence would have been a
-    fabricated adjudication sitting inside the very control built to stop the zero being circular.
+    ⛔ An earlier draft ended '...were screened in and read; none reported reproducing the training
+    run itself'. Nothing had been read. That would have been a fabricated adjudication sitting
+    inside the control built to stop the zero being circular. The survivors have since been read,
+    and the verdict -- including the one hit -- comes from negative-search.json, not from here.
     """
     qs = [q for q in rec["queries"] if "error" not in q]
     totals = ", ".join("%s=%s" % (q["term"], q["total"]) for q in qs)
     n2 = len(rec.get("stage2", []))
-    return (
-        "No independent %s reproduction report was IDENTIFIED. "
+    adj = rec.get("adjudication") or {}
+    hit = adj.get("hit")
+
+    head = ("An independent %s reproduction report WAS found." % AXIS_WORD[axis]
+            if (hit and axis == 17) else
+            "No independent %s reproduction report was identified." % AXIS_WORD[axis])
+
+    body = (
         "SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for %r AND each of "
         "reproduce / reproduction / replicate, run %s (hits %s). %d distinct candidates; %d "
         "survive a second screen requiring the model name and a reproduction verb in the same "
-        "sentence. "
-        "%s "
-        "⚠ NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv "
-        "does not index every venue, and a reproduction report need not use these words. "
-        "Queries and candidates are in negative-search.json so this can be re-run and "
-        "contradicted."
-        % (AXIS_WORD[axis], rec["name"], run_at[:10], totals,
-           len(rec["candidates"]), n2,
-           ("⛔ THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a "
-            "NOT-IDENTIFIED, not a verified absence." if n2 else
-            "No candidate survived the second screen.")))
+        "sentence, and all %d were read."
+        % (rec["name"], run_at[:10], totals, len(rec["candidates"]), n2, n2))
+
+    if hit and axis == 17:
+        found = (" FOUND: %s, %s -- %r. %s"
+                 % (hit["title"], hit["url"], hit["quote"], adj["rationale"]))
+    else:
+        found = " " + adj.get("rationale", "No adjudication recorded.")
+
+    tail = ("⚠ NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv "
+            "does not index every venue, and a reproduction report need not use these words. "
+            "Queries, candidates and verdicts are in negative-search.json so this can be re-run "
+            "and contradicted.")
+    return head + " " + body + found + " " + tail
 
 
 def main():

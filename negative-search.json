@@ -23,7 +23,7 @@
       "bitwise identical"
     ],
     "stage2": "the model NAME and a reproduction verb must appear in the SAME SENTENCE of the abstract. Stage 1 alone screened in 134 papers, most of which merely mention retraining something else.",
-    "adjudication": "NOT DONE. Stage-2 survivors are candidates for a human to read; no cell has been rescored on the strength of this search."
+    "adjudication": "DONE 2026-08-29. All 157 stage-2 survivors read at title + matched-sentence level. 1 hit, 2 recorded near-misses."
   },
   "subjects": {
     "pythia-12b": {
@@ -308,7 +308,12 @@
           "title": "Train the Model, Not the Reader: Decodability Supervision for Verifiable Activation Explanations",
           "sentence": "This replicates on a pretrained Pythia-160M."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction of THIS release",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus. \u26a0 NEAR MISS, recorded because it is the closest thing found: '$100K or 100 Days: Trade-offs when Pre-Training with Academic Resources' reports that Pythia-1B, originally trained on 64 GPUs for three days, can be replicated at far smaller scale. That is a DIFFERENT SIZE from the release scored here, and the census scores one size per family, so it does not settle this cell. It would settle the cell for pythia-1b."
+      }
     },
     "olmo-2-13b": {
       "name": "OLMo",
@@ -518,7 +523,12 @@
           "title": "Trust, but Don't Verify: Epistemic Blind Spots in LLM Source Evaluation",
           "sentence": "The behavioral dissociation replicates across six models from four families (Anthropic Claude, Qwen, OLMo, and OpenAI GPT-5.4) and three professional domains."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus."
+      }
     },
     "bloom-176b": {
       "name": "BLOOM",
@@ -646,7 +656,12 @@
           "title": "Goat: Fine-tuned LLaMA Outperforms GPT-4 on Arithmetic Tasks",
           "sentence": "Surprisingly, Goat can achieve near-perfect accuracy on large-number addition and subtraction through supervised fine-tuning only, which is almost impossible with previous pretrained language models, such as Bloom, OPT, GPT-NeoX, etc."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus. Both survivors match on 'Bloom's taxonomy' and on a fine-tuning comparison; neither concerns the BLOOM model's training."
+      }
     },
     "mistral-7b-v0.3": {
       "name": "Mistral",
@@ -1205,7 +1220,12 @@
           "title": "PANORAMA: A synthetic PII-laced dataset for studying sensitive data memorization in LLMs",
           "sentence": "We validate the utility of PANORAMA by fine-tuning the Mistral-7B model on 1x, 5x, 10x, and 25x data replication rates with a subset of data and measure PII memorization rates - revealing not only consistent increases with repetition but also variation across content types, highlighting PANORAMA's ability to model how memorization risks differ by context."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus."
+      }
     },
     "qwen2.5-7b": {
       "name": "Qwen2.5",
@@ -1894,7 +1914,12 @@
           "title": "RAMPART: Registry-based Agentic Memory with Priority-Aware Runtime Transformation",
           "sentence": "Cross-model replication on Qwen2.5-7B, Llama-3.1-8B, Mistral-7B-v0.3, and Qwen3-14B shows the content-priming effect appears at the same absolute positions across families, with magnitude varying with model strength."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus. 'SimpleRL-Zoo' reproduces zero-RL POST-TRAINING experiments on the Qwen2.5 series, not Qwen2.5's pretraining."
+      }
     },
     "llama-3.1-8b": {
       "name": "Llama 3.1",
@@ -2368,7 +2393,12 @@
           "title": "Beyond GeneGPT: A Multi-Agent Architecture with Open-Source LLMs for Enhanced Genomic Question Answering",
           "sentence": "In this work, we revisit and reproduce GeneGPT in a pilot study using open source models, including Llama 3.1, Qwen2.5, and Qwen2.5 Coder, within a monolithic architecture; this allows us to identify the limitations of this approach."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus."
+      }
     },
     "gemma-2-9b": {
       "name": "Gemma 2",
@@ -2533,7 +2563,12 @@
           "title": "Identity as Attractor: Geometric Evidence for Persistent Agent Architecture in LLM Activation Space",
           "sentence": "Replication on Gemma 2 9B confirms cross-architecture generalizability."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus."
+      }
     },
     "gpt-4o": {
       "name": "GPT-4o",
@@ -3183,7 +3218,12 @@
           "title": "Perturbation Dose Responses in Recursive LLM Loops: Raw Switching, Stochastic Floors, and Persistent Escape under Append, Replace, and Dialog Updates",
           "sentence": "We report 37 experiments on gpt-4o-mini with within-vendor replication on gpt-4.1-nano."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus. 'Mini-Omni2' calls itself one of the closest reproductions of GPT-4o, but reproduces FUNCTIONALITY with a different model; GPT-4o's training is not described publicly at all."
+      }
     },
     "claude-3.5-sonnet": {
       "name": "Claude 3.5",
@@ -3331,7 +3371,12 @@
           "title": "Can Large Language Models Replace Human Subjects? A Large-Scale Replication of Scenario-Based Experiments in Psychology and Management",
           "sentence": "We conducted a large-scale study replicating 156 psychological experiments from top social science journals using three state-of-the-art LLMs (GPT-4, Claude 3.5 Sonnet, and DeepSeek v3)."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus."
+      }
     },
     "gemini-1.5-pro": {
       "name": "Gemini 1.5",
@@ -3453,7 +3498,12 @@
           ]
         }
       ],
-      "stage2": []
+      "stage2": [],
+      "adjudication": {
+        "verdict": "no reproduction",
+        "hit": null,
+        "rationale": "No candidate survived the second screen."
+      }
     },
     "bert-base-uncased": {
       "name": "BERT",
@@ -4511,7 +4561,18 @@
           "title": "Explainable Mapper: Charting LLM Embedding Spaces Using Perturbation-Based Explanation and Verification Agents",
           "sentence": "In particular, we replicate findings from prior research on BERT's embedding properties across various layers of its architecture and provide further observations into the linguistic properties of topological neighborhoods."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "APPROXIMATE REPRODUCTION REPORTED",
+        "hit": {
+          "title": "RoBERTa: A Robustly Optimized BERT Pretraining Approach",
+          "url": "https://arxiv.org/abs/1907.11692",
+          "sha256": "cc4a74f65edcc0901d5a0045ea84b771dcbf2a710e4e3f996d2b6557a6e50fa8",
+          "quote": "We present a replication study of BERT pretraining (Devlin et al., 2019) that carefully measures the impact of many key hyperparameters and training data size.",
+          "affects": "axis 17 only"
+        },
+        "rationale": "An INDEPENDENT party (FAIR / U. Washington, not Google) states in its abstract that it is a replication study of BERT pretraining, and reports that its reimplementation can match or exceed BERT. That is a third-party report of an approximate reproduction and the cell cannot remain ABSENT. \u26a0 It is scored 1, not 2: axis 17 asks for a report 'stating what matched and within what tolerance', and RoBERTa states no tolerance against BERT's own run -- its aim was to IMPROVE on BERT, not to certify a reproduction of it. Axis 16 (bit-identical) stays 0: nothing here claims bit-identity."
+      }
     },
     "gpt-2-1.5b": {
       "name": "GPT-2",
@@ -5123,9 +5184,15 @@
           "title": "The Capacity of Thought: Benchmarking Llama 3.2 in Semantic fMRI Neural Language Decoding and Improving the Huth Encoding-Model Baseline",
           "sentence": "ridge regression encoding pipeline through expanded voxel selection (10K-&gt;15K), substitution of GPT-2 medium for GPT-1 as the beam-search proposal model, and GPU-accelerated bootstrap training, achieving mean METEOR = 0.149 and BLEU-1 = 0.200 across three held-out narratives for subject UTS03 -- an 11% relative METEOR gain over our replication baseline."
         }
-      ]
+      ],
+      "adjudication": {
+        "verdict": "no reproduction of THIS release",
+        "hit": null,
+        "rationale": "read; every stage-2 survivor either USES the model as a tool or subject, REPLICATES a finding or an experiment with it, or TRAINS A DIFFERENT model. None reports re-running this release's training from its corpus. \u26a0 'The Stability-Efficiency Dilemma' reports pre-training experiments replicating 'the GPT-2 model' but never names a size, and the release scored here is the 1.5B (gpt2-xl). An unnamed size cannot settle a cell about a specific release; recorded as UNRESOLVED rather than counted either way."
+      }
     }
   },
   "run_at": "2026-08-29T07:46:08Z",
-  "stage2_total": 157
+  "stage2_total": 157,
+  "adjudicated": true
 }

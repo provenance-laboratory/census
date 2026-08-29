@@ -48,12 +48,39 @@ COMPLETENESS axes   "are ALL of X given?"  "can Y be DECIDED?"  (5, 7, 19)
                     a retrieved document cannot establish a universal -> these cap at 1
 SEARCH axes         "has anyone reported Z?"                    (16, 17)
                     absence is established only within a stated bound -> 0 means not-found
+                    a report that IS found caps at 1 -- see below
 ```
 
 ⚠️ **And the caveat that belongs in the paper rather than in a score:** a publication axis scored 2
 records that checkable material *exists and survived being checked*. It does **not** record that
 the material is true of the released weights. Nobody can establish that without retraining, which
 is the second paper's subject. The instrument measures what was published, and says so.
+
+## The positive case on a search axis, which this rule did not define
+
+⛔ **This document said what a `0` means on axes 16 and 17 and never said what a hit scores.**
+Nothing had ever been found, so the branch was never taken — a rule exercised on one side only.
+Round-1 review's demand for a real negative-search protocol produced the first hit, and the gap
+appeared the moment it did.
+
+**A found report scores 1, never 2.** The reason is the same one that caps the completeness axes:
+
+- What a mechanical check can settle is that **a document exists and says so** — `grep_retrieved`
+  over bytes fetched at a pinned URL. That is real, and it is not what the axis asks.
+- The axis asks whether **an independent party reported a reproduction**, and scoring it 2 would
+  claim the census had checked the *reproduction*, which nobody can do without retraining. Awarding
+  the top level for a successful grep would make VERIFIED mean "the sentence is present", which is
+  precisely the ASSERTED/VERIFIED collapse this instrument exists to prevent.
+
+⇒ So a search axis has three states and only three: **0** not found within a written bound, **1** a
+third-party report found and retrievable, and — until somebody retrains a model and the census can
+check the result — **2 is unreachable by construction, and is recorded as such rather than left to
+look like an absence of effort.**
+
+⚠️ The bar is the axis's own wording. Axis 17 asks for a report *stating what matched and within
+what tolerance*. A replication study that re-runs a pretraining recipe while deliberately varying
+it, and reports improving on the original, is more than nothing and less than that — which is why
+the one hit in this census is a 1 with the shortfall written into the cell.
 
 ## What makes a check "registered"
 
