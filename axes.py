@@ -177,3 +177,56 @@ NA_PERMITTED = {a[0] for a in AXES if a[5]}
 
 assert len(AXES) == 22, "the instrument is defined as 22 axes"
 assert {a[0] for a in AXES} == set(range(1, 23)), "axis ids must be 1..22 with no gaps"
+
+
+# ── What it would COST a publisher to satisfy an axis nobody satisfies ───────────────────────
+# Section 8.1 of the paper asks what the universally-absent axes have in common. An earlier draft
+# answered "they are the machine-checkable ones", which was FALSE -- several satisfied axes are
+# verified by range request and digest comparison, and two absent ones are documentary. The real
+# common property is what a publisher would have to DO, so it is recorded per axis, here, next to
+# the axis definitions rather than in prose the paper maintains separately.
+#
+# NOT AN ENUMERATION OF THE CURRENTLY-ABSENT AXES. Every axis carries an entry, so an axis that
+# becomes constant later is already described; cost_of() fails CLOSED on any that is not.
+ABSENT_COST = {
+    1:  "name the corpus -- a deliberate act, no tooling required",
+    2:  "publish a digest over the corpus: a CRYPTOGRAPHIC COMMITMENT with no established "
+        "practice in this field, and no platform emits it",
+    3:  "publish that digest BEFORE training: the same commitment, plus a timestamp, plus the "
+        "willingness to be bound by it afterwards",
+    4:  "host the corpus bytes -- expensive, but ordinary infrastructure",
+    5:  "enumerate every filtering step; a completeness claim no one can audit",
+    6:  "release the training code -- a deliberate act, ordinary tooling",
+    7:  "state every hyperparameter, including the ones that were not tidy",
+    8:  "record the seed and the ordering",
+    9:  "record the hardware",
+    10: "pin the environment -- ordinary tooling, rarely done",
+    11: "publish the log",
+    12: "host the weights -- the PLATFORM DOES THIS, which is why it is near-universal",
+    13: "per-shard digests -- THE PLATFORM EMITS THESE AUTOMATICALLY from Git-LFS; no publisher "
+        "decided provenance mattered",
+    14: "sign the weights: a key, a published fingerprint, and a signing step in the release "
+        "pipeline. A CRYPTOGRAPHIC COMMITMENT the ecosystem supplies no default for",
+    15: "timestamp that signature against something outside the publisher's control",
+    16: "A SECOND PARTY must retrain and report bit-identity. The publisher cannot do this at all",
+    17: "A SECOND PARTY must retrain and report approximate agreement. Same structure, weaker bar",
+    18: "state the licence -- near-universal, because a platform field asks for it",
+    19: "make the eval/train split checkable rather than asserted",
+    20: "disclose the fine-tuning data: a DELIBERATE ACT with commercial and legal cost, and, for "
+        "several releases here, data the publisher may not be free to redistribute",
+    21: "disclose the preference or reward data: the same, and it is the stage least often "
+        "documented anywhere in the field",
+    22: "state the evaluation contamination position",
+}
+
+
+def cost_of(axis_id):
+    """What a publisher would have to do. Fails CLOSED rather than returning a dash.
+
+    A .get(id, '--') here would let a newly-constant axis appear in the paper's own table with an
+    empty explanation, which is exactly how the six-of-eight omission happened the first time.
+    """
+    if axis_id not in ABSENT_COST:
+        raise KeyError("axis %r has no ABSENT_COST entry; section 8.1 would print a blank cell "
+                       "for it. Describe the act, do not add a default." % (axis_id,))
+    return ABSENT_COST[axis_id]

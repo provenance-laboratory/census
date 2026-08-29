@@ -49,6 +49,21 @@ def order(d):
     return [s for s, _ in sorted(d.items(), key=lambda kv: -kv[1])]
 
 
+def strict_inversions(a, b):
+    """Pairs whose STRICT order flips between two score maps.
+
+    order() imposes a total order on ties, so comparing two orderings counts a reshuffle among
+    equal scores as a reversal. Round-1 review found this inflating B by roughly 70%. Only pairs
+    that are strictly ordered in `a` and strictly ordered the other way in `b` are counted.
+    """
+    subs, n = sorted(a), 0
+    for i, x in enumerate(subs):
+        for y in subs[i + 1:]:
+            if (a[x] > a[y] and b[x] < b[y]) or (a[x] < a[y] and b[x] > b[y]):
+                n += 1
+    return n
+
+
 def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     led = M.load()
@@ -63,6 +78,7 @@ def main():
         return 0
 
     base = {s: frac(list(v.values())) for s, v in cells.items()}
+    kind_of = {x["id"]: x["kind"] for x in led["subjects"]}
     print("=" * 78)
     print("  referee — %d subject(s), %d axes" % (n, len(A.AXES)))
     print("=" * 78)
@@ -88,9 +104,11 @@ def main():
         print("      " + chr(0x26D4) + " FATAL: crediting claims as checks barely moves the")
         print("      picture. The instrument is not measuring what it says it measures.")
     else:
-        print("      the distinction is LOAD-BEARING WHERE IT APPLIES: largest movement",
-              "%.3f," % biggest)
-        print("      so the scores are not a proxy for what a release merely documents.")
+        print("      the distinction moves MAGNITUDES by up to %.3f." % biggest)
+        print("      " + chr(0x26A0) + " It does NOT change the ordering, and round-1 review was")
+        print("      right that calling it \"load-bearing for the headline\" overstated it. What")
+        print("      it shows is that the scores are not a proxy for what a release documents;")
+        print("      the comparative picture would survive the collapse.")
     if unmoved:
         print()
         print("      " + chr(0x26A0) + " %d subject(s) move 0.000: %s"
@@ -114,41 +132,67 @@ def main():
 
     # ── G ─────────────────────────────────────────────────────────────────────────────
     print()
-    print("  G · SELECTION SENSITIVITY   (drop each subject in turn)")
-    if n < 3:
-        print("      %d subject(s): not computable. Stated, not skipped silently." % n)
-    else:
-        full_order = order(base)
-        for drop in sorted(base):
-            rest = {s: base[s] for s in base if s != drop}
-            same = order(rest) == [s for s in full_order if s != drop]
-            print("      without %-14s order preserved: %s" % (drop, same))
-        print("      spread %.3f across %d subject(s)"
-              % (max(base.values()) - min(base.values()), n))
+    print("  G · SELECTION SENSITIVITY")
+    print("      " + chr(0x26D4) + " LEAVE-ONE-SUBJECT-OUT IS NOT RUN. It is tautological: a")
+    print("      subject's score depends only on its own cells, so dropping another subject")
+    print("      cannot change it, and \"order preserved\" was guaranteed by arithmetic rather")
+    print("      than by evidence. Round-1 review found this; it is removed, not repaired.")
+    print()
+    print("      What IS sensitive to judgement: how much a CLAIMED cell is worth. Sweeping the")
+    print("      weight of an ASSERTED cell from 0 to 2 and asking whether the stratum result")
+    print("      holds at every value:")
+    fo = [s for s in cells if kind_of[s] == "fully-open"]
+    owx = [s for s in cells if kind_of[s] == "open-weights"]
+    hist = [s for s in cells if kind_of[s] == "historical-control"]
+    holds_fo = holds_bert = 0
+    for step in range(0, 21):
+        w = step / 10.0
+        f = lambda s: (sum((w if v == 1 else v) for v in cells[s].values() if v is not None)
+                       / (2 * sum(1 for v in cells[s].values() if v is not None)))
+        if all(f(a) > f(b) for a in fo for b in owx):
+            holds_fo += 1
+        if hist and all(f("bert-base-uncased") > f(b) for b in owx):
+            holds_bert += 1
+    print("      fully-open above every open-weights release : %d of 21 weights" % holds_fo)
+    print("      bert above every open-weights release       : %d of 21 weights" % holds_bert)
+    print("      spread %.3f across %d subject(s)"
+          % (max(base.values()) - min(base.values()), n))
 
     # ── B ─────────────────────────────────────────────────────────────────────────────
     print()
     print("  B · ORDERING SENSITIVITY   (adversarial axis subsets)")
     axes_ids = sorted(A.BY_ID)
     k = 3
-    worst, worst_set = 0, None
-    full_order = order(base)
+    inv, first = 0, None
     for drop in itertools.combinations(axes_ids, k):
-        sub = {s: frac([v for a, v in c.items() if a not in drop])
-               for s, c in cells.items()}
-        if order(sub) != full_order:
-            worst += 1
-            if worst_set is None:
-                worst_set = drop
+        sub = {s: frac([v for a, v in c.items() if a not in drop]) for s, c in cells.items()}
+        if strict_inversions(base, sub):
+            inv += 1
+            if first is None:
+                first = drop
     total = len(list(itertools.combinations(axes_ids, k)))
-    print("      dropping every %d-axis subset: %d of %d reverse the order somewhere"
-          % (k, worst, total))
-    if worst_set:
+    print("      %d of %d %d-axis subsets produce a STRICT inversion." % (inv, total, k))
+    print("      " + chr(0x26A0) + " An earlier count of 965 included reshuffles among TIED")
+    print("      scores, which are not reversals. Round-1 review caught it.")
+    if first:
         print("      first such subset: axes %s (%s)"
-              % (list(worst_set), ", ".join(A.BY_ID[a][2] for a in worst_set)))
-        print("      " + chr(0x26A0) + " this MUST appear in the paper, not in a footnote.")
+              % (list(first), ", ".join(A.BY_ID[a][2] for a in first)))
+    print()
+    print("      How deep does the STRATUM separation go? Dropping every subset of size k and")
+    print("      asking whether min(fully-open) still exceeds max(open-weights):")
+    for k2 in range(1, 12):
+        bad = 0
+        for drop in itertools.combinations(axes_ids, k2):
+            sub = {s: frac([v for a, v in c.items() if a not in drop])
+                   for s, c in cells.items()}
+            if min(sub[s] for s in fo) <= max(sub[s] for s in owx):
+                bad += 1
+                break
+        if bad:
+            print("      survives every drop up to %d axes; FIRST FAILS at %d" % (k2 - 1, k2))
+            break
     else:
-        print("      the ordering is stable under every %d-axis drop." % k)
+        print("      survives every drop up to 11 axes")
 
     # ── D ─────────────────────────────────────────────────────────────────────────────
     print()
@@ -180,7 +224,8 @@ def main():
               % (len(constant), len(vec), constant))
         print("      A constant axis discriminates nothing here. It is not necessarily a bad")
         print("      axis -- it may be one nobody satisfies -- but it carries no information")
-        print("      about THESE subjects and the effective count below excludes it.")
+        print("      about THESE subjects, and it is why a redundancy statistic computed")
+        print("      over all 22 would be measuring 14.")
         print()
         pairs = []
         for i, a in enumerate(varying):
@@ -206,10 +251,15 @@ def main():
                 merged += 1
         eff = len(varying) - merged
         print()
-        print("      EFFECTIVE AXIS COUNT: ~%d, against %d nominal." % (eff, len(vec)))
-        print("      Reported because a rubric that says 22 and behaves like %d is" % eff)
-        print("      overstating its own resolution, and a referee will find that faster")
-        print("      than the author will.")
+        print("      " + chr(0x26D4) + " NO \"EFFECTIVE AXIS COUNT\" IS REPORTED.")
+        print("      An earlier version printed ~%d against %d nominal. That number was not a"
+              % (eff, len(vec)))
+        print("      recognised effective-dimension statistic: it greedily paired axes above an")
+        print("      arbitrary threshold, depended on the order pairs were considered, treated")
+        print("      ordinal scores as interval data, recoded N/A as zero, and rested on %d"
+              % n)
+        print("      observations. Round-1 review was right to reject it. The pairs above are")
+        print("      the finding; the single number was an invention.")
 
     # ── F ─────────────────────────────────────────────────────────────────────────────
     print()
