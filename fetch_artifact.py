@@ -21,6 +21,7 @@ a LOCAL TLS defect must never be recorded as a fact about a REMOTE artifact.
     python fetch_artifact.py --save out.json <url>    and write them
 """
 import datetime as dt
+import tempfile
 import hashlib
 import io
 import json
@@ -166,3 +167,49 @@ if __name__ == "__main__":
     print()
     print("  %d retrieved, %d refused" % (len(out), refused))
     raise SystemExit(1 if refused else 0)
+
+
+def content_length(url, timeout=60):
+    """Ask how big it is BEFORE downloading it. None if the server will not say.
+
+    ⛔ WHY THIS IS A PRE-FLIGHT AND NOT A POST-CHECK. archive_evidence downloaded a whole body and
+    then compared its length against the 8 MB cap -- fine for a model card, catastrophic for the
+    corpus data object the OLMo axis-4 evidence now cites, which is a token file of unbounded size.
+    A step that can die halfway needs a check before it starts, not after.
+    """
+    r = subprocess.run(["curl", "-sSLI", "--max-time", str(timeout), url],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return None
+    m = None
+    for line in r.stdout.splitlines():
+        if line.lower().startswith("content-length:"):
+            m = line.split(":", 1)[1].strip()
+    try:
+        return int(m) if m else None
+    except ValueError:
+        return None
+
+
+def evidence_range(url, first=0, last=2047):
+    """Evidence for an artifact too large to hold: the digest of a FIXED byte range.
+
+    A range digest is a weaker claim than a whole-file digest and it is written down as one. What
+    it establishes is that the object is REACHABLE and returns real content -- which is exactly
+    what an axis asking "can a third party acquire the same bytes?" needs.
+    """
+    tmp = pathlib.Path(tempfile.gettempdir()) / ("range-%s.bin" % abs(hash(url)))
+    r = subprocess.run(["curl", "-sSL", "--max-time", "180", "-r", "%d-%d" % (first, last),
+                        "-o", str(tmp), "-w", "%{http_code}", url],
+                       capture_output=True, text=True)
+    if r.returncode != 0 or not tmp.exists():
+        return None, "range request failed: curl exit %d" % r.returncode
+    body = tmp.read_bytes()
+    tmp.unlink(missing_ok=True)
+    if len(body) != (last - first + 1):
+        return None, ("asked for %d bytes, got %d -- a partial range must not be recorded as the "
+                      "range" % (last - first + 1, len(body)))
+    return {"url": url, "retrieved": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d"),
+            "sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body),
+            "http_status": r.stdout.strip(), "range": "bytes=%d-%d" % (first, last),
+            "body": body}, None

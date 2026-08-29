@@ -12,7 +12,8 @@ query recorded so anyone can re-run it and contradict the result:
 
     corpus     arXiv, via the public API
     categories cs.CL or cs.LG -- REQUIRED, see the homonym note below
-    terms      reproduce / reproduction / replicate, in the abstract
+    terms      7 reproduction verbs, in the abstract (see TERMS)
+    paging     every page fetched to exhaustion; an unstated cap is not a stated bound
     subject    the model's name, in the abstract
 
 ⚠️ HOMONYMS ARE WHY THE CATEGORY FILTER IS NOT OPTIONAL. abs:"Pythia" AND abs:"reproduce" returns
@@ -48,10 +49,14 @@ import mp_metric as M
 NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
 OUT = HERE / "negative-search.json"
-API = "https://export.arxiv.org/api/query?search_query=%s&max_results=%d"
-TERMS = ["reproduce", "reproduction", "replicate"]
+API = "https://export.arxiv.org/api/query?search_query=%s&start=%d&max_results=%d"
+# ⚠️ THREE VERBS WAS TOO THIN. Round-2 review pointed out that `replication`,
+# `reimplementation` and `from scratch` all name the thing and none were searched.
+TERMS = ["reproduce", "reproduction", "replicate", "replication", "reimplementation",
+         "from scratch", "independently trained"]
 CATS = "(cat:cs.CL OR cat:cs.LG)"
-MAX = 50
+PAGE = 100          # per request
+MAX_PAGES = 12      # hard stop, so a runaway query cannot hang the protocol
 
 # The string a paper would use to name each release. NOT derivable from the subject id -- nobody
 # writes "llama-3.1-8b" in prose -- so it is a judgement, recorded here rather than improvised.
@@ -89,9 +94,9 @@ def names_for(subject):
     return NAMES[subject]
 
 
-def query(name, term):
+def query(name, term, start=0):
     q = 'abs:"%s" AND abs:"%s" AND %s' % (name, term, CATS)
-    return API % (urllib.parse.quote(q, safe=""), MAX)
+    return API % (urllib.parse.quote(q, safe=""), start, PAGE)
 
 
 def parse(xml):
@@ -120,13 +125,24 @@ def main():
             return 1
         res = json.loads(OUT.read_text(encoding="utf-8"))
         missing = [s for s in subjects if s not in res["subjects"]]
+        # Round-2 review: the verifier proved only that every subject was searched. It must also
+        # refuse an INCOMPLETE retrieval and an UNADJUDICATED candidate set -- the two ways a
+        # negative can be produced by the method rather than by the world.
+        trunc = ["%s/%s (%s of %s)" % (sid, q["term"], q.get("retrieved"), q.get("total"))
+                 for sid, r in res["subjects"].items()
+                 for q in r["queries"] if q.get("total") and not q.get("complete")]
+        unadj = [sid for sid, r in res["subjects"].items() if not r.get("adjudication")]
+        for x in trunc:
+            print("  ! TRUNCATED query: %s" % x)
+        for x in unadj:
+            print("  ! %s has candidates and NO recorded adjudication" % x)
         print("  %d subject(s) in the census, %d covered by the search"
               % (len(subjects), len(res["subjects"])))
         for m in missing:
             print("  ! %s scores 0 on axes 16/17 with NO search recorded" % m)
         print("  " + ("every subject was searched" if not missing
                       else chr(0x26D4) + " %d unsearched" % len(missing)))
-        return 1 if missing else 0
+        return 1 if (missing or trunc or unadj) else 0
 
     out = {
         "_readme": "The negative-search protocol behind every 0 on axes 16 and 17. "
@@ -135,7 +151,9 @@ def main():
             "corpus": "arXiv public API",
             "categories": CATS,
             "terms": TERMS,
-            "max_results_per_query": MAX,
+            "page_size": PAGE,
+            "paginated": True,
+            "max_pages": MAX_PAGES,
             "screened_for": SIGNALS,
         },
         "subjects": {},
@@ -145,23 +163,39 @@ def main():
         name = names_for(s)
         rec = {"name": name, "queries": [], "candidates": [], "screened_in": []}
         for term in TERMS:
-            url = query(name, term)
-            status, body, err = F.fetch(url)
-            if err:
-                print("  %-20s %-13s FETCH FAILED: %s" % (s, term, err))
-                rec["queries"].append({"term": term, "url": url, "error": err})
-                continue
-            xml = body.decode("utf-8", "replace")
-            total, entries = parse(xml)
-            rec["queries"].append({"term": term, "url": url, "total": total,
-                                   "returned": len(entries)})
-            have = set(c["id"] for c in rec["candidates"])
-            for e in entries:
-                if e["id"] not in have:
-                    rec["candidates"].append(e)
-                    have.add(e["id"])
-            print("  %-20s %-13s total=%-5s returned=%d" % (s, term, total, len(entries)))
-            time.sleep(3)          # the API asks for one request every three seconds
+            # ⛔ max_results=50 WITH NO PAGINATION WAS AN UNSTATED BOUND. The deposited JSON
+            # showed 735 hits reported and 635 retrieved: 100 abstracts, 14% of the pool, never
+            # fetched. The worst query was bert + reproduce -- 97 hits, 50 retrieved, 47 unseen --
+            # on the one subject whose cell changed. Section 7.1 exists to insist that a bound be
+            # STATED; this one was ACCIDENTAL, which is worse than a narrow stated bound.
+            start, total, got = 0, None, 0
+            for _page in range(MAX_PAGES):
+                url = query(name, term, start)
+                status, body, err = F.fetch(url)
+                if err:
+                    print("  %-20s %-20s FETCH FAILED: %s" % (s, term, err))
+                    rec["queries"].append({"term": term, "url": url, "error": err})
+                    break
+                xml = body.decode("utf-8", "replace")
+                total, entries = parse(xml)
+                have = set(c["id"] for c in rec["candidates"])
+                for e in entries:
+                    if e["id"] not in have:
+                        rec["candidates"].append(e)
+                        have.add(e["id"])
+                got += len(entries)
+                if not entries or total is None or start + PAGE >= total:
+                    break
+                start += PAGE
+                time.sleep(3)
+            if total is not None:
+                rec["queries"].append({"term": term, "total": total, "retrieved": got,
+                                       "complete": got >= total,
+                                       "url": query(name, term, 0)})
+                print("  %-20s %-20s total=%-5s retrieved=%-4d %s"
+                      % (s, term, total, got, "" if got >= total else "⛔ TRUNCATED"))
+            time.sleep(3)
+
         for c in rec["candidates"]:
             hit = [g for g in SIGNALS if g in c["abstract"].lower()]
             if hit:

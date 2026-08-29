@@ -230,3 +230,33 @@ def cost_of(axis_id):
         raise KeyError("axis %r has no ABSENT_COST entry; section 8.1 would print a blank cell "
                        "for it. Describe the act, do not add a default." % (axis_id,))
     return ABSENT_COST[axis_id]
+
+
+# ── THE ATTAINABLE MAXIMUM, DECLARED PER AXIS ───────────────────────────────────────────────
+# ⛔ CAPS USED TO BE RECORDED PER CELL, and a cap only ever got written where there was a document
+# to be incomplete. So a release that published a hyperparameter table had its axis-7 cell capped
+# at 1, while a release that published nothing scored 0 against a ceiling of 2. THE RELEASES THAT
+# DISCLOSED MORE HAD LOWER CEILINGS. Round-2 review found it. It never threatened a result -- no
+# subject was near its ceiling -- but a rubric in which disclosing more lowers your maximum is not
+# defensible however little it moves.
+#
+# SCORING.md already declared these caps by CLASS; only the ledger applied them by cell. Declaring
+# them here makes the ceiling a property of the instrument, identical for every subject.
+#
+#   COMPLETENESS axes  "are ALL of X given?" -- a retrieved document cannot establish a universal
+#   SEARCH axes        "has anyone reported Z?" -- the only mechanical check over a report is a
+#                      grep, and awarding VERIFIED for a successful grep would make VERIFIED mean
+#                      "the sentence is present", which is the collapse this instrument prevents
+MAX_SCORE = {5: 1, 7: 1, 19: 1, 16: 1, 17: 1}
+
+
+def max_for(axis_id):
+    """The highest score this axis can attain, for anyone. Defaults to 2."""
+    if axis_id not in BY_ID:
+        raise KeyError("axis %r is not one of the %d" % (axis_id, len(AXES)))
+    return MAX_SCORE.get(axis_id, 2)
+
+
+def attainable(axis_ids):
+    """The denominator a subject is really scored against, given which axes apply to it."""
+    return sum(max_for(a) for a in axis_ids)

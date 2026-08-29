@@ -5,6 +5,15 @@
     "OBL-BACKUP. A digest alone proves what WAS there; only the bytes let anyone check it."
   ],
   "artifacts": {
+    "http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy": {
+      "bytes": 1743968224,
+      "cells": [
+        "olmo-2-13b/axis4"
+      ],
+      "reason": "1743968224 bytes exceeds the 8388608-byte repository cap, established by a HEAD request BEFORE downloading. Where a cell cites a byte RANGE of this object, the range digest is the evidence and is re-checkable by repeating the same range request.",
+      "sha256": "6f8f0d90316074f9e45ee1e3735bdbb892565a8e3dbad4feb759db5dd8ae1298",
+      "stored": false
+    },
     "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/releases/latest": {
       "bytes": 17902,
       "cells": [
@@ -105,8 +114,16 @@
         "claude-3.5-sonnet/axis1",
         "claude-3.5-sonnet/axis22"
       ],
-      "reason": "46824360 bytes exceeds the 8388608-byte repository cap; archived to OBL-BACKUP",
+      "reason": "46824360 bytes exceeds the 8388608-byte repository cap, established by a HEAD request BEFORE downloading. Where a cell cites a byte RANGE of this object, the range digest is the evidence and is re-checkable by repeating the same range request.",
       "sha256": "88ae851f53c3034d436816164ce49a876b333fa9b550fb7ef29838182b59ba7d",
+      "stored": false
+    },
+    "https://github.com/karpathy/llm.c/discussions/677": {
+      "cells": [
+        "gpt-2-1.5b/axis17"
+      ],
+      "reason": "VOLATILE endpoint: the body carries counters that move independently of the claim, so it cannot be archived under a fixed digest. The cell it backs is capped at ASSERTED for the same reason.",
+      "sha256": "df33219219d9de7935453daff541d85dcdc2f5b9bd52b70aeb248dc97d9af860",
       "stored": false
     },
     "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors": {
@@ -152,6 +169,16 @@
       "sha256": "912e16a96d767e0c041e0a1c071f3c23e443ab45af4a407667c4cf1e5a18dd40",
       "stored": true
     },
+    "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/README.md": {
+      "cells": [
+        "bloom-176b/axis1",
+        "bloom-176b/axis4",
+        "bloom-176b/axis5",
+        "bloom-176b/axis19"
+      ],
+      "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770",
+      "stored": true
+    },
     "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00001-of-00072.safetensors": {
       "bytes": 135,
       "cells": [
@@ -172,6 +199,15 @@
       "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770",
       "stored": true
     },
+    "https://huggingface.co/datasets/EleutherAI/pile/raw/148e1d5e8349977c76f673190424a2faf6980a1d/README.md": {
+      "cells": [
+        "pythia-12b/axis1",
+        "pythia-12b/axis4",
+        "pythia-12b/axis19"
+      ],
+      "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938",
+      "stored": true
+    },
     "https://huggingface.co/datasets/EleutherAI/pile/raw/main/README.md": {
       "bytes": 14225,
       "cells": [
@@ -182,12 +218,27 @@
       "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938",
       "stored": true
     },
+    "https://huggingface.co/datasets/allenai/olmo-mix-1124/raw/99ee6aaace88779d1ef099d36251b91101c1679b/README.md": {
+      "cells": [
+        "olmo-2-13b/axis1"
+      ],
+      "sha256": "8a0a0c243be08a014bb85062f1117c4fbe97d6caeb22a69545ffdf58c3a49ae5",
+      "stored": true
+    },
     "https://huggingface.co/datasets/allenai/olmo-mix-1124/raw/main/README.md": {
       "bytes": 5922,
       "cells": [
         "olmo-2-13b/axis1"
       ],
       "sha256": "8a0a0c243be08a014bb85062f1117c4fbe97d6caeb22a69545ffdf58c3a49ae5",
+      "stored": true
+    },
+    "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/README.md": {
+      "cells": [
+        "bert-base-uncased/axis1",
+        "bert-base-uncased/axis4"
+      ],
+      "sha256": "9187b6018ea0010d884e78e098e328faa1b88b301570d0cce606bb35e4067e17",
       "stored": true
     },
     "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/coreml/fill-mask/float32_model.mlpackage/Data/com.apple.CoreML/weights/weight.bin": {
@@ -206,6 +257,21 @@
         "bert-base-uncased/axis4"
       ],
       "sha256": "9187b6018ea0010d884e78e098e328faa1b88b301570d0cce606bb35e4067e17",
+      "stored": true
+    },
+    "https://huggingface.co/karpathy/gpt2_1558M_final2_hf": {
+      "cells": [
+        "gpt-2-1.5b/axis17"
+      ],
+      "reason": "VOLATILE endpoint: the body carries counters that move independently of the claim, so it cannot be archived under a fixed digest. The cell it backs is capped at ASSERTED for the same reason.",
+      "sha256": "29aff19f31e00e3bbf54d766b81a57a7594a81c8981f0109e0020b1583a0931c",
+      "stored": false
+    },
+    "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/README.md": {
+      "cells": [
+        "mistral-7b-v0.3/axis1"
+      ],
+      "sha256": "d5f3bf07f3062380b2c26b22a5dc9d462d2a1417040f182775de5102f10b2a28",
       "stored": true
     },
     "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/consolidated.safetensors": {
@@ -243,12 +309,43 @@
       "sha256": "f705981b1fe780c31b94d75804ebe4ee78541b0bffda70e7d225220302d4f5a3",
       "stored": true
     },
+    "https://raw.githubusercontent.com/EleutherAI/gpt-neox/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb/README.md": {
+      "cells": [
+        "pythia-12b/axis6"
+      ],
+      "sha256": "109d01c252722a45edf38170866e45c5a91caae17dad13c81f26be06c6852d60",
+      "stored": true
+    },
     "https://raw.githubusercontent.com/EleutherAI/gpt-neox/main/README.md": {
       "bytes": 58329,
       "cells": [
         "pythia-12b/axis6"
       ],
       "sha256": "109d01c252722a45edf38170866e45c5a91caae17dad13c81f26be06c6852d60",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/EleutherAI/pythia/55e1182be2856e34e5044e5eb8ac96002e9e40f3/models/12B/pythia-12b.yml": {
+      "cells": [
+        "pythia-12b/axis7"
+      ],
+      "sha256": "bac012070f553a9659ff1980d82ad773824a51388635345baf2e38c0f2df6e1d",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/EleutherAI/pythia/da58a10f0364586d897997163f0f57ea62b15f47/utils/batch_viewer.py": {
+      "cells": [
+        "pythia-12b/axis11"
+      ],
+      "sha256": "aa0fc5a5d67f305e3d6db748e262cee4b201604cb742535600d6658122ed5229",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/EleutherAI/pythia/e204ae87eabcc6994ccd93622716525a7005ba17/README.md": {
+      "cells": [
+        "pythia-12b/axis6",
+        "pythia-12b/axis8",
+        "pythia-12b/axis10",
+        "pythia-12b/axis11"
+      ],
+      "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d",
       "stored": true
     },
     "https://raw.githubusercontent.com/EleutherAI/pythia/main/README.md": {
@@ -278,6 +375,14 @@
       "sha256": "aa0fc5a5d67f305e3d6db748e262cee4b201604cb742535600d6658122ed5229",
       "stored": true
     },
+    "https://raw.githubusercontent.com/QwenLM/Qwen2.5/7a2f61ffc7a20d47efcd2bf97f6f2bf52729042e/README.md": {
+      "cells": [
+        "qwen2.5-7b/axis6",
+        "qwen2.5-7b/axis18"
+      ],
+      "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d",
+      "stored": true
+    },
     "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md": {
       "bytes": 24732,
       "cells": [
@@ -285,6 +390,35 @@
         "qwen2.5-7b/axis18"
       ],
       "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/allenai/OLMo/4bf8f90c26dd180095f66d0764636e00d8bae4c1/README.md": {
+      "cells": [
+        "olmo-2-13b/axis6",
+        "olmo-2-13b/axis8",
+        "olmo-2-13b/axis10",
+        "olmo-2-13b/axis18"
+      ],
+      "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml": {
+      "cells": [
+        "olmo-2-13b/axis4",
+        "olmo-2-13b/axis7",
+        "olmo-2-13b/axis8",
+        "olmo-2-13b/axis9",
+        "olmo-2-13b/axis11",
+        "olmo-2-13b/axis19"
+      ],
+      "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/allenai/OLMo/893a2786e85e0f8f62c3e683c83beb66b01be5ad/pyproject.toml": {
+      "cells": [
+        "olmo-2-13b/axis10"
+      ],
+      "sha256": "61f25b6a00bf6dff289016beaab73886c19b8a135e7218c28836a256ff736ca6",
       "stored": true
     },
     "https://raw.githubusercontent.com/allenai/OLMo/main/README.md": {
@@ -301,12 +435,6 @@
     "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml": {
       "bytes": 164084,
       "cells": [
-        "olmo-2-13b/axis4",
-        "olmo-2-13b/axis7",
-        "olmo-2-13b/axis8",
-        "olmo-2-13b/axis9",
-        "olmo-2-13b/axis11",
-        "olmo-2-13b/axis19",
         "fact:olmo_data_paths"
       ],
       "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9",
@@ -318,6 +446,25 @@
         "olmo-2-13b/axis10"
       ],
       "sha256": "61f25b6a00bf6dff289016beaab73886c19b8a135e7218c28836a256ff736ca6",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/bigscience-workshop/bigscience/39ed8110482e9eb87d0e094ede05e4d02c40e298/train/tr11-176B-ml/README.md": {
+      "cells": [
+        "bloom-176b/axis6",
+        "bloom-176b/axis7",
+        "bloom-176b/axis10",
+        "bloom-176b/axis11",
+        "bloom-176b/axis18"
+      ],
+      "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/bigscience-workshop/bigscience/a120215047ccb978dc46cf773cb93bac9b55022f/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json": {
+      "cells": [
+        "bloom-176b/axis1",
+        "bloom-176b/axis11"
+      ],
+      "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60",
       "stored": true
     },
     "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json": {
@@ -341,12 +488,29 @@
       "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022",
       "stored": true
     },
+    "https://raw.githubusercontent.com/google-deepmind/gemma/8fb37ee37e43d23165fe8919c4b1bb9c6e57492a/README.md": {
+      "cells": [
+        "gemma-2-9b/axis6"
+      ],
+      "sha256": "cf4afaef8cda5451e970065df35adf895107b468e7217f3e3d024a7144906611",
+      "stored": true
+    },
     "https://raw.githubusercontent.com/google-deepmind/gemma/main/README.md": {
       "bytes": 3469,
       "cells": [
         "gemma-2-9b/axis6"
       ],
       "sha256": "cf4afaef8cda5451e970065df35adf895107b468e7217f3e3d024a7144906611",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/google-research/bert/8028c0459485299fa1ae6692b2300922a3fa2bad/README.md": {
+      "cells": [
+        "bert-base-uncased/axis1",
+        "bert-base-uncased/axis6",
+        "bert-base-uncased/axis7",
+        "bert-base-uncased/axis18"
+      ],
+      "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756",
       "stored": true
     },
     "https://raw.githubusercontent.com/google-research/bert/master/README.md": {
@@ -358,6 +522,16 @@
         "bert-base-uncased/axis18"
       ],
       "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/meta-llama/llama-models/e2e67cd8b0feca839666b7082dcc1c4fc0ae11e2/models/llama3_1/MODEL_CARD.md": {
+      "cells": [
+        "llama-3.1-8b/axis1",
+        "llama-3.1-8b/axis6",
+        "llama-3.1-8b/axis7",
+        "llama-3.1-8b/axis18"
+      ],
+      "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef",
       "stored": true
     },
     "https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md": {
@@ -377,6 +551,14 @@
         "llama-3.1-8b/axis18"
       ],
       "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/openai/gpt-2/9b63575ef42771a015060c964af2c3da4cf7c8ab/README.md": {
+      "cells": [
+        "gpt-2-1.5b/axis6",
+        "gpt-2-1.5b/axis7"
+      ],
+      "sha256": "cd6e0dd0636dd0cb6af5e15477caff74adc161d724cf59716113095bd358c8a3",
       "stored": true
     },
     "https://raw.githubusercontent.com/openai/gpt-2/master/README.md": {

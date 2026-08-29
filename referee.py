@@ -93,9 +93,20 @@ def main():
         moves.append(delta)
         print("      %-14s %.3f -> %.3f   (+%.3f)" % (s, base[s], coll[s], delta))
     biggest = max(moves) if moves else 0.0
+    # ⛔ ORDER-EQUALITY IS NOT ORDER-PRESERVATION. order() is a stable sort, so a strictly-ordered
+    # pair that collapses to an exact TIE keeps its sequence and this comparison stays False.
+    # Round-2 review found three such collapses, one of them inside the positive control.
+    collapsed = []
+    _ss = sorted(base)
+    for _i, _x in enumerate(_ss):
+        for _y in _ss[_i + 1:]:
+            if base[_x] != base[_y] and abs(coll[_x] - coll[_y]) < 1e-12:
+                collapsed.append((_x, _y, coll[_x]))
     reordered = order(base) != order(coll)
+    changed = reordered or bool(collapsed)
     print()
-    print("      largest movement %.3f; ordering changes: %s" % (biggest, reordered))
+    print("      largest movement %.3f; sequence changes: %s; strict pairs collapsing to a tie: %d"
+          % (biggest, reordered, len(collapsed)))
     # The verdict is COMPUTED. An earlier version asserted "moves every subject" while its
     # own numbers showed two subjects moving 0.000 -- prose disagreeing with the table it sat
     # under, which is the defect this whole repository is arranged against.
@@ -105,10 +116,22 @@ def main():
         print("      picture. The instrument is not measuring what it says it measures.")
     else:
         print("      the distinction moves MAGNITUDES by up to %.3f." % biggest)
-        print("      " + chr(0x26A0) + " It does NOT change the ordering, and round-1 review was")
-        print("      right that calling it \"load-bearing for the headline\" overstated it. What")
-        print("      it shows is that the scores are not a proxy for what a release documents;")
-        print("      the comparative picture would survive the collapse.")
+        # ⛔ THIS VERDICT WAS A HARDCODED STRING that never consulted the computation three lines
+        # above it -- the identical defect the comment above warns about, reintroduced in the fix
+        # for it. It now prints from `changed`.
+        if changed:
+            print("      " + chr(0x26D4) + " AND IT DOES CHANGE THE ORDERING: %d strictly-ordered"
+                  % len(collapsed))
+            print("      pair(s) become EXACT TIES under claims-as-checks --")
+            for _x, _y, _v in collapsed:
+                print("          %-18s %.3f  vs  %-18s %.3f   ->  both %.3f"
+                      % (_x, base[_x], _y, base[_y], _v))
+            print("      A pair ordered in the census and unordered under the test is a change in")
+            print("      the ordering on any reading a reviewer will apply. What survives is")
+            print("      narrower: no pair REVERSES, and the STRATUM separation is untouched")
+            print("      because it rests on dominance (see B).")
+        else:
+            print("      and no ordered pair reverses or collapses under it.")
     if unmoved:
         print()
         print("      " + chr(0x26A0) + " %d subject(s) move 0.000: %s"
@@ -178,7 +201,30 @@ def main():
         print("      first such subset: axes %s (%s)"
               % (list(first), ", ".join(A.BY_ID[a][2] for a in first)))
     print()
-    print("      How deep does the STRATUM separation go? Dropping every subset of size k and")
+    # ⭐ THE SEPARATION IS A DOMINANCE RESULT, and reporting a depth number understated it by a
+    # wide margin. Round-2 review raised this twice before it was taken up: if the LOWEST
+    # fully-open release is >= the HIGHEST open-weights release on EVERY axis, then no subset of
+    # axes and no weighting of them can reverse the separation -- it is closed under both
+    # operations, and the deepest deletions can produce at most a tie. A depth number is a sample
+    # of that fact; the dominance is the fact.
+    lo = min(fo, key=lambda s: base[s])
+    hi = max(owx, key=lambda s: base[s])
+    below = [a for a in axes_ids if (cells[lo].get(a) or 0) < (cells[hi].get(a) or 0)]
+    strict = [a for a in axes_ids if (cells[lo].get(a) or 0) > (cells[hi].get(a) or 0)]
+    print()
+    print("      DOMINANCE: %s (lowest fully-open) vs %s (highest open-weights)" % (lo, hi))
+    if below:
+        print("      " + chr(0x26D4) + " dominance FAILS on axes %s -- the separation depends on"
+              % below)
+        print("      the weighting after all, and the depth number below is the real claim.")
+    else:
+        print("      %s is >= %s on ALL %d axes, strictly greater on %d of them."
+              % (lo, hi, len(axes_ids), len(strict)))
+        print("      " + chr(0x21D2) + " NO subset of axes and NO reweighting can reverse the")
+        print("      stratum separation. The deepest deletions produce at most a TIE, which is")
+        print("      what the k below actually finds.")
+    print()
+    print("      How deep before even a tie appears? Dropping every subset of size k and")
     print("      asking whether min(fully-open) still exceeds max(open-weights):")
     for k2 in range(1, 12):
         bad = 0
@@ -189,7 +235,23 @@ def main():
                 bad += 1
                 break
         if bad:
-            print("      survives every drop up to %d axes; FIRST FAILS at %d" % (k2 - 1, k2))
+            # ⚠️ §6.2 excludes ties by policy in the inversion count and then counted them as
+            # failures here, in the same section. Say which they are.
+            ties = inv2 = 0
+            for drop in itertools.combinations(axes_ids, k2):
+                sub = {s: frac([v for a, v in c.items() if a not in drop])
+                       for s, c in cells.items()}
+                mn, mx = min(sub[s] for s in fo), max(sub[s] for s in owx)
+                if mn < mx:
+                    inv2 += 1
+                elif abs(mn - mx) < 1e-12:
+                    ties += 1
+            print("      survives every drop up to %d axes; first fails at %d" % (k2 - 1, k2))
+            print("      and those %d failure(s) are %d TIE(S) and %d STRICT INVERSION(S) --"
+                  % (ties + inv2, ties, inv2))
+            print("      which the dominance result above already guarantees."
+                  if inv2 == 0 else
+                  "      an inversion here would CONTRADICT the dominance result above.")
             break
     else:
         print("      survives every drop up to 11 axes")
@@ -206,7 +268,12 @@ def main():
         # N/A is treated as absent for this test, and that choice is stated: a correlation
         # cannot consume a null, and dropping the subject instead would change the axis pairs
         # under comparison from one pair to the next.
-        vec = {a: [(cells[s].get(a) or 0) for s in subs] for a in sorted(A.BY_ID)}
+        # ⚠️ `or 0` COERCED N/A TO ZERO and ran in two directions at once: it put axes 20 and 21
+        # on the never-varies list on the strength of THREE live cells, and it HID axis 22, which
+        # is constant over every cell it applies to. Round-2 review found both. Applicable cells
+        # only, and every constant axis is reported with the n it rests on.
+        vec = {a: [cells[s].get(a) for s in subs if cells[s].get(a) is not None]
+               for a in sorted(A.BY_ID)}
 
         def corr(x, y):
             m = len(x)
@@ -218,8 +285,13 @@ def main():
                 return None                       # one of them never varies
             return sxy / ((sxx ** 0.5) * (syy ** 0.5))
 
-        constant = [a for a in vec if max(vec[a]) == min(vec[a])]
+        constant = [a for a in vec if vec[a] and max(vec[a]) == min(vec[a])]
         varying = [a for a in vec if a not in constant]
+        for a in constant:
+            print("          axis %2d  constant at %s over n=%2d applicable cell(s)%s"
+                  % (a, vec[a][0], len(vec[a]),
+                     "  " + chr(0x26A0) + " a claim about %d subjects, not %d" % (len(vec[a]), n)
+                     if len(vec[a]) < n else ""))
         print("      %d of %d axes NEVER VARY across the census: %s"
               % (len(constant), len(vec), constant))
         print("      A constant axis discriminates nothing here. It is not necessarily a bad")

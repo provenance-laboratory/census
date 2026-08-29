@@ -120,6 +120,29 @@ def validate(led):
                 if not SHA256_RE.match(str(e.get("sha256", ""))):
                     d.append(f"{w2}: sha256 of the RETRIEVED BYTES is required "
                              f"-- an HTTP 200 is not an artifact")
+        # The axis cap is a property of the INSTRUMENT, so a cell may not exceed it. This
+        # replaces caps that were noted per-cell and therefore applied unevenly.
+        if val is not None and val > A.max_for(ax):
+            d.append(f"{where}: score {val} exceeds this axis's attainable maximum "
+                     f"({A.max_for(ax)}). See axes.MAX_SCORE -- the cap is a property of the "
+                     f"axis, not of what this particular release happened to publish.")
+
+        # ⛔ "AT A PINNED REVISION" MUST BE TRUE OF THE URL, NOT JUST OF THE DIGEST. Round-2
+        # review found 13 of 25 score-2 cells citing a `main` or `master` branch. The stored
+        # digest always established WHICH BYTES were used; it never made the source a pinned
+        # revision, and the paper's sentence claimed both.
+        if val == 2:
+            for j, e in enumerate(c.get("evidence") or []):
+                u = str(e.get("url", ""))
+                # ⚠️ AN EARLIER VERSION MATCHED ONE HOST. It caught the 13 GitHub urls and
+                # missed 4 identical Hugging Face ones -- an enumeration of hosts where a
+                # projection over MUTABLE REFS was needed, which is the defect this whole census
+                # is arranged against, committed inside the fix for a different defect.
+                if re.search(r"/(main|master|HEAD|latest)/", u):
+                    d.append(f"{where} evidence[{j}]: VERIFIED cell cites a MUTABLE BRANCH "
+                             f"({u[:70]}...). Run pin_urls.py; a branch is a moving pointer and "
+                             f"'retrieved at a pinned revision' is false of it.")
+
         # ⛔ VERIFIED requires a REGISTERED method, not a sentence. Round-1 review passed every
         # score-2 cell with check="read a document" and this validator reported no defect.
         if val == 2:
@@ -176,7 +199,13 @@ def score(led):
         as_coded = (sum(real) / (2 * len(real))) if real else 0.0
         na0 = sum(real) / (2 * len(vals)) if vals else 0.0
         na2 = (sum(real) + 2 * n_na) / (2 * len(vals)) if vals else 0.0
-        out[s] = {"as_coded": as_coded, "na_as_0": na0, "na_as_2": na2,
+        # The ceiling this subject could reach, given which axes apply to it and what each axis
+        # can attain. Reported because the denominator is NOT the same for every stratum: an
+        # API-only release cannot reach axis 12 at all, and no release can reach 2 on a
+        # completeness or search axis.
+        live = [a for a in sorted(cells) if cells[a].get("score") is not None]
+        ceiling = (A.attainable(live) / (2.0 * len(live))) if live else 0.0
+        out[s] = {"as_coded": as_coded, "na_as_0": na0, "na_as_2": na2, "ceiling": ceiling,
                   "n_na": n_na, "n_scored": len(real),
                   "counts": {k: sum(1 for v in vals if v == k) for k in (2, 1, 0)}}
     return out
@@ -215,20 +244,25 @@ def emit_tables(led, sc):
         f"<!-- ledger-fingerprint: {fp} -->" + NL +
         NL.join(t1) + NL, encoding="utf-8", newline=NL)
 
-    t2 = ["| release | CHECKED | CLAIMED | ABSENT | N/A | as-coded | N/A→0 | N/A→2 |",
-          "|---|---|---|---|---|---|---|---|"]
+    # Level names abbreviated to their scores: the paper defines 2/1/0 on its first page, and
+    # the spelled-out header made this table nine columns wide and pushed it past the margin.
+    t2 = ["| release | 2 | 1 | 0 | N/A | as-coded | N/A→0 | N/A→2 | ceiling |",
+          "|---|---|---|---|---|---|---|---|---|"]
     for s in sorted(sc, key=lambda k: -sc[k]["as_coded"]):
         v = sc[s]
-        t2.append("| %s | %d | %d | %d | %d | %.3f | %.3f | %.3f |"
+        t2.append("| %s | %d | %d | %d | %d | %.3f | %.3f | %.3f | %.3f |"
                   % (s, v["counts"][2], v["counts"][1], v["counts"][0], v["n_na"],
-                     v["as_coded"], v["na_as_0"], v["na_as_2"]))
+                     v["as_coded"], v["na_as_0"], v["na_as_2"], v["ceiling"]))
     (TABLES / "table2_scores.md").write_text(
         f"<!-- EMITTED by mp_metric.py, as of {stamp}. Do not edit. -->" + NL +
         f"<!-- ledger-fingerprint: {fp} -->" + NL +
         NL.join(t2) + NL +
         NL + "The three columns are the same census under three readings of N/A. The spread"
         " between" + NL + "`N/A→0` and `N/A→2` is the weight the escape hatch is carrying; where"
-        " it is wide, the" + NL + "as-coded figure is not reportable on its own." + NL,
+        " it is wide, the" + NL + "as-coded figure is not reportable on its own." + NL + NL +
+        "`ceiling` is the highest as-coded score this release COULD reach: completeness and search"
+        + NL + "axes cap at 1 for everyone, and an api-only release cannot publish weights at all."
+        + NL + "Scores are not comparable across releases whose ceilings differ." + NL,
         encoding="utf-8", newline=NL)
     return [TABLES / "table1_axes.md", TABLES / "table2_scores.md"]
 

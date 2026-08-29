@@ -62,6 +62,26 @@
       "volatile": 3,
       "covered": "3a6a9790c7aed93878cb70622847730c6c340179ef40c1db97618b885113daf9",
       "subject_filter": null
+    },
+    {
+      "at": "2026-08-29T09:06:07Z",
+      "artifacts": 44,
+      "unchanged": 39,
+      "drifted": 0,
+      "unretrievable": 0,
+      "volatile": 5,
+      "covered": "a595121ff88ea855c435861c2a5dcfa8117cee857a6ac7210428d331e4783ab6",
+      "subject_filter": null
+    },
+    {
+      "at": "2026-08-29T09:23:43Z",
+      "artifacts": 45,
+      "unchanged": 40,
+      "drifted": 0,
+      "unretrievable": 0,
+      "volatile": 5,
+      "covered": "78ac75065cf2a425de10b55dd51f6e48df0df2f7de3d093bcbcc31f5ae02cdf6",
+      "subject_filter": null
     }
   ]
 }

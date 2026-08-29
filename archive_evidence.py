@@ -55,14 +55,14 @@ def wanted():
     led = M.load()
     out = {}
 
-    def add(url, sha, who, volatile=False):
+    def add(url, sha, who, volatile=False, rng=None):
         out.setdefault(url, {"sha256": sha, "volatile": volatile, "cells": []})
         out[url]["cells"].append(who)
 
     for c in led.get("cells", []):
         for e in (c.get("evidence") or []):
             add(e["url"], e["sha256"], "%s/axis%d" % (c["subject"], c["axis"]),
-                bool(e.get("volatile")))
+                bool(e.get("volatile")), e.get("range"))
 
     fp = HERE / "facts.json"
     if fp.exists():
@@ -120,6 +120,31 @@ def main():
             man["artifacts"].setdefault(url, {})
             man["artifacts"][url].update({"sha256": rec["sha256"], "stored": True,
                                           "cells": rec["cells"]})
+            continue
+        # PRE-FLIGHT. Ask the size before pulling the body: one artifact in this ledger is a
+        # corpus token file of unbounded size, and downloading it to discover it is too big would
+        # be the whole failure this cap exists to avoid.
+        size = F.content_length(url)
+        if size is not None and size > CAP:
+            print("  large  %-52s %d bytes (HEAD) -- not fetched" % (url[-52:], size))
+            man["artifacts"][url] = {
+                "sha256": rec["sha256"], "stored": False, "bytes": size,
+                "reason": "%d bytes exceeds the %d-byte repository cap, established by a HEAD "
+                          "request BEFORE downloading. Where a cell cites a byte RANGE of this "
+                          "object, the range digest is the evidence and is re-checkable by "
+                          "repeating the same range request." % (size, CAP),
+                "cells": rec["cells"]}
+            skipped += 1
+            continue
+        if rec.get("range"):
+            # Cited by RANGE: the whole object is not the evidence and must not be pulled.
+            man["artifacts"][url] = {
+                "sha256": rec["sha256"], "stored": False, "range": rec["range"],
+                "reason": "cited by byte range %s, not as a whole object. The range digest IS the "
+                          "evidence; re-issue the same range request to check it."
+                          % rec["range"],
+                "cells": rec["cells"]}
+            skipped += 1
             continue
         got, why = F.evidence(url)
         if got is None:

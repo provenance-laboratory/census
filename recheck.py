@@ -46,6 +46,7 @@ def main():
     by_url = {}
     for s, a, e in records:
         by_url.setdefault(e["url"], {"sha256": e["sha256"], "cells": [],
+                                     "range": e.get("range"),
                                      "volatile": bool(e.get("volatile"))})["cells"].append((s, a))
 
     print("=" * 78)
@@ -59,7 +60,16 @@ def main():
     for url in sorted(by_url):
         want = by_url[url]["sha256"]
         cells = by_url[url]["cells"]
-        rec, why = F.evidence(url)
+        # ⛔ A CELL MAY CITE A BYTE RANGE OF AN OBJECT TOO LARGE TO HOLD. The OLMo corpus object
+        # is 1.74 GB; re-fetching it whole to check a 2 KB range would download 1.74 GB per run.
+        # Re-issue the SAME range instead -- which is also the only way the recorded digest, which
+        # is a digest of the range, could ever match.
+        rng = by_url[url].get("range")
+        if rng:
+            first, last = (int(x) for x in rng.split("=", 1)[1].split("-"))
+            rec, why = F.evidence_range(url, first, last)
+        else:
+            rec, why = F.evidence(url)
         label = "%-58s" % (url[-58:] if len(url) > 58 else url)
         if rec is None:
             gone += 1
