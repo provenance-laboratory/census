@@ -115,7 +115,12 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The Pile's dataset card names its constituents."
+        "observed": "The Pile's dataset card names its constituents.",
+        "expect": [
+          "Pile-CC",
+          "PubMed",
+          "ArXiv"
+        ]
       },
       "evidence": [
         {
@@ -171,7 +176,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "GPT-NeoX is public and the release names it as the code that produced the weights."
+        "observed": "GPT-NeoX is public and the release names it as the code that produced the weights.",
+        "expect": [
+          "gpt-neox"
+        ]
       },
       "evidence": [
         {
@@ -210,7 +218,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The project README states the seed is the GPT-NeoX default, 1234."
+        "observed": "The project README states the seed is the GPT-NeoX default, 1234.",
+        "expect": [
+          "1234"
+        ]
       },
       "evidence": [
         {
@@ -249,7 +260,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "utils/batch_viewer.py is published: the tool for viewing the exact portions of the training dataloader used by all models."
+        "observed": "utils/batch_viewer.py is published: the tool for viewing the exact portions of the training dataloader used by all models.",
+        "expect": [
+          "batch_viewer"
+        ]
       },
       "evidence": [
         {
@@ -381,7 +395,13 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The olmo-mix-1124 card carries a component table with token counts, uncompressed bytes, document counts and per-component licences."
+        "observed": "The dataset card enumerates the mix's constituent corpora as named configs -- algebraic-stack, arxiv, dclm, open-web-math and 3 more -- each with its own data path. \u26a0 AN EARLIER OBSERVED FIELD DESCRIBED 'a component table with token counts, uncompressed bytes, document counts'. The archived bytes carry no such table; the enumeration is by config name. The axis holds, on different grounds than the cell claimed, and replay.py found the discrepancy by grepping for a string the old description implied.",
+        "expect": [
+          "algebraic-stack",
+          "arxiv",
+          "dclm",
+          "open-web-math"
+        ]
       },
       "evidence": [
         {
@@ -444,7 +464,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The repository gives a reproduce invocation against published configs."
+        "observed": "The repository gives a reproduce invocation against published configs.",
+        "expect": [
+          "torchrun"
+        ]
       },
       "evidence": [
         {
@@ -477,7 +500,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The training config carries seed: 6198 on line 2, and the repository publishes seed-named stage-2 variants."
+        "observed": "The training config carries seed: 6198 on line 2, and the repository publishes seed-named stage-2 variants.",
+        "expect": [
+          "seed: 6198"
+        ]
       },
       "evidence": [
         {
@@ -532,11 +558,11 @@
     {
       "subject": "olmo-2-13b",
       "axis": 11,
-      "score": 2,
+      "score": 1,
       "check": {
         "method": "grep_retrieved",
-        "asserts": "the published training config carries a SEED and an ordered enumeration of the data files, which is the material this axis asks to be published",
-        "observed": "`seed: 6198` appears in the config, together with 1122 data-file paths in order. \u26a0 This records that the MATERIAL IS PUBLISHED. It does not establish that the exact example order can be reconstructed: that additionally requires the sampling and shuffling logic in the training code to be deterministic given this seed, which this census does not execute. A round-2 reviewer was right that the earlier wording implied more."
+        "asserts": "the published training config carries a SEED and an ordered enumeration of the data files",
+        "observed": "`seed: 6198` appears in the config together with 1122 data-file paths in order. \u26d4 SCORED 1, NOT 2, AND THE PREVIOUS 2 WAS WRONG. This axis asks whether sharding and shuffle are DERIVABLE, and its level-2 bar is 'enough to reconstruct the exact sequence of examples'. What was checked is that the material is published -- which is axis 8's question, satisfied by the SAME GREP ON THE SAME FILE. Reconstructing the order additionally requires the sampler and shuffler to be deterministic given this seed, which this census does not execute. The earlier cell stated that disclaimer in its own observed field and kept the 2: stating what a check does not establish is honest, and it does not convert the check into a check of the axis. Both round-3 reviewers reached this independently and both were right."
       },
       "evidence": [
         {
@@ -661,7 +687,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "A training dataset ratios catalogue enumerates the constituent datasets."
+        "observed": "A training dataset ratios catalogue enumerates the constituent datasets.",
+        "expect": [
+          "oscar"
+        ]
       },
       "evidence": [
         {
@@ -726,7 +755,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The training record gives the launch command against a public Megatron-DeepSpeed fork."
+        "observed": "The training record gives the launch command against a public Megatron-DeepSpeed fork.",
+        "expect": [
+          "Megatron-DeepSpeed"
+        ]
       },
       "evidence": [
         {
@@ -2079,7 +2111,11 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The card and repository name BookCorpus and English Wikipedia."
+        "observed": "The card and repository name BookCorpus and English Wikipedia.",
+        "expect": [
+          "BookCorpus",
+          "Wikipedia"
+        ]
       },
       "evidence": [
         {
@@ -2136,7 +2172,11 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The repository ships create_pretraining_data.py and run_pretraining.py."
+        "observed": "The repository ships create_pretraining_data.py and run_pretraining.py.",
+        "expect": [
+          "create_pretraining_data.py",
+          "run_pretraining.py"
+        ]
       },
       "evidence": [
         {

@@ -87,6 +87,31 @@ SIGNALS = [
 ]
 
 
+# ── THE RECALL CONTROL ──────────────────────────────────────────────────────────────────────
+# ⛔ WITHOUT THIS, "we found two in 825" IS UNFALSIFIABLE IN THE ONLY DIRECTION THAT MATTERS.
+# Three reviewers have now found three different bounds on this search, each by looking for what
+# the frame excludes -- and each time the protocol reported a clean negative. So the known answers
+# live here, with the disposition each should receive, and --verify measures recall against them.
+#
+#   in_pool    the protocol must retrieve it; failing to is a RECALL FAILURE
+#   off_corpus established to exist and NOT retrievable by this frame -- a stated blind spot
+KNOWN_POSITIVES = [
+    {"case": "RoBERTa", "arxiv": "1907.11692", "subject": "bert-base-uncased",
+     "expect": "in_pool", "disposition": "scored 1 on axis 17"},
+    {"case": "Cramming", "arxiv": "2212.14034", "subject": "bert-base-uncased",
+     "expect": "in_pool", "disposition": "read and excluded: trains a BERT-LIKE model"},
+    {"case": "MosaicBERT", "arxiv": "2312.17482", "subject": "bert-base-uncased",
+     "expect": "in_pool", "disposition": "read and excluded: new architecture and recipe"},
+    {"case": "llm.c GPT-2 1558M", "arxiv": None, "subject": "gpt-2-1.5b",
+     "expect": "off_corpus", "disposition": "scored 1 on axis 17; published on GitHub, and this "
+                                            "protocol searches arXiv only"},
+    {"case": "Izsak et al., How to Train BERT with an Academic Budget", "arxiv": "2104.07705",
+     "subject": "bert-base-uncased", "expect": "off_corpus",
+     "disposition": "NOT IN THE POOL: on arXiv, but its abstract uses none of the seven verbs. "
+                    "This is the VOCABULARY bound, and it is the one currently standing."},
+]
+
+
 def names_for(subject):
     if subject not in NAMES:
         raise KeyError("no search name for subject %r. Axes 16 and 17 would score 0 for it "
@@ -132,10 +157,58 @@ def main():
                  for sid, r in res["subjects"].items()
                  for q in r["queries"] if q.get("total") and not q.get("complete")]
         unadj = [sid for sid, r in res["subjects"].items() if not r.get("adjudication")]
+        # ⛔ ROUND-3 REVIEW ERASED A SUBJECT'S ENTIRE stage2 ARRAY, kept the adjudication summary,
+        # and this still passed: the verifier trusted a stored total it never recomputed, and
+        # accepted a subject-level verdict with no candidate-level basis under it.
+        recomputed = 0
+        VERB = re.compile(r"reproduc|replicat|retrain|re-train|from scratch|training run"
+                          r"|reimplement", re.I)
+        for sid, r in res["subjects"].items():
+            nm = r["name"].lower()
+            n = 0
+            for c in r["candidates"]:
+                for sent in re.split(r"(?<=[.!?])\s+", c["abstract"]):
+                    if nm in sent.lower() and VERB.search(sent):
+                        n += 1
+                        break
+            if n != len(r.get("stage2", [])):
+                trunc.append("%s: stage2 holds %d record(s), recomputing from the candidates "
+                             "gives %d -- the stored screen does not follow from the stored data"
+                             % (sid, len(r.get("stage2", [])), n))
+            recomputed += n
+        if recomputed != res.get("stage2_total"):
+            trunc.append("stage2_total says %s, recomputation gives %d"
+                         % (res.get("stage2_total"), recomputed))
+        # An adjudication with a HIT must bind evidence; a verdict is not a citation.
+        for sid, r in res["subjects"].items():
+            a = r.get("adjudication") or {}
+            h = a.get("hit")
+            if h and not (h.get("url") and h.get("quote")):
+                unadj.append("%s: positive adjudication with no evidence binding" % sid)
         for x in trunc:
             print("  ! TRUNCATED query: %s" % x)
         for x in unadj:
             print("  ! %s has candidates and NO recorded adjudication" % x)
+        # Recall against the known answers.
+        print()
+        print("  RECALL CONTROL -- known reproductions, and whether this frame reaches them:")
+        recall_fail = []
+        for k in KNOWN_POSITIVES:
+            r = res["subjects"].get(k["subject"], {})
+            found = any(k["arxiv"] and k["arxiv"] in c["id"] for c in r.get("candidates", []))
+            if k["expect"] == "in_pool" and not found:
+                print("    " + chr(0x26D4) + " %-46s SHOULD be in the pool and is NOT" % k["case"])
+                recall_fail.append(k["case"])
+            elif k["expect"] == "in_pool":
+                print("    ok   %-46s in pool; %s" % (k["case"], k["disposition"]))
+            else:
+                print("    " + chr(0x26A0) + "   %-46s OUT OF FRAME BY CONSTRUCTION" % k["case"])
+                print("         %s" % k["disposition"])
+        _in = [k for k in KNOWN_POSITIVES if k["expect"] == "in_pool"]
+        print("    recall on cases this frame can reach: %d of %d"
+              % (len(_in) - len(recall_fail), len(_in)))
+        trunc.extend("recall failure: %s" % c for c in recall_fail)
+
         print("  %d subject(s) in the census, %d covered by the search"
               % (len(subjects), len(res["subjects"])))
         for m in missing:

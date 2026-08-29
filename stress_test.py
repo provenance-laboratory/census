@@ -25,17 +25,35 @@ EV = [{"url": "https://example.org/a", "retrieved": "2026-08-01", "sha256": "a" 
 passed, failed = 0, 0
 
 
-def full_census(subject="s1", score=0, **over):
-    """A complete, valid census: every one of the 22 axes present for one subject."""
+def full_census(subject="s1", score=0, cell_over=None, **over):
+    """A complete, valid census: every one of the 22 axes present for one subject.
+
+    ⚠️ `**over` updates the LEDGER. An earlier test passed `check=...` expecting it to reach the
+    cells; it became a stray top-level key and the test passed for the wrong reason -- vacuously,
+    like the two PDF controls found the same day. `cell_over` is the parameter that reaches cells.
+
+    The default score-2 check now picks a method VALID FOR EACH AXIS, because a fixture that
+    violates method-axis compatibility on 20 of 22 axes cannot be used to test anything else.
+    """
     cells = []
     for ax in A.BY_ID:
-        c = {"subject": subject, "axis": ax, "score": score}
-        if score and score > 0:
+        # A valid census respects the instrument OWN caps: a completeness or search axis
+        # cannot be 2 for anyone, so a fixture claiming otherwise is not a valid census.
+        c = {"subject": subject, "axis": ax,
+             "score": min(score, A.max_for(ax, "open-weights")) if score else score}
+        if c["score"] and c["score"] > 0:
             c["evidence"] = list(EV)
-            if score == 2:
-                c["check"] = {"method": "http_range",
-                              "asserts": "status is 206",
-                              "observed": "HTTP 206, 2048 B"}
+            if c["score"] == 2:
+                valid = sorted(A.methods_for(ax))
+                meth = "grep_retrieved" if "grep_retrieved" in valid else (
+                    valid[0] if valid else "grep_retrieved")
+                c["check"] = {"method": meth, "asserts": "the material is present",
+                              "observed": "it is present"}
+                if meth in ("grep_retrieved", "count_in_retrieved"):
+                    c["check"]["expect"] = ["something"]
+            if cell_over:
+                c.update({k: dict(v) if isinstance(v, dict) else v
+                          for k, v in cell_over.items()})
         cells.append(c)
     led = {"as_of": "2026-08-01",
            "subjects": [{"id": subject, "kind": "open-weights"}], "cells": cells}
@@ -218,6 +236,24 @@ passed, failed = (passed + 1, failed) if inflates else (passed, failed + 1)
 print(("  ok    " if band_catches else "  FAIL  ") +
       "the N/A→0 column exposes it (%.3f < %.3f)" % (sc_hidden["na_as_0"], sc_base["as_coded"]))
 passed, failed = (passed + 1, failed) if band_catches else (passed, failed + 1)
+
+# ── the attacks round-3 review ran by hand, now run every time ───────────────────────────────
+# ⛔ ALL THREE OF THESE VALIDATED CLEAN when a reviewer tried them. The validator confirmed a
+# method NAME was on an allowlist and asked nothing further.
+must_catch("a method that cannot possibly settle the axis it is on",
+           full_census(score=2, cell_over={"check": {
+               "method": "hf_probe.weight_object",
+               "asserts": "nonsense", "observed": "nonsense"}}),
+           "cannot settle this axis")
+
+must_catch("a replayable method carrying nothing to replay",
+           full_census(score=2, cell_over={"check": {
+               "method": "grep_retrieved",
+               "asserts": "something", "observed": "something"}}),
+           "no `expect` list")
+
+must_pass("the score-2 fixture itself is valid under the new method rules",
+          full_census(score=2))
 
 # ── the drift run must be bound to the evidence SET, not to its size ─────────────────────────
 # The paper says every artifact was re-fetched. That was confirmed by comparing a COUNT, which a

@@ -249,14 +249,59 @@ def cost_of(axis_id):
 #                      "the sentence is present", which is the collapse this instrument prevents
 MAX_SCORE = {5: 1, 7: 1, 19: 1, 16: 1, 17: 1}
 
+# ⛔ AND A SECOND RESTRICTION THAT THE PROSE CLAIMED AND THE CODE DID NOT HAVE. Section 5.2 said the
+# ceiling reflects three things -- completeness axes, search axes, AND that an API-only release
+# cannot reach the weights axes. Only the first two were implemented, so API-only releases came out
+# with a HIGHER ceiling (0.886) than every open release (0.868): the opposite of what the sentence
+# describes, printed in the table beside it.
+#
+# A release that publishes no weights cannot have them retrieved (12), cannot have a third party
+# hash them (13), and cannot have them signed or timestamped in any way a third party could check
+# (14, 15). Those are facts about the stratum, not about the publisher's diligence, and a ceiling
+# that ignores them flatters the stratum it is supposed to bound.
+STRATUM_MAX = {
+    "api-only": {12: 0, 13: 1, 14: 1, 15: 1},
+}
 
-def max_for(axis_id):
-    """The highest score this axis can attain, for anyone. Defaults to 2."""
+
+def max_for(axis_id, kind=None):
+    """The highest score this axis can attain, for a release of this kind. Defaults to 2."""
     if axis_id not in BY_ID:
         raise KeyError("axis %r is not one of the %d" % (axis_id, len(AXES)))
-    return MAX_SCORE.get(axis_id, 2)
+    base = MAX_SCORE.get(axis_id, 2)
+    if kind and kind in STRATUM_MAX and axis_id in STRATUM_MAX[kind]:
+        return min(base, STRATUM_MAX[kind][axis_id])
+    return base
 
 
-def attainable(axis_ids):
-    """The denominator a subject is really scored against, given which axes apply to it."""
-    return sum(max_for(a) for a in axis_ids)
+def attainable(axis_ids, kind=None):
+    """The denominator a subject is really scored against, given its stratum and applicable axes."""
+    return sum(max_for(a, kind) for a in axis_ids)
+
+
+# ── WHICH METHOD MAY SETTLE WHICH AXIS ──────────────────────────────────────────────────────
+# ⛔ ROUND-3 REVIEW SET A CONFIG-FILE AXIS'S METHOD TO `hf_probe.weight_object` WITH BOTH FIELDS
+# READING "nonsense", AND THE LEDGER VALIDATED. The validator confirmed the method string was on an
+# allowlist and asked nothing about whether that method could possibly settle that axis.
+#
+# A weights probe cannot establish that a corpus is enumerated; a grep over a model card cannot
+# establish that a shard's bytes are retrievable. Compatibility is declared here, and replay.py
+# refuses a pairing that is not.
+METHOD_AXES = {
+    "grep_retrieved": set(range(1, 23)) - {4, 12, 13},
+    "count_in_retrieved": set(range(1, 23)) - {4, 12, 13},
+    "http_range": {4, 12},
+    "hf_probe.weight_object": {12, 13},
+    "hf_probe.all_shard_digests": {12, 13},
+    "http_status": {4, 12, 18},
+    "api_field": {12, 18},
+    "hash_compare": {2, 13, 14, 15},
+}
+
+
+def methods_for(axis_id):
+    """The methods that may settle this axis. Empty means no method has been declared for it,
+    which is a reason to refuse a 2 rather than to allow any method."""
+    if axis_id not in BY_ID:
+        raise KeyError("axis %r is not one of the %d" % (axis_id, len(AXES)))
+    return {m for m, axes in METHOD_AXES.items() if axis_id in axes}

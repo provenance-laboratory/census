@@ -56,7 +56,8 @@ def wanted():
     out = {}
 
     def add(url, sha, who, volatile=False, rng=None):
-        out.setdefault(url, {"sha256": sha, "volatile": volatile, "cells": []})
+        out.setdefault(url, {"sha256": sha, "volatile": volatile, "range": rng,
+                             "cells": []})
         out[url]["cells"].append(who)
 
     for c in led.get("cells", []):
@@ -121,6 +122,35 @@ def main():
             man["artifacts"][url].update({"sha256": rec["sha256"], "stored": True,
                                           "cells": rec["cells"]})
             continue
+        # ⛔ THE RANGE BRANCH RUNS FIRST. A cell citing a byte RANGE is not a citation of the
+        # whole object, so sizing the object and filing it under "too large" describes the wrong
+        # thing -- which is how a 1.7 GB corpus token shard ended up in the manuscript as a
+        # "1744 MB model card". And the range bytes are small, so they ARE archived: 2 KB, not
+        # 1.7 GB. Section 2.2.1 says the bytes behind every claim are kept; this is the claim that
+        # was not covered.
+        if rec.get("range"):
+            first, last = (int(x) for x in rec["range"].split("=", 1)[1].split("-"))
+            got, why = F.evidence_range(url, first, last)
+            if got is None or got["sha256"] != rec["sha256"]:
+                print("  RANGE  %-52s %s" % (url[-52:], why or "digest moved"))
+                man["artifacts"][url] = {
+                    "sha256": rec["sha256"], "stored": False, "range": rec["range"],
+                    "reason": "range re-request failed or moved: %s" % (why or "digest moved"),
+                    "cells": rec["cells"]}
+                skipped += 1
+                continue
+            blob.write_bytes(gzip.compress(got["body"], 9))
+            man["artifacts"][url] = {
+                "sha256": rec["sha256"], "stored": True, "bytes": got["bytes"],
+                "range": rec["range"], "whole_object_bytes": F.content_length(url),
+                "note": "the archived bytes are the CITED RANGE, not the whole object, which is "
+                        "far too large to hold. The cell's digest is of this range.",
+                "cells": rec["cells"]}
+            print("  stored %-52s %7d B (range) -> %6d B"
+                  % (url[-52:], got["bytes"], blob.stat().st_size))
+            added += 1
+            continue
+
         # PRE-FLIGHT. Ask the size before pulling the body: one artifact in this ledger is a
         # corpus token file of unbounded size, and downloading it to discover it is too big would
         # be the whole failure this cap exists to avoid.
@@ -133,16 +163,6 @@ def main():
                           "request BEFORE downloading. Where a cell cites a byte RANGE of this "
                           "object, the range digest is the evidence and is re-checkable by "
                           "repeating the same range request." % (size, CAP),
-                "cells": rec["cells"]}
-            skipped += 1
-            continue
-        if rec.get("range"):
-            # Cited by RANGE: the whole object is not the evidence and must not be pulled.
-            man["artifacts"][url] = {
-                "sha256": rec["sha256"], "stored": False, "range": rec["range"],
-                "reason": "cited by byte range %s, not as a whole object. The range digest IS the "
-                          "evidence; re-issue the same range request to check it."
-                          % rec["range"],
                 "cells": rec["cells"]}
             skipped += 1
             continue

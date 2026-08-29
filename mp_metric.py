@@ -122,9 +122,10 @@ def validate(led):
                              f"-- an HTTP 200 is not an artifact")
         # The axis cap is a property of the INSTRUMENT, so a cell may not exceed it. This
         # replaces caps that were noted per-cell and therefore applied unevenly.
-        if val is not None and val > A.max_for(ax):
+        _kind = {x["id"]: x.get("kind") for x in led.get("subjects", [])}.get(sub)
+        if val is not None and val > A.max_for(ax, _kind):
             d.append(f"{where}: score {val} exceeds this axis's attainable maximum "
-                     f"({A.max_for(ax)}). See axes.MAX_SCORE -- the cap is a property of the "
+                     f"({A.max_for(ax, _kind)}) for a {_kind} release. See axes.MAX_SCORE -- the cap is a property of the "
                      f"axis, not of what this particular release happened to publish.")
 
         # ⛔ "AT A PINNED REVISION" MUST BE TRUE OF THE URL, NOT JUST OF THE DIGEST. Round-2
@@ -156,6 +157,21 @@ def validate(led):
                     d.append(f"{where}: check.method {meth!r} is not registered in "
                              f"axes.CHECK_METHODS -- a cell cannot be promoted to VERIFIED by "
                              f"describing a check that is not implemented")
+                # ⛔ METHOD-AXIS COMPATIBILITY. Round-3 review set a config-file axis's method
+                # to `hf_probe.weight_object` with both fields reading "nonsense" and this
+                # validated: it checked that the name was on an allowlist and asked nothing about
+                # whether that method could settle that axis.
+                elif meth not in A.methods_for(ax):
+                    d.append(f"{where}: method {meth!r} cannot settle this axis "
+                             f"({A.BY_ID[ax][2]}). Valid: "
+                             f"{sorted(A.methods_for(ax)) or 'NONE DECLARED'}")
+                # ⛔ A REPLAYABLE METHOD MUST CARRY SOMETHING TO REPLAY. `grep_retrieved` with no
+                # `expect` list is a method NAME, not a check, which is what the paper's phrase
+                # "a registered mechanical check over its content succeeded" was resting on.
+                if meth in ("grep_retrieved", "count_in_retrieved") and not chk.get("expect"):
+                    d.append(f"{where}: method {meth!r} with no `expect` list. Nothing can be "
+                             f"replayed, so the method name is a label and the cell cannot be "
+                             f"VERIFIED. See replay.py")
                 for k in ("asserts", "observed"):
                     if not str(chk.get(k, "")).strip():
                         d.append(f"{where}: check.{k} is empty; the assertion and what came "
@@ -236,6 +252,7 @@ def score(led):
     Returns all three, always. There is deliberately no function returning the first alone.
     """
     out = {}
+    kind_of = {x["id"]: x.get("kind") for x in led.get("subjects", [])}
     by_sub = {}
     for c in led.get("cells", []):
         by_sub.setdefault(c["subject"], {})[c["axis"]] = c
@@ -251,7 +268,7 @@ def score(led):
         # API-only release cannot reach axis 12 at all, and no release can reach 2 on a
         # completeness or search axis.
         live = [a for a in sorted(cells) if cells[a].get("score") is not None]
-        ceiling = (A.attainable(live) / (2.0 * len(live))) if live else 0.0
+        ceiling = (A.attainable(live, kind_of.get(s)) / (2.0 * len(live))) if live else 0.0
         out[s] = {"as_coded": as_coded, "na_as_0": na0, "na_as_2": na2, "ceiling": ceiling,
                   "n_na": n_na, "n_scored": len(real),
                   "counts": {k: sum(1 for v in vals if v == k) for k in (2, 1, 0)}}

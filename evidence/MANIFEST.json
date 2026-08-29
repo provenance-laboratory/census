@@ -6,13 +6,15 @@
   ],
   "artifacts": {
     "http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy": {
-      "bytes": 1743968224,
+      "bytes": 2048,
       "cells": [
         "olmo-2-13b/axis4"
       ],
-      "reason": "1743968224 bytes exceeds the 8388608-byte repository cap, established by a HEAD request BEFORE downloading. Where a cell cites a byte RANGE of this object, the range digest is the evidence and is re-checkable by repeating the same range request.",
+      "note": "the archived bytes are the CITED RANGE, not the whole object, which is far too large to hold. The cell's digest is of this range.",
+      "range": "bytes=0-2047",
       "sha256": "6f8f0d90316074f9e45ee1e3735bdbb892565a8e3dbad4feb759db5dd8ae1298",
-      "stored": false
+      "stored": true,
+      "whole_object_bytes": 1743968224
     },
     "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/releases/latest": {
       "bytes": 17902,
