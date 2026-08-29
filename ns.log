@@ -1,0 +1,65 @@
+  pythia-12b           reproduce     total=18    returned=18
+  pythia-12b           reproduction  total=4     returned=4
+  pythia-12b           replicate     total=10    returned=10
+  pythia-12b           29 candidate(s), 9 screened in for reading
+
+  olmo-2-13b           reproduce     total=9     returned=9
+  olmo-2-13b           reproduction  total=1     returned=1
+  olmo-2-13b           replicate     total=7     returned=7
+  olmo-2-13b           17 candidate(s), 5 screened in for reading
+
+  bloom-176b           reproduce     total=12    returned=12
+  bloom-176b           reproduction  total=0     returned=0
+  bloom-176b           replicate     total=3     returned=3
+  bloom-176b           15 candidate(s), 2 screened in for reading
+
+  mistral-7b-v0.3      reproduce     total=47    returned=47
+  mistral-7b-v0.3      reproduction  total=1     returned=1
+  mistral-7b-v0.3      replicate     total=28    returned=28
+  mistral-7b-v0.3      74 candidate(s), 12 screened in for reading
+
+  qwen2.5-7b           reproduce     total=60    returned=50
+  qwen2.5-7b           reproduction  total=5     returned=5
+  qwen2.5-7b           replicate     total=33    returned=33
+  qwen2.5-7b           85 candidate(s), 18 screened in for reading
+
+  llama-3.1-8b         reproduce     total=38    returned=38
+  llama-3.1-8b         reproduction  total=4     returned=4
+  llama-3.1-8b         replicate     total=33    returned=33
+  llama-3.1-8b         67 candidate(s), 12 screened in for reading
+
+  gemma-2-9b           reproduce     total=8     returned=8
+  gemma-2-9b           reproduction  total=2     returned=2
+  gemma-2-9b           replicate     total=12    returned=12
+  gemma-2-9b           21 candidate(s), 3 screened in for reading
+
+  gpt-4o               reproduce     total=90    returned=50
+  gpt-4o               reproduction  total=6     returned=6
+  gpt-4o               replicate     total=53    returned=50
+  gpt-4o               99 candidate(s), 3 screened in for reading
+
+  claude-3.5-sonnet    reproduce     total=12    returned=12
+  claude-3.5-sonnet    reproduction  total=1     returned=1
+  claude-3.5-sonnet    replicate     total=7     returned=7
+  claude-3.5-sonnet    19 candidate(s), 2 screened in for reading
+
+  gemini-1.5-pro       reproduce     total=10    returned=10
+  gemini-1.5-pro       reproduction  total=0     returned=0
+  gemini-1.5-pro       replicate     total=6     returned=6
+  gemini-1.5-pro       16 candidate(s), 2 screened in for reading
+
+  bert-base-uncased    reproduce     total=97    returned=50
+  bert-base-uncased    reproduction  total=9     returned=9
+  bert-base-uncased    replicate     total=42    returned=42
+  bert-base-uncased    98 candidate(s), 45 screened in for reading
+
+  gpt-2-1.5b           reproduce     total=47    returned=47
+  gpt-2-1.5b           reproduction  total=5     returned=5
+  gpt-2-1.5b           replicate     total=15    returned=15
+  gpt-2-1.5b           63 candidate(s), 21 screened in for reading
+
+==============================================================================
+  12 subject(s), 603 candidate(s), 134 screened in for human reading
+  ⚠ SCREENED IN IS NOT A FINDING. Each must be read; the abstract
+  signal only says the paper is worth a human's time.
+==============================================================================

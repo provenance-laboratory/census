@@ -274,13 +274,13 @@
       "subject": "pythia-12b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Pythia' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=18, reproduction=4, replicate=10). 29 distinct candidates; 9 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "pythia-12b",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Pythia' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=18, reproduction=4, replicate=10). 29 distinct candidates; 9 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "pythia-12b",
@@ -537,13 +537,13 @@
       "subject": "olmo-2-13b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'OLMo' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=9, reproduction=1, replicate=7). 17 distinct candidates; 12 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "olmo-2-13b",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'OLMo' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=9, reproduction=1, replicate=7). 17 distinct candidates; 12 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "olmo-2-13b",
@@ -776,13 +776,13 @@
       "subject": "bloom-176b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'BLOOM' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=12, reproduction=0, replicate=3). 15 distinct candidates; 2 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "bloom-176b",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'BLOOM' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=12, reproduction=0, replicate=3). 15 distinct candidates; 2 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "bloom-176b",
@@ -967,13 +967,13 @@
       "subject": "mistral-7b-v0.3",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Mistral' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=47, reproduction=1, replicate=28). 74 distinct candidates; 15 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "mistral-7b-v0.3",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Mistral' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=47, reproduction=1, replicate=28). 74 distinct candidates; 15 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "mistral-7b-v0.3",
@@ -1144,13 +1144,13 @@
       "subject": "qwen2.5-7b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Qwen2.5' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=60, reproduction=5, replicate=33). 85 distinct candidates; 21 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "qwen2.5-7b",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Qwen2.5' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=60, reproduction=5, replicate=33). 85 distinct candidates; 21 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "qwen2.5-7b",
@@ -1328,13 +1328,13 @@
       "subject": "llama-3.1-8b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Llama 3.1' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=38, reproduction=4, replicate=33). 67 distinct candidates; 5 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "llama-3.1-8b",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Llama 3.1' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=38, reproduction=4, replicate=33). 67 distinct candidates; 5 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "llama-3.1-8b",
@@ -1377,7 +1377,7 @@
       "subject": "llama-3.1-8b",
       "axis": 12,
       "score": 1,
-      "note": "The weights are published and NOT retrievable without being granted access: a range request at a pinned revision returned HTTP 401. The axis is satisfied by retrievable weights, 'not gated access granted case by case'. ⚠️ This scoring convention is load-bearing for the non-monotonicity reported in the paper, and its sensitivity is reported there.",
+      "note": "The weights are published and NOT retrievable without being granted access: a range request at a pinned revision returned HTTP 401. The axis is satisfied by retrievable weights, 'not gated access granted case by case'. \u26a0\ufe0f This scoring convention is load-bearing for the non-monotonicity reported in the paper, and its sensitivity is reported there.",
       "evidence": [
         {
           "url": "https://huggingface.co/api/models/meta-llama/Llama-3.1-8B",
@@ -1497,13 +1497,13 @@
       "subject": "gemma-2-9b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Gemma 2' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=8, reproduction=2, replicate=12). 21 distinct candidates; 2 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gemma-2-9b",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Gemma 2' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=8, reproduction=2, replicate=12). 21 distinct candidates; 2 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gemma-2-9b",
@@ -1546,7 +1546,7 @@
       "subject": "gemma-2-9b",
       "axis": 12,
       "score": 1,
-      "note": "The weights are published and NOT retrievable without being granted access: a range request at a pinned revision returned HTTP 401. The axis is satisfied by retrievable weights, 'not gated access granted case by case'. ⚠️ This scoring convention is load-bearing for the non-monotonicity reported in the paper, and its sensitivity is reported there.",
+      "note": "The weights are published and NOT retrievable without being granted access: a range request at a pinned revision returned HTTP 401. The axis is satisfied by retrievable weights, 'not gated access granted case by case'. \u26a0\ufe0f This scoring convention is load-bearing for the non-monotonicity reported in the paper, and its sensitivity is reported there.",
       "evidence": [
         {
           "url": "https://huggingface.co/api/models/google/gemma-2-9b",
@@ -1652,13 +1652,13 @@
       "subject": "gpt-4o",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'GPT-4o' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=90, reproduction=6, replicate=53). 99 distinct candidates; 21 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gpt-4o",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'GPT-4o' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=90, reproduction=6, replicate=53). 99 distinct candidates; 21 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gpt-4o",
@@ -1812,13 +1812,13 @@
       "subject": "claude-3.5-sonnet",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Claude 3.5' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=12, reproduction=1, replicate=7). 19 distinct candidates; 2 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "claude-3.5-sonnet",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Claude 3.5' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=12, reproduction=1, replicate=7). 19 distinct candidates; 2 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "claude-3.5-sonnet",
@@ -1967,13 +1967,13 @@
       "subject": "gemini-1.5-pro",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Gemini 1.5' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=10, reproduction=0, replicate=6). 16 distinct candidates; 0 survive a second screen requiring the model name and a reproduction verb in the same sentence. No candidate survived the second screen. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gemini-1.5-pro",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'Gemini 1.5' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=10, reproduction=0, replicate=6). 16 distinct candidates; 0 survive a second screen requiring the model name and a reproduction verb in the same sentence. No candidate survived the second screen. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gemini-1.5-pro",
@@ -2154,13 +2154,13 @@
       "subject": "bert-base-uncased",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'BERT' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=97, reproduction=9, replicate=42). 98 distinct candidates; 44 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "bert-base-uncased",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'BERT' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=97, reproduction=9, replicate=42). 98 distinct candidates; 44 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "bert-base-uncased",
@@ -2340,13 +2340,13 @@
       "subject": "gpt-2-1.5b",
       "axis": 16,
       "score": 0,
-      "note": "No independent bit-identical reproduction report was found. SEARCH BOUND: the release's own model card, repository README and paper. This is not-found-within-a-bound, not global absence."
+      "note": "No independent bit-identical reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'GPT-2' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=47, reproduction=5, replicate=15). 63 distinct candidates; 24 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gpt-2-1.5b",
       "axis": 17,
       "score": 0,
-      "note": "No independent APPROXIMATE reproduction report was found. SEARCH BOUND, written here rather than cross-referenced: the release own model card, its repository README, and its paper or technical report. This is not-found-within-a-stated-bound, not global absence."
+      "note": "No independent approximate reproduction report was IDENTIFIED. SEARCH: arXiv, categories (cat:cs.CL OR cat:cs.LG), abstract queries for 'GPT-2' AND each of reproduce / reproduction / replicate, run 2026-08-29 (hits reproduce=47, reproduction=5, replicate=15). 63 distinct candidates; 24 survive a second screen requiring the model name and a reproduction verb in the same sentence. \u26d4 THE SURVIVORS HAVE NOT BEEN INDIVIDUALLY ADJUDICATED, so this cell is a NOT-IDENTIFIED, not a verified absence. \u26a0 NOT-FOUND-WITHIN-A-STATED-BOUND, NOT GLOBAL ABSENCE, and the bound is narrow: arXiv does not index every venue, and a reproduction report need not use these words. Queries and candidates are in negative-search.json so this can be re-run and contradicted."
     },
     {
       "subject": "gpt-2-1.5b",
