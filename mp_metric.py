@@ -239,6 +239,27 @@ def validate(led):
             elif h not in seen_sha:
                 seen_sha[h] = (u, f"{c.get('subject')}/axis{c.get('axis')}")
 
+    # ⛔ EVERY NON-ZERO CELL MAY CITE ONLY SOURCES ITS SUBJECT DECLARES. Ownership used to be
+    # inferred from the cells being audited, so it could not fire at runtime and a symmetric swap
+    # redefined it. subjects[].sources is a DECLARATION on the subject record: it does not travel
+    # with evidence, it does not travel with a check block, and exchanging two cells cannot move
+    # it. This is the validator's half; replay.gate() applies the same rule per cell.
+    import replay as _R                                                    # noqa: PLC0415
+    _decl = {s["id"]: set(s.get("sources") or ()) for s in led.get("subjects", [])}
+    for c in led.get("cells", []):
+        if not c.get("score"):
+            continue
+        allowed = _decl.get(c["subject"])
+        if not allowed:
+            continue
+        for e in (c.get("evidence") or []):
+            k = _R.source_key(e["url"])
+            if k not in allowed:
+                owner = sorted(s for s, v in _decl.items() if k in v)
+                d.append(f"{c['subject']}/axis{c['axis']}: cites {k}, which this subject does not "
+                         f"declare in subjects[].sources"
+                         + (f" (it is {', '.join(owner)}'s)" if owner else ""))
+
     # PROJECT over subjects x axes: every pair must be present.
     for s in subjects:
         for ax in A.BY_ID:

@@ -38,73 +38,133 @@
       "id": "pythia-12b",
       "kind": "fully-open",
       "repo": "EleutherAI/pythia-12b",
-      "note": "positive control: if the release publishing most cannot score, the instrument is wrong"
+      "note": "positive control: if the release publishing most cannot score, the instrument is wrong",
+      "sources": [
+        "arxiv:2304.01373",
+        "gh:EleutherAI/gpt-neox",
+        "gh:EleutherAI/lm-evaluation-harness",
+        "gh:EleutherAI/pythia",
+        "hf:EleutherAI/pythia-12b",
+        "hfds:EleutherAI/pile"
+      ]
     },
     {
       "id": "olmo-2-13b",
       "kind": "fully-open",
       "repo": "allenai/OLMo-2-1124-13B",
-      "note": "fully-open stratum"
+      "note": "fully-open stratum",
+      "sources": [
+        "gh:allenai/OLMo",
+        "hf:allenai/OLMo-2-1124-13B",
+        "hfds:allenai/olmo-mix-1124",
+        "host:olmo-data.org"
+      ]
     },
     {
       "id": "bloom-176b",
       "kind": "fully-open",
       "repo": "bigscience/bloom",
-      "note": "fully-open stratum"
+      "note": "fully-open stratum",
+      "sources": [
+        "gh:bigscience-workshop/bigscience",
+        "hf:bigscience/bloom"
+      ]
     },
     {
       "id": "mistral-7b-v0.3",
       "kind": "open-weights",
       "repo": "mistralai/Mistral-7B-v0.3",
-      "note": "open-weights"
+      "note": "open-weights",
+      "sources": [
+        "arxiv:2310.06825",
+        "hf:mistralai/Mistral-7B-v0.3"
+      ]
     },
     {
       "id": "qwen2.5-7b",
       "kind": "open-weights",
       "repo": "Qwen/Qwen2.5-7B",
-      "note": "open-weights"
+      "note": "open-weights",
+      "sources": [
+        "arxiv:2412.15115",
+        "gh:QwenLM/Qwen2.5",
+        "hf:Qwen/Qwen2.5-7B"
+      ]
     },
     {
       "id": "llama-3.1-8b",
       "kind": "open-weights",
       "repo": "meta-llama/Llama-3.1-8B",
-      "note": "open-weights, gated"
+      "note": "open-weights, gated",
+      "sources": [
+        "gh:meta-llama/llama-models",
+        "hf:meta-llama/Llama-3.1-8B"
+      ]
     },
     {
       "id": "gemma-2-9b",
       "kind": "open-weights",
       "repo": "google/gemma-2-9b",
-      "note": "open-weights, gated"
+      "note": "open-weights, gated",
+      "sources": [
+        "arxiv:2408.00118",
+        "gh:google-deepmind/gemma",
+        "hf:google/gemma-2-9b"
+      ]
     },
     {
       "id": "gpt-4o",
       "kind": "api-only",
       "repo": null,
-      "note": "api-only"
+      "note": "api-only",
+      "sources": [
+        "arxiv:2410.21276",
+        "gh:openai/simple-evals"
+      ]
     },
     {
       "id": "claude-3.5-sonnet",
       "kind": "api-only",
       "repo": null,
-      "note": "api-only. Published by the organisation whose model assisted this work; scored by the same rule, per the pre-registered disclosure"
+      "note": "api-only. Published by the organisation whose model assisted this work; scored by the same rule, per the pre-registered disclosure",
+      "sources": [
+        "gh:anthropics/evals",
+        "host:assets.anthropic.com",
+        "host:www.anthropic.com"
+      ]
     },
     {
       "id": "gemini-1.5-pro",
       "kind": "api-only",
       "repo": null,
-      "note": "api-only"
+      "note": "api-only",
+      "sources": [
+        "arxiv:2403.05530"
+      ]
     },
     {
       "id": "bert-base-uncased",
       "kind": "historical-control",
       "repo": "google-bert/bert-base-uncased",
-      "note": "historical control, 2018. google-bert is maintained by the Hugging Face Transformers team, not by the publisher"
+      "note": "historical control, 2018. google-bert is maintained by the Hugging Face Transformers team, not by the publisher",
+      "sources": [
+        "arxiv:1810.04805",
+        "arxiv:1907.11692",
+        "gh:google-research/bert",
+        "hf:google-bert/bert-base-uncased"
+      ]
     },
     {
       "id": "gpt-2-1.5b",
       "kind": "historical-control",
       "repo": "openai-community/gpt2-xl",
-      "note": "historical control, 2019. REBOUND after round-1 review: the prior evidence cited openai-community/gpt2, which is the 137M checkpoint"
+      "note": "historical control, 2019. REBOUND after round-1 review: the prior evidence cited openai-community/gpt2, which is the 137M checkpoint",
+      "sources": [
+        "gh:karpathy/llm.c",
+        "gh:openai/gpt-2",
+        "hf:karpathy/gpt2_1558M_final2_hf",
+        "hf:openai-community/gpt2-xl"
+      ]
     }
   ],
   "cells": [
@@ -490,7 +550,8 @@
       "check": {
         "method": "http_range",
         "asserts": "a third party can acquire the corpus bytes: a byte-range request against a data object named by the published config returns real content",
-        "observed": "Range 0-2047 on http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy returned HTTP 206 with 2048 bytes of binary token data (not markup); sha256 of the returned range recorded in the evidence below. The config enumerates 1122 such objects."
+        "observed": "Range 0-2047 on http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy returned HTTP 206 with 2048 bytes of binary token data (not markup); sha256 of the returned range recorded in the evidence below. The config enumerates 1122 such objects.",
+        "enumerated_index": 0
       },
       "evidence": [
         {
@@ -3823,5 +3884,6 @@
       "note": "4/4 shards carry a digest, but the repository is maintained by the Hugging Face Transformers team rather than by the publisher of the release. The axis requires a digest published BY THE PUBLISHER, not computed by a mirror, so this is 0. Round-1 review found this; it lowers the historical control."
     }
   ],
-  "scoring": "SCORING.md, rewritten after round-1 review"
+  "scoring": "SCORING.md, rewritten after round-1 review",
+  "_sources_readme": "\u26d4 SUBJECT-BOUND SOURCE REGISTRY. Ownership used to be INFERRED from the cells being audited: cited_by() walked the same ledger validate() was checking, so a cell's own subject was in the owner set by construction and the check could not fire; and a SYMMETRIC swap simply redefined each artifact's owner. Both round-7 reviewers found this. These lists live on the SUBJECT record so they cannot travel with evidence or with a check block, and a cell may cite only sources its subject declares."
 }

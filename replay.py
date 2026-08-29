@@ -116,49 +116,38 @@ def _enumeration(ev):
     return (repo, rev, shards), None
 
 
-def subject_context(led):
-    """What the ledger already knows: which repository each subject IS.
-
-    Returns {subject: repo_or_None} plus the inverse, so a cell can be checked against its own
-    subject AND against every other subject it must not be confused with.
-    """
-    return {s["id"]: s.get("repo") for s in led.get("subjects", [])}
-
-
-def foreign_evidence(cell, ctx):
-    """Evidence that belongs, by the ledger's own declaration, to a DIFFERENT subject.
-
-    ⛔ THE GENERAL FORM OF THE LAST DEFECT. Not Hugging Face specific: any cited artifact whose url
-    contains another subject's declared repository path is that subject's evidence, wherever it is
-    hosted. A cell may cite a third party's document -- RoBERTa backs a bert cell, and llm.c backs
-    a gpt-2 cell -- but it may never cite an artifact that IS another census subject's release.
-    """
-    mine = ctx.get(cell["subject"])
-    bad = []
-    for e in (cell.get("evidence") or []):
-        u = e["url"].lower()
-        for sub, repo in ctx.items():
-            if not repo or sub == cell["subject"]:
-                continue
-            if repo.lower() in u and (not mine or mine.lower() not in u):
-                bad.append("%s is %s's artifact" % (e["url"].rsplit("/", 1)[-1][:38], sub))
-    return bad
-
-
-
-def subject_context(led):
-    """What the ledger already knows: which repository each subject IS."""
-    return {s["id"]: s.get("repo") for s in led.get("subjects", [])}
+def source_key(u):
+    """A stable identity for the PUBLISHING SOURCE an artifact comes from."""
+    rest = u.split("//", 1)[-1]
+    host = rest.split("/", 1)[0]
+    tail = rest.split("/", 1)[1] if "/" in rest else ""
+    p = [x for x in tail.split("/") if x]
+    if host == "huggingface.co":
+        if p and p[0] == "api":
+            return ("hf:" if len(p) > 1 and p[1] == "models" else "hfds:") + "/".join(p[2:4])
+        if p and p[0] == "datasets":
+            return "hfds:" + "/".join(p[1:3])
+        return "hf:" + "/".join(p[:2])
+    if host in ("raw.githubusercontent.com", "github.com"):
+        return "gh:" + "/".join(p[:2])
+    if host == "api.github.com":
+        return "gh:" + "/".join(p[1:3])
+    if host == "arxiv.org":
+        return "arxiv:" + p[-1]
+    return "host:" + host
 
 
 def cited_by(led):
-    """url -> {subjects that cite it}. The ledger knows this and nothing was reading it.
+    """url -> {subjects citing it}. ⛔ THIS IS NOT THE OWNERSHIP ORACLE AND MUST NOT BE USED AS ONE.
 
-    ⛔ subjects[].repo NAMES ONLY THE MODEL REPOSITORY, so a dataset repo, a code repo or an arXiv
-    page belonging to another subject was invisible. Two live consequences a reviewer demonstrated:
-    pythia's SEEDS-PUBLISHED cell passed backed solely by google-research/bert's README, because
-    that README contains the literal `1234`; and bloom's CORPUS-ENUMERATED cell passed backed
-    solely by the Gemini 1.5 arXiv page, because it contains `oscar`.
+    It is derived from the cells being audited, so a cell's own subject is in the set by
+    construction and a SYMMETRIC swap redefines every owner. That is precisely how ownership
+    failed: `main()` passed this map and the check became unreachable, while `--selftest` passed a
+    frozen copy and the same mutation was rejected. Ownership now comes from `subjects[].sources`,
+    which a mutation of cells cannot move.
+
+    Kept because it is a useful description of the ledger, and because an external harness may
+    still call it -- but nothing in the gate reads it.
     """
     out = {}
     for c in led.get("cells", []):
@@ -167,31 +156,41 @@ def cited_by(led):
     return out
 
 
-def foreign_evidence(cell, ctx, owners=None):
-    """Evidence the ledger declares to belong to a DIFFERENT subject.
+def subject_context(led):
+    """What the ledger DECLARES about each subject: its repository and its permitted sources.
 
-    ⚠️ `owners` DEFAULTS TO THE LEDGER ON DISK rather than to nothing. A caller passing two
-    arguments used to silently skip half this check -- which is what happened when a reviewer's
-    harness replicated the gate faithfully as of the previous round and got a clean pass on two
-    substitutions the full gate rejects. A check with an optional half is a check with a default
-    that disables it.
+    ⛔ OWNERSHIP USED TO BE INFERRED FROM THE CELLS BEING AUDITED. `cited_by()` walked the same
+    ledger `validate()` was checking, so a cell's own subject was in the owner set by construction
+    and the check could not fire at runtime -- and a SYMMETRIC swap simply redefined each
+    artifact's owner. Both round-7 reviewers found this, one by reading the conjunct and one by
+    exchanging two cells and watching the ledger accept it.
+
+    ⇒ These lists live on the SUBJECT RECORD. They do not travel with evidence, they do not travel
+    with a check block, and exchanging two cells cannot move them.
     """
-    if owners is None:
-        owners = cited_by(json.loads((HERE / "cells.json").read_text(encoding="utf-8")))
-    mine = ctx.get(cell["subject"])
+    return {s["id"]: {"repo": s.get("repo"), "sources": set(s.get("sources") or ())}
+            for s in led.get("subjects", [])}
+
+
+def foreign_evidence(cell, ctx, _unused=None):
+    """Evidence from a source this subject does not declare. POSITIVE, not merely not-another's.
+
+    ⚠️ The previous test was purely negative -- "not some other subject's artifact" -- so a
+    document belonging to NOBODY passed, and nothing required a cell to cite something its own
+    subject publishes or names. This asks the other question.
+    """
+    dec = (ctx or {}).get(cell["subject"]) or {}
+    allowed = dec.get("sources") or set()
+    if not allowed:
+        return []                       # a subject with no declared sources constrains nothing
     bad = []
     for e in (cell.get("evidence") or []):
-        u = e["url"].lower()
-        for sub, repo in ctx.items():
-            if not repo or sub == cell["subject"]:
-                continue
-            if repo.lower() in u and (not mine or mine.lower() not in u):
-                bad.append("%s is %s's artifact" % (e["url"].rsplit("/", 1)[-1][:38], sub))
-        if owners:
-            others = owners.get(e["url"], set()) - {cell["subject"]}
-            if others and cell["subject"] not in owners.get(e["url"], set()):
-                bad.append("%s is cited by %s and by no cell of this subject"
-                           % (e["url"].rsplit("/", 1)[-1][:38], ", ".join(sorted(others))))
+        k = source_key(e["url"])
+        if k not in allowed:
+            owner = sorted(s for s, v in (ctx or {}).items() if k in (v.get("sources") or set()))
+            bad.append("%s is from %s, which %s does not declare%s"
+                       % (e["url"].rsplit("/", 1)[-1][:34], k, cell["subject"],
+                          " (it is %s's)" % ", ".join(owner) if owner else ""))
     return bad
 
 
@@ -229,15 +228,33 @@ def m_range(c, ev, ctx=None):
     if hashlib.sha256(b).hexdigest() != r[0]["sha256"]:
         return False, "archived bytes do not hash to the recorded digest"
 
-    # ⛔ THE ANCHOR. The url must occur in a co-cited artifact's archived bytes.
+    # ⛔ THE ANCHOR BOUND THE DOCUMENT, NOT THE PATH. The config enumerates 1,122 data paths, so
+    # relabelling the ranged url to ANY of them still anchored: right host, right corpus, right
+    # length, wrong object -- the CoreML shape a third time. The bind step records WHICH position
+    # in the enumeration the bytes came from, and the url must be the path at that position.
+    idx = c["check"].get("enumerated_index")
     anchored = []
     for e in others:
         hay = _bytes_for(e)
-        if hay is not None and r[0]["url"].encode() in hay:
-            anchored.append(e["url"].rsplit("/", 1)[-1][:34])
+        if hay is None or r[0]["url"].encode() not in hay:
+            continue
+        if idx is not None:
+            paths = [l.strip()[2:] for l in hay.decode("utf-8", "replace").split(chr(10))
+                     if l.startswith("    - ")]
+            if idx >= len(paths):
+                return False, ("the cell records enumeration index %d and the co-cited document "
+                               "lists %d paths" % (idx, len(paths)))
+            if paths[idx] != r[0]["url"]:
+                return False, ("the ranged url is not the path at the recorded position: index %d "
+                               "of %s is %s" % (idx, e["url"].rsplit("/", 1)[-1][:28],
+                                                paths[idx].rsplit("/", 1)[-1][:34]))
+        anchored.append(e["url"].rsplit("/", 1)[-1][:34])
     if not anchored:
         return False, ("the ranged url appears in NO co-cited artifact, so nothing connects these "
                        "bytes to this subject's corpus")
+    if idx is None:
+        return False, ("the cell records no `enumerated_index`, so the url could name any of the "
+                       "paths the co-cited document lists")
     return True, ("%d archived bytes, digest matches, and the url is named in %s"
                   % (len(b), anchored[0]))
 
@@ -256,7 +273,7 @@ def m_weight_object(c, ev, ctx=None):
     repo, rev, shards = enum
     # ⛔ THE EDGE NOBODY WAS CHECKING. Every artifact agreed with every other artifact, and none
     # agreed with the SUBJECT. The ledger declares subjects[].repo; this reads it.
-    expect = (ctx or {}).get(c["subject"])
+    expect = ((ctx or {}).get(c["subject"]) or {}).get("repo")
     if expect and repo != expect:
         return False, ("this is %s's evidence; the cell is scored for %s, which the ledger "
                        "declares to be %s" % (repo, c["subject"], expect))
@@ -319,7 +336,7 @@ def m_all_shard_digests(c, ev, ctx=None):
     repo, rev, shards = enum
     # ⛔ THE EDGE NOBODY WAS CHECKING. Every artifact agreed with every other artifact, and none
     # agreed with the SUBJECT. The ledger declares subjects[].repo; this reads it.
-    expect = (ctx or {}).get(c["subject"])
+    expect = ((ctx or {}).get(c["subject"]) or {}).get("repo")
     if expect and repo != expect:
         return False, ("this is %s's evidence; the cell is scored for %s, which the ledger "
                        "declares to be %s" % (repo, c["subject"], expect))
@@ -409,6 +426,10 @@ def gate(cell, ctx=None, owners=None, led=None):
         ctx = subject_context(led)
     meth = (cell.get("check") or {}).get("method", "")
 
+    # ⛔ THIS RAN FOR score == 2 ONLY. Thirty of the fifty-four non-zero cells are ASSERTED and
+    # received no identity check anywhere in the project -- and they carry points: all 1,381
+    # transplants onto them were accepted end to end. Section 6.1's claims-as-checks test, the one
+    # that could have killed the paper, is computed entirely from cells nothing was checking.
     stray = foreign_evidence(cell, ctx, owners)
     if stray:
         return False, "; ".join(stray[:2])
@@ -424,6 +445,11 @@ def gate(cell, ctx=None, owners=None, led=None):
             return False, ("digest %s is cited under %d different urls; the same bytes cannot "
                            "have been retrieved from all of them"
                            % (_e["sha256"][:12], len(_urls)))
+    if cell.get("score") == 1:
+        # An ASSERTED cell names no mechanical check by definition. What it must satisfy -- and
+        # what nothing checked until now -- is that its evidence comes from a source its subject
+        # declares. The method/field requirements below are about REPLAY, which a 1 does not claim.
+        return True, "asserted; evidence is from a declared source"
     req = A.required_method(cell["axis"])
     if req and meth not in req:
         return False, ("axis %d REQUIRES %s; %r is registered and permitted but does not bind "
@@ -457,10 +483,16 @@ def selftest():
     def run_one(mut):
         d = copy.deepcopy(led)
         mut(d)
+        # ⚠️ THE SELF-TEST USED A FROZEN ORACLE and the runtime used the mutated ledger, so a
+        # symmetric swap failed here and passed there. Both now read the DECLARATION, which a
+        # mutation of cells cannot move -- so this test is runtime-faithful.
         ctx = subject_context(d)
-        owners = cited_by(led)          # ownership from the UNMUTATED ledger
+        owners = None
+        # ⛔ THIS FILTERED TO score == 2, so the self-test could not see an attack on an
+        # ASSERTED cell -- and 30 of the 54 non-zero cells are ASSERTED. The gate now covers
+        # every non-zero cell and so must the test that exercises it.
         for c in d["cells"]:
-            if c.get("score") != 2:
+            if not c.get("score"):
                 continue
             res, _why = gate(c, ctx, owners, d)
             if res is False:
@@ -548,6 +580,21 @@ def selftest():
         ("a corpus cell backed solely by another subject's arXiv page",
          lambda d: _find(d, "bloom-176b", 1).__setitem__(
              "evidence", copy.deepcopy(_find(d, "gemini-1.5-pro", 1)["evidence"]))),
+        # ── round 7: ownership inferred from the audited ledger ──────────────────────
+        ("a SYMMETRIC swap, which redefined ownership under the old inferred map",
+         lambda d: [_find(d, a, 1).__setitem__("evidence", copy.deepcopy(_find(d, b, 1)["evidence"]))
+                    for a, b in (("pythia-12b", "olmo-2-13b"),)] +
+                   [_find(d, "olmo-2-13b", 1).__setitem__(
+                       "evidence", copy.deepcopy(_find(d, "pythia-12b", 1)["evidence"]))]),
+        ("an ASSERTED cell given another subject's evidence (no gate ran for score 1)",
+         lambda d: _find(d, "bloom-176b", 7).__setitem__(
+             "evidence", copy.deepcopy(_find(d, "llama-3.1-8b", 1)["evidence"]))),
+        ("a ranged url relabelled to a different path the same document enumerates",
+         lambda d: _find(d, "olmo-2-13b", 4)["check"].__setitem__("enumerated_index", 5)),
+        ("a cell backed by a document belonging to nobody",
+         lambda d: _find(d, "bert-base-uncased", 1).__setitem__(
+             "evidence", [{"url": "https://example.org/bert-history", "retrieved": "2026-08-29",
+                           "sha256": "c" * 64}])),
         ("2 KB of an HTML sign-in page instead of the weight range",
          lambda d: _stub_html(d)),
         ("falsified expected strings on a replayable grep",
@@ -586,14 +633,23 @@ def main():
     strict = "--strict" in sys.argv
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
     ctx = subject_context(led)
-    owners = cited_by(led)
-    ok = failed = unreplayable = 0
+    owners = None
+    ok = failed = unreplayable = asserted_ok = 0
     print("=" * 78)
     print("  replaying every VERIFIED check over archived bytes")
     print("=" * 78)
     print()
     for c in led["cells"]:
-        if c.get("score") != 2:
+        if not c.get("score"):
+            continue
+        if c.get("score") == 1:
+            res, why = gate(c, ctx, owners, led)
+            where1 = "%s/axis%d" % (c["subject"], c["axis"])
+            if res is False:
+                print("  " + chr(0x26D4) + " FAIL %-24s %s" % (where1, why))
+                failed += 1
+            else:
+                asserted_ok += 1
             continue
         meth = c["check"]["method"]
         fn = DISPATCH.get(meth)
@@ -623,6 +679,7 @@ def main():
     print("=" * 78)
     print("  %d replayed and passed, %d FAILED, %d shape-verified only"
           % (ok, failed, unreplayable))
+    print("  %d ASSERTED cell(s) also pass the ownership gate" % asserted_ok)
     if unreplayable and strict:
         print("  --strict: a shape-verified check does not support the sentence 'a registered")
         print("  mechanical check over its content succeeded'.")
