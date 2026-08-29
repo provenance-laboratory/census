@@ -125,8 +125,38 @@ def _enumeration(ev):
     return (repo, rev, shards), None
 
 
-def m_weight_object(c, ev):
-    """Axis 12: a real weight range, from a file THIS repository enumerates, at THIS revision."""
+def subject_context(led):
+    """What the ledger already knows: which repository each subject IS.
+
+    Returns {subject: repo_or_None} plus the inverse, so a cell can be checked against its own
+    subject AND against every other subject it must not be confused with.
+    """
+    return {s["id"]: s.get("repo") for s in led.get("subjects", [])}
+
+
+def foreign_evidence(cell, ctx):
+    """Evidence that belongs, by the ledger's own declaration, to a DIFFERENT subject.
+
+    ⛔ THE GENERAL FORM OF THE LAST DEFECT. Not Hugging Face specific: any cited artifact whose url
+    contains another subject's declared repository path is that subject's evidence, wherever it is
+    hosted. A cell may cite a third party's document -- RoBERTa backs a bert cell, and llm.c backs
+    a gpt-2 cell -- but it may never cite an artifact that IS another census subject's release.
+    """
+    mine = ctx.get(cell["subject"])
+    bad = []
+    for e in (cell.get("evidence") or []):
+        u = e["url"].lower()
+        for sub, repo in ctx.items():
+            if not repo or sub == cell["subject"]:
+                continue
+            if repo.lower() in u and (not mine or mine.lower() not in u):
+                bad.append("%s is %s's artifact" % (e["url"].rsplit("/", 1)[-1][:38], sub))
+    return bad
+
+
+
+def m_weight_object(c, ev, ctx=None):
+    """Axis 12: a real weight range, from a file THIS SUBJECT's repository enumerates."""
     want = c["check"].get("expect_range_bytes")
     if not want:
         return None, "no expect_range_bytes: nothing to recompute"
@@ -137,6 +167,13 @@ def m_weight_object(c, ev):
     if enum is None:
         return False, why
     repo, rev, shards = enum
+    # ⛔ THE EDGE NOBODY WAS CHECKING. Every artifact agreed with every other artifact, and none
+    # agreed with the SUBJECT. The ledger declares subjects[].repo; this reads it.
+    expect = (ctx or {}).get(c["subject"])
+    if expect and repo != expect:
+        return False, ("this is %s's evidence; the cell is scored for %s, which the ledger "
+                       "declares to be %s" % (repo, c["subject"], expect))
+
 
     r = [e for e in ev if e.get("range")]
     if len(r) != 1:
@@ -181,8 +218,8 @@ def m_weight_object(c, ev):
                   % (len(b), rfile, repo, rev[:12]))
 
 
-def m_all_shard_digests(c, ev):
-    """Axis 13: the cited pointers must BE this revision's shard set -- exactly, and distinctly."""
+def m_all_shard_digests(c, ev, ctx=None):
+    """Axis 13: the cited pointers must BE this subject's shard set -- exactly, and distinctly."""
     want = c["check"].get("expect_shards")
     if not want:
         return None, "no expect_shards: nothing to recompute"
@@ -193,6 +230,13 @@ def m_all_shard_digests(c, ev):
     if enum is None:
         return False, why
     repo, rev, shards = enum
+    # ⛔ THE EDGE NOBODY WAS CHECKING. Every artifact agreed with every other artifact, and none
+    # agreed with the SUBJECT. The ledger declares subjects[].repo; this reads it.
+    expect = (ctx or {}).get(c["subject"])
+    if expect and repo != expect:
+        return False, ("this is %s's evidence; the cell is scored for %s, which the ledger "
+                       "declares to be %s" % (repo, c["subject"], expect))
+
     if len(shards) != want:
         return False, ("the archived api response enumerates %d shards, the cell claims %d"
                        % (len(shards), want))
@@ -279,14 +323,20 @@ def selftest():
     def run_one(mut):
         d = copy.deepcopy(led)
         mut(d)
+        ctx = subject_context(d)
         for c in d["cells"]:
             if c.get("score") != 2:
                 continue
+            if foreign_evidence(c, ctx):
+                return False
             fn = DISPATCH.get(c["check"]["method"])
             if fn and c["check"]["method"] not in A.methods_for(c["axis"]):
                 return False
             if fn:
-                res, _why = fn(c, c.get("evidence") or [])
+                try:
+                    res, _why = fn(c, c.get("evidence") or [], ctx)
+                except TypeError:
+                    res, _why = fn(c, c.get("evidence") or [])
                 if res is False:
                     return False
         return True
@@ -298,8 +348,11 @@ def selftest():
         page = (b"<!DOCTYPE html><html><head><title>Sign in</title></head><body>"
                 b"You need to agree to share your contact information to access this model."
                 + b" " * 1900)[:2048]
+        # ⚠️ THIS LEFT ITS FABRICATED PAGE IN evidence/, and the archive shipped an
+        # unreferenced 2 KB sign-in blob. Round-5 review found it. Written, used, removed.
         blob = STORE / (_h.sha256(page).hexdigest() + ".gz")
         blob.write_bytes(gzip.compress(page, 9))
+        _temp_blobs.append(blob)
         e = _find(d, "mistral-7b-v0.3", 12)["evidence"][0]
         e["sha256"] = _h.sha256(page).hexdigest()
 
@@ -337,12 +390,26 @@ def selftest():
         ("a pointer whose recorded pinned_commit disagrees with its url",
          lambda d: _find(d, "bloom-176b", 13)["evidence"][3].__setitem__(
              "pinned_commit", "0" * 40)),
+        # ── round 5: evidence that is internally perfect and belongs to another subject ──
+        ("one subject's ENTIRE axis-12 evidence set given to another",
+         lambda d: _find(d, "qwen2.5-7b", 12).__setitem__(
+             "evidence", copy.deepcopy(_find(d, "mistral-7b-v0.3", 12)["evidence"]))),
+        ("both weight axes swapped wholesale between two subjects",
+         lambda d: [_find(d, "qwen2.5-7b", a).__setitem__(
+             "evidence", copy.deepcopy(_find(d, "mistral-7b-v0.3", a)["evidence"]))
+             for a in (12, 13)]),
+        ("a grep cell given another subject's evidence AND its check block",
+         lambda d: (_find(d, "bert-base-uncased", 1).__setitem__(
+             "evidence", copy.deepcopy(_find(d, "bloom-176b", 1)["evidence"])),
+             _find(d, "bert-base-uncased", 1).__setitem__(
+             "check", copy.deepcopy(_find(d, "bloom-176b", 1)["check"])))),
         ("2 KB of an HTML sign-in page instead of the weight range",
          lambda d: _stub_html(d)),
         ("falsified expected strings on a replayable grep",
          lambda d: _find(d, "bert-base-uncased", 1)["check"].update(
              {"expect": ["this string is not in the archived bytes"]})),
     ]
+    _temp_blobs = []
     print("=" * 78)
     print("  SELF-TEST: every mutation below MUST make a check fail")
     print("=" * 78)
@@ -358,6 +425,8 @@ def selftest():
         if survived:
             bad += 1
     print()
+    for _b in _temp_blobs:
+        _b.unlink(missing_ok=True)          # never leave a fabricated artifact in the archive
     print("  %d of %d attacks correctly rejected" % (len(attacks) - bad, len(attacks)))
     if bad:
         print("  " + chr(0x26D4) + " a control that cannot fail is reported as coverage.")
@@ -371,6 +440,7 @@ def main():
         return selftest()
     strict = "--strict" in sys.argv
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
+    ctx = subject_context(led)
     ok = failed = unreplayable = 0
     print("=" * 78)
     print("  replaying every VERIFIED check over archived bytes")
@@ -393,7 +463,15 @@ def main():
                   % (where, meth, ", ".join(sorted(A.methods_for(c["axis"])))))
             failed += 1
             continue
-        res, why = fn(c, c.get("evidence") or [])
+        stray = foreign_evidence(c, ctx)
+        if stray:
+            print("  " + chr(0x26D4) + " FAIL %-24s %s" % (where, "; ".join(stray[:2])))
+            failed += 1
+            continue
+        try:
+            res, why = fn(c, c.get("evidence") or [], ctx)
+        except TypeError:
+            res, why = fn(c, c.get("evidence") or [])
         if res is True:
             print("  ok    %-26s %s" % (where, why))
             ok += 1

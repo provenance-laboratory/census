@@ -103,6 +103,31 @@ def main():
     STORE.mkdir(exist_ok=True)
     man, want = load_manifest(), wanted()
 
+    if "--verify" in sys.argv or "--gc" in sys.argv:
+        # ⛔ AN UNREFERENCED BLOB IS NOT EVIDENCE OF ANYTHING. Rebinding a cell writes a new
+        # artifact and leaves the superseded one on disk, referenced by nothing and listed
+        # nowhere -- so it shipped inside the archive, invisible. That is the same objection
+        # round-5 review raised about a fabricated self-test page left behind, and the manifest's
+        # 18 SUPERSEDED ENTRIES are a different thing: those are recorded, with their digests,
+        # and deliberately kept.
+        man0 = load_manifest()
+        referenced = {a["sha256"] for a in man0["artifacts"].values()}
+        stray = sorted(q.stem for q in STORE.glob("*.gz") if q.stem not in referenced)
+        if stray:
+            print("  %d blob(s) in evidence/ are referenced by nothing:" % len(stray))
+            for s in stray[:6]:
+                print("      %s" % s[:32])
+            if "--gc" in sys.argv:
+                for s in stray:
+                    (STORE / (s + ".gz")).unlink(missing_ok=True)
+                print("  removed. They backed no claim and were listed in no manifest.")
+            else:
+                print("  run with --gc to remove them, or explain why they are kept.")
+        else:
+            print("  no unreferenced blobs")
+        if "--gc" in sys.argv and "--verify" not in sys.argv:
+            return 0
+
     if "--verify" in sys.argv:
         bad = verify(man, want)
         n_stored = sum(1 for u in want if man["artifacts"].get(u, {}).get("stored"))
