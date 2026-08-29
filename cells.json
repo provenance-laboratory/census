@@ -46,7 +46,118 @@
         "gh:EleutherAI/pythia",
         "hf:EleutherAI/pythia-12b",
         "hfds:EleutherAI/pile"
-      ]
+      ],
+      "axis_sources": {
+        "1": [
+          "arxiv:2304.01373",
+          "hfds:EleutherAI/pile"
+        ],
+        "4": [
+          "hfds:EleutherAI/pile"
+        ],
+        "6": [
+          "gh:EleutherAI/gpt-neox",
+          "gh:EleutherAI/pythia"
+        ],
+        "7": [
+          "gh:EleutherAI/pythia"
+        ],
+        "8": [
+          "gh:EleutherAI/pythia"
+        ],
+        "10": [
+          "gh:EleutherAI/pythia"
+        ],
+        "11": [
+          "gh:EleutherAI/pythia"
+        ],
+        "12": [
+          "hf:EleutherAI/pythia-12b"
+        ],
+        "13": [
+          "hf:EleutherAI/pythia-12b"
+        ],
+        "18": [
+          "gh:EleutherAI/lm-evaluation-harness"
+        ],
+        "19": [
+          "hfds:EleutherAI/pile"
+        ]
+      },
+      "axis_documents": {
+        "1": [
+          "https://arxiv.org/abs/2304.01373",
+          "https://huggingface.co/datasets/EleutherAI/pile/raw/148e1d5e8349977c76f673190424a2faf6980a1d/README.md"
+        ],
+        "4": [
+          "https://huggingface.co/datasets/EleutherAI/pile/raw/148e1d5e8349977c76f673190424a2faf6980a1d/README.md"
+        ],
+        "6": [
+          "https://raw.githubusercontent.com/EleutherAI/gpt-neox/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb/README.md",
+          "https://raw.githubusercontent.com/EleutherAI/pythia/e204ae87eabcc6994ccd93622716525a7005ba17/README.md"
+        ],
+        "7": [
+          "https://raw.githubusercontent.com/EleutherAI/pythia/55e1182be2856e34e5044e5eb8ac96002e9e40f3/models/12B/pythia-12b.yml"
+        ],
+        "8": [
+          "https://raw.githubusercontent.com/EleutherAI/pythia/e204ae87eabcc6994ccd93622716525a7005ba17/README.md"
+        ],
+        "10": [
+          "https://raw.githubusercontent.com/EleutherAI/pythia/e204ae87eabcc6994ccd93622716525a7005ba17/README.md"
+        ],
+        "11": [
+          "https://raw.githubusercontent.com/EleutherAI/pythia/da58a10f0364586d897997163f0f57ea62b15f47/utils/batch_viewer.py",
+          "https://raw.githubusercontent.com/EleutherAI/pythia/e204ae87eabcc6994ccd93622716525a7005ba17/README.md"
+        ],
+        "12": [
+          "https://huggingface.co/EleutherAI/pythia-12b/resolve/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors",
+          "https://huggingface.co/api/models/EleutherAI/pythia-12b/revision/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6"
+        ],
+        "13": [
+          "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors",
+          "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00002-of-00003.safetensors",
+          "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00003-of-00003.safetensors",
+          "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/pytorch_model-00001-of-00003.bin",
+          "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/pytorch_model-00002-of-00003.bin",
+          "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/pytorch_model-00003-of-00003.bin",
+          "https://huggingface.co/api/models/EleutherAI/pythia-12b/revision/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6"
+        ],
+        "18": [
+          "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/releases/latest"
+        ],
+        "19": [
+          "https://huggingface.co/datasets/EleutherAI/pile/raw/148e1d5e8349977c76f673190424a2faf6980a1d/README.md"
+        ]
+      },
+      "axis_literals": {
+        "1": [
+          "ArXiv",
+          "Pile-CC",
+          "PubMed"
+        ],
+        "6": [
+          "gpt-neox"
+        ],
+        "8": [
+          "1234"
+        ],
+        "11": [
+          "batch_viewer"
+        ]
+      },
+      "axis_method": {
+        "1": "grep_retrieved",
+        "4": null,
+        "6": "grep_retrieved",
+        "7": null,
+        "8": "grep_retrieved",
+        "10": null,
+        "11": "grep_retrieved",
+        "18": null,
+        "19": null,
+        "12": "hf_probe.weight_object",
+        "13": "hf_probe.all_shard_digests"
+      }
     },
     {
       "id": "olmo-2-13b",
@@ -58,7 +169,128 @@
         "hf:allenai/OLMo-2-1124-13B",
         "hfds:allenai/olmo-mix-1124",
         "host:olmo-data.org"
-      ]
+      ],
+      "axis_sources": {
+        "1": [
+          "hfds:allenai/olmo-mix-1124"
+        ],
+        "4": [
+          "gh:allenai/OLMo",
+          "host:olmo-data.org"
+        ],
+        "6": [
+          "gh:allenai/OLMo"
+        ],
+        "7": [
+          "gh:allenai/OLMo"
+        ],
+        "8": [
+          "gh:allenai/OLMo"
+        ],
+        "9": [
+          "gh:allenai/OLMo"
+        ],
+        "10": [
+          "gh:allenai/OLMo"
+        ],
+        "11": [
+          "gh:allenai/OLMo"
+        ],
+        "12": [
+          "hf:allenai/OLMo-2-1124-13B"
+        ],
+        "13": [
+          "hf:allenai/OLMo-2-1124-13B"
+        ],
+        "18": [
+          "gh:allenai/OLMo"
+        ],
+        "19": [
+          "gh:allenai/OLMo"
+        ]
+      },
+      "axis_documents": {
+        "1": [
+          "https://huggingface.co/datasets/allenai/olmo-mix-1124/raw/99ee6aaace88779d1ef099d36251b91101c1679b/README.md"
+        ],
+        "4": [
+          "http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy",
+          "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
+        ],
+        "6": [
+          "https://raw.githubusercontent.com/allenai/OLMo/4bf8f90c26dd180095f66d0764636e00d8bae4c1/README.md"
+        ],
+        "7": [
+          "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
+        ],
+        "8": [
+          "https://raw.githubusercontent.com/allenai/OLMo/4bf8f90c26dd180095f66d0764636e00d8bae4c1/README.md",
+          "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
+        ],
+        "9": [
+          "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
+        ],
+        "10": [
+          "https://raw.githubusercontent.com/allenai/OLMo/4bf8f90c26dd180095f66d0764636e00d8bae4c1/README.md",
+          "https://raw.githubusercontent.com/allenai/OLMo/893a2786e85e0f8f62c3e683c83beb66b01be5ad/pyproject.toml"
+        ],
+        "11": [
+          "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
+        ],
+        "12": [
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/resolve/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00001-of-00012.safetensors",
+          "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b"
+        ],
+        "13": [
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00001-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00002-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00003-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00004-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00005-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00006-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00007-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00008-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00009-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00010-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00011-of-00012.safetensors",
+          "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00012-of-00012.safetensors",
+          "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b"
+        ],
+        "18": [
+          "https://raw.githubusercontent.com/allenai/OLMo/4bf8f90c26dd180095f66d0764636e00d8bae4c1/README.md"
+        ],
+        "19": [
+          "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
+        ]
+      },
+      "axis_literals": {
+        "1": [
+          "algebraic-stack",
+          "arxiv",
+          "dclm",
+          "open-web-math"
+        ],
+        "6": [
+          "torchrun"
+        ],
+        "8": [
+          "seed: 6198"
+        ]
+      },
+      "axis_method": {
+        "1": "grep_retrieved",
+        "4": "http_range",
+        "6": "grep_retrieved",
+        "7": null,
+        "8": "grep_retrieved",
+        "9": null,
+        "10": null,
+        "11": "grep_retrieved",
+        "18": null,
+        "19": null,
+        "12": "hf_probe.weight_object",
+        "13": "hf_probe.all_shard_digests"
+      }
     },
     {
       "id": "bloom-176b",
@@ -68,7 +300,246 @@
       "sources": [
         "gh:bigscience-workshop/bigscience",
         "hf:bigscience/bloom"
-      ]
+      ],
+      "axis_sources": {
+        "1": [
+          "gh:bigscience-workshop/bigscience",
+          "hf:bigscience/bloom"
+        ],
+        "4": [
+          "hf:bigscience/bloom"
+        ],
+        "5": [
+          "hf:bigscience/bloom"
+        ],
+        "6": [
+          "gh:bigscience-workshop/bigscience"
+        ],
+        "7": [
+          "gh:bigscience-workshop/bigscience"
+        ],
+        "10": [
+          "gh:bigscience-workshop/bigscience"
+        ],
+        "11": [
+          "gh:bigscience-workshop/bigscience"
+        ],
+        "12": [
+          "hf:bigscience/bloom"
+        ],
+        "13": [
+          "hf:bigscience/bloom"
+        ],
+        "18": [
+          "gh:bigscience-workshop/bigscience"
+        ],
+        "19": [
+          "hf:bigscience/bloom"
+        ]
+      },
+      "axis_documents": {
+        "1": [
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/README.md",
+          "https://raw.githubusercontent.com/bigscience-workshop/bigscience/a120215047ccb978dc46cf773cb93bac9b55022f/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json"
+        ],
+        "4": [
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/README.md"
+        ],
+        "5": [
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/README.md"
+        ],
+        "6": [
+          "https://raw.githubusercontent.com/bigscience-workshop/bigscience/39ed8110482e9eb87d0e094ede05e4d02c40e298/train/tr11-176B-ml/README.md"
+        ],
+        "7": [
+          "https://raw.githubusercontent.com/bigscience-workshop/bigscience/39ed8110482e9eb87d0e094ede05e4d02c40e298/train/tr11-176B-ml/README.md"
+        ],
+        "10": [
+          "https://raw.githubusercontent.com/bigscience-workshop/bigscience/39ed8110482e9eb87d0e094ede05e4d02c40e298/train/tr11-176B-ml/README.md"
+        ],
+        "11": [
+          "https://raw.githubusercontent.com/bigscience-workshop/bigscience/39ed8110482e9eb87d0e094ede05e4d02c40e298/train/tr11-176B-ml/README.md",
+          "https://raw.githubusercontent.com/bigscience-workshop/bigscience/a120215047ccb978dc46cf773cb93bac9b55022f/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json"
+        ],
+        "12": [
+          "https://huggingface.co/api/models/bigscience/bloom/revision/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "https://huggingface.co/bigscience/bloom/resolve/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00001-of-00072.safetensors"
+        ],
+        "13": [
+          "https://huggingface.co/api/models/bigscience/bloom/revision/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00001-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00002-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00003-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00004-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00005-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00006-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00007-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00008-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00009-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00010-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00011-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00012-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00013-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00014-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00015-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00016-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00017-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00018-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00019-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00020-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00021-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00022-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00023-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00024-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00025-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00026-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00027-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00028-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00029-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00030-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00031-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00032-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00033-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00034-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00035-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00036-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00037-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00038-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00039-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00040-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00041-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00042-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00043-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00044-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00045-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00046-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00047-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00048-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00049-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00050-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00051-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00052-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00053-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00054-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00055-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00056-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00057-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00058-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00059-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00060-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00061-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00062-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00063-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00064-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00065-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00066-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00067-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00068-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00069-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00070-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00071-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00072-of-00072.safetensors",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00001-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00002-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00003-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00004-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00005-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00006-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00007-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00008-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00009-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00010-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00011-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00012-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00013-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00014-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00015-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00016-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00017-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00018-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00019-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00020-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00021-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00022-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00023-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00024-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00025-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00026-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00027-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00028-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00029-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00030-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00031-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00032-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00033-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00034-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00035-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00036-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00037-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00038-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00039-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00040-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00041-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00042-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00043-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00044-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00045-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00046-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00047-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00048-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00049-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00050-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00051-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00052-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00053-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00054-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00055-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00056-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00057-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00058-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00059-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00060-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00061-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00062-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00063-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00064-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00065-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00066-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00067-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00068-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00069-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00070-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00071-of-00072.bin",
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/pytorch_model_00072-of-00072.bin"
+        ],
+        "18": [
+          "https://raw.githubusercontent.com/bigscience-workshop/bigscience/39ed8110482e9eb87d0e094ede05e4d02c40e298/train/tr11-176B-ml/README.md"
+        ],
+        "19": [
+          "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/README.md"
+        ]
+      },
+      "axis_literals": {
+        "1": [
+          "oscar"
+        ],
+        "6": [
+          "Megatron-DeepSpeed"
+        ]
+      },
+      "axis_method": {
+        "1": "grep_retrieved",
+        "4": null,
+        "5": null,
+        "6": "grep_retrieved",
+        "7": null,
+        "10": null,
+        "11": null,
+        "18": null,
+        "19": null,
+        "12": "hf_probe.weight_object",
+        "13": "hf_probe.all_shard_digests"
+      }
     },
     {
       "id": "mistral-7b-v0.3",
@@ -78,7 +549,32 @@
       "sources": [
         "arxiv:2310.06825",
         "hf:mistralai/Mistral-7B-v0.3"
-      ]
+      ],
+      "axis_sources": {
+        "12": [
+          "hf:mistralai/Mistral-7B-v0.3"
+        ],
+        "13": [
+          "hf:mistralai/Mistral-7B-v0.3"
+        ]
+      },
+      "axis_documents": {
+        "12": [
+          "https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/revision/caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "https://huggingface.co/mistralai/Mistral-7B-v0.3/resolve/caa1feb0e54d415e2df31207e5f4e273e33509b1/consolidated.safetensors"
+        ],
+        "13": [
+          "https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/revision/caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/consolidated.safetensors",
+          "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/model-00001-of-00003.safetensors",
+          "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/model-00002-of-00003.safetensors",
+          "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/model-00003-of-00003.safetensors"
+        ]
+      },
+      "axis_method": {
+        "12": "hf_probe.weight_object",
+        "13": "hf_probe.all_shard_digests"
+      }
     },
     {
       "id": "qwen2.5-7b",
@@ -89,7 +585,32 @@
         "arxiv:2412.15115",
         "gh:QwenLM/Qwen2.5",
         "hf:Qwen/Qwen2.5-7B"
-      ]
+      ],
+      "axis_sources": {
+        "12": [
+          "hf:Qwen/Qwen2.5-7B"
+        ],
+        "13": [
+          "hf:Qwen/Qwen2.5-7B"
+        ]
+      },
+      "axis_documents": {
+        "12": [
+          "https://huggingface.co/Qwen/Qwen2.5-7B/resolve/d149729398750b98c0af14eb82c78cfe92750796/model-00001-of-00004.safetensors",
+          "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796"
+        ],
+        "13": [
+          "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00001-of-00004.safetensors",
+          "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00002-of-00004.safetensors",
+          "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00003-of-00004.safetensors",
+          "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00004-of-00004.safetensors",
+          "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796"
+        ]
+      },
+      "axis_method": {
+        "12": "hf_probe.weight_object",
+        "13": "hf_probe.all_shard_digests"
+      }
     },
     {
       "id": "llama-3.1-8b",
@@ -99,7 +620,20 @@
       "sources": [
         "gh:meta-llama/llama-models",
         "hf:meta-llama/Llama-3.1-8B"
-      ]
+      ],
+      "axis_sources": {
+        "12": [
+          "hf:meta-llama/Llama-3.1-8B"
+        ]
+      },
+      "axis_documents": {
+        "12": [
+          "https://huggingface.co/api/models/meta-llama/Llama-3.1-8B"
+        ]
+      },
+      "axis_method": {
+        "12": null
+      }
     },
     {
       "id": "gemma-2-9b",
@@ -110,7 +644,20 @@
         "arxiv:2408.00118",
         "gh:google-deepmind/gemma",
         "hf:google/gemma-2-9b"
-      ]
+      ],
+      "axis_sources": {
+        "12": [
+          "hf:google/gemma-2-9b"
+        ]
+      },
+      "axis_documents": {
+        "12": [
+          "https://huggingface.co/api/models/google/gemma-2-9b"
+        ]
+      },
+      "axis_method": {
+        "12": null
+      }
     },
     {
       "id": "gpt-4o",
@@ -120,7 +667,27 @@
       "sources": [
         "arxiv:2410.21276",
         "gh:openai/simple-evals"
-      ]
+      ],
+      "axis_sources": {
+        "18": [
+          "gh:openai/simple-evals"
+        ],
+        "22": [
+          "arxiv:2410.21276"
+        ]
+      },
+      "axis_documents": {
+        "18": [
+          "https://api.github.com/repos/openai/simple-evals"
+        ],
+        "22": [
+          "https://arxiv.org/abs/2410.21276"
+        ]
+      },
+      "axis_method": {
+        "18": null,
+        "22": null
+      }
     },
     {
       "id": "claude-3.5-sonnet",
@@ -131,7 +698,27 @@
         "gh:anthropics/evals",
         "host:assets.anthropic.com",
         "host:www.anthropic.com"
-      ]
+      ],
+      "axis_sources": {
+        "18": [
+          "gh:anthropics/evals"
+        ],
+        "22": [
+          "host:assets.anthropic.com"
+        ]
+      },
+      "axis_documents": {
+        "18": [
+          "https://api.github.com/repos/anthropics/evals"
+        ],
+        "22": [
+          "https://assets.anthropic.com/m/61e7d27f8c8f5919/original/Claude-3-Model-Card.pdf"
+        ]
+      },
+      "axis_method": {
+        "18": null,
+        "22": null
+      }
     },
     {
       "id": "gemini-1.5-pro",
@@ -140,7 +727,20 @@
       "note": "api-only",
       "sources": [
         "arxiv:2403.05530"
-      ]
+      ],
+      "axis_sources": {
+        "22": [
+          "arxiv:2403.05530"
+        ]
+      },
+      "axis_documents": {
+        "22": [
+          "https://arxiv.org/abs/2403.05530"
+        ]
+      },
+      "axis_method": {
+        "22": null
+      }
     },
     {
       "id": "bert-base-uncased",
@@ -152,7 +752,70 @@
         "arxiv:1907.11692",
         "gh:google-research/bert",
         "hf:google-bert/bert-base-uncased"
-      ]
+      ],
+      "axis_sources": {
+        "1": [
+          "gh:google-research/bert",
+          "hf:google-bert/bert-base-uncased"
+        ],
+        "4": [
+          "hf:google-bert/bert-base-uncased"
+        ],
+        "6": [
+          "gh:google-research/bert"
+        ],
+        "7": [
+          "arxiv:1810.04805",
+          "gh:google-research/bert"
+        ],
+        "12": [
+          "hf:google-bert/bert-base-uncased"
+        ],
+        "17": [
+          "arxiv:1907.11692"
+        ]
+      },
+      "axis_documents": {
+        "1": [
+          "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/README.md",
+          "https://raw.githubusercontent.com/google-research/bert/8028c0459485299fa1ae6692b2300922a3fa2bad/README.md"
+        ],
+        "4": [
+          "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/README.md"
+        ],
+        "6": [
+          "https://raw.githubusercontent.com/google-research/bert/8028c0459485299fa1ae6692b2300922a3fa2bad/README.md"
+        ],
+        "7": [
+          "https://arxiv.org/abs/1810.04805",
+          "https://raw.githubusercontent.com/google-research/bert/8028c0459485299fa1ae6692b2300922a3fa2bad/README.md"
+        ],
+        "12": [
+          "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/86b5e0934494bd15c9632b12f734a8a67f723594",
+          "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/model.safetensors"
+        ],
+        "17": [
+          "https://arxiv.org/abs/1907.11692"
+        ]
+      },
+      "axis_literals": {
+        "1": [
+          "BookCorpus",
+          "Wikipedia"
+        ],
+        "6": [
+          "create_pretraining_data.py",
+          "run_pretraining.py"
+        ]
+      },
+      "axis_method": {
+        "1": "grep_retrieved",
+        "4": null,
+        "6": "grep_retrieved",
+        "7": null,
+        "17": null,
+        "12": "hf_probe.weight_object"
+      }
     },
     {
       "id": "gpt-2-1.5b",
@@ -164,7 +827,37 @@
         "gh:openai/gpt-2",
         "hf:karpathy/gpt2_1558M_final2_hf",
         "hf:openai-community/gpt2-xl"
-      ]
+      ],
+      "axis_sources": {
+        "1": [
+          "hf:openai-community/gpt2-xl"
+        ],
+        "12": [
+          "hf:openai-community/gpt2-xl"
+        ],
+        "17": [
+          "gh:karpathy/llm.c",
+          "hf:karpathy/gpt2_1558M_final2_hf"
+        ]
+      },
+      "axis_documents": {
+        "1": [
+          "https://huggingface.co/openai-community/gpt2-xl/raw/15ea56dee5df4983c59b2538573817e1667135e2/README.md"
+        ],
+        "12": [
+          "https://huggingface.co/api/models/openai-community/gpt2-xl/revision/15ea56dee5df4983c59b2538573817e1667135e2",
+          "https://huggingface.co/openai-community/gpt2-xl/resolve/15ea56dee5df4983c59b2538573817e1667135e2/model.safetensors"
+        ],
+        "17": [
+          "https://github.com/karpathy/llm.c/discussions/677",
+          "https://huggingface.co/karpathy/gpt2_1558M_final2_hf"
+        ]
+      },
+      "axis_method": {
+        "1": null,
+        "17": null,
+        "12": "hf_probe.weight_object"
+      }
     }
   ],
   "cells": [
@@ -180,7 +873,8 @@
           "Pile-CC",
           "PubMed",
           "ArXiv"
-        ]
+        ],
+        "expect_artifacts": 2
       },
       "evidence": [
         {
@@ -239,7 +933,8 @@
         "observed": "GPT-NeoX is public and the release names it as the code that produced the weights.",
         "expect": [
           "gpt-neox"
-        ]
+        ],
+        "expect_artifacts": 2
       },
       "evidence": [
         {
@@ -281,7 +976,8 @@
         "observed": "The project README states the seed is the GPT-NeoX default, 1234.",
         "expect": [
           "1234"
-        ]
+        ],
+        "expect_artifacts": 1
       },
       "evidence": [
         {
@@ -323,7 +1019,8 @@
         "observed": "utils/batch_viewer.py is published: the tool for viewing the exact portions of the training dataloader used by all models.",
         "expect": [
           "batch_viewer"
-        ]
+        ],
+        "expect_artifacts": 2
       },
       "evidence": [
         {
@@ -519,7 +1216,8 @@
           "arxiv",
           "dclm",
           "open-web-math"
-        ]
+        ],
+        "expect_artifacts": 1
       },
       "evidence": [
         {
@@ -550,8 +1248,9 @@
       "check": {
         "method": "http_range",
         "asserts": "a third party can acquire the corpus bytes: a byte-range request against a data object named by the published config returns real content",
-        "observed": "Range 0-2047 on http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy returned HTTP 206 with 2048 bytes of binary token data (not markup); sha256 of the returned range recorded in the evidence below. The config enumerates 1122 such objects.",
-        "enumerated_index": 0
+        "observed": "Range 0-2047 on http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy returned HTTP 206 with 2048 bytes of binary token data (not markup); sha256 of the returned range recorded in the evidence below. The config enumerates 1122 such objects. \u26d4 A RESIDUAL BOUND, STATED. The ranged url and its recorded position in the enumeration are BOTH fields this ledger's author writes, so moving them together relocates the tell rather than removing it. Closing it needs a property of the BYTES, and this artifact has none: despite the .npy extension the object is a raw token array with no NumPy header (first bytes b'\\x02\\x00\\x00\\x00c\\x84\\x00\\x00'), so nothing in it names which shard it is. An offline archive cannot establish which url served given bytes; this is the limit of what the archive can do, and it is written down rather than papered over.",
+        "enumerated_index": 0,
+        "byte_property": "none available"
       },
       "evidence": [
         {
@@ -586,7 +1285,8 @@
         "observed": "The repository gives a reproduce invocation against published configs.",
         "expect": [
           "torchrun"
-        ]
+        ],
+        "expect_artifacts": 1
       },
       "evidence": [
         {
@@ -622,7 +1322,8 @@
         "observed": "The training config carries seed: 6198 on line 2, and the repository publishes seed-named stage-2 variants.",
         "expect": [
           "seed: 6198"
-        ]
+        ],
+        "expect_artifacts": 2
       },
       "evidence": [
         {
@@ -909,7 +1610,8 @@
         "observed": "A training dataset ratios catalogue enumerates the constituent datasets.",
         "expect": [
           "oscar"
-        ]
+        ],
+        "expect_artifacts": 2
       },
       "evidence": [
         {
@@ -977,7 +1679,8 @@
         "observed": "The training record gives the launch command against a public Megatron-DeepSpeed fork.",
         "expect": [
           "Megatron-DeepSpeed"
-        ]
+        ],
+        "expect_artifacts": 1
       },
       "evidence": [
         {
@@ -3446,7 +4149,8 @@
         "expect": [
           "BookCorpus",
           "Wikipedia"
-        ]
+        ],
+        "expect_artifacts": 2
       },
       "evidence": [
         {
@@ -3507,7 +4211,8 @@
         "expect": [
           "create_pretraining_data.py",
           "run_pretraining.py"
-        ]
+        ],
+        "expect_artifacts": 1
       },
       "evidence": [
         {
@@ -3885,5 +4590,9 @@
     }
   ],
   "scoring": "SCORING.md, rewritten after round-1 review",
-  "_sources_readme": "\u26d4 SUBJECT-BOUND SOURCE REGISTRY. Ownership used to be INFERRED from the cells being audited: cited_by() walked the same ledger validate() was checking, so a cell's own subject was in the owner set by construction and the check could not fire; and a SYMMETRIC swap simply redefined each artifact's owner. Both round-7 reviewers found this. These lists live on the SUBJECT record so they cannot travel with evidence or with a check block, and a cell may cite only sources its subject declares."
+  "_sources_readme": "\u26d4 SUBJECT-BOUND SOURCE REGISTRY. Ownership used to be INFERRED from the cells being audited: cited_by() walked the same ledger validate() was checking, so a cell's own subject was in the owner set by construction and the check could not fire; and a SYMMETRIC swap simply redefined each artifact's owner. Both round-7 reviewers found this. These lists live on the SUBJECT record so they cannot travel with evidence or with a check block, and a cell may cite only sources its subject declares.",
+  "_axis_sources_readme": "\u26d4 SUBJECT-LEVEL SOURCES BOUND A CELL TO ITS SUBJECT AND NOT TO ITS AXIS. Both round-8 reviewers exchanged a subject's OWN cells -- pythia's corpus cell given its own training-code evidence and check -- and every gate passed: the subject was right and the axis was wrong. 258 of 396 intra-subject transplants survived. This map says which sources may settle WHICH AXIS for each subject. Like subjects[].sources it lives on the subject record, so it cannot travel with an evidence list or a check block. \u26a0 It is a POLICY, not a description: changing a cell's evidence means changing the policy deliberately, which is the point.",
+  "_axis_documents_readme": "\u26d4 SOURCE-LEVEL POLICY WAS NOT ENOUGH, because one repository legitimately serves several axes: pythia's training-code and hyperparameter cells both rest on gh:EleutherAI/pythia, so a swap between them satisfied a source-level rule. A reviewer asked for enough non-travelling information to distinguish corpus evidence from code, seed, environment and data-order evidence EVEN WHERE THE SAME REPOSITORY SUPPORTS SEVERAL AXES. This is that: the exact documents each (subject, axis) may rest on. \u26a0 It is deliberately a POLICY and not a description -- it lives on the subject record, it does not travel with a cell, and changing a cell's evidence means changing it on purpose. That is the whole mechanism: a transplant moves the evidence and cannot move the policy.",
+  "_axis_literals_readme": "\u26d4 WHERE SEVERAL AXES REST ON THE SAME DOCUMENT, binding the document is not enough: olmo's hyperparameter, environment, data-order and eval-disjointness cells all rest on one training config, so a swap between them moved only the CHECK. These are the literal strings each (subject, axis) may look for. \u26a0 WHAT THIS MECHANISM IS: tamper-evidence between a cell and a declaration held on the subject record, which a transplant cannot move. It is NOT an independent confirmation that the document supports the claim -- a human read the document and wrote the policy, and the policy records that reading.",
+  "_axis_method_readme": "The method each (subject, axis) may use, null where the cell names none. An ASSERTED cell names no mechanical check BY DEFINITION -- the paper says so -- but one of them legitimately carries a check block that documents why it was DEMOTED from 2, so 'no check on a 1' would be the wrong rule. This is the right one: whatever check a cell carries must be the one its subject declares for that axis. A transplanted check block is then visible even where the documents coincide."
 }

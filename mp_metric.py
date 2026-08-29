@@ -246,11 +246,16 @@ def validate(led):
     # it. This is the validator's half; replay.gate() applies the same rule per cell.
     import replay as _R                                                    # noqa: PLC0415
     _decl = {s["id"]: set(s.get("sources") or ()) for s in led.get("subjects", [])}
+    _ctx_full = _R.subject_context(led)
     for c in led.get("cells", []):
         if not c.get("score"):
             continue
         allowed = _decl.get(c["subject"])
+        # ⛔ FAILS CLOSED. `if not allowed: continue` meant DELETING a subject's declaration turned
+        # the rule off -- the optional-field failure mode, for the third time in three rounds.
         if not allowed:
+            d.append(f"{c['subject']}/axis{c['axis']}: scored, and its subject declares no "
+                     f"sources. A missing policy disables nothing; it is a defect.")
             continue
         for e in (c.get("evidence") or []):
             k = _R.source_key(e["url"])
@@ -259,6 +264,14 @@ def validate(led):
                 d.append(f"{c['subject']}/axis{c['axis']}: cites {k}, which this subject does not "
                          f"declare in subjects[].sources"
                          + (f" (it is {', '.join(owner)}'s)" if owner else ""))
+
+    # And the full per-axis policy, so the validator and the gate agree rather than one of them
+    # carrying half the rule. A reviewer showed the two disagreeing was itself the defect.
+    for c in led.get("cells", []):
+        if not c.get("score"):
+            continue
+        for why in _R.foreign_evidence(c, _ctx_full):
+            d.append(f"{c['subject']}/axis{c['axis']}: {why}")
 
     # PROJECT over subjects x axes: every pair must be present.
     for s in subjects:

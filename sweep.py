@@ -1,4 +1,14 @@
-"""Transplant every non-zero cell's evidence onto every cross-subject non-zero cell, and count.
+"""Transplant every non-zero cell's evidence onto every OTHER non-zero cell, and count survivors.
+
+⚠️ WHAT THIS FIGURE MEASURES, SINCE IT IS EASY TO OVERSTATE. A reviewer replaced `replay.gate()`
+with a function accepting everything and re-ran this: the cross-subject figure did not move,
+because every cross-subject transplant is refused earlier, by `mp_metric.validate()`'s source rule.
+So the cross-subject number measures THE SOURCE DECLARATION, not the gate -- and an earlier draft
+of this docstring and of section 2.2 said it "moves when the gate changes", which was false in the
+same way section 6.4's asserted-weight sweep was: an outcome fixed before any data arrived.
+
+Its value is real and narrower: it would move if a source were ever declared too broadly. The
+intra-subject figure is the one that exercises the axis policy.
 
 ⛔ WHY A NUMBER AND NOT A LIST. The question "is there a substitution the checks miss?" has been
 asked six times and answered six times by a list of named mutations. A list grows by whatever
@@ -47,11 +57,31 @@ def main():
     survivors = []
     for dst in cells:
         for src in cells:
-            if src is dst or src["subject"] == dst["subject"]:
+            if src is dst:
                 continue
-            band = "VERIFIED" if dst.get("score") == 2 else "ASSERTED"
-            tally.setdefault(band, {"n": 0, "validator": 0, "gate": 0, "survived": 0})
+            # ⛔ THIS SKIPPED src["subject"] == dst["subject"], EXCLUDING 396 TRANSPLANTS BY
+            # CONSTRUCTION -- and 258 of them survived, because a subject's own documents are
+            # exactly what it declares. The excluded family was the one where the subject is right
+            # and the AXIS is wrong. Both are enumerated now and reported separately, because they
+            # measure different rules.
+            same = src["subject"] == dst["subject"]
+            band = ("intra-subject " if same else "cross-subject ") + (
+                "VERIFIED" if dst.get("score") == 2 else "ASSERTED")
+            tally.setdefault(band, {"n": 0, "validator": 0, "gate": 0, "survived": 0,
+                                    "vacuous": 0})
             tally[band]["n"] += 1
+
+            # ⚠️ A TRANSPLANT THAT CHANGES NOTHING IS NOT A SURVIVOR. Where two axes rest on
+            # the same documents, moving the evidence moves nothing; and a source cell with no
+            # check block leaves the destination's check in place. Counting those as survivors
+            # would inflate the figure with mutations that mutate nothing -- which is the opposite
+            # error to the one this figure was built to avoid, and just as dishonest.
+            same_docs = ([e["url"] for e in (src.get("evidence") or [])]
+                         == [e["url"] for e in (dst.get("evidence") or [])])
+            same_check = (not src.get("check")) or src.get("check") == dst.get("check")
+            if same_docs and same_check:
+                tally[band]["vacuous"] += 1
+                continue
 
             d = copy.deepcopy(led)
             tgt = [c for c in d["cells"]
@@ -71,13 +101,16 @@ def main():
                 survivors.append((dst["subject"], dst["axis"], src["subject"], src["axis"]))
 
     total = surv = 0
-    for band in ("VERIFIED", "ASSERTED"):
+    for band in ("cross-subject VERIFIED", "cross-subject ASSERTED",
+                 "intra-subject VERIFIED", "intra-subject ASSERTED"):
         t = tally.get(band)
         if not t:
             continue
-        print("  %-9s %5d transplant(s); %5d refused by the validator, %4d reached the gate"
+        print("  %-24s %5d transplant(s); %5d refused by the validator, %4d reached gate"
               % (band, t["n"], t["validator"], t["gate"]))
-        print("            %5d SURVIVED" % t["survived"])
+        print("            %5d SURVIVED%s" % (t["survived"],
+              ("; %d vacuous -- the mutation changed nothing" % t["vacuous"])
+              if t.get("vacuous") else ""))
         total += t["n"]
         surv += t["survived"]
 

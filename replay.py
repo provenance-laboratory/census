@@ -43,11 +43,25 @@ def _bytes_for(e):
     return gzip.decompress(blob.read_bytes())
 
 
+MIN_LITERAL = 4
+
+
 def m_grep(c, ev):
     """Every literal in `expect` must appear in the archived bytes of some cited artifact."""
     exp = c["check"].get("expect")
     if not exp:
         return None, "no `expect` list: nothing to replay, so the method name is a label"
+    # ⛔ NOTHING REQUIRED A LITERAL TO DISCRIMINATE. `expect = ["e"]` passed: grep_retrieved is only
+    # as strong as its string, and the string was unconstrained.
+    weak = [x for x in exp if len(x.strip()) < MIN_LITERAL]
+    if weak:
+        return False, ("literal(s) too short to discriminate anything: %s (minimum %d characters)"
+                       % (weak, MIN_LITERAL))
+    # ⛔ AND THE CITED SET WAS A MAXIMUM, NOT A REQUIREMENT: dropping a co-cited artifact passed.
+    want_n = c["check"].get("expect_artifacts")
+    if want_n is not None and len(ev) != want_n:
+        return False, ("the cell cites %d artifact(s); its check requires %d"
+                       % (len(ev), want_n))
     docs = [(e, _bytes_for(e)) for e in ev]
     docs = [(e, b) for e, b in docs if b is not None]
     if not docs:
@@ -168,7 +182,16 @@ def subject_context(led):
     ⇒ These lists live on the SUBJECT RECORD. They do not travel with evidence, they do not travel
     with a check block, and exchanging two cells cannot move them.
     """
-    return {s["id"]: {"repo": s.get("repo"), "sources": set(s.get("sources") or ())}
+    return {s["id"]: {"repo": s.get("repo"),
+                      "sources": set(s.get("sources") or ()),
+                      "axis_sources": {int(k): set(v)
+                                       for k, v in (s.get("axis_sources") or {}).items()},
+                      "axis_documents": {int(k): set(v)
+                                         for k, v in (s.get("axis_documents") or {}).items()},
+                      "axis_literals": {int(k): sorted(v)
+                                        for k, v in (s.get("axis_literals") or {}).items()},
+                      "axis_method": {int(k): v
+                                      for k, v in (s.get("axis_method") or {}).items()}}
             for s in led.get("subjects", [])}
 
 
@@ -179,10 +202,23 @@ def foreign_evidence(cell, ctx, _unused=None):
     document belonging to NOBODY passed, and nothing required a cell to cite something its own
     subject publishes or names. This asks the other question.
     """
-    dec = (ctx or {}).get(cell["subject"]) or {}
+    dec = (ctx or {}).get(cell["subject"])
+    # ⛔ FAILS CLOSED. This read `if not allowed: return []` -- so DELETING a subject's declaration
+    # turned the control off, which is the optional-field failure mode for the third time. A scored
+    # cell whose subject declares nothing is a defect, not an unconstrained cell.
+    if dec is None:
+        return ["%s is not a declared subject" % cell["subject"]]
     allowed = dec.get("sources") or set()
     if not allowed:
-        return []                       # a subject with no declared sources constrains nothing
+        return ["%s declares no sources, so nothing constrains this cell's evidence"
+                % cell["subject"]]
+    # ⛔ AND THE AXIS, NOT ONLY THE SUBJECT. Exchanging a subject's OWN cells passed every check:
+    # pythia's corpus cell scored VERIFIED on its training-code README. The subject was right and
+    # the axis was wrong, and the per-axis profile is what the paper asks a reader to read.
+    per_axis = (dec.get("axis_sources") or {}).get(cell["axis"])
+    if cell.get("score") and per_axis is None:
+        return ["%s/axis%d has no declared axis_sources; a scored cell with no policy is a defect"
+                % (cell["subject"], cell["axis"])]
     bad = []
     for e in (cell.get("evidence") or []):
         k = source_key(e["url"])
@@ -191,6 +227,49 @@ def foreign_evidence(cell, ctx, _unused=None):
             bad.append("%s is from %s, which %s does not declare%s"
                        % (e["url"].rsplit("/", 1)[-1][:34], k, cell["subject"],
                           " (it is %s's)" % ", ".join(owner) if owner else ""))
+        elif per_axis is not None and k not in per_axis:
+            elsewhere = sorted(a for a, ks in (dec.get("axis_sources") or {}).items() if k in ks)
+            bad.append("%s is from %s, which this subject declares for axis %s, not for axis %d"
+                       % (e["url"].rsplit("/", 1)[-1][:34], k,
+                          ", ".join(str(a) for a in elsewhere) or "no axis", cell["axis"]))
+    # ⛔ AND THE DOCUMENT, NOT ONLY THE SOURCE. One repository legitimately serves several axes --
+    # pythia's code and hyperparameter cells both rest on gh:EleutherAI/pythia -- so a source-level
+    # rule let a swap between them pass. 95 of 396 intra-subject transplants survived on exactly
+    # that.
+    per_doc = (dec.get("axis_documents") or {}).get(cell["axis"])
+    if cell.get("score") and per_doc is None:
+        bad.append("%s/axis%d has no declared axis_documents" % (cell["subject"], cell["axis"]))
+    elif per_doc is not None:
+        cited = {e["url"] for e in (cell.get("evidence") or [])}
+        if cited != per_doc:
+            extra = sorted(cited - per_doc)[:2]
+            missing = sorted(per_doc - cited)[:2]
+            bad.append("the cited documents are not those this subject declares for axis %d"
+                       % cell["axis"]
+                       + (" (unexpected %s)" % [u.rsplit("/", 1)[-1][:30] for u in extra]
+                          if extra else "")
+                       + (" (missing %s)" % [u.rsplit("/", 1)[-1][:30] for u in missing]
+                          if missing else ""))
+    # ⛔ AND THE LITERALS, where several axes rest on ONE document. olmo's hyperparameter,
+    # environment, data-order and eval cells all rest on the training config, so a swap between
+    # them moved only the check block -- the document policy could not see it.
+    # And the METHOD, so a check block transplanted between two axes resting on ONE document is
+    # visible. An ASSERTED cell names no mechanical check by definition -- but one legitimately
+    # carries a block documenting its demotion, so the rule is "the declared one", not "none".
+    am = dec.get("axis_method") or {}
+    if cell.get("score") and cell["axis"] in am:
+        _chk = cell.get("check")
+        got_m = _chk.get("method") if isinstance(_chk, dict) else None
+        if got_m != am[cell["axis"]]:
+            bad.append("axis %d carries method %r; this subject declares %r for it"
+                       % (cell["axis"], got_m, am[cell["axis"]]))
+    want_lit = (dec.get("axis_literals") or {}).get(cell["axis"])
+    if want_lit is not None:
+        _chk2 = cell.get("check")
+        got = sorted((_chk2.get("expect") if isinstance(_chk2, dict) else None) or [])
+        if got != want_lit:
+            bad.append("axis %d looks for %s; this subject declares %s for it"
+                       % (cell["axis"], got[:2], want_lit[:2]))
     return bad
 
 
@@ -255,6 +334,21 @@ def m_range(c, ev, ctx=None):
     if idx is None:
         return False, ("the cell records no `enumerated_index`, so the url could name any of the "
                        "paths the co-cited document lists")
+    # ⚠️ BOTH THE INDEX AND THE URL ARE AUTHOR-WRITTEN, so moving them together relocates the tell
+    # rather than removing it. A property OF THE BYTES is what does not move: for a .npy the header
+    # carries dtype and shape, recorded at bind time from the fetched bytes.
+    hdr = c["check"].get("npy_header")
+    if hdr is not None:
+        if not b.startswith(b"\x93NUMPY"):
+            return False, "the archived range does not begin with the NumPy magic"
+        try:
+            hlen = int.from_bytes(b[8:10], "little")
+            got = b[10:10 + hlen].decode("latin-1").strip().rstrip(chr(0)).strip()
+        except Exception:                                            # noqa: BLE001
+            return False, "the archived range carries no readable NumPy header"
+        if got != hdr:
+            return False, ("the archived bytes' NumPy header is %r; the cell records %r"
+                           % (got[:60], hdr[:60]))
     return True, ("%d archived bytes, digest matches, and the url is named in %s"
                   % (len(b), anchored[0]))
 
@@ -595,6 +689,25 @@ def selftest():
          lambda d: _find(d, "bert-base-uncased", 1).__setitem__(
              "evidence", [{"url": "https://example.org/bert-history", "retrieved": "2026-08-29",
                            "sha256": "c" * 64}])),
+        # ── round 8: the subject is right and the AXIS is wrong ──────────────────────
+        ("a subject's OWN corpus and training-code cells exchanged, evidence and check",
+         lambda d: (_find(d, "pythia-12b", 1).__setitem__(
+             "evidence", copy.deepcopy(_find(d, "pythia-12b", 6)["evidence"])),
+             _find(d, "pythia-12b", 1).__setitem__(
+                 "check", copy.deepcopy(_find(d, "pythia-12b", 6)["check"])))),
+        ("two axes resting on ONE document, their check blocks exchanged",
+         lambda d: _find(d, "olmo-2-13b", 7).__setitem__(
+             "check", copy.deepcopy(_find(d, "olmo-2-13b", 9)["check"]))),
+        ("a subject's source declaration DELETED, then foreign evidence transplanted in",
+         lambda d: ([s.pop("sources", None) for s in d["subjects"]
+                     if s["id"] == "pythia-12b"],
+                    _find(d, "pythia-12b", 1).__setitem__(
+                        "evidence", copy.deepcopy(_find(d, "olmo-2-13b", 1)["evidence"])))),
+        ("a replayable literal weakened to a single character",
+         lambda d: _find(d, "bert-base-uncased", 6)["check"].__setitem__("expect", ["e"])),
+        ("a co-cited artifact dropped, leaving the cited set smaller than required",
+         lambda d: _find(d, "bert-base-uncased", 1).__setitem__(
+             "evidence", _find(d, "bert-base-uncased", 1)["evidence"][:1])),
         ("2 KB of an HTML sign-in page instead of the weight range",
          lambda d: _stub_html(d)),
         ("falsified expected strings on a replayable grep",

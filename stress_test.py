@@ -60,8 +60,24 @@ def full_census(subject="s1", score=0, cell_over=None, **over):
                 c.update({k: dict(v) if isinstance(v, dict) else v
                           for k, v in cell_over.items()})
         cells.append(c)
+    # A valid census DECLARES its policy: which sources, documents, methods and literals may
+    # settle which axis. The rule fails closed, so a fixture without one is not a valid census --
+    # which is the point of failing closed.
+    import replay as _R                                                   # noqa: PLC0415
+    _urls = sorted({e["url"] for c in cells for e in (c.get("evidence") or [])})
+    _srcs = sorted({_R.source_key(u) for u in _urls})
     led = {"as_of": "2026-08-01",
-           "subjects": [{"id": subject, "kind": "open-weights"}], "cells": cells}
+           "subjects": [{"id": subject, "kind": "open-weights", "sources": _srcs,
+                         "axis_sources": {str(c["axis"]): _srcs for c in cells if c.get("score")},
+                         "axis_documents": {str(c["axis"]):
+                                            sorted(e["url"] for e in (c.get("evidence") or []))
+                                            for c in cells if c.get("score")},
+                         "axis_method": {str(c["axis"]): (c.get("check") or {}).get("method")
+                                         for c in cells if c.get("score")},
+                         "axis_literals": {str(c["axis"]): sorted((c.get("check") or {})["expect"])
+                                           for c in cells
+                                           if c.get("score") and (c.get("check") or {}).get("expect")}}],
+           "cells": cells}
     led.update(over)
     return led
 
