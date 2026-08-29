@@ -84,11 +84,14 @@ AXES = [
 
     (12, 3, "weights released",
      "Are the weights published?",
-     "Retrievable weights, not gated access granted case by case.",
+     "Weight-object BYTES retrieved at a pinned revision and verified not to be a Git-LFS "
+     "pointer. A pointer is what LFS commits INSTEAD of the blob; retrieving one is not "
+     "retrieving weights. Gated access granted case by case does not satisfy this.",
      True),
     (13, 3, "weights content-addressed",
      "Does the publisher publish a digest of the weights?",
-     "A digest published BY THE PUBLISHER, not computed by a mirror.",
+     "A publisher-committed digest for EVERY weight shard at a pinned revision. A digest for "
+     "one shard of seventy-two is not a digest of the weights. Not computed by a mirror.",
      True),
     (14, 3, "weights signed",
      "Are the weights signed by an identifiable key?",
@@ -131,11 +134,41 @@ AXES = [
 ]
 
 SCORES = {
-    2: ("CHECKED", "an artifact exists, was retrieved BY US, and the check is scripted"),
-    1: ("CLAIMED", "asserted in a document, with no artifact that would let anyone verify it"),
-    0: ("ABSENT", "neither asserted nor available"),
-    None: ("N/A", "the axis cannot apply to this release type -- justified per cell, never in bulk"),
+    2: ("VERIFIED", "an artifact exists, was retrieved AT A PINNED REVISION, and a REGISTERED "
+                    "mechanical check over its content succeeded"),
+    1: ("ASSERTED", "stated in a document we retrieved, with no artifact whose content a third "
+                    "party could check against the claim"),
+    0: ("ABSENT", "neither stated nor available, within a search whose bound is in the cell"),
+    None: ("N/A", "the property cannot exist for this release type -- justified per cell"),
 }
+
+# ⛔ THE REGISTRY THAT CLOSES THE FREE-TEXT HOLE.
+# Round-1 review passed every score-2 cell with check="read a document" and the validator
+# reported no defect, because it required only a NON-EMPTY STRING. A free-text field is not a
+# control. `check.method` must now name something implemented here, so a cell cannot be promoted
+# to VERIFIED by describing a check more impressively than it was performed.
+#
+# ⚠️ This does not make lying impossible. It makes the claim specific enough to be CONTRADICTED:
+# the method names a program, `asserts` names its postcondition, `observed` names what came back,
+# and a reader who reruns the method and sees something else has caught it.
+CHECK_METHODS = {
+    "hf_probe.weight_object":   "range-request a weight shard at a pinned revision and verify the "
+                                "bytes returned are not a Git-LFS pointer",
+    "hf_probe.all_shard_digests": "enumerate every weight shard at a pinned revision and collect a "
+                                  "publisher-committed digest for each",
+    "http_range":               "range-request a URL and record status, length and first bytes",
+    "http_status":              "request a URL and record the status code",
+    "api_field":                "query a documented API and read a named field from the response",
+    "grep_retrieved":           "search retrieved bytes for a pattern and record the match",
+    "count_in_retrieved":       "count occurrences of a pattern in retrieved bytes",
+    "hash_compare":             "recompute a digest over retrieved bytes and compare to a published one",
+}
+
+# ⚠️ READING A RETRIEVED DOCUMENT IS NOT A METHOD HERE, DELIBERATELY.
+# `grep_retrieved` records that a document CONTAINS a statement -- which is evidence that the
+# statement was published, not that the statement is true of the weights. An axis whose property
+# can only be established by reading prose therefore tops out at ASSERTED, and that is the
+# correction round-1 review forced. See SCORING.md.
 
 BY_ID = {a[0]: a for a in AXES}
 NA_PERMITTED = {a[0] for a in AXES if a[5]}

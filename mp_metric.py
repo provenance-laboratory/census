@@ -98,15 +98,48 @@ def validate(led):
                 w2 = f"{where} evidence[{j}]"
                 if not str(e.get("url", "")).startswith(("http://", "https://")):
                     d.append(f"{w2}: no retrievable url")
-                if not DATE_RE.match(str(e.get("retrieved", ""))):
-                    d.append(f"{w2}: retrieved date must be YYYY-MM-DD "
-                             f"(a release edited after scoring silently invalidates the cell)")
+                # a regex accepted 2026-99-99; parse it, and refuse the future
+                try:
+                    got = dt.date.fromisoformat(str(e.get("retrieved", "")))
+                    if got > dt.date.today():
+                        d.append(f"{w2}: retrieved date {got} is in the future")
+                except ValueError:
+                    d.append(f"{w2}: retrieved must be a real YYYY-MM-DD date "
+                             f"(got {e.get('retrieved')!r}); a regex accepted 2026-99-99")
                 if not SHA256_RE.match(str(e.get("sha256", ""))):
                     d.append(f"{w2}: sha256 of the RETRIEVED BYTES is required "
                              f"-- an HTTP 200 is not an artifact")
-        if val == 2 and not str(c.get("check", "")).strip():
-            d.append(f"{where}: CHECKED requires `check` -- the scripted check that was run. "
-                     f"Without it this is a 1, not a 2")
+        # ⛔ VERIFIED requires a REGISTERED method, not a sentence. Round-1 review passed every
+        # score-2 cell with check="read a document" and this validator reported no defect.
+        if val == 2:
+            chk = c.get("check")
+            if not isinstance(chk, dict):
+                d.append(f"{where}: VERIFIED requires a `check` OBJECT "
+                         f"{{method, asserts, observed}}; a free-text string is not a control")
+            else:
+                meth = str(chk.get("method", ""))
+                if meth not in A.CHECK_METHODS:
+                    d.append(f"{where}: check.method {meth!r} is not registered in "
+                             f"axes.CHECK_METHODS -- a cell cannot be promoted to VERIFIED by "
+                             f"describing a check that is not implemented")
+                for k in ("asserts", "observed"):
+                    if not str(chk.get(k, "")).strip():
+                        d.append(f"{where}: check.{k} is empty; the assertion and what came "
+                                 f"back must both be recorded or the claim cannot be contradicted")
+
+    # ⛔ THE SAME URL MAY NOT CARRY TWO DIGESTS. Round-1 review showed a census validating with
+    # one url recorded under conflicting hashes -- and recheck.py silently used the first, so the
+    # contradiction was invisible on both sides.
+    seen_url = {}
+    for c in led.get("cells", []):
+        for e in (c.get("evidence") or []):
+            u, h = e.get("url"), e.get("sha256")
+            if u in seen_url and seen_url[u][0] != h:
+                d.append(f"{u}: recorded with two different digests "
+                         f"({seen_url[u][0][:12]} at {seen_url[u][1]}, {str(h)[:12]} at "
+                         f"{c.get('subject')}/axis{c.get('axis')}) -- one of them is wrong")
+            elif u not in seen_url:
+                seen_url[u] = (h, f"{c.get('subject')}/axis{c.get('axis')}")
 
     # PROJECT over subjects x axes: every pair must be present.
     for s in subjects:

@@ -21,7 +21,7 @@ import mp_metric as M
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-EV = [{"url": "https://example.org/a", "retrieved": "2026-09-01", "sha256": "a" * 64}]
+EV = [{"url": "https://example.org/a", "retrieved": "2026-08-01", "sha256": "a" * 64}]
 passed, failed = 0, 0
 
 
@@ -33,9 +33,11 @@ def full_census(subject="s1", score=0, **over):
         if score and score > 0:
             c["evidence"] = list(EV)
             if score == 2:
-                c["check"] = "scripts/x.py"
+                c["check"] = {"method": "http_range",
+                              "asserts": "status is 206",
+                              "observed": "HTTP 206, 2048 B"}
         cells.append(c)
-    led = {"as_of": "2026-09-01",
+    led = {"as_of": "2026-08-01",
            "subjects": [{"id": subject, "kind": "open-weights"}], "cells": cells}
     led.update(over)
     return led
@@ -77,10 +79,41 @@ must_catch("a CLAIMED cell with no evidence record", led, "no evidence")
 
 led = full_census(score=2)
 del led["cells"][3]["check"]
-must_catch("a CHECKED cell with no scripted check", led, "requires `check`")
+must_catch("a VERIFIED cell with no check at all", led, "check` OBJECT")
+
+# ── the three holes round-1 review drove through the validator ─────────────────────────
+led = full_census(score=2)
+for c in led["cells"]:
+    c["check"] = "read a document"
+must_catch("VERIFIED on a free-text check -- the round-1 attack", led, "not a control")
+
+led = full_census(score=2)
+led["cells"][0]["check"] = {"method": "i_looked_at_it", "asserts": "a", "observed": "b"}
+must_catch("a check method that is not implemented", led, "not registered")
+
+led = full_census(score=2)
+led["cells"][0]["check"] = {"method": "http_range", "asserts": "", "observed": "y"}
+must_catch("a check with no stated assertion", led, "check.asserts is empty")
 
 led = full_census(score=1)
-led["cells"][0]["evidence"] = [{"url": "https://x/a", "retrieved": "2026-09-01",
+led["cells"][0]["evidence"] = [{"url": "https://x/a", "retrieved": "2026-99-99",
+                               "sha256": "b" * 64}]
+must_catch("a retrieval date that is not a real date", led, "real yyyy-mm-dd")
+
+led = full_census(score=1)
+led["cells"][0]["evidence"] = [{"url": "https://x/a", "retrieved": "2099-01-01",
+                               "sha256": "b" * 64}]
+must_catch("a retrieval date in the future", led, "future")
+
+led = full_census(score=1)
+led["cells"][0]["evidence"] = [{"url": "https://x/same", "retrieved": "2026-08-01",
+                               "sha256": "c" * 64}]
+led["cells"][1]["evidence"] = [{"url": "https://x/same", "retrieved": "2026-08-01",
+                               "sha256": "d" * 64}]
+must_catch("one url recorded under two different digests", led, "two different digests")
+
+led = full_census(score=1)
+led["cells"][0]["evidence"] = [{"url": "https://x/a", "retrieved": "2026-08-01",
                                "sha256": "not-a-digest"}]
 must_catch("evidence whose sha256 is not a digest", led, "sha256")
 
@@ -90,7 +123,7 @@ led["cells"][0]["evidence"] = [{"url": "https://x/a", "retrieved": "Sept 2026",
 must_catch("evidence with an unparseable retrieval date", led, "yyyy-mm-dd")
 
 led = full_census(score=1)
-led["cells"][0]["evidence"] = [{"url": "ftp://x/a", "retrieved": "2026-09-01",
+led["cells"][0]["evidence"] = [{"url": "ftp://x/a", "retrieved": "2026-08-01",
                                "sha256": "b" * 64}]
 must_catch("evidence with no retrievable url", led, "url")
 
