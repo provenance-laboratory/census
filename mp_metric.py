@@ -183,6 +183,53 @@ def validate(led):
     return d
 
 
+
+def by_subject(led):
+    """{subject: {axis: score}} -- the shape every consumer kept rebuilding for itself."""
+    out = {}
+    for c in led.get("cells", []):
+        out.setdefault(c["subject"], {})[c["axis"]] = c.get("score")
+    return out
+
+
+def constant_axes(led):
+    """Axes that never vary OVER THE CELLS WHERE THEY APPLY.
+
+    ⛔ FOUR CALL SITES COMPUTED THIS AS `len({(score or 0) for s in subjects}) == 1`, and `or 0`
+    coerces N/A to zero. That ran in two directions at once: it put the post-training axes on the
+    list on the strength of THREE live cells -- attributing to nine publishers a failure on an axis
+    they were never scored against -- and it HID axis 22, which is constant at 1 over every cell it
+    applies to, the opposite of absent.
+    ⚠️ Round-2 review named two of those call sites. I fixed those two and a third was still
+    wrong, which is the recurring lesson: a fix is not finished until the other call sites are
+    found. Hence one implementation, here, and callers that import it.
+
+    Returns [(axis, value, applicable_n)], sorted.
+    """
+    by = by_subject(led)
+    subs = sorted(by)
+    out = []
+    for a in sorted(A.BY_ID):
+        live = [by[s].get(a) for s in subs if by[s].get(a) is not None]
+        if live and max(live) == min(live):
+            out.append((a, live[0], len(live)))
+    return out
+
+
+def dominates(led, lo, hi):
+    """Does `lo` weakly dominate `hi` cell by cell? Returns (below, strictly_greater).
+
+    Compares only axes where BOTH have a real score: N/A against a number is not a comparison,
+    and coercing it to zero would manufacture dominance where the axis does not apply.
+    """
+    by = by_subject(led)
+    both = [a for a in sorted(A.BY_ID)
+            if by[lo].get(a) is not None and by[hi].get(a) is not None]
+    below = [a for a in both if by[lo][a] < by[hi][a]]
+    strict = [a for a in both if by[lo][a] > by[hi][a]]
+    return below, strict, both
+
+
 def score(led):
     """Per subject: (as_coded, na_as_0, na_as_2), each a fraction of the maximum.
 

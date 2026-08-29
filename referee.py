@@ -209,8 +209,7 @@ def main():
     # of that fact; the dominance is the fact.
     lo = min(fo, key=lambda s: base[s])
     hi = max(owx, key=lambda s: base[s])
-    below = [a for a in axes_ids if (cells[lo].get(a) or 0) < (cells[hi].get(a) or 0)]
-    strict = [a for a in axes_ids if (cells[lo].get(a) or 0) > (cells[hi].get(a) or 0)]
+    below, strict, comparable = M.dominates(led, lo, hi)
     print()
     print("      DOMINANCE: %s (lowest fully-open) vs %s (highest open-weights)" % (lo, hi))
     if below:
@@ -218,8 +217,8 @@ def main():
               % below)
         print("      the weighting after all, and the depth number below is the real claim.")
     else:
-        print("      %s is >= %s on ALL %d axes, strictly greater on %d of them."
-              % (lo, hi, len(axes_ids), len(strict)))
+        print("      %s is >= %s on ALL %d axes where both are scored, strictly greater on %d."
+              % (lo, hi, len(comparable), len(strict)))
         print("      " + chr(0x21D2) + " NO subset of axes and NO reweighting can reverse the")
         print("      stratum separation. The deepest deletions produce at most a TIE, which is")
         print("      what the k below actually finds.")
@@ -285,7 +284,7 @@ def main():
                 return None                       # one of them never varies
             return sxy / ((sxx ** 0.5) * (syy ** 0.5))
 
-        constant = [a for a in vec if vec[a] and max(vec[a]) == min(vec[a])]
+        constant = [a for a, _v, _n in M.constant_axes(led)]
         varying = [a for a in vec if a not in constant]
         for a in constant:
             print("          axis %2d  constant at %s over n=%2d applicable cell(s)%s"
