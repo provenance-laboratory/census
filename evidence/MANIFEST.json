@@ -1,0 +1,392 @@
+{
+  "_readme": [
+    "Every artifact any cell rests on. `stored: true` means the bytes are in evidence/<sha>.gz",
+    "and can be re-read offline; `stored: false` names the reason and the bytes live in",
+    "OBL-BACKUP. A digest alone proves what WAS there; only the bytes let anyone check it."
+  ],
+  "artifacts": {
+    "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/releases/latest": {
+      "bytes": 17902,
+      "cells": [
+        "pythia-12b/axis18"
+      ],
+      "sha256": "7ee1752d7056bd59f906ebcd9080a231b47a37daa74d7918319467bb4a7bbf87",
+      "stored": true
+    },
+    "https://api.github.com/repos/anthropics/evals": {
+      "bytes": 7135,
+      "cells": [
+        "claude-3.5-sonnet/axis18"
+      ],
+      "sha256": "34acd8b5d3e2d69c7f0becaea90d92e065b9025d04032a5c7552b279779cc24e",
+      "stored": true
+    },
+    "https://api.github.com/repos/openai/simple-evals": {
+      "cells": [
+        "gpt-4o/axis18"
+      ],
+      "reason": "VOLATILE endpoint: the body carries counters that move independently of the claim, so it cannot be archived under a fixed digest. The cell it backs is capped at ASSERTED for the same reason.",
+      "sha256": "83ac437c868702efc771231caeec8271db8eb3dd9f6e25352113322a475d8367",
+      "stored": false
+    },
+    "https://arxiv.org/abs/1810.04805": {
+      "bytes": 42090,
+      "cells": [
+        "bert-base-uncased/axis7"
+      ],
+      "sha256": "ffa5d3591fa543ce7b833bea05f1455d40a6be8680417720f09da8807ada6abe",
+      "stored": true
+    },
+    "https://arxiv.org/abs/2304.01373": {
+      "bytes": 42743,
+      "cells": [
+        "pythia-12b/axis1"
+      ],
+      "sha256": "a4ed5e7d70ff9ae90237a5421aabea072396346e2f70406e23257078d28eddf1",
+      "stored": true
+    },
+    "https://arxiv.org/abs/2310.06825": {
+      "bytes": 42369,
+      "cells": [
+        "mistral-7b-v0.3/axis6",
+        "mistral-7b-v0.3/axis7"
+      ],
+      "sha256": "ef5fab750f82f531c6070f473e10cee1085fa3aa765a6ab8764353fb82bf2f1b",
+      "stored": true
+    },
+    "https://arxiv.org/abs/2403.05530": {
+      "bytes": 232766,
+      "cells": [
+        "gemini-1.5-pro/axis1",
+        "gemini-1.5-pro/axis22"
+      ],
+      "sha256": "7cf955d4a1316886536abde3a5f5c7479f6e524b14fbb6d546e7f2b09f4d4780",
+      "stored": true
+    },
+    "https://arxiv.org/abs/2408.00118": {
+      "bytes": 74022,
+      "cells": [
+        "gemma-2-9b/axis1",
+        "gemma-2-9b/axis7",
+        "gemma-2-9b/axis18"
+      ],
+      "sha256": "3cdf7d2ea65469fecbc77da757d5ba2c77c951f253e8b955e592603e012829a4",
+      "stored": true
+    },
+    "https://arxiv.org/abs/2410.21276": {
+      "bytes": 112172,
+      "cells": [
+        "gpt-4o/axis1",
+        "gpt-4o/axis22"
+      ],
+      "sha256": "508f052338146352b46e96076ef713aaabd3c2d3f4de909ed178404a441daad7",
+      "stored": true
+    },
+    "https://arxiv.org/abs/2412.15115": {
+      "bytes": 49064,
+      "cells": [
+        "qwen2.5-7b/axis1",
+        "qwen2.5-7b/axis7"
+      ],
+      "sha256": "0f8c331e73817eefeb222aa5be49c515aed4c3ab74829555f8e0b2cde03c5be1",
+      "stored": true
+    },
+    "https://assets.anthropic.com/m/61e7d27f8c8f5919/original/Claude-3-Model-Card.pdf": {
+      "bytes": 46824360,
+      "cells": [
+        "claude-3.5-sonnet/axis1",
+        "claude-3.5-sonnet/axis22"
+      ],
+      "reason": "46824360 bytes exceeds the 8388608-byte repository cap; archived to OBL-BACKUP",
+      "sha256": "88ae851f53c3034d436816164ce49a876b333fa9b550fb7ef29838182b59ba7d",
+      "stored": false
+    },
+    "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors": {
+      "bytes": 135,
+      "cells": [
+        "pythia-12b/axis12",
+        "pythia-12b/axis13"
+      ],
+      "sha256": "43895e1fb3271dd2cca2285fc826319483bdafb8075eaa794e4da94d79691c2f",
+      "stored": true
+    },
+    "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00001-of-00004.safetensors": {
+      "bytes": 135,
+      "cells": [
+        "qwen2.5-7b/axis12",
+        "qwen2.5-7b/axis13"
+      ],
+      "sha256": "6837909d0194850ce6e03cbb197e7de4048ed2b787d84cfc388eb414de5ee827",
+      "stored": true
+    },
+    "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00001-of-00012.safetensors": {
+      "bytes": 135,
+      "cells": [
+        "olmo-2-13b/axis12",
+        "olmo-2-13b/axis13"
+      ],
+      "sha256": "8d4164aa8db49ae67e32493c8a2a04b118bde44f52f06de35733250fb6e2801e",
+      "stored": true
+    },
+    "https://huggingface.co/api/models/google/gemma-2-9b": {
+      "cells": [
+        "gemma-2-9b/axis12"
+      ],
+      "reason": "VOLATILE endpoint: the body carries counters that move independently of the claim, so it cannot be archived under a fixed digest. The cell it backs is capped at ASSERTED for the same reason.",
+      "sha256": "9dc1d828cb8366b96afdd91afb9903674ce3d57b03027d3c86993a6dc13a2241",
+      "stored": false
+    },
+    "https://huggingface.co/api/models/meta-llama/Llama-3.1-8B": {
+      "bytes": 18123,
+      "cells": [
+        "llama-3.1-8b/axis12"
+      ],
+      "sha256": "912e16a96d767e0c041e0a1c071f3c23e443ab45af4a407667c4cf1e5a18dd40",
+      "stored": true
+    },
+    "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/model_00001-of-00072.safetensors": {
+      "bytes": 135,
+      "cells": [
+        "bloom-176b/axis12",
+        "bloom-176b/axis13"
+      ],
+      "sha256": "0738a2c29ca75924aef4f824a5c8aa05cdee010818811ac544a93a6d79002b7b",
+      "stored": true
+    },
+    "https://huggingface.co/bigscience/bloom/raw/main/README.md": {
+      "bytes": 29877,
+      "cells": [
+        "bloom-176b/axis1",
+        "bloom-176b/axis4",
+        "bloom-176b/axis5",
+        "bloom-176b/axis19"
+      ],
+      "sha256": "dfcc25552c185cdba2436f530678b29e39ae542157484d792145126b43d10770",
+      "stored": true
+    },
+    "https://huggingface.co/datasets/EleutherAI/pile/raw/main/README.md": {
+      "bytes": 14225,
+      "cells": [
+        "pythia-12b/axis1",
+        "pythia-12b/axis4",
+        "pythia-12b/axis19"
+      ],
+      "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938",
+      "stored": true
+    },
+    "https://huggingface.co/datasets/allenai/olmo-mix-1124/raw/main/README.md": {
+      "bytes": 5922,
+      "cells": [
+        "olmo-2-13b/axis1"
+      ],
+      "sha256": "8a0a0c243be08a014bb85062f1117c4fbe97d6caeb22a69545ffdf58c3a49ae5",
+      "stored": true
+    },
+    "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/coreml/fill-mask/float32_model.mlpackage/Data/com.apple.CoreML/weights/weight.bin": {
+      "bytes": 134,
+      "cells": [
+        "bert-base-uncased/axis12",
+        "bert-base-uncased/axis13"
+      ],
+      "sha256": "0e6c059b4692b2c344ec3ae352b007fe0bf76713c568254ffcb521c8f832278d",
+      "stored": true
+    },
+    "https://huggingface.co/google-bert/bert-base-uncased/raw/main/README.md": {
+      "bytes": 10517,
+      "cells": [
+        "bert-base-uncased/axis1",
+        "bert-base-uncased/axis4"
+      ],
+      "sha256": "9187b6018ea0010d884e78e098e328faa1b88b301570d0cce606bb35e4067e17",
+      "stored": true
+    },
+    "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/consolidated.safetensors": {
+      "bytes": 136,
+      "cells": [
+        "mistral-7b-v0.3/axis12",
+        "mistral-7b-v0.3/axis13"
+      ],
+      "sha256": "ae5e3b669154c35102ac23a3060716f0c67d2aabb35e1d19bde81831e50c83e1",
+      "stored": true
+    },
+    "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/main/README.md": {
+      "bytes": 3580,
+      "cells": [
+        "mistral-7b-v0.3/axis1"
+      ],
+      "sha256": "d5f3bf07f3062380b2c26b22a5dc9d462d2a1417040f182775de5102f10b2a28",
+      "stored": true
+    },
+    "https://huggingface.co/openai-community/gpt2-xl/raw/15ea56dee5df4983c59b2538573817e1667135e2/README.md": {
+      "bytes": 11973,
+      "cells": [
+        "gpt-2-1.5b/axis1",
+        "gpt-2-1.5b/axis4"
+      ],
+      "sha256": "83acf576ac2b22546b139ba48e690bace7c1de4b40c65d2fbd1cc9950eda75dd",
+      "stored": true
+    },
+    "https://huggingface.co/openai-community/gpt2-xl/raw/15ea56dee5df4983c59b2538573817e1667135e2/flax_model.msgpack": {
+      "bytes": 135,
+      "cells": [
+        "gpt-2-1.5b/axis12",
+        "gpt-2-1.5b/axis13"
+      ],
+      "sha256": "f705981b1fe780c31b94d75804ebe4ee78541b0bffda70e7d225220302d4f5a3",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/EleutherAI/gpt-neox/main/README.md": {
+      "bytes": 58329,
+      "cells": [
+        "pythia-12b/axis6"
+      ],
+      "sha256": "109d01c252722a45edf38170866e45c5a91caae17dad13c81f26be06c6852d60",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/EleutherAI/pythia/main/README.md": {
+      "bytes": 33112,
+      "cells": [
+        "pythia-12b/axis6",
+        "pythia-12b/axis8",
+        "pythia-12b/axis10",
+        "pythia-12b/axis11"
+      ],
+      "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/EleutherAI/pythia/main/models/12B/pythia-12b.yml": {
+      "bytes": 2372,
+      "cells": [
+        "pythia-12b/axis7"
+      ],
+      "sha256": "bac012070f553a9659ff1980d82ad773824a51388635345baf2e38c0f2df6e1d",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/EleutherAI/pythia/main/utils/batch_viewer.py": {
+      "bytes": 1263,
+      "cells": [
+        "pythia-12b/axis11"
+      ],
+      "sha256": "aa0fc5a5d67f305e3d6db748e262cee4b201604cb742535600d6658122ed5229",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/QwenLM/Qwen2.5/main/README.md": {
+      "bytes": 24732,
+      "cells": [
+        "qwen2.5-7b/axis6",
+        "qwen2.5-7b/axis18"
+      ],
+      "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/allenai/OLMo/main/README.md": {
+      "bytes": 17665,
+      "cells": [
+        "olmo-2-13b/axis6",
+        "olmo-2-13b/axis8",
+        "olmo-2-13b/axis10",
+        "olmo-2-13b/axis18"
+      ],
+      "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml": {
+      "bytes": 164084,
+      "cells": [
+        "olmo-2-13b/axis4",
+        "olmo-2-13b/axis7",
+        "olmo-2-13b/axis8",
+        "olmo-2-13b/axis9",
+        "olmo-2-13b/axis11",
+        "olmo-2-13b/axis19",
+        "fact:olmo_data_paths"
+      ],
+      "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/allenai/OLMo/main/pyproject.toml": {
+      "bytes": 3329,
+      "cells": [
+        "olmo-2-13b/axis10"
+      ],
+      "sha256": "61f25b6a00bf6dff289016beaab73886c19b8a135e7218c28836a256ff736ca6",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/data/catalogue/training_dataset_ratios_merged_nigercongo_v3.json": {
+      "bytes": 7945,
+      "cells": [
+        "bloom-176b/axis1",
+        "bloom-176b/axis11"
+      ],
+      "sha256": "dbd5de91efad77eb94934ae045f69b0d6965da0954db551c55827ceea5c5ba60",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/bigscience-workshop/bigscience/master/train/tr11-176B-ml/README.md": {
+      "bytes": 37047,
+      "cells": [
+        "bloom-176b/axis6",
+        "bloom-176b/axis7",
+        "bloom-176b/axis10",
+        "bloom-176b/axis11",
+        "bloom-176b/axis18"
+      ],
+      "sha256": "0be1781306c2d3d49401a403ce5da53af8dce76747f04c8d24053c810a757022",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/google-deepmind/gemma/main/README.md": {
+      "bytes": 3469,
+      "cells": [
+        "gemma-2-9b/axis6"
+      ],
+      "sha256": "cf4afaef8cda5451e970065df35adf895107b468e7217f3e3d024a7144906611",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/google-research/bert/master/README.md": {
+      "bytes": 50519,
+      "cells": [
+        "bert-base-uncased/axis1",
+        "bert-base-uncased/axis6",
+        "bert-base-uncased/axis7",
+        "bert-base-uncased/axis18"
+      ],
+      "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md": {
+      "bytes": 10065,
+      "cells": [
+        "fact:llama_readme_bytes"
+      ],
+      "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md": {
+      "bytes": 26739,
+      "cells": [
+        "llama-3.1-8b/axis1",
+        "llama-3.1-8b/axis6",
+        "llama-3.1-8b/axis7",
+        "llama-3.1-8b/axis18"
+      ],
+      "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/openai/gpt-2/master/README.md": {
+      "bytes": 2831,
+      "cells": [
+        "gpt-2-1.5b/axis6",
+        "gpt-2-1.5b/axis7"
+      ],
+      "sha256": "cd6e0dd0636dd0cb6af5e15477caff74adc161d724cf59716113095bd358c8a3",
+      "stored": true
+    },
+    "https://www.anthropic.com/news/claude-3-5-sonnet": {
+      "bytes": 161327,
+      "cells": [
+        "claude-3.5-sonnet/axis1"
+      ],
+      "sha256": "dbd090316d47a1173f029e5d39b8c58bdf7a3e5878d3a2aa9c44383829a64384",
+      "stored": true
+    }
+  }
+}

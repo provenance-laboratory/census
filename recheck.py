@@ -86,11 +86,21 @@ def main():
     # none had drifted", which is a claim about a PROCESS: without a record it is unfalsifiable,
     # and an unfalsifiable sentence in a paper about checkability is the wrong kind of sentence.
     import datetime as _dt
+    import hashlib as _hl
     log = HERE / "recheck-log.json"
     prev = json.loads(log.read_text(encoding="utf-8")) if log.exists() else {"runs": []}
+    # ⛔ A COUNT IS NOT A COVER. The paper says "all N artifacts were re-fetched"; the build used
+    # to confirm that by comparing N against the ledger's artifact count. Swap one url for another
+    # and the count is identical, so the check would pass for a run that never touched the current
+    # evidence. Record a fingerprint over the url+digest SET instead, and let the build compare
+    # that. Round-1 review asked for exactly this.
+    fp = _hl.sha256(chr(10).join(sorted(
+        u + chr(0) + str(by_url[u]["sha256"]) for u in by_url)).encode("utf-8")).hexdigest()
     prev["runs"].append({
         "at": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "artifacts": len(by_url), "unchanged": same, "drifted": drift, "unretrievable": gone, "volatile": volatile_drift,
+        "artifacts": len(by_url), "unchanged": same, "drifted": drift, "unretrievable": gone,
+        "volatile": volatile_drift,
+        "covered": fp,
         "subject_filter": only,
     })
     prev["runs"] = prev["runs"][-50:]

@@ -8,7 +8,11 @@
     "missing, which is the same discipline the emitted tables enforce for scores.",
     "",
     "Each fact carries how it was obtained. A fact whose `check` does not say what was counted is",
-    "not a fact, it is a number somebody remembered."
+    "not a fact, it is a number somebody remembered.",
+    "",
+    "Each fact now carries a `method` naming a REGISTERED recomputation, and check_facts.py",
+    "recomputes the value from the archived bytes. A fact whose method is not registered, or",
+    "whose bytes are not archived, FAILS -- it is not demoted to a remembered number."
   ],
   "facts": {
     "olmo_data_paths": {
@@ -19,6 +23,11 @@
         "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
         "retrieved": "2026-08-28",
         "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+      },
+      "method": {
+        "name": "count_lines_matching",
+        "pattern": "^    - ",
+        "also_all_contain": "olmo-data.org"
       }
     },
     "llama_readme_bytes": {
@@ -29,6 +38,9 @@
         "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md",
         "retrieved": "2026-08-28",
         "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e"
+      },
+      "method": {
+        "name": "byte_length"
       }
     }
   }

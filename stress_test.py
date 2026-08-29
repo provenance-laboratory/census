@@ -219,6 +219,35 @@ print(("  ok    " if band_catches else "  FAIL  ") +
       "the N/A→0 column exposes it (%.3f < %.3f)" % (sc_hidden["na_as_0"], sc_base["as_coded"]))
 passed, failed = (passed + 1, failed) if band_catches else (passed, failed + 1)
 
+# ── the drift run must be bound to the evidence SET, not to its size ─────────────────────────
+# The paper says every artifact was re-fetched. That was confirmed by comparing a COUNT, which a
+# substitution passes: swap one url for another and the count is unchanged. The build now compares
+# a fingerprint over url+digest, and this is the POSITIVE CONTROL that the fingerprint moves when
+# the set does. A binding nobody has watched fail is not known to bind.
+import hashlib as _h
+
+
+def _fp(pairs):
+    return _h.sha256(chr(10).join(sorted(
+        u + chr(0) + d for u, d in pairs)).encode("utf-8")).hexdigest()
+
+
+A = [("https://example.org/a", "aa" * 32), ("https://example.org/b", "bb" * 32)]
+B = [("https://example.org/a", "aa" * 32), ("https://example.org/DIFFERENT", "bb" * 32)]
+C = [("https://example.org/a", "aa" * 32), ("https://example.org/b", "cc" * 32)]
+
+print()
+print("  " + chr(0x26D4) + " SUBSTITUTION, NOT CORRUPTION: same count, different evidence")
+print("      two artifacts either way, so a count check passes all three of these")
+for label, other in (("a url replaced", B), ("a digest replaced", C)):
+    moved = _fp(A) != _fp(other)
+    print(("  ok    " if moved else "  FAIL  ") + "the cover fingerprint changes when %s" % label)
+    passed, failed = (passed + 1, failed) if moved else (passed, failed + 1)
+same = _fp(A) == _fp(list(reversed(A)))
+print(("  ok    " if same else "  FAIL  ") +
+      "and does NOT change when only the ORDER differs (it is a set, not a list)")
+passed, failed = (passed + 1, failed) if same else (passed, failed + 1)
+
 print()
 print("=" * 78)
 print("  %d passed, %d failed" % (passed, failed))

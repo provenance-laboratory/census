@@ -129,6 +129,10 @@ def evidence(url):
         "sha256": hashlib.sha256(body).hexdigest(),
         "bytes": len(body),
         "content_head": body[:80].decode("utf-8", "replace").strip()[:60],
+        # The bytes themselves, so a caller can ARCHIVE them rather than only hash them.
+        # Transient and never serialised into cells.json: a digest proves what WAS
+        # there, and only the bytes let a later reader check the claim for themselves.
+        "body": body,
     }, None
 
 

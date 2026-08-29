@@ -42,6 +42,16 @@
       "unretrievable": 0,
       "volatile": 1,
       "subject_filter": null
+    },
+    {
+      "at": "2026-08-29T07:27:30Z",
+      "artifacts": 41,
+      "unchanged": 39,
+      "drifted": 0,
+      "unretrievable": 0,
+      "volatile": 2,
+      "covered": "d7a54f2badad98194c58dac3bf2fc9687790ff87d69142bd8a77d9faa35d85cc",
+      "subject_filter": null
     }
   ]
 }
