@@ -74,9 +74,11 @@ def full_census(subject="s1", score=0, cell_over=None, **over):
                                             for c in cells if c.get("score")},
                          "axis_method": {str(c["axis"]): (c.get("check") or {}).get("method")
                                          for c in cells if c.get("score")},
-                         "axis_literals": {str(c["axis"]): sorted((c.get("check") or {})["expect"])
-                                           for c in cells
-                                           if c.get("score") and (c.get("check") or {}).get("expect")}}],
+                         # Every scored axis declares literals EXPLICITLY, [] where there are
+                         # none -- a missing key is now a defect, not an exemption.
+                         "axis_literals": {str(c["axis"]):
+                                           sorted((c.get("check") or {}).get("expect") or [])
+                                           for c in cells if c.get("score")}}],
            "cells": cells}
     led.update(over)
     return led
