@@ -48,31 +48,22 @@ def m_grep(c, ev):
     exp = c["check"].get("expect")
     if not exp:
         return None, "no `expect` list: nothing to replay, so the method name is a label"
-    haystacks = [b for b in (_bytes_for(e) for e in ev) if b is not None]
-    if not haystacks:
+    docs = [(e, _bytes_for(e)) for e in ev]
+    docs = [(e, b) for e, b in docs if b is not None]
+    if not docs:
         return None, "no archived bytes for any cited artifact"
+    # ⛔ THIS ORed OVER THE UNION, answering "do these strings occur somewhere in this pile" rather
+    # than "does one of this subject's documents say this". Every literal must be found in ONE
+    # artifact, and that artifact is named in the verdict.
+    for e, b in docs:
+        low = b.lower()
+        if all(x.lower().encode() in low for x in exp):
+            return True, ("all %d expected string(s) found in %s"
+                          % (len(exp), e["url"].rsplit("/", 1)[-1][:40]))
     missing = [x for x in exp
-               if not any(x.lower().encode() in h.lower() for h in haystacks)]
-    if missing:
-        return False, "NOT FOUND in the archived bytes: %s" % missing
-    return True, "found all %d expected string(s)" % len(exp)
-
-
-def m_range(c, ev):
-    r = [e for e in ev if e.get("range")]
-    if not r:
-        return False, "method is http_range and no evidence record carries a range"
-    b = _bytes_for(r[0])
-    if b is None:
-        return None, "the range bytes are not archived"
-    # ⚠️ THIS COMPUTED last + 1, which is the length only when the range starts at zero. True of
-    # every range in this ledger today, and a silent wrong answer the moment one does not.
-    _spec = r[0]["range"].split("=", 1)[-1]
-    _first, _last = (int(x) for x in _spec.split("-"))
-    want = _last - _first + 1
-    if len(b) != want:
-        return False, "archived range is %d bytes, the record claims %d" % (len(b), want)
-    return True, "%d archived bytes match the cited range" % len(b)
+               if not any(x.lower().encode() in b.lower() for _e, b in docs)]
+    return False, ("no single cited artifact contains all %d expected string(s)%s"
+                   % (len(exp), ("; never found anywhere: %s" % missing) if missing else ""))
 
 
 HF_API = re.compile(r"^https://huggingface\.co/api/models/([^/]+/[^/]+)/revision/([0-9a-f]{40})$")
@@ -153,6 +144,102 @@ def foreign_evidence(cell, ctx):
                 bad.append("%s is %s's artifact" % (e["url"].rsplit("/", 1)[-1][:38], sub))
     return bad
 
+
+
+def subject_context(led):
+    """What the ledger already knows: which repository each subject IS."""
+    return {s["id"]: s.get("repo") for s in led.get("subjects", [])}
+
+
+def cited_by(led):
+    """url -> {subjects that cite it}. The ledger knows this and nothing was reading it.
+
+    ⛔ subjects[].repo NAMES ONLY THE MODEL REPOSITORY, so a dataset repo, a code repo or an arXiv
+    page belonging to another subject was invisible. Two live consequences a reviewer demonstrated:
+    pythia's SEEDS-PUBLISHED cell passed backed solely by google-research/bert's README, because
+    that README contains the literal `1234`; and bloom's CORPUS-ENUMERATED cell passed backed
+    solely by the Gemini 1.5 arXiv page, because it contains `oscar`.
+    """
+    out = {}
+    for c in led.get("cells", []):
+        for e in (c.get("evidence") or []):
+            out.setdefault(e["url"], set()).add(c["subject"])
+    return out
+
+
+def foreign_evidence(cell, ctx, owners=None):
+    """Evidence the ledger declares to belong to a DIFFERENT subject.
+
+    ⚠️ `owners` DEFAULTS TO THE LEDGER ON DISK rather than to nothing. A caller passing two
+    arguments used to silently skip half this check -- which is what happened when a reviewer's
+    harness replicated the gate faithfully as of the previous round and got a clean pass on two
+    substitutions the full gate rejects. A check with an optional half is a check with a default
+    that disables it.
+    """
+    if owners is None:
+        owners = cited_by(json.loads((HERE / "cells.json").read_text(encoding="utf-8")))
+    mine = ctx.get(cell["subject"])
+    bad = []
+    for e in (cell.get("evidence") or []):
+        u = e["url"].lower()
+        for sub, repo in ctx.items():
+            if not repo or sub == cell["subject"]:
+                continue
+            if repo.lower() in u and (not mine or mine.lower() not in u):
+                bad.append("%s is %s's artifact" % (e["url"].rsplit("/", 1)[-1][:38], sub))
+        if owners:
+            others = owners.get(e["url"], set()) - {cell["subject"]}
+            if others and cell["subject"] not in owners.get(e["url"], set()):
+                bad.append("%s is cited by %s and by no cell of this subject"
+                           % (e["url"].rsplit("/", 1)[-1][:38], ", ".join(sorted(others))))
+    return bad
+
+
+def m_range(c, ev, ctx=None):
+    """A ranged artifact, ANCHORED: the url must appear in a co-cited artifact's archived bytes.
+
+    ⛔ THIS EXECUTOR RECEIVED NONE OF THE IDENTITY REPAIR. It compared len(bytes) to the range spec
+    and returned True, never reading the url, the context, or the document that names the path. So
+    olmo's CORPUS-OBTAINABLE cell accepted 2 KB of BERT's weights with the olmo-data.org url left
+    in place, accepted an arbitrary url with GPT-2's bytes, and accepted having the config deleted.
+    A reviewer ran the first end to end: every gate in the project exited 0 and the built paper
+    still said the token files were retrievable.
+
+    ⇒ The anchor is available OFFLINE and the ledger already holds it: the ranged url occurs
+    verbatim in the archived config that enumerates the corpus. So the pair must be co-cited, and
+    the url must be FOUND in the other artifact's bytes. That is what makes this range this
+    subject's corpus rather than 2 KB of something.
+    """
+    r = [e for e in ev if e.get("range")]
+    if len(r) != 1:
+        return False, "expected exactly one ranged artifact, found %d" % len(r)
+    others = [e for e in ev if not e.get("range")]
+    if not others:
+        return False, ("the ranged artifact is cited alone, so nothing in the ledger says this "
+                       "url belongs to this subject")
+    b = _bytes_for(r[0])
+    if b is None:
+        return None, "the range bytes are not archived"
+
+    _spec = r[0]["range"].split("=", 1)[-1]
+    _first, _last = (int(x) for x in _spec.split("-"))
+    want = _last - _first + 1
+    if len(b) != want:
+        return False, "archived range is %d bytes, the record claims %d" % (len(b), want)
+    if hashlib.sha256(b).hexdigest() != r[0]["sha256"]:
+        return False, "archived bytes do not hash to the recorded digest"
+
+    # ⛔ THE ANCHOR. The url must occur in a co-cited artifact's archived bytes.
+    anchored = []
+    for e in others:
+        hay = _bytes_for(e)
+        if hay is not None and r[0]["url"].encode() in hay:
+            anchored.append(e["url"].rsplit("/", 1)[-1][:34])
+    if not anchored:
+        return False, ("the ranged url appears in NO co-cited artifact, so nothing connects these "
+                       "bytes to this subject's corpus")
+    return True, ("%d archived bytes, digest matches, and the url is named in %s"
+                  % (len(b), anchored[0]))
 
 
 def m_weight_object(c, ev, ctx=None):
@@ -309,6 +396,53 @@ DISPATCH = {
 }
 
 
+def gate(cell, ctx=None, owners=None, led=None):
+    """The single admissibility gate for a VERIFIED cell. (ok, why).
+
+    ⛔ THIS LOGIC EXISTED IN THREE PLACES -- main, selftest, and a reviewer's harness -- and only
+    one of them had the newest half. Every caller now goes through here, so a gate cannot be
+    partially replicated: whatever is added is added everywhere at once.
+    """
+    if led is None:
+        led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
+    if ctx is None:
+        ctx = subject_context(led)
+    meth = (cell.get("check") or {}).get("method", "")
+
+    stray = foreign_evidence(cell, ctx, owners)
+    if stray:
+        return False, "; ".join(stray[:2])
+    # The same bytes cannot have come from two different urls. This is what catches a swap that
+    # leaves the url truthful and replaces the digest AND the archived bytes together.
+    _owned = {}
+    for _c in led.get("cells", []):
+        for _e in (_c.get("evidence") or []):
+            _owned.setdefault(_e["sha256"], set()).add(_e["url"])
+    for _e in (cell.get("evidence") or []):
+        _urls = _owned.get(_e["sha256"], set())
+        if len(_urls) > 1:
+            return False, ("digest %s is cited under %d different urls; the same bytes cannot "
+                           "have been retrieved from all of them"
+                           % (_e["sha256"][:12], len(_urls)))
+    req = A.required_method(cell["axis"])
+    if req and meth not in req:
+        return False, ("axis %d REQUIRES %s; %r is registered and permitted but does not bind "
+                       "this axis's identity" % (cell["axis"], sorted(req), meth))
+    for f in A.required_fields(meth):
+        if not (cell.get("check") or {}).get(f):
+            return False, ("method %r requires `%s`; without it nothing can be replayed and the "
+                           "evidence is unconstrained" % (meth, f))
+    if meth not in A.methods_for(cell["axis"]):
+        return False, "method %r cannot settle this axis" % meth
+    fn = DISPATCH.get(meth)
+    if fn is None:
+        return False, "method %r has no executor" % meth
+    try:
+        return fn(cell, cell.get("evidence") or [], ctx)
+    except TypeError:
+        return fn(cell, cell.get("evidence") or [])
+
+
 def selftest():
     """Mutate the real ledger IN MEMORY and require each mutation to fail.
 
@@ -324,21 +458,13 @@ def selftest():
         d = copy.deepcopy(led)
         mut(d)
         ctx = subject_context(d)
+        owners = cited_by(led)          # ownership from the UNMUTATED ledger
         for c in d["cells"]:
             if c.get("score") != 2:
                 continue
-            if foreign_evidence(c, ctx):
+            res, _why = gate(c, ctx, owners, d)
+            if res is False:
                 return False
-            fn = DISPATCH.get(c["check"]["method"])
-            if fn and c["check"]["method"] not in A.methods_for(c["axis"]):
-                return False
-            if fn:
-                try:
-                    res, _why = fn(c, c.get("evidence") or [], ctx)
-                except TypeError:
-                    res, _why = fn(c, c.get("evidence") or [])
-                if res is False:
-                    return False
         return True
 
     def _stub_html(d):
@@ -403,6 +529,25 @@ def selftest():
              "evidence", copy.deepcopy(_find(d, "bloom-176b", 1)["evidence"])),
              _find(d, "bert-base-uncased", 1).__setitem__(
              "check", copy.deepcopy(_find(d, "bloom-176b", 1)["check"])))),
+        # ── round 6: the seven a reviewer demonstrated still surviving ───────────────
+        ("a corpus range backed by another subject's weight bytes, url untouched",
+         lambda d: _find(d, "olmo-2-13b", 4)["evidence"][1].__setitem__(
+             "sha256", _find(d, "bert-base-uncased", 12)["evidence"][0]["sha256"])),
+        ("the document that NAMES the ranged path dropped from the cell",
+         lambda d: _find(d, "olmo-2-13b", 4).__setitem__(
+             "evidence", [e for e in _find(d, "olmo-2-13b", 4)["evidence"] if e.get("range")])),
+        ("a weights cell moved to http_range, which is registered and axis-legal",
+         lambda d: (_find(d, "qwen2.5-7b", 12)["check"].__setitem__("method", "http_range"),
+                    _find(d, "qwen2.5-7b", 12)["evidence"][0].__setitem__(
+                        "sha256", _find(d, "bert-base-uncased", 12)["evidence"][0]["sha256"]))),
+        ("a weights cell disarmed by deleting expect_range_bytes",
+         lambda d: _find(d, "qwen2.5-7b", 12)["check"].pop("expect_range_bytes", None)),
+        ("a seeds cell backed solely by another subject's README containing the literal",
+         lambda d: _find(d, "pythia-12b", 8).__setitem__(
+             "evidence", copy.deepcopy(_find(d, "bert-base-uncased", 6)["evidence"]))),
+        ("a corpus cell backed solely by another subject's arXiv page",
+         lambda d: _find(d, "bloom-176b", 1).__setitem__(
+             "evidence", copy.deepcopy(_find(d, "gemini-1.5-pro", 1)["evidence"]))),
         ("2 KB of an HTML sign-in page instead of the weight range",
          lambda d: _stub_html(d)),
         ("falsified expected strings on a replayable grep",
@@ -441,6 +586,7 @@ def main():
     strict = "--strict" in sys.argv
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
     ctx = subject_context(led)
+    owners = cited_by(led)
     ok = failed = unreplayable = 0
     print("=" * 78)
     print("  replaying every VERIFIED check over archived bytes")
@@ -463,15 +609,7 @@ def main():
                   % (where, meth, ", ".join(sorted(A.methods_for(c["axis"])))))
             failed += 1
             continue
-        stray = foreign_evidence(c, ctx)
-        if stray:
-            print("  " + chr(0x26D4) + " FAIL %-24s %s" % (where, "; ".join(stray[:2])))
-            failed += 1
-            continue
-        try:
-            res, why = fn(c, c.get("evidence") or [], ctx)
-        except TypeError:
-            res, why = fn(c, c.get("evidence") or [])
+        res, why = gate(c, ctx, owners, led)
         if res is True:
             print("  ok    %-26s %s" % (where, why))
             ok += 1

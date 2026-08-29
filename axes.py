@@ -305,3 +305,35 @@ def methods_for(axis_id):
     if axis_id not in BY_ID:
         raise KeyError("axis %r is not one of the %d" % (axis_id, len(AXES)))
     return {m for m, axes in METHOD_AXES.items() if axis_id in axes}
+
+
+# ── WHAT AN AXIS REQUIRES, not merely what it permits ───────────────────────────────────────
+# ⛔ IDENTITY BINDING WAS OPT-IN PER EXECUTOR. `http_range` is registered and declared legal for
+# axis 12, so moving a weights cell onto it bypassed every identity check by a route the validator
+# and the axis table both approved: mp_metric reported no defects and replay printed
+# "24 replayed and passed" with one cell holding another subject's bytes.
+#
+# A permitted-set says which methods MAY settle an axis. That is not enough where one method binds
+# identity and another does not. These axes name the method that MUST be used.
+REQUIRED_METHOD = {
+    12: {"hf_probe.weight_object"},
+    13: {"hf_probe.all_shard_digests"},
+}
+
+# Fields an executor cannot run without. Deleting one used to DEMOTE a cell to "unreplayable",
+# after which its evidence was unconstrained and the build printed the count into the paper.
+# A VERIFIED cell missing what its own method needs is a defect, not a weaker cell.
+REQUIRED_FIELDS = {
+    "grep_retrieved": ("expect",),
+    "count_in_retrieved": ("expect", "expect_count"),
+    "hf_probe.weight_object": ("expect_range_bytes",),
+    "hf_probe.all_shard_digests": ("expect_shards",),
+}
+
+
+def required_method(axis_id):
+    return REQUIRED_METHOD.get(axis_id)
+
+
+def required_fields(method):
+    return REQUIRED_FIELDS.get(method, ())

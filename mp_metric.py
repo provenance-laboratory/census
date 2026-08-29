@@ -179,6 +179,22 @@ def validate(led):
                     d.append(f"{where}: method {meth!r} cannot settle this axis "
                              f"({A.BY_ID[ax][2]}). Valid: "
                              f"{sorted(A.methods_for(ax)) or 'NONE DECLARED'}")
+                # ⛔ AND WHERE AN AXIS REQUIRES A SPECIFIC METHOD, A LEGAL ALTERNATIVE IS
+                # NOT ACCEPTABLE. Round-6 review moved a weights cell to `http_range` -- which is
+                # registered, and which axes.py declared legal for that axis -- and every identity
+                # check was bypassed with no defect reported anywhere.
+                _req = A.required_method(ax)
+                if _req and meth not in _req:
+                    d.append(f"{where}: axis {ax} REQUIRES {sorted(_req)}; {meth!r} is registered "
+                             f"and permitted but does not bind this axis's identity")
+                # A cell missing what its own method needs is a DEFECT, not a weaker cell. Deleting
+                # `expect_range_bytes` used to demote the check to unreplayable and leave the
+                # evidence unconstrained.
+                for _f in A.required_fields(meth):
+                    if not chk.get(_f):
+                        d.append(f"{where}: method {meth!r} requires `{_f}`; without it nothing "
+                                 f"can be replayed and the evidence is unconstrained")
+
                 # ⛔ A REPLAYABLE METHOD MUST CARRY SOMETHING TO REPLAY. `grep_retrieved` with no
                 # `expect` list is a method NAME, not a check, which is what the paper's phrase
                 # "a registered mechanical check over its content succeeded" was resting on.
@@ -204,6 +220,24 @@ def validate(led):
                          f"{c.get('subject')}/axis{c.get('axis')}) -- one of them is wrong")
             elif u not in seen_url:
                 seen_url[u] = (h, f"{c.get('subject')}/axis{c.get('axis')}")
+
+    # ⛔ AND THE MIRROR OF IT. The rule above refuses one url under two digests. The reverse --
+    # one DIGEST under two urls -- is how a cell keeps a truthful-looking url while its bytes are
+    # replaced by another artifact's: the url still anchors, and the recorded digest still matches
+    # the archived bytes, because BOTH were swapped. Offline, the tell is that the same bytes are
+    # now claimed to have come from two different places. Round-6 review demonstrated it on olmo's
+    # corpus cell using bert's weight range.
+    seen_sha = {}
+    for c in led.get("cells", []):
+        for e in (c.get("evidence") or []):
+            h, u = e.get("sha256"), e.get("url")
+            if h in seen_sha and seen_sha[h][0] != u:
+                d.append(f"digest {str(h)[:12]} is cited under TWO different urls "
+                         f"({seen_sha[h][0][:58]} at {seen_sha[h][1]}, and {str(u)[:58]} at "
+                         f"{c.get('subject')}/axis{c.get('axis')}) -- the same bytes cannot have "
+                         f"been retrieved from both")
+            elif h not in seen_sha:
+                seen_sha[h] = (u, f"{c.get('subject')}/axis{c.get('axis')}")
 
     # PROJECT over subjects x axes: every pair must be present.
     for s in subjects:

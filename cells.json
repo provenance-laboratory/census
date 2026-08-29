@@ -389,7 +389,7 @@
       "check": {
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
-        "observed": "6 of 6 enumerated shards carry a Git-LFS sha256 oid at revision bb1e3e710cdf. The API response that ENUMERATES them and every shard pointer are archived; replay.py recomputes the enumeration from the response rather than trusting this count.",
+        "observed": "6 of 6 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision bb1e3e710cdf (3 .bin, 3 .safetensors). \u26a0 THIS IS 2 COMPLETE SERIALISATIONS of the same weights, not 6 shards of one: 3 .bin, 3 .safetensors. The axis asks whether every published weight FILE carries a digest, which this answers; the word 'shard' would not. The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
         "expect_shards": 6
       },
       "evidence": [
@@ -739,7 +739,7 @@
       "check": {
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
-        "observed": "12 of 12 enumerated shards carry a Git-LFS sha256 oid at revision 3fefddc1bf18. The API response that ENUMERATES them and every shard pointer are archived; replay.py recomputes the enumeration from the response rather than trusting this count.",
+        "observed": "12 of 12 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision 3fefddc1bf18 (12 .safetensors). The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
         "expect_shards": 12
       },
       "evidence": [
@@ -1095,7 +1095,7 @@
       "check": {
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
-        "observed": "144 of 144 enumerated shards carry a Git-LFS sha256 oid at revision 7f10a99ce7c0. The API response that ENUMERATES them and every shard pointer are archived; replay.py recomputes the enumeration from the response rather than trusting this count.",
+        "observed": "144 of 144 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision 7f10a99ce7c0 (72 .bin, 72 .safetensors). \u26a0 THIS IS 2 COMPLETE SERIALISATIONS of the same weights, not 144 shards of one: 72 .bin, 72 .safetensors. The axis asks whether every published weight FILE carries a digest, which this answers; the word 'shard' would not. The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
         "expect_shards": 144
       },
       "evidence": [
@@ -2297,7 +2297,7 @@
       "check": {
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
-        "observed": "4 of 4 enumerated shards carry a Git-LFS sha256 oid at revision caa1feb0e54d. The API response that ENUMERATES them and every shard pointer are archived; replay.py recomputes the enumeration from the response rather than trusting this count.",
+        "observed": "4 of 4 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision caa1feb0e54d (4 .safetensors). \u26a0 1 of these is a CONSOLIDATED single-file form (consolidated.safetensors) rather than a shard of the sharded set. Counted because the axis asks about published weight files. The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
         "expect_shards": 4
       },
       "evidence": [
@@ -2527,7 +2527,7 @@
       "check": {
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
-        "observed": "4 of 4 enumerated shards carry a Git-LFS sha256 oid at revision d14972939875. The API response that ENUMERATES them and every shard pointer are archived; replay.py recomputes the enumeration from the response rather than trusting this count.",
+        "observed": "4 of 4 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision d14972939875 (4 .safetensors). The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
         "expect_shards": 4
       },
       "evidence": [
