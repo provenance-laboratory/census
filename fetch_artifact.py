@@ -117,8 +117,22 @@ def looks_like_a_wall(body, status):
     return None
 
 
-def evidence(url):
-    status, body, err = fetch(url)
+def evidence(url, retries=2):
+    """⛔ A RATE LIMIT IS NOT A FINDING ABOUT THE ARTIFACT. Re-fetching 226 artifacts hits Hugging
+    Face's limiter, and two came back HTTP 429 -- which the drift report then filed as
+    "unretrievable", a claim about the resource made from a fact about the channel. That is the
+    sibling of treating a bot-wall's HTTP 200 as an answer. Back off and retry; if it persists,
+    say RATE-LIMITED rather than gone."""
+    import time as _t
+    for attempt in range(retries + 1):
+        status, body, err = fetch(url)
+        if str(status) in ("429", "503") and attempt < retries:
+            _t.sleep(5 * (attempt + 1))
+            continue
+        break
+    if str(status) in ("429", "503"):
+        return None, ("RATE-LIMITED (HTTP %s) after %d attempts -- a fact about the channel, not "
+                      "about the artifact" % (status, retries + 1))
     if err:
         return None, err
     wall = looks_like_a_wall(body, status)

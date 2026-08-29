@@ -112,6 +112,35 @@
       "volatile": 5,
       "covered": "b6e5ebbf6172d88d2349c9da6dee8272d654ed146381cc5ce9238827a7a568d9",
       "subject_filter": null
+    },
+    {
+      "at": "2026-08-29T13:25:54Z",
+      "artifacts": 224,
+      "unchanged": 214,
+      "drifted": 0,
+      "unretrievable": 2,
+      "volatile": 8,
+      "covered": "b6e5ebbf6172d88d2349c9da6dee8272d654ed146381cc5ce9238827a7a568d9",
+      "subject_filter": null,
+      "findings": [
+        {
+          "url": "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+          "what": "unretrievable: HTTP 429",
+          "cells": [
+            "olmo-2-13b/axis12",
+            "olmo-2-13b/axis13"
+          ],
+          "recorded_sha256": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3"
+        },
+        {
+          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/model-00002-of-00003.safetensors",
+          "what": "unretrievable: HTTP 429",
+          "cells": [
+            "mistral-7b-v0.3/axis13"
+          ],
+          "recorded_sha256": "489fe50a5c3d9bdef12f0c37944587e9b5c98e5a379474420d46d0e7fa24a699"
+        }
+      ]
     }
   ]
 }

@@ -311,7 +311,7 @@
         "pythia-12b/axis12",
         "pythia-12b/axis13"
       ],
-      "sha256": "39b5004b19319e3d1eb80cf019194c2c6de677e66117e949a0b65bee50508152",
+      "sha256": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71",
       "stored": true
     },
     "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796": {
@@ -335,7 +335,7 @@
         "bloom-176b/axis12",
         "bloom-176b/axis13"
       ],
-      "sha256": "c907ea31628e06859b1dc88fa9a529e026868c636fcc5e7348f81c5220d92f06",
+      "sha256": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29",
       "stored": true
     },
     "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/86b5e0934494bd15c9632b12f734a8a67f723594": {
@@ -1477,6 +1477,13 @@
         "bert-base-uncased/axis12"
       ],
       "sha256": "29746b90aea1aaa5a829656d849cd699f5f194fa4078cf60b4c53eb958ef8608",
+      "stored": true
+    },
+    "https://huggingface.co/google-bert/bert-base-uncased/resolve/86b5e0934494bd15c9632b12f734a8a67f723594/model.safetensors": {
+      "cells": [
+        "bert-base-uncased/axis12"
+      ],
+      "sha256": "a312ded84642890d49cb0163900d4e7779f350da778e6f6f0a918d5aa705c059",
       "stored": true
     },
     "https://huggingface.co/karpathy/gpt2_1558M_final2_hf": {

@@ -11,14 +11,18 @@ entire instrument exists to draw. This script performs them.
 
 WHAT IT CAN AND CANNOT DO. `grep_retrieved` and `count_in_retrieved` are fully replayable: the cell
 names the literal strings its claim rests on and this greps the stored bytes for them.
-`http_range` is replayable against the recorded range digest. The `hf_probe.*` methods executed a
-live probe at scoring time whose outputs are recorded; this checks the recorded evidence has the
-shape that probe produces, which is weaker, and says so rather than implying more.
+`http_range` is replayable against the recorded range digest. The `hf_probe.*` methods are replayed
+too, and against IDENTITY rather than shape: the archived API response must be of the repository and
+revision its url claims, the cited shard pointers must be SET-EQUAL to the enumeration it carries,
+and the ranged file must be one of those shards, at that revision, carrying real weight bytes.
+⚠️ An earlier version of this docstring called them "shape-verified", which was generous: what it
+actually tested was that some cited url contained a hostname.
 
     python replay.py            replay every score-2 check
     python replay.py --strict   also fail on a check that is only shape-verified
 """
 import gzip
+import hashlib
 import io
 import json
 import pathlib
@@ -61,26 +65,98 @@ def m_range(c, ev):
     b = _bytes_for(r[0])
     if b is None:
         return None, "the range bytes are not archived"
-    want = int(r[0]["range"].split("-")[-1]) + 1
+    # ⚠️ THIS COMPUTED last + 1, which is the length only when the range starts at zero. True of
+    # every range in this ledger today, and a silent wrong answer the moment one does not.
+    _spec = r[0]["range"].split("=", 1)[-1]
+    _first, _last = (int(x) for x in _spec.split("-"))
+    want = _last - _first + 1
     if len(b) != want:
         return False, "archived range is %d bytes, the record claims %d" % (len(b), want)
     return True, "%d archived bytes match the cited range" % len(b)
 
 
-def m_weight_object(c, ev):
-    """Axis 12: the archived bytes must BE a real weight range, not a pointer, at the right length.
+HF_API = re.compile(r"^https://huggingface\.co/api/models/([^/]+/[^/]+)/revision/([0-9a-f]{40})$")
+HF_FILE = re.compile(r"^https://huggingface\.co/([^/]+/[^/]+)/(?:raw|resolve)/([0-9a-f]{40})/(.+)$")
+# safetensors begins with a little-endian u64 header length, then '{"' of the JSON header. A
+# .bin shard is a zip (PK) or a pickle. "Not a Git-LFS pointer" was the old test and it accepts
+# an HTML sign-in page, which is the wall the retrieval tool refuses everywhere else.
+WEIGHT_MAGIC = (b"{", b"PK", b"\x80")
 
-    ⛔ THE OLD CHECK ASKED WHETHER SOME URL CONTAINED "huggingface.co". A fabricated digest, a
-    nonsense observation and a non-existent repository all returned "shape-verified only". Both
-    round-4 reviewers found it. The cell claimed "HTTP 206, 2048 B, is_pointer=False" while the
-    archive held a 136-byte Git-LFS pointer -- the paper's own confessed defect, inside the fix.
-    """
+
+def _identity(ev):
+    """(repo, revision) shared by every cited artifact, or a reason they do not share one."""
+    seen = set()
+    for e in ev:
+        m = HF_API.match(e["url"]) or HF_FILE.match(e["url"])
+        if not m:
+            return None, "cited url is not a pinned Hugging Face artifact: %s" % e["url"][:70]
+        seen.add((m.group(1), m.group(2)))
+    if len(seen) != 1:
+        return None, ("cited artifacts span %d different repository/revision pairs: %s"
+                      % (len(seen), sorted(seen)))
+    return seen.pop(), None
+
+
+def _enumeration(ev):
+    """(repo, revision, {filenames}) from the ARCHIVED api response, with its sha checked."""
+    api = [e for e in ev if HF_API.match(e["url"])]
+    if len(api) != 1:
+        return None, "expected exactly one pinned api response, found %d" % len(api)
+    repo, rev = HF_API.match(api[0]["url"]).groups()
+    raw = _bytes_for(api[0])
+    if raw is None:
+        return None, "the api response is not archived"
+    try:
+        j = json.loads(raw)
+    except ValueError:
+        return None, "the archived api response is not json"
+    # ⛔ THE RESPONSE MUST BE OF THE REVISION ITS URL CLAIMS. Otherwise one repository's
+    # enumeration can stand in for another's, which is attack 2.
+    if j.get("sha") != rev:
+        return None, ("the archived api response is for revision %s, the url claims %s"
+                      % (str(j.get("sha"))[:12], rev[:12]))
+    if j.get("id") and j["id"] != repo:
+        return None, "the archived api response is for %r, the url claims %r" % (j["id"], repo)
+    files = {s["rfilename"] for s in j.get("siblings", [])}
+    # Top-level weight files only -- see bind_probe_evidence.SHARD_RE. A nested vendor
+    # export (CoreML, ONNX) is not a shard of the released model.
+    shards = {f for f in files if re.match(r"^[^/]+\.(safetensors|bin)$", f)
+              and "index" not in f}
+    return (repo, rev, shards), None
+
+
+def m_weight_object(c, ev):
+    """Axis 12: a real weight range, from a file THIS repository enumerates, at THIS revision."""
     want = c["check"].get("expect_range_bytes")
     if not want:
         return None, "no expect_range_bytes: nothing to recompute"
+    ident, why = _identity(ev)
+    if ident is None:
+        return False, why
+    enum, why = _enumeration(ev)
+    if enum is None:
+        return False, why
+    repo, rev, shards = enum
+
     r = [e for e in ev if e.get("range")]
-    if not r:
-        return False, "axis-12 cell cites no ranged artifact"
+    if len(r) != 1:
+        return False, "expected exactly one ranged artifact, found %d" % len(r)
+    m = HF_FILE.match(r[0]["url"])
+    if not m:
+        return False, "the ranged artifact is not a pinned Hugging Face file url"
+    rrepo, rrev, rfile = m.groups()
+    # ⛔ IDENTITY, NOT SHAPE. Attack 1 swapped this range for a CORPUS range from another host
+    # and the old check passed it: it never looked at the url.
+    if (rrepo, rrev) != (repo, rev):
+        return False, ("the range is from %s@%s, the enumeration is from %s@%s"
+                       % (rrepo, rrev[:12], repo, rev[:12]))
+    if rfile not in shards:
+        return False, "%r is not among the %d shards this revision enumerates" % (rfile, len(shards))
+    if r[0].get("pinned_commit") not in (None, rev):
+        return False, "pinned_commit disagrees with the url's revision"
+    if r[0].get("range") != "bytes=0-%d" % (want - 1):
+        return False, "range is %r, the cell claims %d bytes" % (r[0].get("range"), want)
+
     b = _bytes_for(r[0])
     if b is None:
         return None, "the range bytes are not archived"
@@ -88,60 +164,101 @@ def m_weight_object(c, ev):
         return False, "archived range is %d bytes, the cell claims %d" % (len(b), want)
     if b[:100].startswith(b"version https://git-lfs.github.com/spec/v1"):
         return False, "the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect"
-    import hashlib as _h
-    if _h.sha256(b).hexdigest() != r[0]["sha256"]:
+    # ⛔ "NOT A POINTER" ACCEPTS AN HTML SIGN-IN PAGE, which is attack 4 and is the same wall the
+    # retrieval tool refuses everywhere else in this census.
+    if rfile.endswith(".safetensors"):
+        if len(b) < 8:
+            return False, "too short to carry a safetensors header"
+        hdr = int.from_bytes(b[:8], "little")
+        if not (0 < hdr < len(b) * 4096) or b[8:10] not in (b'{"', b"{}"):
+            return False, ("the archived bytes do not begin with a safetensors header "
+                           "(first bytes %r)" % b[:16])
+    elif not b.startswith(WEIGHT_MAGIC):
+        return False, "the archived bytes do not look like weight data (first bytes %r)" % b[:16]
+    if hashlib.sha256(b).hexdigest() != r[0]["sha256"]:
         return False, "archived bytes do not hash to the recorded digest"
-    return True, "%d real weight bytes, not a pointer, digest matches" % len(b)
+    return True, ("%d bytes of %s at %s@%s, enumerated, non-pointer, digest matches"
+                  % (len(b), rfile, repo, rev[:12]))
 
 
 def m_all_shard_digests(c, ev):
-    """Axis 13: recompute the shard enumeration from the archived API response.
-
-    The cell used to assert "144/144 shards" with one pointer archived. Now the response that
-    ENUMERATES the shards is archived, so the count is recomputed rather than believed, and every
-    cited pointer must carry a real Git-LFS sha256 oid.
-    """
+    """Axis 13: the cited pointers must BE this revision's shard set -- exactly, and distinctly."""
     want = c["check"].get("expect_shards")
     if not want:
         return None, "no expect_shards: nothing to recompute"
-    api = [e for e in ev if "/api/models/" in e["url"]]
-    if not api:
-        return False, "axis-13 cell cites no api response, so its count rests on nothing"
-    raw = _bytes_for(api[0])
-    if raw is None:
-        return None, "the api response is not archived"
-    try:
-        files = [s["rfilename"] for s in json.loads(raw).get("siblings", [])]
-    except ValueError:
-        return False, "the archived api response is not json"
-    enumerated = sorted(f for f in files
-                        if re.search(r"\.(safetensors|bin)$", f) and "index" not in f)
-    if len(enumerated) != want:
-        return False, ("the api response enumerates %d shards, the cell claims %d"
-                       % (len(enumerated), want))
+    ident, why = _identity(ev)
+    if ident is None:
+        return False, why
+    enum, why = _enumeration(ev)
+    if enum is None:
+        return False, why
+    repo, rev, shards = enum
+    if len(shards) != want:
+        return False, ("the archived api response enumerates %d shards, the cell claims %d"
+                       % (len(shards), want))
+
     ptrs = [e for e in ev if e.get("lfs_oid") is not None]
-    if len(ptrs) != want:
-        return False, "%d shard pointer(s) cited, %d enumerated" % (len(ptrs), want)
-    bad = []
+    names, bad = [], []
     for e in ptrs:
+        m = HF_FILE.match(e["url"])
+        if not m:
+            bad.append("a pointer url is not a pinned Hugging Face file url")
+            continue
+        prepo, prev, pfile = m.groups()
+        if (prepo, prev) != (repo, rev):
+            bad.append("%s is from %s@%s" % (pfile, prepo, prev[:12]))
+            continue
+        if e.get("pinned_commit") not in (None, rev):
+            bad.append("%s: pinned_commit disagrees with its url" % pfile)
+        names.append(pfile)
         b = _bytes_for(e)
         if b is None:
-            bad.append("%s not archived" % e["url"].rsplit("/", 1)[-1])
+            bad.append("%s not archived" % pfile)
             continue
-        m = re.search(rb"oid sha256:([0-9a-f]{64})", b)
-        if not m:
-            bad.append("%s carries no sha256 oid" % e["url"].rsplit("/", 1)[-1])
-        elif m.group(1).decode() != e["lfs_oid"]:
-            bad.append("%s oid does not match the ledger" % e["url"].rsplit("/", 1)[-1])
+        mo = re.search(rb"oid sha256:([0-9a-f]{64})", b)
+        if not mo:
+            bad.append("%s carries no sha256 oid" % pfile)
+        elif mo.group(1).decode() != e["lfs_oid"]:
+            bad.append("%s oid does not match the ledger" % pfile)
+        if hashlib.sha256(b).hexdigest() != e["sha256"]:
+            bad.append("%s archived bytes do not hash to the recorded digest" % pfile)
+    # ⛔ len(ptrs) COUNTED RECORDS. Citing one pointer four times gave "4 oids verified", which is
+    # attack 3. Set equality against the enumeration settles count, distinctness and membership
+    # in one comparison.
+    if len(set(names)) != len(names):
+        dup = sorted({n for n in names if names.count(n) > 1})
+        bad.append("duplicate shard pointer(s): %s" % dup[:3])
+    if set(names) != shards:
+        missing = sorted(shards - set(names))[:3]
+        extra = sorted(set(names) - shards)[:3]
+        bad.append("cited set does not equal the enumeration (missing %s, unexpected %s)"
+                   % (missing, extra))
     if bad:
         return False, "; ".join(bad[:3])
-    return True, "%d shards enumerated by the archived api response, %d oids verified" % (
-        want, len(ptrs))
+    return True, ("%d distinct shards, set-equal to the enumeration at %s@%s, every oid verified"
+                  % (len(shards), repo, rev[:12]))
+
+
+def m_count(c, ev):
+    """⚠️ THIS DISPATCHED TO THE GREP EXECUTOR, so a method named `count_in_retrieved` never
+    counted anything. No score-2 cell uses it today, which is exactly why nobody noticed -- a
+    registry entry that is never exercised is a claim nobody has tested."""
+    exp = c["check"].get("expect")
+    n = c["check"].get("expect_count")
+    if not exp or n is None:
+        return None, "needs both `expect` (a pattern) and `expect_count`"
+    hay = [b for b in (_bytes_for(e) for e in ev) if b is not None]
+    if not hay:
+        return None, "no archived bytes for any cited artifact"
+    got = max(sum(h.lower().count(x.lower().encode()) for h in hay) for x in exp)
+    if got != n:
+        return False, "counted %d occurrence(s), the cell claims %d" % (got, n)
+    return True, "counted %d, as claimed" % got
 
 
 DISPATCH = {
     "grep_retrieved": m_grep,
-    "count_in_retrieved": m_grep,
+    "count_in_retrieved": m_count,
     "http_range": m_range,
     "hf_probe.weight_object": m_weight_object,
     "hf_probe.all_shard_digests": m_all_shard_digests,
@@ -174,6 +291,18 @@ def selftest():
                     return False
         return True
 
+    def _stub_html(d):
+        """Round-4 review: "not a Git-LFS pointer" accepts a consent wall -- the same wall the
+        retrieval tool refuses everywhere else in this census."""
+        import hashlib as _h
+        page = (b"<!DOCTYPE html><html><head><title>Sign in</title></head><body>"
+                b"You need to agree to share your contact information to access this model."
+                + b" " * 1900)[:2048]
+        blob = STORE / (_h.sha256(page).hexdigest() + ".gz")
+        blob.write_bytes(gzip.compress(page, 9))
+        e = _find(d, "mistral-7b-v0.3", 12)["evidence"][0]
+        e["sha256"] = _h.sha256(page).hexdigest()
+
     def _find(d, sub, ax):
         return [c for c in d["cells"] if c["subject"] == sub and c["axis"] == ax][0]
 
@@ -189,6 +318,27 @@ def selftest():
          lambda d: _find(d, "mistral-7b-v0.3", 12)["evidence"].__setitem__(
              0, dict(_find(d, "mistral-7b-v0.3", 13)["evidence"][1],
                      range="bytes=0-2047"))),
+        # ── the seven substitutions round-4 review ran, all of which PASSED ─────────
+        # Each swaps one artifact for another that is equally well-formed. Identity, not shape.
+        ("a weight range swapped for another repository's range",
+         lambda d: _find(d, "mistral-7b-v0.3", 12)["evidence"].__setitem__(
+             0, dict(_find(d, "olmo-2-13b", 12)["evidence"][0]))),
+        ("an enumeration swapped for another repository's api response",
+         lambda d: _find(d, "qwen2.5-7b", 13)["evidence"].__setitem__(
+             0, dict(_find(d, "mistral-7b-v0.3", 13)["evidence"][0]))),
+        ("the same shard pointer cited four times",
+         lambda d: _find(d, "qwen2.5-7b", 13).__setitem__(
+             "evidence", [_find(d, "qwen2.5-7b", 13)["evidence"][0]]
+             + [dict(_find(d, "qwen2.5-7b", 13)["evidence"][1]) for _ in range(4)])),
+        ("a range whose url is not among the enumerated shards",
+         lambda d: _find(d, "pythia-12b", 12)["evidence"][0].__setitem__(
+             "url", _find(d, "pythia-12b", 12)["evidence"][0]["url"]
+             .rsplit("/", 1)[0] + "/not-a-shard.safetensors")),
+        ("a pointer whose recorded pinned_commit disagrees with its url",
+         lambda d: _find(d, "bloom-176b", 13)["evidence"][3].__setitem__(
+             "pinned_commit", "0" * 40)),
+        ("2 KB of an HTML sign-in page instead of the weight range",
+         lambda d: _stub_html(d)),
         ("falsified expected strings on a replayable grep",
          lambda d: _find(d, "bert-base-uncased", 1)["check"].update(
              {"expect": ["this string is not in the archived bytes"]})),

@@ -55,7 +55,7 @@ def main():
     print("=" * 78)
     print()
 
-    same = drift = gone = volatile_drift = 0
+    same = drift = gone = volatile_drift = limited = 0
     findings = []
     for url in sorted(by_url):
         want = by_url[url]["sha256"]
@@ -71,7 +71,11 @@ def main():
         else:
             rec, why = F.evidence(url)
         label = "%-58s" % (url[-58:] if len(url) > 58 else url)
-        if rec is None:
+        if rec is None and "RATE-LIMITED" in (why or ""):
+            limited += 1
+            print("  limit  %s" % label)
+            print("         %s" % why)
+        elif rec is None:
             gone += 1
             print("  GONE   %s" % label)
             print("         %s" % why)
@@ -106,20 +110,31 @@ def main():
     # that. Round-1 review asked for exactly this.
     fp = _hl.sha256(chr(10).join(sorted(
         u + chr(0) + str(by_url[u]["sha256"]) for u in by_url)).encode("utf-8")).hexdigest()
+    # ⛔ A COUNT IS NOT A COVER -- AND THAT APPLIES TO THE DRIFT COUNT TOO. This function builds a
+    # findings list carrying every drifted url and the cells it backs, prints it, and then
+    # persisted the integer 2. Four lines above sat the comment saying a count is not a cover,
+    # about the coverage fingerprint. Round-4 review found the same defect in the same dictionary.
+    #
+    # A drifted cell is UNVERIFIED until someone reads the new bytes -- this docstring says so --
+    # and "someone" cannot act on an integer. The findings are persisted.
     prev["runs"].append({
         "at": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "artifacts": len(by_url), "unchanged": same, "drifted": drift, "unretrievable": gone,
-        "volatile": volatile_drift,
+        "volatile": volatile_drift, "rate_limited": limited,
         "covered": fp,
         "subject_filter": only,
+        "findings": [{"url": u, "what": w,
+                      "cells": ["%s/axis%d" % c for c in cs],
+                      "recorded_sha256": by_url[u]["sha256"]}
+                     for u, w, cs in findings],
     })
     prev["runs"] = prev["runs"][-50:]
     log.write_text(json.dumps(prev, indent=2) + NL, encoding="utf-8", newline=NL)
 
     print()
     print("=" * 78)
-    print("  %d unchanged · %d DRIFTED · %d unretrievable · %d volatile"
-          % (same, drift, gone, volatile_drift))
+    print("  %d unchanged · %d DRIFTED · %d unretrievable · %d volatile · %d rate-limited"
+          % (same, drift, gone, volatile_drift, limited))
     print("  recorded in recheck-log.json")
     if findings:
         print()

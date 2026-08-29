@@ -40,6 +40,24 @@ LEDGER = HERE / "cells.json"
 RANGE_BYTES = 2048
 
 
+# ⛔ WHAT COUNTS AS A SHARD. Top-level weight files only. `sorted()[0]` over every matching path
+# chose `coreml/fill-mask/float32_model.mlpackage/.../weight.bin` for bert-base-uncased -- a
+# CoreML export blob nested inside a vendor package, ranged and archived as though it were the
+# model's weights. The new identity check caught it; nothing before it could have. A vendor
+# export is not a shard of the released model, and a nested path is the tell.
+SHARD_RE = re.compile(r"^[^/]+\.(safetensors|bin)$")
+
+
+def shard_names(files):
+    return sorted(f for f in files if SHARD_RE.match(f) and "index" not in f)
+
+
+def primary_shard(shards):
+    """The file a range should be taken from: prefer safetensors, else the first shard."""
+    st = [f for f in shards if f.endswith(".safetensors")]
+    return (sorted(st) or sorted(shards))[0]
+
+
 def curl(url, extra=None):
     cmd = ["curl", "-sSL", "--max-time", "180", "-w", "%{http_code}", "-o", "-"]
     if extra:
@@ -77,8 +95,7 @@ def gather(repo, rev):
         files = [s["rfilename"] for s in json.loads(body).get("siblings", [])]
     except ValueError:
         return None, "api response is not json"
-    shards = sorted(f for f in files
-                    if re.search(r"\.(safetensors|bin)$", f) and "index" not in f)
+    shards = shard_names(files)
     if not shards:
         return None, "no weight shards enumerated in the api response"
     out["shard_names"] = shards
@@ -97,7 +114,8 @@ def gather(repo, rev):
     # ⛔ THE RANGE MUST BE OF THE RESOLVED OBJECT, NOT THE POINTER. /raw/ returns the pointer;
     # /resolve/ redirects to the bytes. The old cell claimed "is_pointer=False" about a range it
     # never kept, and what the archive held was the pointer.
-    ru = "https://huggingface.co/%s/resolve/%s/%s" % (repo, rev, shards[0])
+    _pick = primary_shard(shards)
+    ru = "https://huggingface.co/%s/resolve/%s/%s" % (repo, rev, _pick)
     code, body, err = curl(ru, ["-r", "0-%d" % (RANGE_BYTES - 1)])
     if err or not body:
         return None, "range: %s" % (err or "no body")
