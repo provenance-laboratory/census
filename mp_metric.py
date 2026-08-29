@@ -182,16 +182,37 @@ def score(led):
     return out
 
 
+def ledger_fingerprint(led):
+    """A digest over every (subject, axis, score) triple, N/A included.
+
+    ⛔ WHY EMITTED TABLES CARRY THIS. Round-2 review found the shipped PDF's results table one
+    ledger-revision stale: it said bert scored 0.211 while every other figure in the same document
+    said 0.237, because build_paper.py read the table off disk with an existence check while
+    recomputing everything else live. The header stamp could not distinguish the two files -- both
+    said "as of 2026-08-29".
+
+    The mechanism deserves naming. The gate loop that was supposed to catch this ran
+    `mp_metric.py --check`, whose entire purpose is to VALIDATE AND WRITE NOTHING. So the tables
+    never regenerated, and a build that refuses to proceed unless a url+digest fingerprint covers
+    the drift run then loaded the census's headline result from a filename.
+    """
+    rows = sorted("%s|%d|%s" % (c["subject"], c["axis"], c.get("score"))
+                  for c in led.get("cells", []))
+    return hashlib.sha256(NL.join(rows).encode("utf-8")).hexdigest()
+
+
 def emit_tables(led, sc):
     """Write tables/. NOTHING here may ever be typed into the manuscript by hand."""
     TABLES.mkdir(exist_ok=True)
     stamp = led.get("as_of", "undated")
+    fp = ledger_fingerprint(led)
 
     t1 = ["| # | group | axis | may be N/A |", "|---|---|---|---|"]
     for i, g, name, _q, _s, na in A.AXES:
         t1.append(f"| {i} | {g} | {name} | {'yes' if na else 'no'} |")
     (TABLES / "table1_axes.md").write_text(
         f"<!-- EMITTED by mp_metric.py, as of {stamp}. Do not edit. -->" + NL +
+        f"<!-- ledger-fingerprint: {fp} -->" + NL +
         NL.join(t1) + NL, encoding="utf-8", newline=NL)
 
     t2 = ["| release | CHECKED | CLAIMED | ABSENT | N/A | as-coded | N/A→0 | N/A→2 |",
@@ -203,6 +224,7 @@ def emit_tables(led, sc):
                      v["as_coded"], v["na_as_0"], v["na_as_2"]))
     (TABLES / "table2_scores.md").write_text(
         f"<!-- EMITTED by mp_metric.py, as of {stamp}. Do not edit. -->" + NL +
+        f"<!-- ledger-fingerprint: {fp} -->" + NL +
         NL.join(t2) + NL +
         NL + "The three columns are the same census under three readings of N/A. The spread"
         " between" + NL + "`N/A→0` and `N/A→2` is the weight the escape hatch is carrying; where"
