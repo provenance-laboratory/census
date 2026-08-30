@@ -1359,7 +1359,13 @@
         "asserts": "a third party can acquire the corpus bytes: a byte-range request against a data object named by the published config returns real content",
         "observed": "Range 0-2047 on http://olmo-data.org/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/allenai/dolma2-tokenizer/part-00-00000.npy returned HTTP 206 with 2048 bytes of binary token data (not markup); sha256 of the returned range recorded in the evidence below. The config enumerates 1122 such objects. \u26d4 A RESIDUAL BOUND, STATED. The ranged url and its recorded position in the enumeration are BOTH fields this ledger's author writes, so moving them together relocates the tell rather than removing it. Closing it needs a property of the BYTES, and this artifact has none: despite the .npy extension the object is a raw token array with no NumPy header (first bytes b'\\x02\\x00\\x00\\x00c\\x84\\x00\\x00'), so nothing in it names which shard it is. An offline archive cannot establish which url served given bytes; this is the limit of what the archive can do, and it is written down rather than papered over.",
         "enumerated_index": 0,
-        "byte_property": "none available"
+        "byte_property": {
+          "kind": "uint32_token_stream",
+          "count": 512,
+          "vocab_bound": 100352,
+          "max_id": 91255,
+          "_how": "recomputed from the archived range by m_range; the previous value was the string 'none available' and the executor read a different key entirely"
+        }
       },
       "evidence": [
         {

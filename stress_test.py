@@ -306,21 +306,84 @@ def _fp(pairs):
         u + chr(0) + d for u, d in pairs)).encode("utf-8")).hexdigest()
 
 
-A = [("https://example.org/a", "aa" * 32), ("https://example.org/b", "bb" * 32)]
-B = [("https://example.org/a", "aa" * 32), ("https://example.org/DIFFERENT", "bb" * 32)]
-C = [("https://example.org/a", "aa" * 32), ("https://example.org/b", "cc" * 32)]
+# NOTE: these were named A, B, C -- and `A` is the axes module, imported at the top
+# and used by full_census(). The rebinding shadowed it, so every test written BELOW
+# this line died with "'list' object has no attribute BY_ID". Renamed.
+_FA = [("https://example.org/a", "aa" * 32), ("https://example.org/b", "bb" * 32)]
+_FB = [("https://example.org/a", "aa" * 32), ("https://example.org/DIFFERENT", "bb" * 32)]
+_FC = [("https://example.org/a", "aa" * 32), ("https://example.org/b", "cc" * 32)]
 
 print()
 print("  " + chr(0x26D4) + " SUBSTITUTION, NOT CORRUPTION: same count, different evidence")
 print("      two artifacts either way, so a count check passes all three of these")
-for label, other in (("a url replaced", B), ("a digest replaced", C)):
-    moved = _fp(A) != _fp(other)
+for label, other in (("a url replaced", _FB), ("a digest replaced", _FC)):
+    moved = _fp(_FA) != _fp(other)
     print(("  ok    " if moved else "  FAIL  ") + "the cover fingerprint changes when %s" % label)
     passed, failed = (passed + 1, failed) if moved else (passed, failed + 1)
-same = _fp(A) == _fp(list(reversed(A)))
+same = _fp(_FA) == _fp(list(reversed(_FA)))
 print(("  ok    " if same else "  FAIL  ") +
       "and does NOT change when only the ORDER differs (it is a set, not a list)")
 passed, failed = (passed + 1, failed) if same else (passed, failed + 1)
+
+print()
+print("  ⛔ CONTROLS A MUTATION AUDIT FOUND NOTHING WAS WATCHING")
+print("      Each of these validator rules could be DELETED with the whole suite still green.")
+print("      They are correct and reachable -- a manual probe fired every one -- but nothing")
+print("      automated had ever seen one fail, which is indistinguishable from a comment.")
+
+_l = full_census(score=1)
+_l["subjects"].append(dict(_l["subjects"][0]))
+must_catch("two subjects sharing one id", _l, "duplicate subject")
+
+# The volatile bar EXEMPTS a cell whose check is replayed against archived bytes, and
+# full_census picks a replayable method for every axis -- so the first version of this test
+# built a census the rule deliberately permits and reported the rule broken. The branch is
+# reachable: hash_compare, http_status and api_field are all axis-legal for a 2 and none is
+# replayable. Aim at the branch that exists rather than at the one the fixture happens to build.
+_l = full_census(score=2)
+for _c in _l["cells"]:
+    if _c["axis"] == 4 and _c.get("score") == 2:
+        _c["check"] = {"method": "http_status", "asserts": "it resolves", "observed": "200"}
+        _c["evidence"] = [dict(EV[0], volatile=True, volatile_reason="an api response")]
+must_catch("a VERIFIED cell on a NON-replayed check resting on volatile evidence", _l,
+           "cannot support a VERIFIED")
+
+_l = full_census(score=2, cell_over={"evidence": [dict(EV[0], volatile=True)]})
+must_catch("volatile with no stated reason", _l, "no stated reason")
+
+_l = full_census(score=1)
+for _c in _l["cells"]:
+    if _c["axis"] == 16:
+        _c["score"] = 2
+must_catch("a score above the axis's attainable ceiling", _l, "exceeds")
+
+_l = full_census(score=2, cell_over={"evidence": [dict(
+    EV[0], url="https://raw.githubusercontent.com/o/r/main/README.md")]})
+must_catch("a VERIFIED cell citing a mutable branch", _l, "mutable branch")
+
+_l = full_census(score=1)
+_seen = [c for c in _l["cells"] if c.get("evidence")]
+_seen[0]["evidence"] = [dict(EV[0], url="https://example.org/somewhere-else")]
+must_catch("one digest cited under two different urls", _l, "two different urls")
+
+_l = full_census(score=1)
+_l["subjects"][0].pop("axis_sources", None)
+must_catch("a scored cell whose subject declares no axis_sources", _l, "axis_sources")
+
+_l = full_census(score=1)
+_l["subjects"][0]["sources"] = ["host:nowhere.invalid"]
+must_catch("evidence from a source the subject does not declare", _l, "does not declare")
+
+_l = full_census(score=1)
+_l["subjects"][0]["unheard_of_key"] = "x"
+_fired = False
+try:
+    M.ledger_fingerprint(_l)
+except SystemExit:
+    _fired = True
+print(("  ok    " if _fired else "  FAIL  ")
+      + "a subject field no policy key covers stops the fingerprint")
+passed, failed = (passed + 1, failed) if _fired else (passed, failed + 1)
 
 print()
 print("=" * 78)

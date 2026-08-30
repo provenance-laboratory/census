@@ -27,6 +27,7 @@ import io
 import json
 import pathlib
 import re
+import struct
 import sys
 
 import axes as A
@@ -50,7 +51,11 @@ def m_grep(c, ev):
     """Every literal in `expect` must appear in the archived bytes of some cited artifact."""
     exp = c["check"].get("expect")
     if not exp:
-        return None, "no `expect` list: nothing to replay, so the method name is a label"
+        # ⛔ DEMOTING, NOT REJECTING. Returning None marks the cell shape-verified and leaves
+        # its evidence unconstrained, so deleting one key disarmed the check -- the same
+        # optional-field failure the range and shard executors carried.
+        return False, ("no `expect` list: nothing to replay, so the method name is a label and "
+                       "the evidence is unconstrained")
     # ⛔ NOTHING REQUIRED A LITERAL TO DISCRIMINATE. `expect = ["e"]` passed: grep_retrieved is only
     # as strong as its string, and the string was unconstrained.
     weak = [x for x in exp if len(x.strip()) < MIN_LITERAL]
@@ -58,11 +63,25 @@ def m_grep(c, ev):
         return False, ("literal(s) too short to discriminate anything: %s (minimum %d characters)"
                        % (weak, MIN_LITERAL))
     # ⛔ AND THE CITED SET WAS A MAXIMUM, NOT A REQUIREMENT: dropping a co-cited artifact passed.
+    # ⛔ AND THIS FIELD WAS OPTIONAL TOO. `is not None` meant deleting the key skipped the
+    # comparison and the executor returned True.
     want_n = c["check"].get("expect_artifacts")
-    if want_n is not None and len(ev) != want_n:
+    if want_n is None:
+        return False, ("no `expect_artifacts`: the cited set is then a maximum rather than a "
+                       "requirement, and dropping a co-cited document passes")
+    if len(ev) != want_n:
         return False, ("the cell cites %d artifact(s); its check requires %d"
                        % (len(ev), want_n))
+    # ⛔ A COUNT IS NOT A COVER -- a sentence this project wrote in recheck.py and did not
+    # apply here. `expect_artifacts` compares the number of CITED artifacts, and this line then
+    # silently discarded any whose bytes are not archived. So repointing one artifact's digest at
+    # nothing left the count identical, dropped the document, and the grep still passed on the
+    # remaining ones. The cited set has to be READ, not counted.
     docs = [(e, _bytes_for(e)) for e in ev]
+    unread = [e["url"].rsplit("/", 1)[-1][:34] for e, b in docs if b is None]
+    if unread:
+        return False, ("cited artifact(s) whose recorded bytes are not archived: %s -- the cell "
+                       "cites more than the check can read" % unread[:3])
     docs = [(e, b) for e, b in docs if b is not None]
     if not docs:
         return None, "no archived bytes for any cited artifact"
@@ -376,18 +395,39 @@ def m_range(c, ev, ctx=None):
     # ⚠️ BOTH THE INDEX AND THE URL ARE AUTHOR-WRITTEN, so moving them together relocates the tell
     # rather than removing it. A property OF THE BYTES is what does not move: for a .npy the header
     # carries dtype and shape, recorded at bind time from the fetched bytes.
-    hdr = c["check"].get("npy_header")
-    if hdr is not None:
-        if not b.startswith(b"\x93NUMPY"):
-            return False, "the archived range does not begin with the NumPy magic"
-        try:
-            hlen = int.from_bytes(b[8:10], "little")
-            got = b[10:10 + hlen].decode("latin-1").strip().rstrip(chr(0)).strip()
-        except Exception:                                            # noqa: BLE001
-            return False, "the archived range carries no readable NumPy header"
-        if got != hdr:
-            return False, ("the archived bytes' NumPy header is %r; the cell records %r"
-                           % (got[:60], hdr[:60]))
+    # ⛔ THIS BRANCH HAD NEVER EXECUTED. It read `npy_header`; the only cell it applies to
+    # declares `byte_property`, whose value was the string "none available". So the code looked for
+    # a key no cell has, the cell carried a key no code reads, and `if hdr is not None` was false on
+    # every call. The round-8 repair -- "what closes it is a property of the BYTES" -- was written,
+    # reviewed, shipped, and inert. A control audit calling the executor directly found it because
+    # the field survived being BOTH deleted and corrupted with the check still returning True.
+    #
+    # ⚠ And the honest half: "none available" was TRUE. The file carries a .npy extension but
+    # the ranged bytes are raw little-endian uint32 token ids with no header, so there was no
+    # header to bind to and the binder said so. The defect was leaving a dead branch standing as
+    # though the binding existed.
+    #
+    # What the bytes DO carry: 512 uint32 token ids, every one below the tokenizer's vocabulary
+    # bound, with a maximum recorded at bind time. That discriminates -- the same 2 KB taken from
+    # any weights file in this census has 510 of its 512 words above the bound.
+    bp = c["check"].get("byte_property")
+    if not isinstance(bp, dict):
+        return False, ("no `byte_property`: nothing ties these bytes to this corpus, so any 2 KB "
+                       "with the right length and digest would anchor")
+    if bp.get("kind") != "uint32_token_stream":
+        return False, "unknown byte_property kind %r" % bp.get("kind")
+    n = len(b) // 4
+    if n != bp.get("count"):
+        return False, "the range holds %d uint32 words; the cell records %d" % (n, bp.get("count"))
+    vals = struct.unpack("<%dI" % n, b[:n * 4])
+    bound = bp.get("vocab_bound")
+    over = sum(1 for x in vals if x >= bound)
+    if over:
+        return False, ("%d of %d words are not valid token ids below %d -- these bytes are not a "
+                       "token stream from this corpus" % (over, n, bound))
+    if max(vals) != bp.get("max_id"):
+        return False, ("the largest token id in the archived range is %d; the cell records %d"
+                       % (max(vals), bp.get("max_id")))
     return True, ("%d archived bytes, digest matches, and the url is named in %s"
                   % (len(b), anchored[0]))
 
@@ -395,8 +435,14 @@ def m_range(c, ev, ctx=None):
 def m_weight_object(c, ev, ctx=None):
     """Axis 12: a real weight range, from a file THIS SUBJECT's repository enumerates."""
     want = c["check"].get("expect_range_bytes")
+    # ⛔ A MISSING EXPECTATION USED TO DEMOTE, NOT REJECT. Returning None marks the cell
+    # "shape-verified only" and leaves its evidence unconstrained -- so deleting one key disarmed
+    # the check, which is the round-6 defect. It was repaired at the VALIDATOR by making the field
+    # required, and the executor kept demoting. A control audit calling the executors directly
+    # found it still doing so: the layer that was fixed is not the layer that was broken.
     if not want:
-        return None, "no expect_range_bytes: nothing to recompute"
+        return False, ("no `expect_range_bytes`: this check declares nothing to recompute, so the "
+                       "method name is a label and the evidence is unconstrained")
     ident, why = _identity(ev)
     if ident is None:
         return False, why
@@ -430,8 +476,14 @@ def m_weight_object(c, ev, ctx=None):
     # costs nothing and makes the block discriminating.
     # ⛔ A FILENAME COLLIDES: bert and gpt-2 both name model.safetensors, mistral and qwen both
     # publish four shards. The digest of the artifact the check is ABOUT does not.
+    # ⛔ `if want_sha` MADE THE FIELD OPTIONAL, which is the optional-field failure mode
+    # for the fourth time in this project: deleting the key turned the control off and the
+    # executor returned True. I introduced it in the same round that added the field.
     want_sha = c["check"].get("expect_evidence_sha256")
-    if want_sha and r[0]["sha256"] != want_sha:
+    if not want_sha:
+        return False, ("no `expect_evidence_sha256`: nothing ties this check block to the "
+                       "artifact it is about")
+    if r[0]["sha256"] != want_sha:
         return False, ("this check declares evidence %s; the cell cites %s"
                        % (want_sha[:12], r[0]["sha256"][:12]))
     want_file = c["check"].get("expect_file")
@@ -474,8 +526,14 @@ def m_weight_object(c, ev, ctx=None):
 def m_all_shard_digests(c, ev, ctx=None):
     """Axis 13: the cited pointers must BE this subject's shard set -- exactly, and distinctly."""
     want = c["check"].get("expect_shards")
+    # ⛔ A MISSING EXPECTATION USED TO DEMOTE, NOT REJECT. Returning None marks the cell
+    # "shape-verified only" and leaves its evidence unconstrained -- so deleting one key disarmed
+    # the check, which is the round-6 defect. It was repaired at the VALIDATOR by making the field
+    # required, and the executor kept demoting. A control audit calling the executors directly
+    # found it still doing so: the layer that was fixed is not the layer that was broken.
     if not want:
-        return None, "no expect_shards: nothing to recompute"
+        return False, ("no `expect_shards`: this check declares nothing to recompute, so the "
+                       "method name is a label and the evidence is unconstrained")
     ident, why = _identity(ev)
     if ident is None:
         return False, why
@@ -496,7 +554,10 @@ def m_all_shard_digests(c, ev, ctx=None):
 
     _api = [e for e in ev if HF_API.match(e["url"])]
     want_sha = c["check"].get("expect_evidence_sha256")
-    if want_sha and (not _api or _api[0]["sha256"] != want_sha):
+    if not want_sha:
+        return False, ("no `expect_evidence_sha256`: nothing ties this check block to the "
+                       "artifact it is about")
+    if not _api or _api[0]["sha256"] != want_sha:
         return False, ("this check declares evidence %s; the cell cites %s"
                        % (want_sha[:12], (_api[0]["sha256"][:12] if _api else "nothing")))
     ptrs = [e for e in ev if e.get("lfs_oid") is not None]
@@ -778,6 +839,22 @@ def selftest():
         ("a co-cited artifact dropped, leaving the cited set smaller than required",
          lambda d: _find(d, "bert-base-uncased", 1).__setitem__(
              "evidence", _find(d, "bert-base-uncased", 1)["evidence"][:1])),
+        # -- round 11: controls the audit found nothing was watching ----------------------
+        ("2 KB of another subject's WEIGHTS passed off as the corpus token range",
+         lambda d: _find(d, "olmo-2-13b", 4)["evidence"][0].__setitem__(
+             "sha256", [e for e in _find(d, "bert-base-uncased", 12)["evidence"]
+                        if e.get("range")][0]["sha256"])),
+        ("the corpus range's byte property deleted",
+         lambda d: _find(d, "olmo-2-13b", 4)["check"].pop("byte_property", None)),
+        ("the corpus range's largest token id misreported",
+         lambda d: _find(d, "olmo-2-13b", 4)["check"]["byte_property"].__setitem__("max_id", 1)),
+        ("a grep cell's expect list deleted, which used to merely demote it",
+         lambda d: _find(d, "bert-base-uncased", 1)["check"].pop("expect", None)),
+        ("expect_artifacts deleted, making the cited set a maximum again",
+         lambda d: _find(d, "bert-base-uncased", 1)["check"].pop("expect_artifacts", None)),
+        ("one cited document's digest repointed at bytes that are not archived",
+         lambda d: _find(d, "bert-base-uncased", 1)["evidence"][0].__setitem__(
+             "sha256", "0" * 64)),
         # -- round 10: the check block itself carried nothing subject-specific ------------
         ("bert's axis-12 check block moved onto gpt-2's cell -- the two collide on filename",
          lambda d: _find(d, "gpt-2-1.5b", 12).__setitem__(
