@@ -54,6 +54,38 @@ def load():
     return json.loads(LEDGER.read_text(encoding="utf-8"))
 
 
+def all_cited(led, include_facts=True):
+    """Every artifact THE PROJECT CITES -- cells and facts alike -- as (label, evidence_dict).
+
+    ⛔ facts.json SAT OUTSIDE EVERY CONTROL. pin_urls.py, recheck.py and both digest-uniqueness
+    rules below walked led["cells"] and nothing else, so the two fact urls were unpinned `/main/`
+    branches that were never re-fetched and were free to collide with cell evidence. A fact is
+    cited in the manuscript BY NAME and supplies a number no reader can recompute without it;
+    there is no principle on which it should be less bound than a cell's evidence.
+
+    ⛔ AND THE FIX IS A PROJECTION, NOT ANOTHER LIST. The recurring defect in this project is
+    repairing instance N by enumerating the members of a class. The class here is "everything the
+    project cites"; this function IS that class, and every control takes it rather than naming the
+    files it happens to know about.
+    """
+    for c in led.get("cells", []):
+        where = "%s/axis%d" % (c.get("subject"), c.get("axis"))
+        for e in (c.get("evidence") or []):
+            yield where, e
+    if not include_facts:
+        return
+    fp = HERE / "facts.json"
+    if not fp.exists():
+        return
+    for name, f in (json.loads(fp.read_text(encoding="utf-8")).get("facts") or {}).items():
+        e = f.get("evidence")
+        if isinstance(e, dict):
+            yield "fact:" + name, e
+        elif isinstance(e, list):
+            for one in e:
+                yield "fact:" + name, one
+
+
 def validate(led):
     """Return a list of defects. ANY defect means the census is not scoreable.
 
@@ -211,15 +243,14 @@ def validate(led):
     # one url recorded under conflicting hashes -- and recheck.py silently used the first, so the
     # contradiction was invisible on both sides.
     seen_url = {}
-    for c in led.get("cells", []):
-        for e in (c.get("evidence") or []):
-            u, h = e.get("url"), e.get("sha256")
-            if u in seen_url and seen_url[u][0] != h:
-                d.append(f"{u}: recorded with two different digests "
-                         f"({seen_url[u][0][:12]} at {seen_url[u][1]}, {str(h)[:12]} at "
-                         f"{c.get('subject')}/axis{c.get('axis')}) -- one of them is wrong")
-            elif u not in seen_url:
-                seen_url[u] = (h, f"{c.get('subject')}/axis{c.get('axis')}")
+    for where, e in all_cited(led):
+        u, h = e.get("url"), e.get("sha256")
+        if u in seen_url and seen_url[u][0] != h:
+            d.append(f"{u}: recorded with two different digests "
+                     f"({seen_url[u][0][:12]} at {seen_url[u][1]}, {str(h)[:12]} at "
+                     f"{where}) -- one of them is wrong")
+        elif u not in seen_url:
+            seen_url[u] = (h, where)
 
     # ⛔ AND THE MIRROR OF IT. The rule above refuses one url under two digests. The reverse --
     # one DIGEST under two urls -- is how a cell keeps a truthful-looking url while its bytes are
@@ -228,16 +259,14 @@ def validate(led):
     # now claimed to have come from two different places. Round-6 review demonstrated it on olmo's
     # corpus cell using bert's weight range.
     seen_sha = {}
-    for c in led.get("cells", []):
-        for e in (c.get("evidence") or []):
-            h, u = e.get("sha256"), e.get("url")
-            if h in seen_sha and seen_sha[h][0] != u:
-                d.append(f"digest {str(h)[:12]} is cited under TWO different urls "
-                         f"({seen_sha[h][0][:58]} at {seen_sha[h][1]}, and {str(u)[:58]} at "
-                         f"{c.get('subject')}/axis{c.get('axis')}) -- the same bytes cannot have "
-                         f"been retrieved from both")
-            elif h not in seen_sha:
-                seen_sha[h] = (u, f"{c.get('subject')}/axis{c.get('axis')}")
+    for where, e in all_cited(led):
+        h, u = e.get("sha256"), e.get("url")
+        if h in seen_sha and seen_sha[h][0] != u:
+            d.append(f"digest {str(h)[:12]} is cited under TWO different urls "
+                     f"({seen_sha[h][0][:58]} at {seen_sha[h][1]}, and {str(u)[:58]} at "
+                     f"{where}) -- the same bytes cannot have been retrieved from both")
+        elif h not in seen_sha:
+            seen_sha[h] = (u, where)
 
     # ⛔ EVERY NON-ZERO CELL MAY CITE ONLY SOURCES ITS SUBJECT DECLARES. Ownership used to be
     # inferred from the cells being audited, so it could not fire at runtime and a symmetric swap
@@ -379,17 +408,27 @@ def ledger_fingerprint(led):
     # the drift fingerprint covers (url, digest); the OpenTimestamps anchor covers the selection
     # rule. NONE covered the policy. So the coverage sweep held one operand of a two-operand
     # comparison fixed by convention rather than by any mechanism: move a cell AND its declaration
-    # together and 1,680 of 2,842 mutations survive. A round-8 reviewer measured exactly that.
+    # together and the figure sweep.py computes at run time mutations survive. A round-8 reviewer measured exactly that.
     #
     # ⚠️ WHAT THIS FIXES AND WHAT IT DOES NOT. Hashing the policy here means a policy edit
     # invalidates every emitted table and the build refuses until they are regenerated -- so the
     # edit is loud rather than silent. It does NOT make the policy externally anchored: it is
     # still the same repository, and moving evidence plus its declaration is two edits rather than
     # one. What makes the second visible is review of a diff, not a control in this toolchain.
-    pol = sorted(json.dumps({k: s.get(k) for k in
-                             ("id", "repo", "sources", "axis_sources", "axis_documents",
-                              "axis_method", "axis_literals")},
-                            sort_keys=True)
+    # ⛔ `kind` WAS NOT IN THIS TUPLE. It is the field the headline result is stated
+    # over -- fully-open versus open-weights -- and it could be flipped without invalidating
+    # one emitted table. The two keys added in round 10 were missing for the same reason: a
+    # LIST of policy keys omits whatever is added after it is written, so this one fails
+    # closed on any subject field it does not name.
+    _POLICY_KEYS = ("id", "repo", "kind", "sources", "axis_sources", "axis_documents",
+                    "axis_method", "axis_literals", "axis_file", "axis_evidence_sha256",
+                    "note")
+    _unlisted = sorted({k for s in led.get("subjects", []) for k in s} - set(_POLICY_KEYS))
+    if _unlisted:
+        raise SystemExit("⛔ subject record carries field(s) no policy key covers: %s."
+                         " Add them to _POLICY_KEYS or the fingerprint does not cover the"
+                         " policy." % _unlisted)
+    pol = sorted(json.dumps({k: s.get(k) for k in _POLICY_KEYS}, sort_keys=True)
                  for s in led.get("subjects", []))
     return hashlib.sha256(NL.join(rows + pol).encode("utf-8")).hexdigest()
 

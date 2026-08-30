@@ -92,10 +92,21 @@ def main():
                     ds["sources"] = sorted(set(ds.get("sources") or ())
                                            | set(ss.get("sources") or ()))
 
-                if json.dumps(tgt, sort_keys=True) == json.dumps(
-                        [c for c in led["cells"] if c["subject"] == dst["subject"]
-                         and c["axis"] == dst["axis"]][0], sort_keys=True) and (
-                        mode != "with the policy moved too"):
+                # ⛔ THE VACUITY TEST WAS SKIPPED FOR THE POLICY-MOVED FAMILY, so that
+                # family alone counted no-op mutations in its denominator -- and it is the family
+                # with the large survivor count, which the asymmetry flatters. The test is the same
+                # question for every family: did this mutation change anything at all? For the
+                # policy family the answer must consider the SUBJECT RECORD too, because that is
+                # the operand this family moves.
+                pristine = [c for c in led["cells"] if c["subject"] == dst["subject"]
+                            and c["axis"] == dst["axis"]][0]
+                unchanged = json.dumps(tgt, sort_keys=True) == json.dumps(pristine, sort_keys=True)
+                if unchanged and mode == "with the policy moved too":
+                    ds_now = [s for s in d["subjects"] if s["id"] == dst["subject"]][0]
+                    ds_was = [s for s in led["subjects"] if s["id"] == dst["subject"]][0]
+                    unchanged = json.dumps(ds_now, sort_keys=True) == json.dumps(
+                        ds_was, sort_keys=True)
+                if unchanged:
                     tally[band]["vacuous"] += 1
                     continue
 

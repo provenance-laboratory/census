@@ -191,7 +191,12 @@ def subject_context(led):
                       "axis_literals": {int(k): sorted(v)
                                         for k, v in (s.get("axis_literals") or {}).items()},
                       "axis_method": {int(k): v
-                                      for k, v in (s.get("axis_method") or {}).items()}}
+                                      for k, v in (s.get("axis_method") or {}).items()},
+                      "axis_file": {int(k): v
+                                    for k, v in (s.get("axis_file") or {}).items()},
+                      "axis_evidence_sha256": {
+                          int(k): v for k, v
+                          in (s.get("axis_evidence_sha256") or {}).items()}}
             for s in led.get("subjects", [])}
 
 
@@ -275,6 +280,21 @@ def foreign_evidence(cell, ctx, _unused=None):
         if got_m != am[cell["axis"]]:
             bad.append("axis %d carries method %r; this subject declares %r for it"
                        % (cell["axis"], got_m, am[cell["axis"]]))
+    # the declared filename lives on the subject record like every other policy key
+    aes = dec.get("axis_evidence_sha256") or {}
+    if cell.get("score") and cell["axis"] in aes:
+        _c4 = cell.get("check")
+        _ge = _c4.get("expect_evidence_sha256") if isinstance(_c4, dict) else None
+        if _ge != aes[cell["axis"]]:
+            bad.append("axis %d declares evidence %s; the cell expects %s"
+                       % (cell["axis"], aes[cell["axis"]][:12], str(_ge)[:12]))
+    af = dec.get("axis_file") or {}
+    if cell.get("score") and cell["axis"] in af:
+        _c3 = cell.get("check")
+        _gf = _c3.get("expect_file") if isinstance(_c3, dict) else None
+        if _gf != af[cell["axis"]]:
+            bad.append("axis %d declares file %r; the cell expects %r"
+                       % (cell["axis"], af[cell["axis"]], _gf))
     want_lit = al.get(cell["axis"])
     if cell.get("score") and cell["axis"] in al:
         _chk2 = cell.get("check")
@@ -404,6 +424,22 @@ def m_weight_object(c, ev, ctx=None):
     if (rrepo, rrev) != (repo, rev):
         return False, ("the range is from %s@%s, the enumeration is from %s@%s"
                        % (rrepo, rrev[:12], repo, rev[:12]))
+    # ⛔ THE ONLY FIELD THIS EXECUTOR READ WAS expect_range_bytes, IDENTICAL FOR EVERY SUBJECT --
+    # so an axis-12 check block had nothing subject-specific in it and transplanting one changed
+    # only the prose. The filename is recomputed here anyway; requiring the cell to declare it
+    # costs nothing and makes the block discriminating.
+    # ⛔ A FILENAME COLLIDES: bert and gpt-2 both name model.safetensors, mistral and qwen both
+    # publish four shards. The digest of the artifact the check is ABOUT does not.
+    want_sha = c["check"].get("expect_evidence_sha256")
+    if want_sha and r[0]["sha256"] != want_sha:
+        return False, ("this check declares evidence %s; the cell cites %s"
+                       % (want_sha[:12], r[0]["sha256"][:12]))
+    want_file = c["check"].get("expect_file")
+    if not want_file:
+        return False, ("no `expect_file`: this check block carries nothing that distinguishes one "
+                       "subject's weights from another's")
+    if rfile != want_file:
+        return False, "the ranged file is %r; the cell declares %r" % (rfile, want_file)
     if rfile not in shards:
         return False, "%r is not among the %d shards this revision enumerates" % (rfile, len(shards))
     if r[0].get("pinned_commit") not in (None, rev):
@@ -458,6 +494,11 @@ def m_all_shard_digests(c, ev, ctx=None):
         return False, ("the archived api response enumerates %d shards, the cell claims %d"
                        % (len(shards), want))
 
+    _api = [e for e in ev if HF_API.match(e["url"])]
+    want_sha = c["check"].get("expect_evidence_sha256")
+    if want_sha and (not _api or _api[0]["sha256"] != want_sha):
+        return False, ("this check declares evidence %s; the cell cites %s"
+                       % (want_sha[:12], (_api[0]["sha256"][:12] if _api else "nothing")))
     ptrs = [e for e in ev if e.get("lfs_oid") is not None]
     names, bad = [], []
     for e in ptrs:
@@ -737,6 +778,20 @@ def selftest():
         ("a co-cited artifact dropped, leaving the cited set smaller than required",
          lambda d: _find(d, "bert-base-uncased", 1).__setitem__(
              "evidence", _find(d, "bert-base-uncased", 1)["evidence"][:1])),
+        # -- round 10: the check block itself carried nothing subject-specific ------------
+        ("bert's axis-12 check block moved onto gpt-2's cell -- the two collide on filename",
+         lambda d: _find(d, "gpt-2-1.5b", 12).__setitem__(
+             "check", copy.deepcopy(_find(d, "bert-base-uncased", 12)["check"]))),
+        ("mistral's axis-13 check block moved onto qwen's cell -- both publish four shards",
+         lambda d: _find(d, "qwen2.5-7b", 13).__setitem__(
+             "check", copy.deepcopy(_find(d, "mistral-7b-v0.3", 13)["check"]))),
+        ("the shard filename expectation deleted, disarming the axis-12 block",
+         lambda d: _find(d, "qwen2.5-7b", 12)["check"].pop("expect_file", None)),
+        ("the declared evidence digest deleted from the check block",
+         lambda d: _find(d, "mistral-7b-v0.3", 13)["check"].pop("expect_evidence_sha256", None)),
+        ("the check declares a digest the subject record does not",
+         lambda d: _find(d, "bert-base-uncased", 12)["check"].__setitem__(
+             "expect_evidence_sha256", "0" * 64)),
         ("2 KB of an HTML sign-in page instead of the weight range",
          lambda d: _stub_html(d)),
         ("falsified expected strings on a replayable grep",

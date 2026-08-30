@@ -112,6 +112,40 @@ KNOWN_POSITIVES = [
 ]
 
 
+GOVERN_CHARS = 25
+
+
+def stage3_for(record_sentence, names, terms):
+    """The third screen: a reproduction verb within GOVERN_CHARS of the model name.
+
+    ⛔ THIS SCREEN HAD NO IMPLEMENTATION. The manuscript reported "33 survive a third screen
+    requiring the verb to govern the name", and the only place that number existed was a PROSE
+    STRING inside negative-search.json's protocol block. Nothing computed it, nothing recomputed it
+    on --verify, and no stage-3 record was stored, so a reader could not check which papers it kept.
+    Recomputing it from the stored sentences under the rule as written gives a different number, and
+    under three other natural readings of the same words gives three more -- which is the whole
+    problem with a bound carried in prose.
+
+    ⚠ The rule is stated ONCE, here, and the figure is whatever it produces. It is not
+    tuned to recover 33; a rule chosen to reproduce a remembered number is the number wearing a
+    rule as a costume.
+    """
+    # ⚠ names_for() RETURNS A STRING, and the first version of this function iterated it,
+    # so every LETTER of "BERT" was matched as a name and the screen kept 171 of 318 records. The
+    # number looked plausible, which is the only reason it needed catching by reading rather than
+    # by running. Accept either shape and normalise.
+    if isinstance(names, str):
+        names = [names]
+    s = record_sentence.lower()
+    for nm in names:
+        for m in re.finditer(re.escape(nm.lower()), s):
+            for tm in terms:
+                for vm in re.finditer(re.escape(tm.lower()), s):
+                    if abs(vm.start() - m.start()) <= GOVERN_CHARS:
+                        return True
+    return False
+
+
 def names_for(subject):
     if subject not in NAMES:
         raise KeyError("no search name for subject %r. Axes 16 and 17 would score 0 for it "
@@ -176,6 +210,19 @@ def main():
                              "gives %d -- the stored screen does not follow from the stored data"
                              % (sid, len(r.get("stage2", [])), n))
             recomputed += n
+        # ⛔ AND THE THIRD SCREEN, which had no code at all. Recomputed here from the stored
+        # stage-2 sentences, so the figure the manuscript prints is one this file can contradict.
+        r3 = 0
+        for sid, r in res["subjects"].items():
+            got = [x for x in (r.get("stage2") or [])
+                   if stage3_for(x["sentence"], names_for(sid), res["protocol"]["terms"])]
+            if len(got) != len(r.get("stage3") or []):
+                trunc.append("%s: stage3 holds %d record(s), recomputing from the stored stage-2 "
+                             "sentences gives %d" % (sid, len(r.get("stage3") or []), len(got)))
+            r3 += len(got)
+        if r3 != res.get("stage3_total"):
+            trunc.append("stage3_total says %s, recomputation gives %d"
+                         % (res.get("stage3_total"), r3))
         if recomputed != res.get("stage2_total"):
             trunc.append("stage2_total says %s, recomputation gives %d"
                          % (res.get("stage2_total"), recomputed))

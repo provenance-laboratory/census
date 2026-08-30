@@ -164,6 +164,13 @@
         "19": null,
         "12": "hf_probe.weight_object",
         "13": "hf_probe.all_shard_digests"
+      },
+      "axis_file": {
+        "12": "model-00001-of-00003.safetensors"
+      },
+      "axis_evidence_sha256": {
+        "12": "01d4829682a02bc7d813310ed3f56554d04b2e3d15e357cae548a206e3d55381",
+        "13": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71"
       }
     },
     {
@@ -306,6 +313,13 @@
         "19": null,
         "12": "hf_probe.weight_object",
         "13": "hf_probe.all_shard_digests"
+      },
+      "axis_file": {
+        "12": "model-00001-of-00012.safetensors"
+      },
+      "axis_evidence_sha256": {
+        "12": "df21d04baa23cab835578296f64e83129c610030c3da2462641e42f5c2e5abb8",
+        "13": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3"
       }
     },
     {
@@ -564,6 +578,13 @@
         "19": null,
         "12": "hf_probe.weight_object",
         "13": "hf_probe.all_shard_digests"
+      },
+      "axis_file": {
+        "12": "model_00001-of-00072.safetensors"
+      },
+      "axis_evidence_sha256": {
+        "12": "4e1831f2b60559ab64295e8c90d505c39ed58d2e71cba2c951c722910b439d3b",
+        "13": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29"
       }
     },
     {
@@ -603,6 +624,13 @@
       "axis_literals": {
         "12": [],
         "13": []
+      },
+      "axis_file": {
+        "12": "consolidated.safetensors"
+      },
+      "axis_evidence_sha256": {
+        "12": "1024823909540665e5d8ef9dc354c1bcdf1ded2832cf6155cfde2e09691c2063",
+        "13": "65652618c2c1d9fcb19dfaf3c1b9e0ff46ce6e21490a53c6f34fea852171b4bd"
       }
     },
     {
@@ -643,6 +671,13 @@
       "axis_literals": {
         "12": [],
         "13": []
+      },
+      "axis_file": {
+        "12": "model-00001-of-00004.safetensors"
+      },
+      "axis_evidence_sha256": {
+        "12": "3efc3eb3eaec7987570ecde73fa038e173a343f40c69b9a41f351ba600edbafb",
+        "13": "c12581151f4234bd051e16831c3dcd782f5ff623e9a0213dfe7d55b7a8fc15d9"
       }
     },
     {
@@ -869,6 +904,12 @@
         "7": null,
         "17": null,
         "12": "hf_probe.weight_object"
+      },
+      "axis_file": {
+        "12": "model.safetensors"
+      },
+      "axis_evidence_sha256": {
+        "12": "a312ded84642890d49cb0163900d4e7779f350da778e6f6f0a918d5aa705c059"
       }
     },
     {
@@ -916,6 +957,12 @@
         "1": [],
         "12": [],
         "17": []
+      },
+      "axis_file": {
+        "12": "model.safetensors"
+      },
+      "axis_evidence_sha256": {
+        "12": "633014397106b036ab215984fc9f6a93a12ca05d35f6abfd67f636d0b608c997"
       }
     }
   ],
@@ -1176,7 +1223,9 @@
         "method": "hf_probe.weight_object",
         "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
         "observed": "HTTP 206, 2048 bytes of the resolved object at revision bb1e3e710cdf, is_pointer=False. The range bytes are archived and replay.py re-checks their length, their digest and that they are not a pointer.",
-        "expect_range_bytes": 2048
+        "expect_range_bytes": 2048,
+        "expect_file": "model-00001-of-00003.safetensors",
+        "expect_evidence_sha256": "01d4829682a02bc7d813310ed3f56554d04b2e3d15e357cae548a206e3d55381"
       },
       "evidence": [
         {
@@ -1206,7 +1255,8 @@
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
         "observed": "6 of 6 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision bb1e3e710cdf (3 .bin, 3 .safetensors). \u26a0 THIS IS 2 COMPLETE SERIALISATIONS of the same weights, not 6 shards of one: 3 .bin, 3 .safetensors. The axis asks whether every published weight FILE carries a digest, which this answers; the word 'shard' would not. The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
-        "expect_shards": 6
+        "expect_shards": 6,
+        "expect_evidence_sha256": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71"
       },
       "evidence": [
         {
@@ -1531,7 +1581,9 @@
         "method": "hf_probe.weight_object",
         "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
         "observed": "HTTP 206, 2048 bytes of the resolved object at revision 3fefddc1bf18, is_pointer=False. The range bytes are archived and replay.py re-checks their length, their digest and that they are not a pointer.",
-        "expect_range_bytes": 2048
+        "expect_range_bytes": 2048,
+        "expect_file": "model-00001-of-00012.safetensors",
+        "expect_evidence_sha256": "df21d04baa23cab835578296f64e83129c610030c3da2462641e42f5c2e5abb8"
       },
       "evidence": [
         {
@@ -1561,7 +1613,8 @@
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
         "observed": "12 of 12 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision 3fefddc1bf18 (12 .safetensors). The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
-        "expect_shards": 12
+        "expect_shards": 12,
+        "expect_evidence_sha256": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3"
       },
       "evidence": [
         {
@@ -1889,7 +1942,9 @@
         "method": "hf_probe.weight_object",
         "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
         "observed": "HTTP 206, 2048 bytes of the resolved object at revision 7f10a99ce7c0, is_pointer=False. The range bytes are archived and replay.py re-checks their length, their digest and that they are not a pointer.",
-        "expect_range_bytes": 2048
+        "expect_range_bytes": 2048,
+        "expect_file": "model_00001-of-00072.safetensors",
+        "expect_evidence_sha256": "4e1831f2b60559ab64295e8c90d505c39ed58d2e71cba2c951c722910b439d3b"
       },
       "evidence": [
         {
@@ -1919,7 +1974,8 @@
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
         "observed": "144 of 144 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision 7f10a99ce7c0 (72 .bin, 72 .safetensors). \u26a0 THIS IS 2 COMPLETE SERIALISATIONS of the same weights, not 144 shards of one: 72 .bin, 72 .safetensors. The axis asks whether every published weight FILE carries a digest, which this answers; the word 'shard' would not. The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
-        "expect_shards": 144
+        "expect_shards": 144,
+        "expect_evidence_sha256": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29"
       },
       "evidence": [
         {
@@ -3091,7 +3147,9 @@
         "method": "hf_probe.weight_object",
         "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
         "observed": "HTTP 206, 2048 bytes of the resolved object at revision caa1feb0e54d, is_pointer=False. The range bytes are archived and replay.py re-checks their length, their digest and that they are not a pointer.",
-        "expect_range_bytes": 2048
+        "expect_range_bytes": 2048,
+        "expect_file": "consolidated.safetensors",
+        "expect_evidence_sha256": "1024823909540665e5d8ef9dc354c1bcdf1ded2832cf6155cfde2e09691c2063"
       },
       "evidence": [
         {
@@ -3121,7 +3179,8 @@
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
         "observed": "4 of 4 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision caa1feb0e54d (4 .safetensors). \u26a0 1 of these is a CONSOLIDATED single-file form (consolidated.safetensors) rather than a shard of the sharded set. Counted because the axis asks about published weight files. The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
-        "expect_shards": 4
+        "expect_shards": 4,
+        "expect_evidence_sha256": "65652618c2c1d9fcb19dfaf3c1b9e0ff46ce6e21490a53c6f34fea852171b4bd"
       },
       "evidence": [
         {
@@ -3321,7 +3380,9 @@
         "method": "hf_probe.weight_object",
         "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
         "observed": "HTTP 206, 2048 bytes of the resolved object at revision d14972939875, is_pointer=False. The range bytes are archived and replay.py re-checks their length, their digest and that they are not a pointer.",
-        "expect_range_bytes": 2048
+        "expect_range_bytes": 2048,
+        "expect_file": "model-00001-of-00004.safetensors",
+        "expect_evidence_sha256": "3efc3eb3eaec7987570ecde73fa038e173a343f40c69b9a41f351ba600edbafb"
       },
       "evidence": [
         {
@@ -3351,7 +3412,8 @@
         "method": "hf_probe.all_shard_digests",
         "asserts": "every weight shard at a pinned revision carries a publisher-committed digest",
         "observed": "4 of 4 enumerated top-level weight FILES carry a Git-LFS sha256 oid at revision d14972939875 (4 .safetensors). The API response that enumerates them and every pointer are archived; replay.py recomputes the enumeration from that response and requires the cited set to be set-equal to it.",
-        "expect_shards": 4
+        "expect_shards": 4,
+        "expect_evidence_sha256": "c12581151f4234bd051e16831c3dcd782f5ff623e9a0213dfe7d55b7a8fc15d9"
       },
       "evidence": [
         {
@@ -4403,7 +4465,9 @@
         "method": "hf_probe.weight_object",
         "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
         "observed": "HTTP 206, 2048 bytes of the resolved object at revision 86b5e0934494, is_pointer=False. The range bytes are archived and replay.py re-checks their length, their digest and that they are not a pointer.",
-        "expect_range_bytes": 2048
+        "expect_range_bytes": 2048,
+        "expect_file": "model.safetensors",
+        "expect_evidence_sha256": "a312ded84642890d49cb0163900d4e7779f350da778e6f6f0a918d5aa705c059"
       },
       "evidence": [
         {
@@ -4612,7 +4676,9 @@
         "method": "hf_probe.weight_object",
         "asserts": "a range request on a weight shard at a pinned revision returns bytes that are not a Git-LFS pointer",
         "observed": "HTTP 206, 2048 bytes of the resolved object at revision 15ea56dee5df, is_pointer=False. The range bytes are archived and replay.py re-checks their length, their digest and that they are not a pointer.",
-        "expect_range_bytes": 2048
+        "expect_range_bytes": 2048,
+        "expect_file": "model.safetensors",
+        "expect_evidence_sha256": "633014397106b036ab215984fc9f6a93a12ca05d35f6abfd67f636d0b608c997"
       },
       "evidence": [
         {
@@ -4653,5 +4719,7 @@
   "_axis_sources_readme": "\u26d4 SUBJECT-LEVEL SOURCES BOUND A CELL TO ITS SUBJECT AND NOT TO ITS AXIS. Both round-8 reviewers exchanged a subject's OWN cells -- pythia's corpus cell given its own training-code evidence and check -- and every gate passed: the subject was right and the axis was wrong. 258 of 396 intra-subject transplants survived. This map says which sources may settle WHICH AXIS for each subject. Like subjects[].sources it lives on the subject record, so it cannot travel with an evidence list or a check block. \u26a0 It is a POLICY, not a description: changing a cell's evidence means changing the policy deliberately, which is the point.",
   "_axis_documents_readme": "\u26d4 SOURCE-LEVEL POLICY WAS NOT ENOUGH, because one repository legitimately serves several axes: pythia's training-code and hyperparameter cells both rest on gh:EleutherAI/pythia, so a swap between them satisfied a source-level rule. A reviewer asked for enough non-travelling information to distinguish corpus evidence from code, seed, environment and data-order evidence EVEN WHERE THE SAME REPOSITORY SUPPORTS SEVERAL AXES. This is that: the exact documents each (subject, axis) may rest on. \u26a0 It is deliberately a POLICY and not a description -- it lives on the subject record, it does not travel with a cell, and changing a cell's evidence means changing it on purpose. That is the whole mechanism: a transplant moves the evidence and cannot move the policy.",
   "_axis_literals_readme": "\u26d4 WHERE SEVERAL AXES REST ON THE SAME DOCUMENT, binding the document is not enough: olmo's hyperparameter, environment, data-order and eval-disjointness cells all rest on one training config, so a swap between them moved only the CHECK. These are the literal strings each (subject, axis) may look for. \u26a0 WHAT THIS MECHANISM IS: tamper-evidence between a cell and a declaration held on the subject record, which a transplant cannot move. It is NOT an independent confirmation that the document supports the claim -- a human read the document and wrote the policy, and the policy records that reading.",
-  "_axis_method_readme": "The method each (subject, axis) may use, null where the cell names none. An ASSERTED cell names no mechanical check BY DEFINITION -- the paper says so -- but one of them legitimately carries a check block that documents why it was DEMOTED from 2, so 'no check on a 1' would be the wrong rule. This is the right one: whatever check a cell carries must be the one its subject declares for that axis. A transplanted check block is then visible even where the documents coincide."
+  "_axis_method_readme": "The method each (subject, axis) may use, null where the cell names none. An ASSERTED cell names no mechanical check BY DEFINITION -- the paper says so -- but one of them legitimately carries a check block that documents why it was DEMOTED from 2, so 'no check on a 1' would be the wrong rule. This is the right one: whatever check a cell carries must be the one its subject declares for that axis. A transplanted check block is then visible even where the documents coincide.",
+  "_axis_file_readme": "\u26d4 THE AXIS-12 CHECK BLOCK CARRIED NOTHING SUBJECT-SPECIFIC. Its method, assertion and expected length are identical across all seven subjects, so transplanting one onto another changed only the prose `observed` field and survived. The paper attributed all 44 survivors to prose being unbindable -- true of 2 of them, and a MISSING FIELD for the other 42. A round-9 reviewer pointed out that m_weight_object already computes the shard filename and already holds the range digest, so declaring one costs nothing and closes 95% of the residual. Calling a residual irreducible when most of it is reducible is closing an argument early.",
+  "_axis_evidence_readme": "\u26d4 THE LAST FOUR SURVIVORS WERE COLLISIONS, not prose. mistral and qwen publish the same number of shards; bert and gpt-2 name the same primary weight file. So a filename or a count discriminates six subjects out of seven and stops. The digest of the artifact each check is ABOUT does not collide, and the executor already holds it -- a transplanted check block then declares a digest the destination's own evidence does not carry."
 }

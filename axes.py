@@ -326,8 +326,9 @@ REQUIRED_METHOD = {
 REQUIRED_FIELDS = {
     "grep_retrieved": ("expect",),
     "count_in_retrieved": ("expect", "expect_count"),
-    "hf_probe.weight_object": ("expect_range_bytes",),
-    "hf_probe.all_shard_digests": ("expect_shards",),
+    "hf_probe.weight_object": ("expect_range_bytes", "expect_file",
+                              "expect_evidence_sha256"),
+    "hf_probe.all_shard_digests": ("expect_shards", "expect_evidence_sha256"),
 }
 
 

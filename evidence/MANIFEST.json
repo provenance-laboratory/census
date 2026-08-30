@@ -1669,7 +1669,8 @@
         "olmo-2-13b/axis8",
         "olmo-2-13b/axis9",
         "olmo-2-13b/axis11",
-        "olmo-2-13b/axis19"
+        "olmo-2-13b/axis19",
+        "fact:olmo_data_paths"
       ],
       "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9",
       "stored": true
@@ -1782,6 +1783,13 @@
         "bert-base-uncased/axis18"
       ],
       "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756",
+      "stored": true
+    },
+    "https://raw.githubusercontent.com/meta-llama/llama-models/0e0b8c519242d5833d8c11bffc1232b77ad7f301/README.md": {
+      "cells": [
+        "fact:llama_readme_bytes"
+      ],
+      "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e",
       "stored": true
     },
     "https://raw.githubusercontent.com/meta-llama/llama-models/e2e67cd8b0feca839666b7082dcc1c4fc0ae11e2/models/llama3_1/MODEL_CARD.md": {

@@ -20,9 +20,10 @@
       "unit": "data-file paths",
       "check": "counted lines matching '^    - ' in the retrieved training config; all 1122 are http://olmo-data.org URLs",
       "evidence": {
-        "url": "https://raw.githubusercontent.com/allenai/OLMo/main/configs/official-1124/OLMo2-13B-stage1.yaml",
+        "url": "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml",
         "retrieved": "2026-08-28",
-        "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9"
+        "sha256": "d52cab4d16aa8e7ddff070fcb120cd378195ad56d3d65aade2c9449917b9e2c9",
+        "pinned_commit": "600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91"
       },
       "method": {
         "name": "count_lines_matching",
@@ -35,9 +36,10 @@
       "unit": "bytes",
       "check": "byte length of the retrieved document; the gate detector refused it on a soft marker, which is the defect reported in the paper",
       "evidence": {
-        "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/README.md",
+        "url": "https://raw.githubusercontent.com/meta-llama/llama-models/0e0b8c519242d5833d8c11bffc1232b77ad7f301/README.md",
         "retrieved": "2026-08-28",
-        "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e"
+        "sha256": "0ac5f064caca753d78aa286ca382cf7e819b54b1f90edca9a905786b2aac238e",
+        "pinned_commit": "0e0b8c519242d5833d8c11bffc1232b77ad7f301"
       },
       "method": {
         "name": "byte_length"

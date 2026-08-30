@@ -184,6 +184,18 @@
       "covered": "ddcafdfd6e69fa78b8b72d5018a98011b78297a710b4d4e69fa47063f07eebb8",
       "subject_filter": null,
       "findings": []
+    },
+    {
+      "at": "2026-08-30T08:39:25Z",
+      "artifacts": 225,
+      "unchanged": 212,
+      "drifted": 0,
+      "unretrievable": 0,
+      "volatile": 13,
+      "rate_limited": 0,
+      "covered": "6f8fef0f8c05d2de6bca00b824e81dfa2aeefea683f2561dec0c9db214a40065",
+      "subject_filter": null,
+      "findings": []
     }
   ]
 }

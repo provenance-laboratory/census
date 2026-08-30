@@ -1,0 +1,22 @@
+{
+  "_what": "A CONTROL, not a claim. The coverage figure is zero; a zero is only meaningful if the mechanism producing it can be watched failing. This records what the same sweep reports when the three files carrying the round-10 repair are reverted to the commit before it.",
+  "baseline_commit": "04d73008171a06e5b99a6edbbb610b8bbde69845",
+  "reverted_files": [
+    "cells.json",
+    "replay.py",
+    "axes.py"
+  ],
+  "command": "git checkout -- cells.json replay.py axes.py && python sweep.py",
+  "survivors_before_repair": 44,
+  "survivors_after_repair": 0,
+  "measured": "2026-08-30",
+  "_note": "Re-running this restores the working tree afterwards and verifies the three digests match; it was run that way. 42 of the 44 were axis-12 transplants that survived because the check block carried no subject-specific field at all; the remaining 2 pairs collide on the field that discriminates the other five subjects (bert and gpt-2 name the same primary weight file; mistral and qwen publish the same shard count).",
+  "gate_reached_before_repair": 62,
+  "gate_reached_after_repair": 0,
+  "_gate_note": "The repair moved every rejection from the executor to the validator: declaring a required field is a validator rule. Before it, 62 of the 8,586 held-fixed mutations reached the gate and it rejected 18; after it, none reach the gate at all. The zero is the validator's, and the paper says so rather than crediting the executor for it.",
+  "measured_with": "sweep.py as of the round-10 revision, both runs",
+  "survivors_after_filename_declared": 4,
+  "closed_by_filename": 40,
+  "closed_by_evidence_digest": 4,
+  "_split_note": "MEASURED, not predicted. A reviewer expected 42 reducible and 2 irreducible. Declaring the shard filename took 44 to 4; declaring the digest of the artifact each check is about took 4 to 0. So the split is 40 and 4: forty survived because the check block named nothing subject-specific, and four because the field that discriminates the other five subjects COLLIDES for two pairs (bert and gpt-2 name the same primary weight file, mistral and qwen publish the same shard count). Reporting the reviewer's 42/2 would have been repeating a prediction as a measurement."
+}

@@ -34,20 +34,17 @@ def main():
         only = sys.argv[sys.argv.index("--subject") + 1]
 
     led = M.load()
-    records = []
-    for c in led.get("cells", []):
-        if only and c["subject"] != only:
-            continue
-        for e in (c.get("evidence") or []):
-            records.append((c["subject"], c["axis"], e))
+    # ⛔ THE RE-FETCH SKIPPED facts.json ENTIRELY. Every fact in the manuscript is a
+    # number read out of a retrieved artifact, and no run of this tool had ever confirmed that
+    # artifact still serves the recorded bytes.
+    records = [(w, e) for w, e in M.all_cited(led)
+               if only is None or w.startswith(only)]
 
-    # De-duplicate by url: the same artifact backs several cells, and fetching it once is both
-    # faster and, more importantly, guarantees every cell sees the SAME bytes.
     by_url = {}
-    for s, a, e in records:
+    for w, e in records:
         by_url.setdefault(e["url"], {"sha256": e["sha256"], "cells": [],
                                      "range": e.get("range"),
-                                     "volatile": bool(e.get("volatile"))})["cells"].append((s, a))
+                                     "volatile": bool(e.get("volatile"))})["cells"].append(w)
 
     print("=" * 78)
     print("  retrieval drift — %d evidence record(s), %d distinct artifact(s)"
@@ -140,7 +137,7 @@ def main():
         "covered": fp,
         "subject_filter": only,
         "findings": [{"url": u, "what": w,
-                      "cells": ["%s/axis%d" % c for c in cs],
+                      "cells": list(cs),
                       "recorded_sha256": by_url[u]["sha256"]}
                      for u, w, cs in findings],
     })
@@ -161,7 +158,7 @@ def main():
         for url, what, cells in findings:
             print("      %s" % what)
             print("        %s" % url)
-            print("        affects: %s" % ", ".join("%s/axis%d" % c for c in cells))
+            print("        affects: %s" % ", ".join(cells))
     print("=" * 78)
     return 1 if findings else 0
 

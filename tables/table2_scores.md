@@ -1,5 +1,5 @@
 <!-- EMITTED by mp_metric.py, as of 2026-08-29. Do not edit. -->
-<!-- ledger-fingerprint: e298313927ade8f0ee26e5cef9ce899dfd98e3fb8f9c114f82b549c4d158ad78 -->
+<!-- ledger-fingerprint: 9a7e3c1f1587c6237fc07f14229954afe51ce4fb081fecde0cd016e403b46148 -->
 | release | 2 | 1 | 0 | N/A | as-coded | N/A→0 | N/A→2 | ceiling |
 |---|---|---|---|---|---|---|---|---|
 | olmo-2-13b | 6 | 6 | 7 | 3 | 0.474 | 0.409 | 0.545 | 0.868 |

@@ -28,6 +28,7 @@ import sys
 import time
 
 import fetch_artifact as F
+import mp_metric as M
 
 NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
@@ -89,11 +90,12 @@ def main():
     dry = "--dry-run" in sys.argv
     led = json.loads(LEDGER.read_text(encoding="utf-8"))
 
+    # ⛔ THIS WALKED led["cells"] AND NOTHING ELSE, so facts.json's urls -- cited by name
+    # in the manuscript -- stayed on mutable `/main/` branches through every run of this tool.
     targets = {}
-    for c in led["cells"]:
-        for e in (c.get("evidence") or []):
-            if RAW.match(e["url"]) or HF.match(e["url"]):
-                targets.setdefault(e["url"], []).append("%s/axis%d" % (c["subject"], c["axis"]))
+    for where, e in M.all_cited(led):
+        if RAW.match(e["url"]) or HF.match(e["url"]):
+            targets.setdefault(e["url"], []).append(where)
 
     print("  %d mutable branch url(s) cited by %d cell reference(s)"
           % (len(targets), sum(len(v) for v in targets.values())))
@@ -129,12 +131,11 @@ def main():
     # not, the recorded digest was describing a later state of the branch, and rewriting the url
     # would silently repoint the citation at different content.
     drift = []
-    for c in led["cells"]:
-        for e in (c.get("evidence") or []):
-            if e["url"] in mapping:
-                _p, got, _sha = mapping[e["url"]]
-                if got != e["sha256"]:
-                    drift.append((e["url"], e["sha256"], got))
+    for _where, e in M.all_cited(led):
+        if e["url"] in mapping:
+            _p, got, _sha = mapping[e["url"]]
+            if got != e["sha256"]:
+                drift.append((e["url"], e["sha256"], got))
     if drift:
         print()
         print("  ⛔ %d artifact(s) hash DIFFERENTLY at the pinned commit:" % len(drift))
@@ -152,7 +153,7 @@ def main():
               "Nothing written (--dry-run)." % len(mapping))
         return 0
 
-    n = 0
+    n = nf = 0
     for c in led["cells"]:
         for e in (c.get("evidence") or []):
             if e["url"] in mapping:
@@ -161,6 +162,21 @@ def main():
                 e["pinned_commit"] = sha
                 n += 1
     LEDGER.write_text(json.dumps(led, indent=2) + NL, encoding="utf-8", newline=NL)
+    # facts.json is a second file, so it is REWRITTEN as a second file -- the union is for reading.
+    FP = HERE / "facts.json"
+    if FP.exists():
+        fd = json.loads(FP.read_text(encoding="utf-8"))
+        for _name, f in (fd.get("facts") or {}).items():
+            evs = f.get("evidence")
+            for e in ([evs] if isinstance(evs, dict) else (evs or [])):
+                if isinstance(e, dict) and e.get("url") in mapping:
+                    pinned, _digest, sha = mapping[e["url"]]
+                    e["url"] = pinned
+                    e["pinned_commit"] = sha
+                    nf += 1
+        if nf:
+            FP.write_text(json.dumps(fd, indent=2) + NL, encoding="utf-8", newline=NL)
+            print("  %d fact reference(s) pinned as well" % nf)
     print()
     print("  %d evidence reference(s) now cite a commit, not a branch. Digests unchanged." % n)
     return 0
