@@ -23,7 +23,89 @@ import tempfile
 NL = chr(10)
 D = chr(0x26D4)
 HERE = pathlib.Path(__file__).resolve().parent
-SUITE = ("mp_metric.py", "replay.py", "check_facts.py")
+# ⛔ THIS WAS THREE TOOLS WHILE THE PAPER SAID "the whole suite", AND THE GAP WAS THE ANSWER.
+# check_claims.py carries two predicates that READ the notes on every axis-16/17 zero, so 22 of
+# the 176 are not unread at all -- the true figure is 154. A round-14 reviewer blanked all 176,
+# watched check_claims fail two predicates, blanked only the other 154 and watched it pass.
+#
+# ⚠ The measurement was a PROXY for the claim: "nothing reads these" was tested against a subset
+# chosen for speed, and reported as though it had been tested against everything. That is the
+# defect this census scores publishers for, in the tool written to measure it.
+#
+# ⇒ And the correction cuts in our favour, which is why it went unnoticed: those 22 notes are the
+# axes-16/17 zeros that section 9.1 calls the STRONGEST in the census. The mechanism that makes
+# them strong is exactly these two predicates, and the paper had not cited it.
+SUITE = ("mp_metric.py", "replay.py", "check_facts.py", "check_claims.py")
+
+
+def _tool_path(here, name):
+    """check_claims.py lives with the PAPER, not the census, and resolves the census beside it."""
+    if (here / name).exists():
+        return here, [name]
+    paper = here.parents[1] / "journal-submissions" / "mp-metric"
+    if (paper / name).exists():
+        return paper, [name]
+    return None, None
+
+
+def blank(led, axes, only_unbounded=True):
+    """A copy of the ledger with the notes on `axes`' unbounded zeros blanked."""
+    import copy
+    out = copy.deepcopy(led)
+    n = 0
+    for c in out["cells"]:
+        if c.get("score") != 0 or c["axis"] not in axes:
+            continue
+        if only_unbounded and isinstance(c.get("bound"), dict):
+            continue
+        if str(c.get("note") or "").strip():
+            c["note"] = ""
+            n += 1
+    return out, n
+
+
+def notices(root, led, paper_src):
+    """Does any tool in SUITE notice this ledger? Returns the list that did."""
+    (root / "cells.json").write_text(json.dumps(led, indent=2) + NL, encoding="utf-8", newline=NL)
+    hit = []
+    for tool in SUITE:
+        cwd, argv = _tool_path(HERE, tool)
+        if cwd is None:
+            continue
+        if cwd != HERE:
+            cwd = paper_src
+        r = subprocess.run([sys.executable, "-X", "utf8"] + argv, cwd=str(cwd),
+                           capture_output=True, text=True, encoding="utf-8", errors="replace")
+        out = (r.stdout or "") + (r.stderr or "")
+        if (r.returncode != 0 or "DEFECT" in out
+                or ("validation:" in out and "no defects" not in out)):
+            hit.append(tool)
+    return hit
+
+
+def read_axes(root, led, axes, paper_src):
+    """The minimal set of axes whose notes something reads. Bisection, not inspection.
+
+    ⛔ THE FIRST VERSION OF THIS FILE ASKED ONLY *WHETHER* ANYTHING NOTICED, and answered with a
+    single number that was wrong: it reported all 176 unbounded-zero notes as unread, against a
+    suite of three tools, while the paper claimed "the whole suite". check_claims.py reads the
+    notes on every axis-16/17 zero, so 22 of them are read and the figure is 154.
+
+    ⚠ AND THE OBVIOUS FIX WOULD HAVE BEEN TO READ THE PREDICATES AND SUBTRACT -- which is
+    inspection, the thing this file exists to avoid. So the partition is MEASURED: blank a subset,
+    ask whether anything notices, and bisect. If a future control starts reading a different axis's
+    notes, this finds it without anyone editing a list.
+    """
+    if not axes:
+        return []
+    mutated, n = blank(led, set(axes))
+    if n == 0 or not notices(root, mutated, paper_src):
+        return []
+    if len(axes) == 1:
+        return list(axes)
+    mid = len(axes) // 2
+    return (read_axes(root, led, axes[:mid], paper_src)
+            + read_axes(root, led, axes[mid:], paper_src))
 
 
 def main():
@@ -43,53 +125,49 @@ def main():
     print()
 
     work = pathlib.Path(tempfile.mkdtemp(prefix="unread-"))
-    root = work / "census"
+    root = work / "provenance-laboratory" / "census"
     shutil.copytree(HERE, root, dirs_exist_ok=True)
+    paper_src = work / "journal-submissions" / "mp-metric"
+    _real_paper = HERE.parents[1] / "journal-submissions" / "mp-metric"
+    if _real_paper.exists():
+        shutil.copytree(_real_paper, paper_src, dirs_exist_ok=True)
     try:
-        mutated = json.loads(json.dumps(led))
-        for c in mutated["cells"]:
-            if (c.get("score") == 0 and not isinstance(c.get("bound"), dict)
-                    and str(c.get("note") or "").strip()):
-                c["note"] = ""
-        (root / "cells.json").write_text(json.dumps(mutated, indent=2) + NL,
-                                         encoding="utf-8", newline=NL)
-        noticed = []
-        for tool in SUITE:
-            r = subprocess.run([sys.executable, "-X", "utf8", tool], cwd=str(root),
-                               capture_output=True, text=True, encoding="utf-8",
-                               errors="replace")
-            out = (r.stdout or "") + (r.stderr or "")
-            bad = (r.returncode != 0 or "DEFECT" in out
-                   or ("validation:" in out and "no defects" not in out))
-            print("  %-16s %s" % (tool, "NOTICED" if bad else "did not notice"))
-            if bad:
-                noticed.append(tool)
+        axes = sorted({c["axis"] for c in target})
+        print("  bisecting over %d axes that carry unbounded-zero notes ..." % len(axes))
+        read = sorted(read_axes(root, led, axes, paper_src))
+        read_cells = [c for c in target if c["axis"] in read]
+        unread_cells = [c for c in target if c["axis"] not in read]
+        print()
+        if read:
+            print("  READ   axes %s -- %d note(s). Something in the suite fails when these are"
+                  % (read, len(read_cells)))
+            print("         blanked, so they are load-bearing rather than decorative.")
+        else:
+            print("  READ   none")
+        print("  UNREAD %d note(s) across the remaining axes." % len(unread_cells))
+        # confirm the complement really is green, rather than inferring it
+        mutated, n = blank(led, {c["axis"] for c in unread_cells} - set(read))
+        still = notices(root, mutated, paper_src)
+        print()
+        print("  CONTROL: blanking only the %d unread note(s) -> %s"
+              % (n, "nothing noticed" if not still else (D + " %s NOTICED" % still)))
     finally:
         shutil.rmtree(work, ignore_errors=True)
 
-    rec = {"_what": ("The number of zero-cell notes that can be blanked with the whole suite "
-                     "still green. It is measured, not asserted: the notes are blanked in a copy "
-                     "and the suite is run against it."),
+    rec = {"_what": ("Which zero-cell notes can be blanked with the whole suite still green, "
+                     "measured by blanking them and bisecting -- not by reading the predicates, "
+                     "which is the inspection this file exists to avoid."),
            "zeros": len(zeros), "bounded_zeros": len(bounded),
-           "unread_notes": 0 if noticed else len(target),
-           "noticed_by": noticed, "suite": list(SUITE)}
-    (HERE / "UNREAD-NOTES.json").write_text(json.dumps(rec, indent=2) + NL,
-                                            encoding="utf-8", newline=NL)
-    print()
-    if noticed:
-        print("  %d note(s) blanked and %s NOTICED. The prose is load-bearing after all;"
-              % (len(target), ", ".join(noticed)))
-        print("  update the paper, which currently reports that nothing reads it.")
-    else:
-        print("  " + D + " %d NOTE(S) BLANKED AND NOTHING NOTICED." % len(target))
-        print("  Every one of them states a search bound, a reason and a date for a zero, and no")
-        print("  tool in this project reads a character of it. That is the difference between the")
-        print("  %d bounded zeros and the rest: a bound is executed, a note is decoration."
-              % len(bounded))
+           "notes_examined": len(target),
+           "read_axes": read,
+           "read_notes": len(read_cells),
+           "unread_notes": len(unread_cells),
+           "complement_still_green": not still,
+           "suite": list(SUITE)}
     print()
     print("  written to UNREAD-NOTES.json")
     print("=" * 78)
-    return 0
+    return 1 if still else 0
 
 
 if __name__ == "__main__":

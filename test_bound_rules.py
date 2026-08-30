@@ -57,10 +57,22 @@ MUTATIONS = [
     ("delete a bound entirely (coverage ratchet)",
      lambda L: find(L, "mistral-7b-v0.3", 14).pop("bound"),
      "mp_metric.py", "COVERAGE FELL"),
+    # ⚠ THIS EXPECTED THE SUBSTRING "the cell declares" AND THE MESSAGE NOW SAYS "this cell
+    # declares", so the control reported MISSED against a rejection that had happened correctly.
+    # A substring is not a token -- the same defect that produced three false verdicts in this
+    # project in one day. Matched on the distinctive clause instead.
     ("claim the platform key is the publisher's",
      lambda L: find(L, "pythia-12b", 14)["bound"].__setitem__(
          "expect_signer_fingerprint", "0" * 40),
+     "replay.py", "must be rescored"),
+    ("claim a README edit was a weight upload",
+     lambda L: find(L, "olmo-2-13b", 14)["bound"].__setitem__(
+         "expect_commit_subject", "Adding safetensors weights"),
      "replay.py", "the cell declares"),
+    ("drop the shared-signer requirement",
+     lambda L: find(L, "pythia-12b", 14)["bound"].pop(
+         "expect_signer_is_shared_across_publishers"),
+     "replay.py", "silently disables"),
     ("claim an unsigned commit is signed",
      lambda L: find(L, "bloom-176b", 14)["bound"].__setitem__("expect_signed", True),
      "replay.py", "carries no a signature"),

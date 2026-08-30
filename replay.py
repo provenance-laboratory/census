@@ -215,7 +215,14 @@ def subject_context(led):
     ⇒ These lists live on the SUBJECT RECORD. They do not travel with evidence, they do not travel
     with a check block, and exchanging two cells cannot move them.
     """
-    return {s["id"]: {"repo": s.get("repo"),
+    # ⛔ ONE EXECUTOR NEEDS A FACT ABOUT THE CENSUS, NOT ABOUT ONE SUBJECT. m_signed_commit's
+    # claim is that a signing key belongs to the HOST, and its evidence is that the key signs
+    # UNRELATED PUBLISHERS -- which cannot be read off a single subject record. A round-14 reviewer
+    # showed the alternative was a denylist of one fingerprint. The ledger travels under a reserved
+    # key so the fact is DERIVED at replay time rather than asserted in a cell.
+    if any(s.get("id") == "_led" for s in led.get("subjects", [])):
+        raise SystemExit(D + " a subject is named `_led`, which this context reserves.")
+    return {"_led": led, **{s["id"]: {"repo": s.get("repo"),
                       "sources": set(s.get("sources") or ()),
                       "axis_sources": {int(k): set(v)
                                        for k, v in (s.get("axis_sources") or {}).items()},
@@ -230,7 +237,7 @@ def subject_context(led):
                       "axis_evidence_sha256": {
                           int(k): v for k, v
                           in (s.get("axis_evidence_sha256") or {}).items()}}
-            for s in led.get("subjects", [])}
+            for s in led.get("subjects", [])}}
 
 
 def foreign_evidence(cell, ctx, _unused=None):
@@ -814,8 +821,59 @@ def m_signed_commit(c, ev, ctx=None):
 
     fpr = _commit_fingerprint(raw)
     if fpr != chk.get("expect_signer_fingerprint"):
-        return False, ("signed by %s; the cell declares %s"
+        # ⛔ THIS WAS A DENYLIST OF ONE, AND IT WOULD HAVE FAILED FOR THE RIGHT REASON WITH THE
+        # WRONG VERDICT. A round-14 reviewer pointed out that the first publisher-signed commit
+        # this census ever meets returns False here -- reported as a broken check, when what has
+        # actually happened is that the cell's PREMISE changed and the zero may no longer hold.
+        # A check that cannot distinguish "the world moved" from "the check is wrong" turns a
+        # discovery into a build failure somebody will be tempted to route around.
+        return False, ("signed by %s, not the %s this cell declares. If that key belongs to the "
+                       "PUBLISHER rather than the host, this axis-14 zero no longer holds and the "
+                       "cell must be rescored -- this is a finding, not a broken check."
                        % (fpr, chk.get("expect_signer_fingerprint")))
+
+    # ⛔ AND THE POSITIVE HALF WAS ASSERTED. The cell's claim is that this key is the HOST'S, and
+    # the evidence for that is that it signs unrelated publishers -- a fact about the census, which
+    # the executor can compute and had not. It is derived here rather than trusted, so the day a
+    # publisher signs with its own key the shared-signer premise fails on its own.
+    # ⛔ OPTIONAL AGAIN. Deleting this key would fall straight through to the weak return below,
+    # disabling the derived shared-signer check in silence -- the identical defect the mutation
+    # tester found in expect_signed and expect_committer one round ago, reintroduced in the repair
+    # for a different one. Present, boolean, and compared by identity.
+    # ⛔ DECLARED AND NEVER COMPARED. `expect_commit_subject` was interpolated into the pass
+    # message and checked against nothing, so the cell could say the commit was a weight upload
+    # while the object said "Update README.md" -- and the message would repeat the cell back to
+    # the reader as though the bytes had confirmed it. The mutation tester found it within a minute
+    # of the field being added. It is read out of the archived object here.
+    _subj = raw.split(bytes([10, 10]), 1)[1].decode("utf-8", "replace").strip().splitlines()[0]         if bytes([10, 10]) in raw else ""
+    _want_subj = chk.get("expect_commit_subject")
+    if not _want_subj:
+        return False, ("no `expect_commit_subject`: what the signed commit actually DID is the "
+                       "difference between 'the weights are signed' and 'a README was edited'")
+    if _subj != _want_subj:
+        return False, "the commit's subject is %r; the cell declares %r" % (_subj[:60],
+                                                                            str(_want_subj)[:60])
+    if not isinstance(chk.get("expect_signer_is_shared_across_publishers"), bool):
+        return False, ("`expect_signer_is_shared_across_publishers` must be present and a boolean; "
+                       "absent, it silently disables the check that this key is the host's")
+    if chk["expect_signer_is_shared_across_publishers"]:
+        others = set()
+        for other in ((ctx or {}).get("_led") or {}).get("cells", []):
+            b = other.get("bound") or {}
+            if (other.get("axis") == 14 and other["subject"] != c["subject"]
+                    and b.get("expect_signer_fingerprint") == fpr):
+                others.add(other["subject"])
+        if len(others) < 2:
+            return False, ("this cell claims %s is a SHARED platform key, but it signs only %d "
+                           "other subject(s) in this census. A key used by one publisher is that "
+                           "publisher's until shown otherwise." % (fpr[:16], len(others)))
+        return True, ("revision %s self-authenticates, is signed by %s -- which also signs %d "
+                      "other unrelated publisher(s) here, so it is not %s's -- and was committed "
+                      "by %s. ⚠ The signature is over the COMMIT, whose subject is %r; it binds "
+                      "the weights only through the tree, which this executor does not walk."
+                      % (want_rev[:12], fpr[:16], len(others), c["subject"], committer,
+                         (chk.get("expect_commit_subject") or "not declared")[:48]))
+
     return True, ("revision %s self-authenticates, is signed by %s, and was committed by %s"
                   % (want_rev[:12], fpr[:16], committer))
 

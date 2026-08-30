@@ -1184,7 +1184,7 @@
       "bound": {
         "method": "hf_probe.signed_commit",
         "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
-        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- and the executor DERIVES that this key is the host's rather than taking it on trust, by requiring it to sign unrelated publishers elsewhere in this census. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. \u26a0 AND WHAT THE SIGNATURE COVERS, STATED PRECISELY BECAUSE AN EARLIER DRAFT DID NOT: this commit is 'Adding `safetensors` variant of this model (#5)'. It IS a weight upload, so the tree it names demonstrably contains the weight files. A git signature covers the COMMIT OBJECT, which names a tree; the weight files are bound only through that tree, and this executor does not walk it. So the honest reading is 'the host signed a commit in this repository', not 'the weights are signed' -- which is enough for a 0 and would not be enough for anything else. Score 0.",
         "searched": [
           "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
           "the publisher's Hugging Face profile page, for a published key or fingerprint",
@@ -1197,7 +1197,9 @@
         "expect_evidence_sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8",
         "expect_signed": true,
         "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
-        "expect_committer": "system@huggingface.co"
+        "expect_committer": "system@huggingface.co",
+        "expect_signer_is_shared_across_publishers": true,
+        "expect_commit_subject": "Adding `safetensors` variant of this model (#5)"
       },
       "evidence": [
         {
@@ -1589,7 +1591,7 @@
       "bound": {
         "method": "hf_probe.signed_commit",
         "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
-        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- and the executor DERIVES that this key is the host's rather than taking it on trust, by requiring it to sign unrelated publishers elsewhere in this census. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. \u26a0 AND WHAT THE SIGNATURE COVERS, STATED PRECISELY BECAUSE AN EARLIER DRAFT DID NOT: this commit is 'Update README.md'. It is a README or metadata edit, NOT a weight upload -- so nothing about it is specifically about the weights at all. A git signature covers the COMMIT OBJECT, which names a tree; the weight files are bound only through that tree, and this executor does not walk it. So the honest reading is 'the host signed a commit in this repository', not 'the weights are signed' -- which is enough for a 0 and would not be enough for anything else. Score 0.",
         "searched": [
           "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
           "the publisher's Hugging Face profile page, for a published key or fingerprint",
@@ -1602,7 +1604,9 @@
         "expect_evidence_sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995",
         "expect_signed": true,
         "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
-        "expect_committer": "system@huggingface.co"
+        "expect_committer": "system@huggingface.co",
+        "expect_signer_is_shared_across_publishers": true,
+        "expect_commit_subject": "Update README.md"
       },
       "evidence": [
         {
@@ -3222,7 +3226,7 @@
       "bound": {
         "method": "hf_probe.signed_commit",
         "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
-        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- and the executor DERIVES that this key is the host's rather than taking it on trust, by requiring it to sign unrelated publishers elsewhere in this census. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. \u26a0 AND WHAT THE SIGNATURE COVERS, STATED PRECISELY BECAUSE AN EARLIER DRAFT DID NOT: this commit is 'Update README.md'. It is a README or metadata edit, NOT a weight upload -- so nothing about it is specifically about the weights at all. A git signature covers the COMMIT OBJECT, which names a tree; the weight files are bound only through that tree, and this executor does not walk it. So the honest reading is 'the host signed a commit in this repository', not 'the weights are signed' -- which is enough for a 0 and would not be enough for anything else. Score 0.",
         "searched": [
           "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
           "the publisher's Hugging Face profile page, for a published key or fingerprint",
@@ -3235,7 +3239,9 @@
         "expect_evidence_sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2",
         "expect_signed": true,
         "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
-        "expect_committer": "system@huggingface.co"
+        "expect_committer": "system@huggingface.co",
+        "expect_signer_is_shared_across_publishers": true,
+        "expect_commit_subject": "Update README.md"
       },
       "evidence": [
         {
@@ -3473,7 +3479,7 @@
       "bound": {
         "method": "hf_probe.signed_commit",
         "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
-        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- and the executor DERIVES that this key is the host's rather than taking it on trust, by requiring it to sign unrelated publishers elsewhere in this census. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. \u26a0 AND WHAT THE SIGNATURE COVERS, STATED PRECISELY BECAUSE AN EARLIER DRAFT DID NOT: this commit is 'Update metadata: Add library_name to Transformers (#3)'. It is a README or metadata edit, NOT a weight upload -- so nothing about it is specifically about the weights at all. A git signature covers the COMMIT OBJECT, which names a tree; the weight files are bound only through that tree, and this executor does not walk it. So the honest reading is 'the host signed a commit in this repository', not 'the weights are signed' -- which is enough for a 0 and would not be enough for anything else. Score 0.",
         "searched": [
           "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
           "the publisher's Hugging Face profile page, for a published key or fingerprint",
@@ -3486,7 +3492,9 @@
         "expect_evidence_sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953",
         "expect_signed": true,
         "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
-        "expect_committer": "system@huggingface.co"
+        "expect_committer": "system@huggingface.co",
+        "expect_signer_is_shared_across_publishers": true,
+        "expect_commit_subject": "Update metadata: Add library_name to Transformers (#3)"
       },
       "evidence": [
         {

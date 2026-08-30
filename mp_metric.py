@@ -209,6 +209,19 @@ def validate(led):
                          f"{{method, asserts, observed}}; a free-text string is not a control")
             else:
                 meth = str(chk.get("method", ""))
+                # ⛔ A METHOD CAN BE REGISTERED AND HAVE NO EXECUTOR, and until round 14
+                # three were: api_field, hash_compare and http_status are in CHECK_METHODS and
+                # absent from replay.DISPATCH. A cell could be promoted to VERIFIED by naming one,
+                # pass this validator, and then be reported by replay as "method has no executor"
+                # -- a defect discovered one tool later, in a run nothing forces anyone to make.
+                # Worse, hash_compare is the only non-prose method permitted on axis 15, so the
+                # axis's registry looked richer than it was. A reviewer found all three.
+                import replay as _R
+                if meth in A.CHECK_METHODS and meth not in _R.DISPATCH:
+                    d.append(f"{where}: check.method {meth!r} is registered in axes.CHECK_METHODS "
+                             f"but has NO EXECUTOR in replay.DISPATCH. A registry entry nothing "
+                             f"implements is a method name, and it makes an axis look more "
+                             f"observable than it is")
                 if meth not in A.CHECK_METHODS:
                     d.append(f"{where}: check.method {meth!r} is not registered in "
                              f"axes.CHECK_METHODS -- a cell cannot be promoted to VERIFIED by "
