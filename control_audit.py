@@ -318,6 +318,7 @@ def main():
     # ⛔ A CONTROL THAT IS DELETED LEAVES NO TRACE IN THIS CENSUS, so the count silently falls
     # and nothing notices. Compare against the previous record: a DROP is either a deliberate
     # removal, which belongs in a commit message, or a neutered file.
+    _old = None
     _prev = HERE / "CONTROL-AUDIT.json"
     if _prev.exists():
         try:
@@ -336,6 +337,14 @@ def main():
                      "still green, and what kind of survivor each one is."),
            "targets": {n: _h.sha256((HERE / n).read_bytes()).hexdigest() for n in targets},
            "suite": [list(a) for a, _ in SUITE],
+           # ⛔ THE PAPER COMPARES THIS ROUND'S WATCHED SHARE WITH LAST ROUND'S, and the first
+           # version of that resolver TYPED the previous numbers. Reading them from git worked
+           # until the audit was committed, after which HEAD held the CURRENT record and the
+           # comparison became a figure against itself. The record carries its own predecessor now,
+           # so the comparison does not depend on when anything was committed.
+           "previous": ({"controls_total": _old.get("controls_total"),
+                         "watched": _old.get("watched")}
+                        if isinstance(locals().get("_old"), dict) else None),
            "controls_total": watched + len(unwatched),
            "watched": watched,
            "unwatched": len(unwatched),
