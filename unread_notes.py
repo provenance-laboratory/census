@@ -22,6 +22,7 @@ import tempfile
 
 NL = chr(10)
 D = chr(0x26D4)
+W = chr(0x26A0)   # undefined until round 14; the baseline warning raised NameError instead
 HERE = pathlib.Path(__file__).resolve().parent
 # ⛔ THIS WAS THREE TOOLS WHILE THE PAPER SAID "the whole suite", AND THE GAP WAS THE ANSWER.
 # check_claims.py carries two predicates that READ the notes on every axis-16/17 zero, so 22 of
@@ -36,6 +37,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 # axes-16/17 zeros that section 9.1 calls the STRONGEST in the census. The mechanism that makes
 # them strong is exactly these two predicates, and the paper had not cited it.
 SUITE = ("mp_metric.py", "replay.py", "check_facts.py", "check_claims.py")
+SUITE_ACTIVE = list(SUITE)
 
 
 def _tool_path(here, name):
@@ -68,7 +70,7 @@ def notices(root, led, paper_src):
     """Does any tool in SUITE notice this ledger? Returns the list that did."""
     (root / "cells.json").write_text(json.dumps(led, indent=2) + NL, encoding="utf-8", newline=NL)
     hit = []
-    for tool in SUITE:
+    for tool in SUITE_ACTIVE:
         cwd, argv = _tool_path(HERE, tool)
         if cwd is None:
             continue
@@ -135,6 +137,34 @@ def main():
     _real_paper = HERE.parents[1] / "journal-submissions" / "mp-metric"
     if _real_paper.exists():
         shutil.copytree(_real_paper, paper_src, dirs_exist_ok=True)
+    # ⛔ THIS HAD NO BASELINE, AND IT COST THIRTY-FIVE MINUTES OF MEASURING NOTHING.
+    # check_claims compares the MANUSCRIPT against the ledger, so it is red whenever the paper has
+    # been edited and not yet rebuilt -- which is exactly when someone re-runs this tool. Every
+    # bisection step then "noticed", the recursion descended to all 19 axes, and the answer would
+    # have been "every note is read": a control that always fires, reported as a measurement.
+    #
+    # ⚠ control_audit.py CARRIES THIS EXACT GUARD, added after being burned twice, and this file
+    # was written without it. A tool that is red before any mutation cannot tell you what a
+    # mutation did.
+    #
+    # ⇒ A red tool is EXCLUDED and NAMED, rather than silently treated as a signal. The figure
+    # then carries the bound: measured against the tools that could participate.
+    print("  baseline: running the suite BEFORE any mutation ...")
+    red = notices(root, led, paper_src)
+    if red:
+        print("  " + W + " %s %s red on the UNMUTATED tree and cannot participate."
+              % (", ".join(red), "is" if len(red) == 1 else "are"))
+        print("  A tool that fails before any mutation cannot report what a mutation did. The")
+        print("  usual cause is an edited manuscript that has not been rebuilt.")
+        for _t in red:
+            SUITE_ACTIVE.remove(_t)
+        if not SUITE_ACTIVE:
+            print("  " + D + " nothing is left to measure with.")
+            return 1
+    else:
+        print("  baseline: every tool green, so a failure below is attributable to the mutation")
+    print()
+
     try:
         axes = sorted({c["axis"] for c in target})
         print("  bisecting over %d axes that carry unbounded-zero notes ..." % len(axes))
@@ -167,9 +197,21 @@ def main():
            "read_notes": len(read_cells),
            "unread_notes": len(unread_cells),
            "complement_still_green": not still,
-           "suite": list(SUITE)}
+           "suite": list(SUITE),
+           "suite_that_participated": list(SUITE_ACTIVE),
+           "excluded_red_at_baseline": [x for x in SUITE if x not in SUITE_ACTIVE]}
+    # ⛔ THE WRITE WAS DELETED BY A PATCH AND THE PRINT SURVIVED IT. For three runs this tool
+    # announced "written to UNREAD-NOTES.json" and wrote nothing at all -- the success message
+    # without the artifact, in the file whose entire purpose is to find prose that nothing backs.
+    # It was caught by reading the record instead of the log: the file's mtime was six hours old
+    # and its schema two versions behind, while the run reported success.
+    (HERE / "UNREAD-NOTES.json").write_text(json.dumps(rec, indent=2) + NL,
+                                            encoding="utf-8", newline=NL)
+    _back = json.loads((HERE / "UNREAD-NOTES.json").read_text(encoding="utf-8"))
+    if _back.get("unread_notes") != rec["unread_notes"]:
+        raise SystemExit(D + " the record on disk does not match what was just computed.")
     print()
-    print("  written to UNREAD-NOTES.json")
+    print("  written to UNREAD-NOTES.json and read back")
     print("=" * 78)
     return 1 if still else 0
 

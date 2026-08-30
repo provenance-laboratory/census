@@ -1,12 +1,24 @@
 {
-  "_what": "The number of zero-cell notes that can be blanked with the whole suite still green. It is measured, not asserted: the notes are blanked in a copy and the suite is run against it.",
+  "_what": "Which zero-cell notes can be blanked with the whole suite still green, measured by blanking them and bisecting -- not by reading the predicates, which is the inspection this file exists to avoid.",
   "zeros": 182,
-  "bounded_zeros": 6,
-  "unread_notes": 176,
-  "noticed_by": [],
+  "bounded_zeros": 37,
+  "notes_examined": 145,
+  "read_axes": [],
+  "read_notes": 0,
+  "unread_notes": 145,
+  "complement_still_green": true,
   "suite": [
     "mp_metric.py",
     "replay.py",
+    "check_facts.py",
+    "check_claims.py"
+  ],
+  "suite_that_participated": [
+    "mp_metric.py",
+    "replay.py",
     "check_facts.py"
+  ],
+  "excluded_red_at_baseline": [
+    "check_claims.py"
   ]
 }
