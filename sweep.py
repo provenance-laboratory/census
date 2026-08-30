@@ -86,7 +86,17 @@ def main():
                     ds = [s for s in d["subjects"] if s["id"] == dst["subject"]][0]
                     ss = [s for s in d["subjects"] if s["id"] == src["subject"]][0]
                     a_d, a_s = str(dst["axis"]), str(src["axis"])
-                    for key in ("axis_sources", "axis_documents", "axis_method", "axis_literals"):
+                    # ⛔ THIS LIST WAS WRITTEN BEFORE ROUND 10 ADDED TWO POLICY KEYS, and
+                    # it never grew: `axis_file` and `axis_evidence_sha256` stayed behind when the
+                    # policy "moved", so this family did not do what section 2.2 says it does.
+                    # A reviewer found it. The survivor total is unchanged, but 62 cross-subject
+                    # cases move from validator rejection to executor rejection -- so the
+                    # MECHANISM described in the paper was not the mechanism being measured.
+                    #
+                    # ⚠ And a hand-kept list of policy keys is the same defect as
+                    # every other hand-kept list here, so it is derived from the fingerprint's
+                    # own key tuple instead: whatever mp_metric considers policy, this moves.
+                    for key in [k for k in M.policy_keys() if k.startswith("axis_")]:
                         if (ss.get(key) or {}).get(a_s) is not None:
                             ds.setdefault(key, {})[a_d] = copy.deepcopy(ss[key][a_s])
                     ds["sources"] = sorted(set(ds.get("sources") or ())

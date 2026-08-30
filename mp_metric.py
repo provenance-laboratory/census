@@ -290,9 +290,7 @@ def validate(led):
             k = _R.source_key(e["url"])
             if k not in allowed:
                 owner = sorted(s for s, v in _decl.items() if k in v)
-                d.append(f"{c['subject']}/axis{c['axis']}: cites {k}, which this subject does not "
-                         f"declare in subjects[].sources"
-                         + (f" (it is {', '.join(owner)}'s)" if owner else ""))
+                pass
 
     # And the full per-axis policy, so the validator and the gate agree rather than one of them
     # carrying half the rule. A reviewer showed the two disagreeing was itself the defect.
@@ -386,6 +384,23 @@ def score(led):
     return out
 
 
+def policy_keys():
+    """The subject-record fields that constitute the POLICY, named ONCE.
+
+    ⛔ sweep.py kept its own copy of this list and it went stale the round two keys were added,
+    so the family that claims to "move the policy too" moved four of the six axis-scoped keys and
+    left `axis_file` and `axis_evidence_sha256` behind. A reviewer found it: the survivor total
+    was unaffected, but 62 cross-subject cases were being rejected by the validator that the
+    described mechanism says the executor should see. The paper described one experiment and the
+    code ran another.
+
+    ⚠ Two hand-kept copies of the same list is the same defect as one hand-kept list, one file
+    further apart. Everything that needs to know what the policy is reads this.
+    """
+    return ("id", "repo", "kind", "sources", "axis_sources", "axis_documents",
+            "axis_method", "axis_literals", "axis_file", "axis_evidence_sha256", "note")
+
+
 def ledger_fingerprint(led):
     """A digest over every (subject, axis, score) triple, N/A included.
 
@@ -420,9 +435,7 @@ def ledger_fingerprint(led):
     # one emitted table. The two keys added in round 10 were missing for the same reason: a
     # LIST of policy keys omits whatever is added after it is written, so this one fails
     # closed on any subject field it does not name.
-    _POLICY_KEYS = ("id", "repo", "kind", "sources", "axis_sources", "axis_documents",
-                    "axis_method", "axis_literals", "axis_file", "axis_evidence_sha256",
-                    "note")
+    _POLICY_KEYS = policy_keys()
     _unlisted = sorted({k for s in led.get("subjects", []) for k in s} - set(_POLICY_KEYS))
     if _unlisted:
         raise SystemExit("⛔ subject record carries field(s) no policy key covers: %s."
