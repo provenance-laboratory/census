@@ -165,6 +165,9 @@ CHECK_METHODS = {
     "grep_retrieved":           "search retrieved bytes for a pattern and record the match",
     "count_in_retrieved":       "count occurrences of a pattern in retrieved bytes",
     "hash_compare":             "recompute a digest over retrieved bytes and compare to a published one",
+    "reproduction_search":      "re-run the recorded reproduction search over ARCHIVED query "
+                                "responses: every query present, every total recomputed from the "
+                                "bytes, and the human adjudication recorded as human",
     "hf_probe.release_artifacts": "enumerate every file published at a pinned revision and count "
                                   "those matching a declared class of artifact -- signatures, "
                                   "timestamp proofs, attestations -- so their ABSENCE is a "
@@ -338,6 +341,12 @@ METHOD_AXES = {
     # of three mechanisms covering this project. It anchored its own pre-registration by exactly
     # the mechanism it had no method to observe in a subject.
     "hf_probe.release_artifacts": {3, 14, 15},
+    # ⛔ AXES 16 AND 17 HAD THE ONLY BOUNDED SEARCH IN THE CENSUS AND NO WAY TO EXECUTE IT.
+    # negative_search.py recorded every query, its total and its adjudication -- and the cells
+    # carried that as PROSE in a note, so section 9.1 could call these the strongest zeros while
+    # the first-class accounting counted all 22 among the asserted. A round-14 reviewer found the
+    # inconsistency and proposed the fix; this is it.
+    "reproduction_search": {16, 17},
 }
 
 
@@ -384,6 +393,8 @@ REQUIRED_FIELDS = {
     "hf_probe.release_artifacts": ("expect_repo", "expect_revision", "expect_patterns",
                                    "expect_matches", "expect_pattern_probe",
                                    "expect_evidence_sha256"),
+    "reproduction_search": ("expect_subject_name", "expect_queries", "expect_total_results",
+                            "expect_adjudicated_positive", "expect_response_digests"),
 }
 
 

@@ -755,6 +755,112 @@ HF_REVISION = re.compile(
     r"^https://huggingface\.co/api/models/([^/]+/[^/]+)/revision/([0-9a-f]{40})$")
 
 
+ARXIV_Q = re.compile(r"^https://export\.arxiv\.org/api/query\?")
+_TOTAL = re.compile(rb"<opensearch:totalResults[^>]*>(\d+)<")
+_ENTRY = re.compile(rb"<entry>")
+
+
+def m_reproduction_search(c, ev, ctx=None):
+    """Axes 16/17: the recorded reproduction search, re-run over its archived responses.
+
+    ⛔ WHY. These were the ONLY zeros in the census with a stated, re-runnable bound -- and the
+    bound lived in a NOTE, as prose, executed by nothing. So section 9.1 could call them the
+    strongest zeros while the coverage figure counted all 22 among the asserted. Both round-14
+    reviewers noticed the inconsistency from opposite directions.
+
+    ⚠ WHAT IS MECHANICAL AND WHAT IS NOT, because conflating them is how a bound becomes
+    ceremony. MECHANICAL: every declared query has archived bytes; each response's
+    `opensearch:totalResults` is recomputed from those bytes and compared; the entries are counted.
+    HUMAN: whether any retrieved paper actually REPORTS a reproduction of this model. That
+    adjudication was made by reading, it cannot be recomputed here, and the cell records it as a
+    human judgement rather than a measurement.
+
+    ⭐ THE PROTOCOL CARRIES ITS OWN POSITIVE CONTROL. Two axis-17 cells score 1, not 0, because
+    this same search FOUND reports for BERT and GPT-2. A search that has returned positives in the
+    census it is used on could have returned one here.
+    """
+    chk = _asserted(c)
+    name = chk.get("expect_subject_name")
+    want_q = chk.get("expect_queries")
+    want_totals = chk.get("expect_total_results")
+    pos = chk.get("expect_adjudicated_positive")
+    if not name or not want_q or not isinstance(want_totals, dict) or pos is None:
+        return False, ("needs expect_subject_name, expect_queries, expect_total_results and "
+                       "expect_adjudicated_positive; a search with no recorded result is prose")
+
+    # ⛔ A ZERO THAT DECLARES A POSITIVE IS INCOHERENT, and corrupting the field to 1 used to
+    # pass: the executor branched on it and returned True either way. It cannot verify a human
+    # adjudication, but it can refuse a cell that contradicts its own score.
+    if c.get("score") == 0 and pos != 0:
+        return False, ("this cell is scored 0 and declares %r adjudicated positive(s). A search "
+                       "that found a reproduction report does not support a zero" % (pos,))
+
+    recs = [e for e in ev if ARXIV_Q.match(str(e.get("url", "")))]
+    if len(recs) != want_q:
+        return False, ("%d archived query response(s); the cell declares %d"
+                       % (len(recs), want_q))
+
+    # ⛔ AND THE BYTES MUST BE THE ONES THE CELL MEANS. Repointing an evidence digest used to
+    # return "unreplayable" rather than a failure -- a cell citing bytes that are not in the store
+    # is broken, not merely unrunnable, and the mutation tester read the difference correctly.
+    want_dig = chk.get("expect_response_digests")
+    if not isinstance(want_dig, dict) or not want_dig:
+        return False, ("no `expect_response_digests`: without them any archived response could be "
+                       "substituted for any other and the search would still 'replay'")
+    got_dig = {str(e.get("sha256")) for e in recs}
+    if got_dig != set(want_dig.values()):
+        return False, ("the cited response digests are not those this cell declares (%d of %d "
+                       "match)" % (len(got_dig & set(want_dig.values())), len(want_dig)))
+
+    seen, bad = {}, []
+    for e in recs:
+        b = _bytes_for(e)
+        if b is None:
+            return None, "an archived query response is missing from the store"
+        # the subject's name must actually be in the query, or the search was of something else
+        if quote_ok(name, e["url"]) is False:
+            bad.append("a query does not search for %r" % name)
+            continue
+        m = _TOTAL.search(b)
+        if not m:
+            bad.append("a response carries no totalResults")
+            continue
+        term = term_of(e["url"])
+        seen[term] = int(m.group(1))
+    if bad:
+        return False, "; ".join(bad[:2])
+
+    missing = sorted(set(want_totals) - set(seen))
+    if missing:
+        return False, "no archived response for declared term(s) %s" % missing[:3]
+    moved = {k: (seen[k], want_totals[k]) for k in want_totals if seen[k] != want_totals[k]}
+    if moved:
+        return False, ("%d term(s) return a different total than recorded: %s. arXiv grows, so "
+                       "this is expected over time -- but the CELL must then say what was true "
+                       "when, not what is true now" % (len(moved), list(moved.items())[:2]))
+    if pos != 0:
+        return True, ("%d archived queries for %r, totals as recorded, and the cell declares %d "
+                      "adjudicated positive(s)" % (len(recs), name, pos))
+    return True, ("%d archived queries for %r replay to the recorded totals (%d results screened); "
+                  "0 adjudicated as a reproduction report, BY READING -- that half is human"
+                  % (len(recs), name, sum(seen.values())))
+
+
+def term_of(url):
+    """The search term this query used, read out of the url rather than positionally."""
+    import urllib.parse as _u
+    q = _u.parse_qs(_u.urlparse(url).query).get("search_query", [""])[0]
+    m = re.findall(r'abs:"([^"]+)"', _u.unquote(q))
+    return m[-1] if m else url
+
+
+def quote_ok(name, url):
+    """Does this query actually search for the subject's name?"""
+    import urllib.parse as _u
+    q = _u.unquote(_u.parse_qs(_u.urlparse(url).query).get("search_query", [""])[0])
+    return ('abs:"%s"' % name) in q
+
+
 def m_release_artifacts(c, ev, ctx=None):
     """Axes 3, 14, 15: does the release publish signature or timestamp artifacts at all?
 
@@ -1076,6 +1182,7 @@ DISPATCH = {
     "hf_probe.signed_commit": m_signed_commit,
     "repo_tree_probe": m_repo_tree,
     "hf_probe.release_artifacts": m_release_artifacts,
+    "reproduction_search": m_reproduction_search,
 }
 
 
