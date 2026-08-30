@@ -134,6 +134,7 @@
         "pythia-12b/axis14"
       ],
       "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "retrieval": "git-object",
       "sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8",
       "stored": true
     },
@@ -193,6 +194,7 @@
         "qwen2.5-7b/axis14"
       ],
       "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "retrieval": "git-object",
       "sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953",
       "stored": true
     },
@@ -238,6 +240,7 @@
         "olmo-2-13b/axis14"
       ],
       "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "retrieval": "git-object",
       "sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995",
       "stored": true
     },
@@ -426,6 +429,7 @@
         "bloom-176b/axis14"
       ],
       "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "retrieval": "git-object",
       "sha256": "039a984949154b7df446a9078bb90b7d8e6b2c9bd8fcb9c1005aaeb3bdd0a3d0",
       "stored": true
     },
@@ -1553,6 +1557,7 @@
         "mistral-7b-v0.3/axis14"
       ],
       "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "retrieval": "git-object",
       "sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2",
       "stored": true
     },

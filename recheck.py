@@ -17,6 +17,7 @@ the new bytes and decides whether the property still holds. This script never re
 """
 import io
 import json
+import re
 import pathlib
 import sys
 
@@ -44,6 +45,11 @@ def main():
     for w, e in records:
         by_url.setdefault(e["url"], {"sha256": e["sha256"], "cells": [],
                                      "range": e.get("range"),
+                                     # the METHOD the bytes were obtained by. A commit url's HTTP
+                                     # body is rendered HTML; the archived bytes are the git
+                                     # object, and re-fetching the wrong representation reports
+                                     # drift that has not happened.
+                                     "retrieval": e.get("retrieval"),
                                      "volatile": bool(e.get("volatile"))})["cells"].append(w)
 
     print("=" * 78)
@@ -77,8 +83,27 @@ def main():
         # is 1.74 GB; re-fetching it whole to check a 2 KB range would download 1.74 GB per run.
         # Re-issue the SAME range instead -- which is also the only way the recorded digest, which
         # is a digest of the range, could ever match.
+        # ⛔ THE URL IS PROVENANCE, NOT A REPRESENTATION. A commit page's HTTP body is rendered
+        # HTML; the bytes this census archives are the GIT COMMIT OBJECT at that revision. Hashing
+        # the HTTP reply reported "digest moved" for all five axis-14 artifacts on the first run
+        # after they were added -- correctly, because the two are different things.
+        #
+        # ⛔ THE FIX IS TO RE-FETCH BY THE METHOD THE ARTIFACT WAS OBTAINED BY, NOT TO EXEMPT IT.
+        # An artifact excused from the drift check is an artifact whose disappearance nobody
+        # notices, and this file exists to notice.
         rng = by_url[url].get("range")
-        if rng:
+        if by_url[url].get("retrieval") == "git-object":
+            import hashlib as _hl
+
+            import probe_signatures as _PS
+            _m = re.match("^https://huggingface\\.co/([^/]+/[^/]+)/commit/([0-9a-f]{40})$", url)
+            try:
+                _blob = _PS.commit_object(_m.group(1), _m.group(2))
+                rec = {"sha256": _hl.sha256(_blob).hexdigest(), "bytes": len(_blob)}
+                why = None
+            except BaseException as _e:                                     # noqa: BLE001
+                rec, why = None, "git retrieval failed: %s" % str(_e)[:120]
+        elif rng:
             first, last = (int(x) for x in rng.split("=", 1)[1].split("-"))
             rec, why = F.evidence_range(url, first, last)
         else:

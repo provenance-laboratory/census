@@ -1203,7 +1203,8 @@
         {
           "url": "https://huggingface.co/EleutherAI/pythia-12b/commit/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
           "retrieved": "2026-08-30",
-          "sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8"
+          "sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8",
+          "retrieval": "git-object"
         }
       ]
     },
@@ -1607,7 +1608,8 @@
         {
           "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/commit/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
           "retrieved": "2026-08-30",
-          "sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995"
+          "sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995",
+          "retrieval": "git-object"
         }
       ]
     },
@@ -1992,7 +1994,8 @@
         {
           "url": "https://huggingface.co/bigscience/bloom/commit/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
           "retrieved": "2026-08-30",
-          "sha256": "039a984949154b7df446a9078bb90b7d8e6b2c9bd8fcb9c1005aaeb3bdd0a3d0"
+          "sha256": "039a984949154b7df446a9078bb90b7d8e6b2c9bd8fcb9c1005aaeb3bdd0a3d0",
+          "retrieval": "git-object"
         }
       ]
     },
@@ -3238,7 +3241,8 @@
         {
           "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/commit/caa1feb0e54d415e2df31207e5f4e273e33509b1",
           "retrieved": "2026-08-30",
-          "sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2"
+          "sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2",
+          "retrieval": "git-object"
         }
       ]
     },
@@ -3488,7 +3492,8 @@
         {
           "url": "https://huggingface.co/Qwen/Qwen2.5-7B/commit/d149729398750b98c0af14eb82c78cfe92750796",
           "retrieved": "2026-08-30",
-          "sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953"
+          "sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953",
+          "retrieval": "git-object"
         }
       ]
     },

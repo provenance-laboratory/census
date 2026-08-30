@@ -1,0 +1,12 @@
+{
+  "_what": "The number of zero-cell notes that can be blanked with the whole suite still green. It is measured, not asserted: the notes are blanked in a copy and the suite is run against it.",
+  "zeros": 182,
+  "bounded_zeros": 6,
+  "unread_notes": 176,
+  "noticed_by": [],
+  "suite": [
+    "mp_metric.py",
+    "replay.py",
+    "check_facts.py"
+  ]
+}
