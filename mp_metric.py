@@ -290,7 +290,9 @@ def validate(led):
             k = _R.source_key(e["url"])
             if k not in allowed:
                 owner = sorted(s for s, v in _decl.items() if k in v)
-                pass
+                d.append(f"{c['subject']}/axis{c['axis']}: cites {k}, which this subject does not "
+                         f"declare in subjects[].sources"
+                         + (f" (it is {', '.join(owner)}'s)" if owner else ""))
 
     # And the full per-axis policy, so the validator and the gate agree rather than one of them
     # carrying half the rule. A reviewer showed the two disagreeing was itself the defect.

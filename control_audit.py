@@ -87,6 +87,13 @@ def controls(src, path):
                 a = e.args[0] if e.args else None
                 if isinstance(a, ast.Constant) and isinstance(a.value, int):
                     continue
+                # ⛔ `raise SystemExit(main())` IS AN ENTRYPOINT, NOT A CONTROL. It propagates
+                # main()'s status and reports no defect, but it was counted -- so replay.py:1090
+                # appeared as REDUNDANT and sweep.py:199 as NEVER EXECUTES, inflating both the
+                # denominator and the survivor list the manuscript quotes. Two reviewers found it.
+                if (isinstance(a, ast.Call) and isinstance(a.func, ast.Name)
+                        and a.func.id == "main"):
+                    continue
                 out.append((node.lineno, node.end_lineno, "refuses to proceed"))
     return sorted(set(out))
 
@@ -160,10 +167,36 @@ def neutered(src, lo, hi):
     return "".join(lines[:lo - 1] + [" " * indent + "pass" + NL] + lines[hi:])
 
 
-def suite_passes():
-    """True if EVERY tool in the suite still exits 0 -- i.e. nothing noticed."""
+_WORK = {"root": None}
+
+
+def _root_for_baseline():
+    """The tree the mutations will run in -- created here so the BASELINE measures IT.
+
+    ⛔ THE BASELINE WAS MEASURED IN THE REAL TREE AND THE MUTATIONS RUN IN A COPY, so a
+    copy that could not run the suite at all reported every control as unwatched: 0 watched, 111
+    deletable. A baseline is only a baseline for the thing it was taken from.
+    """
+    import shutil as _sh
+    import tempfile as _tf
+    if _WORK["root"] is None:
+        w = pathlib.Path(_tf.mkdtemp(prefix="control-audit-"))
+        _sh.copytree(HERE, w / "census", dirs_exist_ok=True)
+        _WORK["root"] = w / "census"
+    return _WORK["root"]
+
+
+def suite_passes(_cwd=None):
+    """True if EVERY tool in the suite still exits 0 in `_cwd` -- i.e. nothing noticed.
+
+    ⛔ `cwd` WAS HARD-CODED TO THE REAL TREE while the mutations were written to a copy,
+    so every mutation left the suite green and the audit reported 0 of 111 controls watched. The
+    fix for one tree-confusion introduced another: measuring one tree while mutating a different
+    one is the same error the copy was meant to prevent, moved inward by a single argument.
+    """
+    _cwd = _cwd or HERE
     for argv, _name in SUITE:
-        r = subprocess.run([sys.executable, "-X", "utf8"] + argv, cwd=str(HERE),
+        r = subprocess.run([sys.executable, "-X", "utf8"] + argv, cwd=str(_cwd),
                            capture_output=True, text=True, encoding="utf-8", errors="replace")
         if r.returncode != 0:
             return False, _name
@@ -193,7 +226,7 @@ def main():
     print("=" * 78)
     print()
 
-    base_ok, base_why = suite_passes()
+    base_ok, base_why = suite_passes(_root_for_baseline())
     if not base_ok:
         print("  " + chr(0x26D4) + " the suite does not pass BEFORE any mutation (%s)." % base_why)
         print("  A mutation audit against a red suite measures nothing. Fix the suite first.")
@@ -203,22 +236,43 @@ def main():
 
     # trace once, before any mutation, so the classification describes the REAL suite
     print("  tracing which control lines the suite actually executes ...")
-    _hit = executed_lines((("replay.py",), ("replay.py", "--selftest"),
-                           ("test_executors.py",), ("mp_metric.py",)))
+    # ⛔ THE TRACER RAN FOUR TOOLS WHILE SUITE DECLARES SIX, so a control exercised only by
+    # stress_test.py or check_facts.py was classified "no input the suite can build reaches this
+    # line" -- which was false of mp_metric.py:286, built by stress_test.py:370. Both reviewers
+    # found the same site. A hand-copied subset of a declared list is the enumeration defect with
+    # the list sitting ten lines above it.
+    _hit = executed_lines(tuple(tuple(argv) for argv, _n in SUITE))
     print("  %d distinct line(s) executed across the traced tools" % len(_hit))
+    print()
+
+    # ⛔ THIS MUTATED THE SOURCE TREE IN PLACE, AND A KILLED RUN LEFT IT NEUTERED. The restore
+    # lived in a `finally`, which does not run when the process is killed -- and one was. The
+    # neutered mp_metric.py was then COMMITTED (7a4d51d), shipped, and found by a reviewer who
+    # recognised the shape as this function's own output: a `d.append(...)` replaced by `pass`
+    # with its `owner = ...` left orphaned above it.
+    #
+    # ⚠ AND THE TOOL COULD NOT SEE ITS OWN DAMAGE. `controls()` walks the AST for `d.append`,
+    # so a control reduced to `pass` leaves no signature and drops out of the DENOMINATOR -- the
+    # audit that answers "which of our controls does nothing" is blind to one that has been
+    # removed entirely. That is why the packet and the paper disagreed by exactly one control.
+    #
+    # ⇒ The audit now runs against a COPY. The real tree is opened read-only from here on, so an
+    # interrupted run can lose work but cannot alter a source file.
+    _root = _root_for_baseline()
+    print("  auditing a COPY at %s -- the real tree is not written to" % _root)
     print()
 
     unwatched, watched, t0 = [], 0, time.time()
     for name in targets:
-        p = HERE / name
-        src = p.read_text(encoding="utf-8")
+        p = _root / name
+        src = (HERE / name).read_text(encoding="utf-8")
         sites = controls(src, name)
         print("  %-14s %d control(s)" % (name, len(sites)))
         backup = src
         for lo, hi, kind in sites:
             p.write_text(neutered(src, lo, hi), encoding="utf-8", newline=NL)
             try:
-                still, _n = suite_passes()
+                still, _n = suite_passes(_root)
             finally:
                 p.write_text(backup, encoding="utf-8", newline=NL)
             if still:
@@ -260,6 +314,23 @@ def main():
     # whatever the intention. The record carries the digests of the files it audited, so a stale
     # record is detectable rather than merely old.
     import hashlib as _h
+    # ⛔ A CONTROL THAT IS DELETED LEAVES NO TRACE IN THIS CENSUS, so the count silently falls
+    # and nothing notices. Compare against the previous record: a DROP is either a deliberate
+    # removal, which belongs in a commit message, or a neutered file.
+    _prev = HERE / "CONTROL-AUDIT.json"
+    if _prev.exists():
+        try:
+            _old = json.loads(_prev.read_text(encoding="utf-8"))
+            _was, _now = _old.get("controls_total"), watched + len(unwatched)
+            if isinstance(_was, int) and _now < _was:
+                print()
+                print("  " + D + " THE CONTROL COUNT FELL from %d to %d." % (_was, _now))
+                print("  Either a control was deliberately removed -- say so in the commit -- or a")
+                print("  file is NEUTERED. A `d.append(...)` replaced by `pass` leaves no AST")
+                print("  signature and drops out of this census without appearing anywhere.")
+        except Exception:                                                   # noqa: BLE001
+            pass
+
     rec = {"_what": ("Which of this project's own controls can be deleted with the whole suite "
                      "still green, and what kind of survivor each one is."),
            "targets": {n: _h.sha256((HERE / n).read_bytes()).hexdigest() for n in targets},

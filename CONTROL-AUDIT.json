@@ -1,7 +1,7 @@
 {
   "_what": "Which of this project's own controls can be deleted with the whole suite still green, and what kind of survivor each one is.",
   "targets": {
-    "mp_metric.py": "9b40a33f6d0849cfdcf29d61613b8154781381b0530374ea2cdbbe261b1c2cc6",
+    "mp_metric.py": "422d82da1175b1feeed353a7ac78a20aff99b017164edc0bcc74e8111d8b9759",
     "replay.py": "9a37b31089af2f8dc4daa60c8dbf9c52526a95dd8b35809c23a8b276e7f22346",
     "axes.py": "496bfcadf165745653b67b7fa434eb1d88df361d7e7a120593f8656795522d65",
     "sweep.py": "78a2a3913f89c801fe469f72919da7cb692ab2cf247cc94000e4b8c609ca8a15"
@@ -27,18 +27,25 @@
       "test_executors.py"
     ]
   ],
-  "controls_total": 112,
-  "watched": 62,
+  "controls_total": 111,
+  "watched": 61,
   "unwatched": 50,
-  "redundant": 13,
-  "never_executes": 37,
+  "redundant": 15,
+  "never_executes": 35,
   "survivors": [
     {
       "file": "mp_metric.py",
       "line": 286,
       "kind": "reports a defect",
       "source": "d.append(f\"{c['subject']}/axis{c['axis']}: scored, and its subject declares no \"",
-      "class": "NEVER EXECUTES"
+      "class": "REDUNDANT"
+    },
+    {
+      "file": "mp_metric.py",
+      "line": 293,
+      "kind": "reports a defect",
+      "source": "d.append(f\"{c['subject']}/axis{c['axis']}: cites {k}, which this subject does not \"",
+      "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
@@ -46,6 +53,13 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"literal(s) too short to discriminate anything: %s (minimum %d characters",
       "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 253,
+      "kind": "reports a defect",
+      "source": "bad.append(\"%s is from %s, which %s does not declare%s\"",
+      "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
@@ -367,20 +381,6 @@
       "line": 742,
       "kind": "rejects in an executor",
       "source": "return False, \"method %r has no executor\" % meth",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 1090,
-      "kind": "refuses to proceed",
-      "source": "raise SystemExit(main())",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "sweep.py",
-      "line": 199,
-      "kind": "refuses to proceed",
-      "source": "raise SystemExit(main())",
       "class": "NEVER EXECUTES"
     }
   ],
