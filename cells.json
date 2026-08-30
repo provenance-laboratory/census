@@ -1038,7 +1038,50 @@
       "subject": "pythia-12b",
       "axis": 3,
       "score": 0,
-      "note": "No commitment predating training was found."
+      "note": "No timestamp over the corpus digest: 3 files enumerated at EleutherAI/pile@148e1d5e8349, none matching any declared timestamp or signature artifact pattern. The enumeration is a pinned subtree, and a dated signed publication outside the repository would not appear. Searched 2026-08-31.",
+      "bound": {
+        "method": "hf_probe.release_artifacts",
+        "asserts": "the declared corpus publishes no timestamp proof, and no dated signed publication, over its digest",
+        "observed": "3 file(s) are enumerated at EleutherAI/pile@148e1d5e8349 (the repository root) and NONE matches any of 5 declared timestamp-or-signature patterns. \u26d4 THIS AXIS'S BAR NAMES A FILE FORMAT OUTRIGHT -- 'An OpenTimestamps proof, or a dated signed publication, that predates the training run' -- AND ITS ONLY METHODS WERE GREP AND COUNT. An OTS proof is not greppable, so the zero was made by the registry rather than by the world. Both round-14 reviewers found it independently, and one put it at its sharpest: this census ships SELECTION-RULE.md.ots and names the OpenTimestamps anchor as one of three mechanisms covering its own pre-registration. It anchored itself by exactly the mechanism it could not observe in a subject. \u26a0 WHAT THE ZERO MEANS AND WHERE IT STOPS. No such FILE is published in this enumeration. The enumeration is a PINNED SUBTREE where the axis-2 evidence is one, not the whole repository, and the axis's second limb -- a dated signed publication -- is not a file at all and is searched only in the documents named below. A publisher who anchored a corpus digest in a paper, a blog post or a transparency log would not appear here.",
+        "searched_archived": [
+          "https://huggingface.co/api/datasets/EleutherAI/pile/tree/148e1d5e8349977c76f673190424a2faf6980a1d"
+        ],
+        "searched_live": [
+          "the dataset card at the same pinned revision",
+          "the release's paper or technical report, for a dated signed digest"
+        ],
+        "as_of": "2026-08-31",
+        "expect_repo": "EleutherAI/pile",
+        "expect_revision": "148e1d5e8349977c76f673190424a2faf6980a1d",
+        "expect_patterns": [
+          "\\.(sig|asc|ots|tsr|minisig)$",
+          "\\.sigstore(\\.json)?$",
+          "\\.intoto\\.jsonl$",
+          "(^|/)(attestation|provenance|signature|timestamp)s?(/|\\.|$)",
+          "(rekor|transparency[-_]log)"
+        ],
+        "expect_matches": 0,
+        "expect_pattern_probe": [
+          "corpus.ots",
+          "MANIFEST.json.asc",
+          "shard-0000.sig",
+          "digest.tsr",
+          "corpus.minisig",
+          "bundle.sigstore.json",
+          "release.intoto.jsonl",
+          "attestations/corpus.json",
+          "timestamps/root.txt",
+          "rekor-entry.txt"
+        ],
+        "expect_evidence_sha256": "02772cfa32f3139c083fc4348eee8cba27dc42f191f2f56ec4fc1c9584f80fc4"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/api/datasets/EleutherAI/pile/tree/148e1d5e8349977c76f673190424a2faf6980a1d",
+          "retrieved": "2026-08-31",
+          "sha256": "02772cfa32f3139c083fc4348eee8cba27dc42f191f2f56ec4fc1c9584f80fc4"
+        }
+      ]
     },
     {
       "subject": "pythia-12b",
@@ -1465,7 +1508,50 @@
       "subject": "olmo-2-13b",
       "axis": 3,
       "score": 0,
-      "note": "No commitment predating training was found."
+      "note": "No timestamp over the corpus digest: 16 files enumerated at allenai/olmo-mix-1124@99ee6aaace88, none matching any declared timestamp or signature artifact pattern. The enumeration is a pinned subtree, and a dated signed publication outside the repository would not appear. Searched 2026-08-31.",
+      "bound": {
+        "method": "hf_probe.release_artifacts",
+        "asserts": "the declared corpus publishes no timestamp proof, and no dated signed publication, over its digest",
+        "observed": "16 file(s) are enumerated at allenai/olmo-mix-1124@99ee6aaace88 (data/algebraic-stack/train) and NONE matches any of 5 declared timestamp-or-signature patterns. \u26d4 THIS AXIS'S BAR NAMES A FILE FORMAT OUTRIGHT -- 'An OpenTimestamps proof, or a dated signed publication, that predates the training run' -- AND ITS ONLY METHODS WERE GREP AND COUNT. An OTS proof is not greppable, so the zero was made by the registry rather than by the world. Both round-14 reviewers found it independently, and one put it at its sharpest: this census ships SELECTION-RULE.md.ots and names the OpenTimestamps anchor as one of three mechanisms covering its own pre-registration. It anchored itself by exactly the mechanism it could not observe in a subject. \u26a0 WHAT THE ZERO MEANS AND WHERE IT STOPS. No such FILE is published in this enumeration. The enumeration is a PINNED SUBTREE where the axis-2 evidence is one, not the whole repository, and the axis's second limb -- a dated signed publication -- is not a file at all and is searched only in the documents named below. A publisher who anchored a corpus digest in a paper, a blog post or a transparency log would not appear here.",
+        "searched_archived": [
+          "https://huggingface.co/api/datasets/allenai/olmo-mix-1124/tree/99ee6aaace88779d1ef099d36251b91101c1679b/data/algebraic-stack/train"
+        ],
+        "searched_live": [
+          "the dataset card at the same pinned revision",
+          "the release's paper or technical report, for a dated signed digest"
+        ],
+        "as_of": "2026-08-31",
+        "expect_repo": "allenai/olmo-mix-1124",
+        "expect_revision": "99ee6aaace88779d1ef099d36251b91101c1679b",
+        "expect_patterns": [
+          "\\.(sig|asc|ots|tsr|minisig)$",
+          "\\.sigstore(\\.json)?$",
+          "\\.intoto\\.jsonl$",
+          "(^|/)(attestation|provenance|signature|timestamp)s?(/|\\.|$)",
+          "(rekor|transparency[-_]log)"
+        ],
+        "expect_matches": 0,
+        "expect_pattern_probe": [
+          "corpus.ots",
+          "MANIFEST.json.asc",
+          "shard-0000.sig",
+          "digest.tsr",
+          "corpus.minisig",
+          "bundle.sigstore.json",
+          "release.intoto.jsonl",
+          "attestations/corpus.json",
+          "timestamps/root.txt",
+          "rekor-entry.txt"
+        ],
+        "expect_evidence_sha256": "427b951862f6d7aa78fdce283d4320bc624cc7c1f2ca3a8e79bcdb2e2a1c69e0"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/api/datasets/allenai/olmo-mix-1124/tree/99ee6aaace88779d1ef099d36251b91101c1679b/data/algebraic-stack/train",
+          "retrieved": "2026-08-31",
+          "sha256": "427b951862f6d7aa78fdce283d4320bc624cc7c1f2ca3a8e79bcdb2e2a1c69e0"
+        }
+      ]
     },
     {
       "subject": "olmo-2-13b",
@@ -5237,7 +5323,7 @@
   "_axis_evidence_readme": "\u26d4 THE LAST FOUR SURVIVORS WERE COLLISIONS, not prose. mistral and qwen publish the same number of shards; bert and gpt-2 name the same primary weight file. So a filename or a count discriminates six subjects out of seven and stops. The digest of the artifact each check is ABOUT does not collide, and the executor already holds it -- a transplanted check block then declares a digest the destination's own evidence does not carry.",
   "zero_bounds_floor": {
     "_readme": "How many of this census's zeros carry a replayable bound. It may rise. If it falls, mp_metric reports a defect: a bound was deleted and a negative became unfalsifiable again. Lower it only deliberately, in a commit that says why.",
-    "bounded_zeros": 13,
+    "bounded_zeros": 15,
     "total_zeros": 182,
     "recorded": "2026-08-31"
   }

@@ -786,10 +786,19 @@ def m_release_artifacts(c, ev, ctx=None):
         return False, ("needs expect_repo, expect_revision, expect_patterns, expect_matches and "
                        "expect_evidence_sha256; an absence with no declared search is an opinion")
 
-    recs = [e for e in ev if HF_REVISION.match(str(e.get("url", "")))]
+    # ⛔ AXIS 3 ASKS THE SAME QUESTION ON THE CORPUS SIDE, and its evidence is a DATASET tree
+    # rather than a model revision -- a different endpoint with a different response shape. An
+    # executor that recognised only one of them would leave axis 3 blind for the same reason
+    # axis 15 was, one endpoint over.
+    recs = [e for e in ev if HF_REVISION.match(str(e.get("url", "")))
+            or HF_DS_TREE.match(str(e.get("url", "")))]
     if len(recs) != 1:
-        return False, "expected exactly one pinned revision response, found %d" % len(recs)
-    repo, rev = HF_REVISION.match(recs[0]["url"]).groups()
+        return False, "expected exactly one pinned enumeration, found %d" % len(recs)
+    _m = HF_REVISION.match(recs[0]["url"])
+    if _m:
+        repo, rev = _m.groups()
+    else:
+        repo, rev, _path = HF_DS_TREE.match(recs[0]["url"]).groups()
     if repo != want_repo:
         return False, "the enumeration is of %s; the cell declares %s" % (repo, want_repo)
     if rev != want_rev:
@@ -805,7 +814,11 @@ def m_release_artifacts(c, ev, ctx=None):
         d = json.loads(b.decode("utf-8"))
     except Exception:                                                       # noqa: BLE001
         return False, "the archived revision response is not JSON"
-    files = [s.get("rfilename", "") for s in (d.get("siblings") or [])]
+    if isinstance(d, dict):
+        files = [s.get("rfilename", "") for s in (d.get("siblings") or [])]
+    else:
+        # a dataset tree is a LIST of entries, each with a path
+        files = [x.get("path", "") for x in d if x.get("type") == "file"]
     if not files:
         return False, "the archived response enumerates no files, so it settles nothing"
 
