@@ -32,6 +32,7 @@ overstatement the census keeps correcting elsewhere.
 import ast
 import re
 import io
+import json
 import pathlib
 import shutil
 import subprocess
@@ -90,6 +91,68 @@ def controls(src, path):
     return sorted(set(out))
 
 
+TRACER = r"""
+import json, os, runpy, sys
+seen = set()
+def tr(frame, event, arg):
+    if event == "line":
+        seen.add((frame.f_code.co_filename, frame.f_lineno))
+    return tr
+target = sys.argv[1]
+out = sys.argv[-1]
+# the runner lives elsewhere, so sys.path[0] is NOT the census: without this the traced tool
+# dies on `import axes` and the trace records only the import machinery -- which then reads as
+# "this control never executes", a false disposition produced by the classifier itself.
+sys.path.insert(0, os.path.dirname(target))
+sys.argv = [target] + sys.argv[2:-1]
+sys.settrace(tr)
+try:
+    runpy.run_path(target, run_name="__main__")
+except SystemExit:
+    pass
+except Exception:
+    pass
+finally:
+    sys.settrace(None)
+open(out + ".trace", "w").write(json.dumps(sorted(seen)))
+"""
+
+
+def executed_lines(scripts):
+    """Which lines actually EXECUTE when the suite runs? Traced in a SUBPROCESS.
+
+    ⛔ "MAY BE UNREACHABLE, REDUNDANT, OR UNFIXTURED" IS A MENU, NOT A DISPOSITION. A
+    round-12 reviewer said so and was right: this tool reported a count of unwatched controls and
+    then offered three possible explanations without choosing between them. The important half of
+    that choice is computable.
+
+    A control line that NEVER EXECUTES during the whole suite is not merely untested -- no input
+    the suite can build reaches it. A line that executes on every run, and whose deletion changes
+    no verdict, is REDUNDANT: something else rejects the same input first. Different findings,
+    and only one of them is alarming.
+
+    ⚠ IN A SUBPROCESS, because the traced tools rewrap sys.stdout around the
+    real buffer and close it on exit -- tracing them in-process killed this tool's own output
+    mid-sentence.
+    """
+    import json as _j
+    import tempfile
+    seen = set()
+    td = pathlib.Path(tempfile.mkdtemp(prefix="trace-"))
+    runner = td / "runner.py"
+    runner.write_text(TRACER, encoding="utf-8")
+    for argv in scripts:
+        out = td / ("t%d" % len(seen))
+        r = subprocess.run([sys.executable, "-X", "utf8", str(runner),
+                            str(HERE / argv[0])] + list(argv[1:]) + [str(out)],
+                           cwd=str(HERE), capture_output=True, text=True)
+        f = pathlib.Path(str(out) + ".trace")
+        if f.exists():
+            seen |= {tuple(x) for x in _j.loads(f.read_text())}
+    shutil.rmtree(td, ignore_errors=True)
+    return seen
+
+
 def neutered(src, lo, hi):
     """The same source with lines lo..hi replaced by a `pass` at the same indentation."""
     lines = src.splitlines(True)
@@ -138,6 +201,13 @@ def main():
     print("  baseline: the suite passes, so a failure below is attributable to the mutation")
     print()
 
+    # trace once, before any mutation, so the classification describes the REAL suite
+    print("  tracing which control lines the suite actually executes ...")
+    _hit = executed_lines((("replay.py",), ("replay.py", "--selftest"),
+                           ("test_executors.py",), ("mp_metric.py",)))
+    print("  %d distinct line(s) executed across the traced tools" % len(_hit))
+    print()
+
     unwatched, watched, t0 = [], 0, time.time()
     for name in targets:
         p = HERE / name
@@ -153,7 +223,9 @@ def main():
                 p.write_text(backup, encoding="utf-8", newline=NL)
             if still:
                 line = src.splitlines()[lo - 1].strip()
-                unwatched.append((name, lo, kind, line[:88]))
+                ran = any(f.endswith(name) and n0 == lo for f, n0 in _hit)
+                unwatched.append((name, lo, kind, line[:88],
+                                  "REDUNDANT" if ran else "NEVER EXECUTES"))
                 print("      " + chr(0x26D4) + " line %-4d NOTHING NOTICED  %s" % (lo, line[:60]))
             else:
                 watched += 1
@@ -169,10 +241,45 @@ def main():
         print("  given this ledger, redundant with a control that fires first, or guarding a")
         print("  state no fixture builds. Those are three findings and this tool cannot tell")
         print("  them apart. It says what nothing is watching; a human reads them.")
-        for name, lo, kind, line in unwatched:
+        _red = [u for u in unwatched if u[4] == "REDUNDANT"]
+        _never = [u for u in unwatched if u[4] == "NEVER EXECUTES"]
+        print()
+        print("      %d REDUNDANT      the line runs, and deleting it changes no verdict --"
+              % len(_red))
+        print("                       another control rejects the same input first")
+        print("      %d NEVER EXECUTES no input the suite can build reaches the line at all."
+              % len(_never))
+        print("                       This is the half worth reading: either the branch is")
+        print("                       unreachable given the ledger, or nothing fixtures it")
+        for name, lo, kind, line, cls in unwatched:
             print()
-            print("      %s:%d  (%s)" % (name, lo, kind))
+            print("      %-14s %s:%d  (%s)" % (cls, name, lo, kind))
             print("        %s" % line)
+    # ⛔ THE RESULT IS RECORDED, because the manuscript must cite it and this takes ten
+    # minutes -- and a figure a reader cannot find in the paper is a figure the paper is hiding,
+    # whatever the intention. The record carries the digests of the files it audited, so a stale
+    # record is detectable rather than merely old.
+    import hashlib as _h
+    rec = {"_what": ("Which of this project's own controls can be deleted with the whole suite "
+                     "still green, and what kind of survivor each one is."),
+           "targets": {n: _h.sha256((HERE / n).read_bytes()).hexdigest() for n in targets},
+           "suite": [list(a) for a, _ in SUITE],
+           "controls_total": watched + len(unwatched),
+           "watched": watched,
+           "unwatched": len(unwatched),
+           "redundant": len([u for u in unwatched if u[4] == "REDUNDANT"]),
+           "never_executes": len([u for u in unwatched if u[4] == "NEVER EXECUTES"]),
+           "survivors": [{"file": n, "line": lo, "kind": k, "source": s, "class": cls}
+                         for n, lo, k, s, cls in unwatched],
+           "_dispositions": {
+               "REDUNDANT": ("the line executes during the suite and deleting it changes no "
+                             "verdict: another control rejects the same input first"),
+               "NEVER EXECUTES": ("no input the suite can build reaches the line. Either the "
+                                  "branch is unreachable given this ledger, or nothing fixtures "
+                                  "the state it guards -- and those are still two things")}}
+    (HERE / "CONTROL-AUDIT.json").write_text(json.dumps(rec, indent=2) + NL,
+                                             encoding="utf-8", newline=NL)
+    print("  written to CONTROL-AUDIT.json")
     print("=" * 78)
     return 0
 

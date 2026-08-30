@@ -138,14 +138,30 @@ def main():
     # separately -- so a reviewer running the tool read a total that appears nowhere in the
     # manuscript and contradicts the figure printed beside it. The families are summed the way
     # they are reported.
-    held_n = sum(t2["n"] for b, t2 in tally.items() if "policy" not in b)
+    # ⛔ THE DENOMINATOR INCLUDED THE VACUOUS CASES. `tally[band]["n"]` increments BEFORE
+    # the vacuity test, so a mutation that changed nothing was counted in the population it was
+    # then excluded from -- while section 2.2 says vacuous cases are "recorded as vacuous rather
+    # than counted, since inflating a coverage figure is the same fault as excluding a family from
+    # it." The figure was inflated by the exact mechanism the sentence beside it disclaims.
+    #
+    # 0 of 8,586 and 0 of 7,718 are both true and only one of them is the coverage of actual
+    # transplants. The generated total is kept and labelled, because dropping it would hide that
+    # 868 of the mutations this enumeration produces are no-ops.
+    held_gen = sum(t2["n"] for b, t2 in tally.items() if "policy" not in b)
+    held_vac = sum(t2["vacuous"] for b, t2 in tally.items() if "policy" not in b)
+    held_n = held_gen - held_vac
     held_s = sum(t2["survived"] for b, t2 in tally.items() if "policy" not in b)
-    moved_n = sum(t2["n"] for b, t2 in tally.items() if "policy" in b)
+    moved_gen = sum(t2["n"] for b, t2 in tally.items() if "policy" in b)
+    moved_vac = sum(t2["vacuous"] for b, t2 in tally.items() if "policy" in b)
+    moved_n = moved_gen - moved_vac
     moved_s = sum(t2["survived"] for b, t2 in tally.items() if "policy" in b)
     print()
+    print("  generated %d held-fixed mutations, of which %d changed nothing"
+          % (held_gen, held_vac))
     print("  WITH THE POLICY HELD FIXED : %d of %d survive" % (held_s, held_n))
-    print("  WITH THE POLICY MOVED TOO  : %d of %d survive  -- reported separately, because"
-          % (moved_s, moved_n))
+    print("  WITH THE POLICY MOVED TOO  : %d of %d survive (%d generated, %d vacuous)"
+          % (moved_s, moved_n, moved_gen, moved_vac))
+    print("                               -- reported separately, because")
     print("                               moving both operands is outside what a policy inside")
     print("                               the ledger can prevent")
     if show and survivors:

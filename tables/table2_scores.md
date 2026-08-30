@@ -1,8 +1,8 @@
 <!-- EMITTED by mp_metric.py, as of 2026-08-29. Do not edit. -->
-<!-- ledger-fingerprint: 9a7e3c1f1587c6237fc07f14229954afe51ce4fb081fecde0cd016e403b46148 -->
+<!-- ledger-fingerprint: 54dcc5d7de0c4b0d95b9e14880d256b97f8320a21777651cc16fbe1cd46472df -->
 | release | 2 | 1 | 0 | N/A | as-coded | N/A→0 | N/A→2 | ceiling |
 |---|---|---|---|---|---|---|---|---|
-| olmo-2-13b | 6 | 6 | 7 | 3 | 0.474 | 0.409 | 0.545 | 0.868 |
+| olmo-2-13b | 7 | 6 | 6 | 3 | 0.526 | 0.455 | 0.591 | 0.868 |
 | pythia-12b | 6 | 5 | 8 | 3 | 0.447 | 0.386 | 0.523 | 0.868 |
 | bloom-176b | 4 | 7 | 8 | 3 | 0.395 | 0.341 | 0.477 | 0.868 |
 | bert-base-uncased | 3 | 3 | 13 | 3 | 0.237 | 0.205 | 0.341 | 0.868 |

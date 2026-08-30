@@ -100,6 +100,8 @@ def m_grep(c, ev):
 
 
 HF_API = re.compile(r"^https://huggingface\.co/api/models/([^/]+/[^/]+)/revision/([0-9a-f]{40})$")
+HF_DS_TREE = re.compile(
+    r"^https://huggingface\.co/api/datasets/([^/]+/[^/]+)/tree/([0-9a-f]{40})/(.+)$")
 HF_FILE = re.compile(r"^https://huggingface\.co/([^/]+/[^/]+)/(?:raw|resolve)/([0-9a-f]{40})/(.+)$")
 # safetensors begins with a little-endian u64 header length, then '{"' of the JSON header. A
 # .bin shard is a zip (PK) or a pickle. "Not a Git-LFS pointer" was the old test and it accepts
@@ -432,6 +434,65 @@ def m_range(c, ev, ctx=None):
                   % (len(b), anchored[0]))
 
 
+def m_corpus_item_digests(c, ev, ctx=None):
+    """Axis 2: the corpus's own files carry publisher-committed digests at a pinned revision.
+
+    ⛔ THIS METHOD DID NOT EXIST, AND THAT IS WHY THE AXIS WAS WRONG. Axis 2's registered
+    methods all read prose, so a corpus could only score by someone WRITING that digests exist.
+    Meanwhile axis 13 credits Git-LFS sha256 oids as publisher-committed digests for weights --
+    and the identical mechanism, on the identical host, for the corpus, could not be seen. Two
+    reviewers found the same counter-example independently.
+
+    ⚠ WHAT THIS VERIFIES AND WHAT IT DOES NOT. It replays a PINNED, ENUMERATED subtree
+    from an archived API response and requires every file in it to carry an LFS sha256 oid. It
+    does not enumerate the whole repository offline -- that is tens of thousands of entries -- so
+    the cell's `observed` states the full-tree figure and the command that reproduces it. Axis 2
+    asks for "per-item OR aggregate digests", not for every item, which is why a bounded
+    enumeration settles it where axis 13's explicit "EVERY weight shard" would not.
+    """
+    want_n = c["check"].get("expect_files")
+    if not want_n:
+        return False, ("no `expect_files`: nothing to recompute, so the method name is a label")
+    want_repo = c["check"].get("expect_repo")
+    if not want_repo:
+        return False, "no `expect_repo`: nothing ties this enumeration to a declared corpus"
+    want_sha = c["check"].get("expect_evidence_sha256")
+    if not want_sha:
+        return False, ("no `expect_evidence_sha256`: nothing ties this check to the artifact it "
+                       "is about")
+
+    trees = [e for e in ev if HF_DS_TREE.match(e["url"])]
+    if len(trees) != 1:
+        return False, "expected exactly one pinned dataset tree response, found %d" % len(trees)
+    repo, rev, path = HF_DS_TREE.match(trees[0]["url"]).groups()
+    if repo != want_repo:
+        return False, "the enumeration is of %s; the cell declares %s" % (repo, want_repo)
+    if trees[0]["sha256"] != want_sha:
+        return False, ("this check declares evidence %s; the cell cites %s"
+                       % (want_sha[:12], trees[0]["sha256"][:12]))
+
+    b = _bytes_for(trees[0])
+    if b is None:
+        return None, "the tree response is not archived"
+    try:
+        entries = json.loads(b.decode("utf-8"))
+    except Exception:                                                       # noqa: BLE001
+        return False, "the archived tree response is not JSON"
+    files = [e for e in entries if e.get("type") == "file"]
+    if len(files) != want_n:
+        return False, ("the archived enumeration lists %d file(s); the cell claims %d"
+                       % (len(files), want_n))
+    # ⛔ EVERY file in the enumerated subtree, not a sample. A sample would answer
+    # "does the host ever publish a digest", which is a question about the host.
+    missing = [e.get("path") for e in files
+               if not (isinstance(e.get("lfs"), dict) and e["lfs"].get("oid"))]
+    if missing:
+        return False, ("%d of %d enumerated corpus file(s) carry NO publisher digest: %s"
+                       % (len(missing), len(files), missing[:2]))
+    return True, ("%d of %d enumerated corpus files under %s carry a Git-LFS sha256 oid at "
+                  "%s@%s" % (len(files), want_n, path, repo, rev[:12]))
+
+
 def m_weight_object(c, ev, ctx=None):
     """Axis 12: a real weight range, from a file THIS SUBJECT's repository enumerates."""
     want = c["check"].get("expect_range_bytes")
@@ -625,6 +686,7 @@ DISPATCH = {
     "http_range": m_range,
     "hf_probe.weight_object": m_weight_object,
     "hf_probe.all_shard_digests": m_all_shard_digests,
+    "hf_probe.corpus_item_digests": m_corpus_item_digests,
 }
 
 
@@ -695,9 +757,44 @@ def selftest():
     import copy
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
 
+    _reached = {"n": 0}
+    _pristine = {(c["subject"], c["axis"]): json.dumps(c, sort_keys=True) for c in led["cells"]}
+
     def run_one(mut):
         d = copy.deepcopy(led)
         mut(d)
+        # ⛔ HOW MANY OF THESE ATTACKS ACTUALLY REACH AN EXECUTOR? The paper credited
+        # this suite with exercising the executors, and a reviewer instrumented the dispatch table
+        # to find that most attacks are refused by the policy layer before any executor runs. A
+        # count of attacks is not a count of coverage, so the suite now reports both.
+        # ⛔ AND IT MUST BE THE MUTATED CELL. A first version counted whether ANY executor
+        # ran during the scan, which is true for almost every attack because the untouched cells
+        # legitimately reach theirs -- it reported 39 of 43 where a reviewer's instrumentation
+        # reported 9. The reviewer was measuring the question that matters: does the attack reach
+        # the executor for the cell it ATTACKED? A coverage number that counts bystanders is the
+        # denominator error one level in.
+        _touched = {(c["subject"], c["axis"]) for c in d["cells"]
+                    if json.dumps(c, sort_keys=True) != _pristine.get((c["subject"], c["axis"]))}
+        _seen = {"hit": False}
+        _orig = dict(DISPATCH)
+
+        def _wrap(fn):
+            def _inner(cell, *a, **k):
+                if (cell.get("subject"), cell.get("axis")) in _touched:
+                    _seen["hit"] = True
+                return fn(cell, *a, **k)
+            return _inner
+        for _k, _v in list(DISPATCH.items()):
+            DISPATCH[_k] = _wrap(_v)
+        try:
+            return _run_one_inner(d)
+        finally:
+            DISPATCH.clear()
+            DISPATCH.update(_orig)
+            if _seen["hit"]:
+                _reached["n"] += 1
+
+    def _run_one_inner(d):
         # ⚠️ THE SELF-TEST USED A FROZEN ORACLE and the runtime used the mutated ledger, so a
         # symmetric swap failed here and passed there. Both now read the DECLARATION, which a
         # mutation of cells cannot move -- so this test is runtime-faithful.
@@ -919,6 +1016,9 @@ def selftest():
     for _b in _temp_blobs:
         _b.unlink(missing_ok=True)          # never leave a fabricated artifact in the archive
     print("  %d of %d attacks correctly rejected" % (len(attacks) - bad, len(attacks)))
+    print("  %d of %d attacks reached the executor FOR THE CELL THEY ATTACKED;"
+          % (_reached["n"], len(attacks)))
+    print("  the rest are refused by the policy layer before any executor sees them")
     if bad:
         print("  " + chr(0x26D4) + " a control that cannot fail is reported as coverage.")
     print("=" * 78)

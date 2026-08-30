@@ -221,6 +221,9 @@
         ],
         "19": [
           "gh:allenai/OLMo"
+        ],
+        "2": [
+          "hfds:allenai/olmo-mix-1124"
         ]
       },
       "axis_documents": {
@@ -275,6 +278,9 @@
         ],
         "19": [
           "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
+        ],
+        "2": [
+          "https://huggingface.co/api/datasets/allenai/olmo-mix-1124/tree/99ee6aaace88779d1ef099d36251b91101c1679b/data/algebraic-stack/train"
         ]
       },
       "axis_literals": {
@@ -298,7 +304,8 @@
         "12": [],
         "13": [],
         "18": [],
-        "19": []
+        "19": [],
+        "2": []
       },
       "axis_method": {
         "1": "grep_retrieved",
@@ -312,14 +319,16 @@
         "18": null,
         "19": null,
         "12": "hf_probe.weight_object",
-        "13": "hf_probe.all_shard_digests"
+        "13": "hf_probe.all_shard_digests",
+        "2": "hf_probe.corpus_item_digests"
       },
       "axis_file": {
         "12": "model-00001-of-00012.safetensors"
       },
       "axis_evidence_sha256": {
         "12": "df21d04baa23cab835578296f64e83129c610030c3da2462641e42f5c2e5abb8",
-        "13": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3"
+        "13": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3",
+        "2": "427b951862f6d7aa78fdce283d4320bc624cc7c1f2ca3a8e79bcdb2e2a1c69e0"
       }
     },
     {
@@ -1341,8 +1350,22 @@
     {
       "subject": "olmo-2-13b",
       "axis": 2,
-      "score": 0,
-      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
+      "score": 2,
+      "evidence": [
+        {
+          "url": "https://huggingface.co/api/datasets/allenai/olmo-mix-1124/tree/99ee6aaace88779d1ef099d36251b91101c1679b/data/algebraic-stack/train",
+          "retrieved": "2026-08-30",
+          "sha256": "427b951862f6d7aa78fdce283d4320bc624cc7c1f2ca3a8e79bcdb2e2a1c69e0"
+        }
+      ],
+      "check": {
+        "method": "hf_probe.corpus_item_digests",
+        "asserts": "the corpus's own files carry publisher-committed per-item digests at a pinned revision, recomputable by a third party over the bytes they obtain",
+        "observed": "All 16 files in the enumerated subtree data/algebraic-stack/train carry a Git-LFS sha256 oid at allenai/olmo-mix-1124@99ee6aa. \u26d4 THE BOUND, STATED: the check replays this pinned subtree offline and does not enumerate the whole repository. The full figure was measured separately -- 28,878 of 28,878 files under data/ carry an LFS sha256 oid at the same revision -- and is reproducible by a paginated walk of /api/datasets/allenai/olmo-mix-1124/tree/99ee6aa/data?recursive=true; the repository's .gitattributes at that revision declares the LFS patterns repo-wide. \u26a0 THIS CELL WAS 0 UNTIL ROUND 12, on a search bounded to the dataset card, the project README and the paper -- three prose documents, none of which is where a hosting platform publishes digests. Axis 13 credits this exact mechanism for weights and axis 2's bar is weaker (per-item OR aggregate), so axis 2 was being scored more strictly than the axis it borrows its evidence type from. Two reviewers found it independently.",
+        "expect_files": 16,
+        "expect_repo": "allenai/olmo-mix-1124",
+        "expect_evidence_sha256": "427b951862f6d7aa78fdce283d4320bc624cc7c1f2ca3a8e79bcdb2e2a1c69e0"
+      }
     },
     {
       "subject": "olmo-2-13b",

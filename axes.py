@@ -156,6 +156,7 @@ SCORES = {
 CHECK_METHODS = {
     "hf_probe.weight_object":   "range-request a weight shard at a pinned revision and verify the "
                                 "bytes returned are not a Git-LFS pointer",
+    "hf_probe.corpus_item_digests": "every file in a pinned dataset subtree carries a Git-LFS sha256 oid",
     "hf_probe.all_shard_digests": "enumerate every weight shard at a pinned revision and collect a "
                                   "publisher-committed digest for each",
     "http_range":               "range-request a URL and record status, length and first bytes",
@@ -296,6 +297,13 @@ METHOD_AXES = {
     "http_status": {4, 12, 18},
     "api_field": {12, 18},
     "hash_compare": {2, 13, 14, 15},
+    # ⛔ AXIS 2 HAD NO STORAGE-LAYER METHOD. Its only registered methods read PROSE --
+    # grep, count, and a hash comparison over a document -- so the axis could be settled only by
+    # someone writing that a digest exists, and digests published by the HOSTING LAYER were
+    # invisible to it by construction. Two round-12 reviewers found the same counter-example
+    # independently, and the missing method is why it was there to find: axis 13 credits Git-LFS
+    # oids for weights, and nothing could credit the identical mechanism for a corpus.
+    "hf_probe.corpus_item_digests": {2},
 }
 
 
@@ -329,6 +337,8 @@ REQUIRED_FIELDS = {
     "hf_probe.weight_object": ("expect_range_bytes", "expect_file",
                               "expect_evidence_sha256"),
     "hf_probe.all_shard_digests": ("expect_shards", "expect_evidence_sha256"),
+    "hf_probe.corpus_item_digests": ("expect_files", "expect_repo",
+                                     "expect_evidence_sha256"),
 }
 
 

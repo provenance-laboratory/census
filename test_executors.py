@@ -121,6 +121,28 @@ def main():
                 missed += 1
                 unread.append((where, "evidence[0].sha256", "repointing it", res3))
 
+        # (c2) ANOTHER SUBJECT'S EVIDENCE, WHOLESALE.
+        # ⛔ THIS FILE PROJECTED OVER THE CHECK BLOCK AND NEVER OVER THE EVIDENCE'S OWNER,
+        # so the executors' subject-binding checks were unreachable from it. A reviewer deleted
+        # `return False, "this is %s's evidence; the cell is scored for %s"` from m_weight_object
+        # and this suite still reported 153 of 153 rejected, with the whole workspace green. The
+        # identity checks the paper is built on were the ones nothing here could exercise --
+        # which is the shape of every defect this project keeps finding, arriving inside the tool
+        # written to find it.
+        for other in cells:
+            if other["subject"] == c["subject"] or other["axis"] != c["axis"]:
+                continue
+            d5 = copy.deepcopy(c)
+            d5["evidence"] = copy.deepcopy(other.get("evidence") or [])
+            res5, _why5 = _call(d5, ctx, led)
+            if res5 is False:
+                ok += 1
+            else:
+                missed += 1
+                unread.append((where, "%s's evidence" % other["subject"],
+                               "transplanting it", res5))
+            break
+
         # (d) drop every co-cited artifact, leaving the primary alone.
         d4 = copy.deepcopy(c)
         if len(d4.get("evidence") or []) > 1:
