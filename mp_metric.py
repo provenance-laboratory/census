@@ -51,7 +51,17 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 def load():
     if not LEDGER.exists():
         return {"subjects": [], "cells": []}
-    return json.loads(LEDGER.read_text(encoding="utf-8"))
+    led = json.loads(LEDGER.read_text(encoding="utf-8"))
+    # ⛔ THE RATCHET IS ONLY A CONTROL IF IT CANNOT BE DELETED. Its floor lives inside the census
+    # so that it travels with the thing it describes -- which means removing the key would disarm
+    # it silently, and the census would go back to asserting 182 negatives with nothing watching.
+    # Every reader of the real census passes through here, so the requirement is stated once.
+    if "zero_bounds_floor" not in led:
+        raise SystemExit(
+            "⛔ cells.json has no `zero_bounds_floor`. That key is what stops a bounded "
+            "negative from being quietly un-bounded; without it the coverage ratchet in "
+            "validate() does not run at all. Restore it, do not work around it.")
+    return led
 
 
 def all_cited(led, include_facts=True):
@@ -239,6 +249,44 @@ def validate(led):
                         d.append(f"{where}: check.{k} is empty; the assertion and what came "
                                  f"back must both be recorded or the claim cannot be contradicted")
 
+        # ⛔ A NEGATIVE IS A CLAIM, AND UNTIL ROUND 13 NOTHING VALIDATED ONE. Every rule above
+        # is gated on `val == 2`, so a cell scored 0 could carry any `check` it liked, or none, and
+        # this validator reported nothing. 182 of 264 cells are zeros; not one recorded what was
+        # searched. A reviewer showed that 36 of those notes could simply be DELETED and the build
+        # would still pass -- the note was decoration beside a score.
+        #
+        # A `bound` says what was searched, on what date, with what method, and what came back. It
+        # is held to the same standard as a `check`, because it is one.
+        if isinstance(c.get("bound"), dict):
+            b = c["bound"]
+            if val != 0:
+                d.append(f"{where}: carries a `bound`, which records a SEARCH THAT FOUND "
+                         f"NOTHING, but the cell is scored {val!r}. A bound belongs on a zero.")
+            meth = str(b.get("method", ""))
+            if meth not in A.CHECK_METHODS:
+                d.append(f"{where}: bound.method {meth!r} is not registered in "
+                         f"axes.CHECK_METHODS -- a negative cannot rest on a method that is not "
+                         f"implemented any more than a positive can")
+            elif meth not in A.methods_for(ax):
+                d.append(f"{where}: bound.method {meth!r} cannot settle this axis "
+                         f"({A.BY_ID[ax][2]}). Valid: {sorted(A.methods_for(ax)) or 'NONE'}")
+            for _f in A.required_fields(meth):
+                if not b.get(_f):
+                    d.append(f"{where}: bound.method {meth!r} requires `{_f}`; without it the "
+                             f"negative cannot be replayed")
+            for k in ("asserts", "observed", "as_of"):
+                if not str(b.get(k, "")).strip():
+                    d.append(f"{where}: bound.{k} is empty. A zero with no {k} is the "
+                             f"circular negative this instrument exists to refuse")
+            if not b.get("searched"):
+                d.append(f"{where}: bound has no `searched` list. 'We looked and found nothing' "
+                         f"is not a measurement until WHERE is written down -- see "
+                         f"negative_search.py, where naming the bound is what exposed that the "
+                         f"axis-16 search could not have found anything.")
+            if not (c.get("evidence") or []):
+                d.append(f"{where}: bound with NO evidence record. The bytes searched must be "
+                         f"archived or the negative cannot be re-run against them.")
+
     # ⛔ THE SAME URL MAY NOT CARRY TWO DIGESTS. Round-1 review showed a census validating with
     # one url recorded under conflicting hashes -- and recheck.py silently used the first, so the
     # contradiction was invisible on both sides.
@@ -307,6 +355,24 @@ def validate(led):
         for ax in A.BY_ID:
             if (s, ax) not in seen:
                 d.append(f"{s}/axis{ax} ({A.BY_ID[ax][2]}): MISSING -- absent is not zero")
+    # ⛔ AND THE COVERAGE MUST NOT FALL. A bounded zero can be un-bounded by deleting a key,
+    # and nothing above would notice -- the cell would rejoin the unvalidated majority in silence.
+    # This is a PROJECTION over every zero, not a list of the ones we remember bounding.
+    #
+    # ⚠ THE FLOOR LIVES IN THE CENSUS, NOT BESIDE IT. Its first version read a floor FILE, so
+    # the rule fired against stress_test's synthetic fixtures -- small censuses with no zeros at
+    # all -- and reported that coverage had "fallen from 6 to 0 of 0". A floor is a fact about one
+    # census; a validator runs on whatever ledger it is handed. Carrying it inside the ledger
+    # makes it travel with the thing it describes.
+    _floor = led.get("zero_bounds_floor")
+    if isinstance(_floor, dict):
+        _zeros = [c for c in led["cells"] if c.get("score") == 0]
+        _bounded = [c for c in _zeros if isinstance(c.get("bound"), dict)]
+        if len(_bounded) < _floor.get("bounded_zeros", 0):
+            d.append(f"BOUNDED-ZERO COVERAGE FELL from {_floor['bounded_zeros']} to "
+                     f"{len(_bounded)} of {len(_zeros)} zeros. A bound was removed. If that was "
+                     f"deliberate, say so in the commit and lower zero_bounds_floor in "
+                     f"cells.json; otherwise a negative just became unfalsifiable again.")
     return d
 
 

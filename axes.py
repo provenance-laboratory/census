@@ -165,6 +165,9 @@ CHECK_METHODS = {
     "grep_retrieved":           "search retrieved bytes for a pattern and record the match",
     "count_in_retrieved":       "count occurrences of a pattern in retrieved bytes",
     "hash_compare":             "recompute a digest over retrieved bytes and compare to a published one",
+    "hf_probe.signed_commit":   "read the git commit object at a pinned revision and establish "
+                                "whether it is signed, by which key, and whether that key is the "
+                                "publisher's or the hosting platform's",
 }
 
 # ⚠️ READING A RETRIEVED DOCUMENT IS NOT A METHOD HERE, DELIBERATELY.
@@ -304,6 +307,12 @@ METHOD_AXES = {
     # independently, and the missing method is why it was there to find: axis 13 credits Git-LFS
     # oids for weights, and nothing could credit the identical mechanism for a corpus.
     "hf_probe.corpus_item_digests": {2},
+    # ⛔ AXIS 14 HAD NO METHOD THAT COULD SEE A SIGNATURE. Its registered methods -- grep, count,
+    # hash_compare -- all read prose, so "are the weights signed?" could be settled only by someone
+    # WRITING that they were. A round-13 reviewer found signed commits on the very revisions axes
+    # 12 and 13 already pin and concluded the axis could not be universally zero. The blindness was
+    # real; the conclusion was not. See m_signed_commit in replay.py for what the evidence showed.
+    "hf_probe.signed_commit": {14},
 }
 
 
@@ -339,6 +348,7 @@ REQUIRED_FIELDS = {
     "hf_probe.all_shard_digests": ("expect_shards", "expect_evidence_sha256"),
     "hf_probe.corpus_item_digests": ("expect_files", "expect_repo",
                                      "expect_evidence_sha256"),
+    "hf_probe.signed_commit": ("expect_revision", "expect_evidence_sha256"),
 }
 
 

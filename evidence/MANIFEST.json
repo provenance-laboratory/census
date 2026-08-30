@@ -128,6 +128,15 @@
       "sha256": "df33219219d9de7935453daff541d85dcdc2f5b9bd52b70aeb248dc97d9af860",
       "stored": false
     },
+    "https://huggingface.co/EleutherAI/pythia-12b/commit/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6": {
+      "bytes": 1315,
+      "cells": [
+        "pythia-12b/axis14"
+      ],
+      "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8",
+      "stored": true
+    },
     "https://huggingface.co/EleutherAI/pythia-12b/raw/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6/model-00001-of-00003.safetensors": {
       "bytes": 135,
       "cells": [
@@ -178,6 +187,15 @@
       "sha256": "01d4829682a02bc7d813310ed3f56554d04b2e3d15e357cae548a206e3d55381",
       "stored": true
     },
+    "https://huggingface.co/Qwen/Qwen2.5-7B/commit/d149729398750b98c0af14eb82c78cfe92750796": {
+      "bytes": 1301,
+      "cells": [
+        "qwen2.5-7b/axis14"
+      ],
+      "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953",
+      "stored": true
+    },
     "https://huggingface.co/Qwen/Qwen2.5-7B/raw/d149729398750b98c0af14eb82c78cfe92750796/model-00001-of-00004.safetensors": {
       "bytes": 135,
       "cells": [
@@ -212,6 +230,15 @@
         "qwen2.5-7b/axis12"
       ],
       "sha256": "3efc3eb3eaec7987570ecde73fa038e173a343f40c69b9a41f351ba600edbafb",
+      "stored": true
+    },
+    "https://huggingface.co/allenai/OLMo-2-1124-13B/commit/3fefddc1bf18a30e1d9b91000271630718f2aa8b": {
+      "bytes": 1106,
+      "cells": [
+        "olmo-2-13b/axis14"
+      ],
+      "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995",
       "stored": true
     },
     "https://huggingface.co/allenai/OLMo-2-1124-13B/raw/3fefddc1bf18a30e1d9b91000271630718f2aa8b/model-00001-of-00012.safetensors": {
@@ -306,6 +333,15 @@
       "sha256": "df21d04baa23cab835578296f64e83129c610030c3da2462641e42f5c2e5abb8",
       "stored": true
     },
+    "https://huggingface.co/api/datasets/EleutherAI/pile/tree/148e1d5e8349977c76f673190424a2faf6980a1d": {
+      "bytes": 293,
+      "cells": [
+        "pythia-12b/axis2"
+      ],
+      "note": "the ROOT tree of the declared corpus repository at a pinned revision. It is archived because it is the evidence for an ABSENCE: there are no data files here to carry digests.",
+      "sha256": "02772cfa32f3139c083fc4348eee8cba27dc42f191f2f56ec4fc1c9584f80fc4",
+      "stored": true
+    },
     "https://huggingface.co/api/datasets/allenai/olmo-mix-1124/tree/99ee6aaace88779d1ef099d36251b91101c1679b/data/algebraic-stack/train": {
       "bytes": 5547,
       "cells": [
@@ -382,6 +418,15 @@
         "gpt-2-1.5b/axis12"
       ],
       "sha256": "0c993bc7336e2cd0330036b4da9c6bd8ce9d6cccd2b7f26dccb3abc9a8e5df0f",
+      "stored": true
+    },
+    "https://huggingface.co/bigscience/bloom/commit/7f10a99ce7c08f03c7719a586cb2cbda1433ac05": {
+      "bytes": 445,
+      "cells": [
+        "bloom-176b/axis14"
+      ],
+      "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "sha256": "039a984949154b7df446a9078bb90b7d8e6b2c9bd8fcb9c1005aaeb3bdd0a3d0",
       "stored": true
     },
     "https://huggingface.co/bigscience/bloom/raw/7f10a99ce7c08f03c7719a586cb2cbda1433ac05/README.md": {
@@ -1501,6 +1546,15 @@
       "reason": "VOLATILE endpoint: the body carries counters that move independently of the claim, so it cannot be archived under a fixed digest. The cell it backs is capped at ASSERTED for the same reason.",
       "sha256": "29aff19f31e00e3bbf54d766b81a57a7594a81c8981f0109e0020b1583a0931c",
       "stored": false
+    },
+    "https://huggingface.co/mistralai/Mistral-7B-v0.3/commit/caa1feb0e54d415e2df31207e5f4e273e33509b1": {
+      "bytes": 1106,
+      "cells": [
+        "mistral-7b-v0.3/axis14"
+      ],
+      "note": "the archived bytes are the GIT COMMIT OBJECT at this revision, obtained with `git cat-file commit`, not the rendered HTML page. They SELF-AUTHENTICATE: sha1 of the git object header and these bytes reproduces the revision id that axes 12 and 13 pin, so this retrieval need not be trusted.",
+      "sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2",
+      "stored": true
     },
     "https://huggingface.co/mistralai/Mistral-7B-v0.3/raw/caa1feb0e54d415e2df31207e5f4e273e33509b1/README.md": {
       "cells": [

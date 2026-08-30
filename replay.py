@@ -37,6 +37,18 @@ HERE = pathlib.Path(__file__).resolve().parent
 STORE = HERE / "evidence"
 
 
+def _asserted(c):
+    """The check-block a cell is asserting, whether it is a positive or a negative.
+
+    ⛔ EVERY EXECUTOR READ `_asserted(c)` DIRECTLY, so the moment negatives became executable the
+    first bound cell raised KeyError inside the executor -- the fix for one executor
+    (m_signed_commit) had not been made for its five siblings. That is this project's most
+    persistent defect committed inside the repair for a different instance of itself, in the same
+    hour. It is a projection now, so a seventh executor cannot reintroduce it.
+    """
+    return c.get("bound") or c.get("check") or {}
+
+
 def _bytes_for(e):
     blob = STORE / (e["sha256"] + ".gz")
     if not blob.exists():
@@ -49,7 +61,7 @@ MIN_LITERAL = 4
 
 def m_grep(c, ev):
     """Every literal in `expect` must appear in the archived bytes of some cited artifact."""
-    exp = c["check"].get("expect")
+    exp = _asserted(c).get("expect")
     if not exp:
         # ⛔ DEMOTING, NOT REJECTING. Returning None marks the cell shape-verified and leaves
         # its evidence unconstrained, so deleting one key disarmed the check -- the same
@@ -65,7 +77,7 @@ def m_grep(c, ev):
     # ⛔ AND THE CITED SET WAS A MAXIMUM, NOT A REQUIREMENT: dropping a co-cited artifact passed.
     # ⛔ AND THIS FIELD WAS OPTIONAL TOO. `is not None` meant deleting the key skipped the
     # comparison and the executor returned True.
-    want_n = c["check"].get("expect_artifacts")
+    want_n = _asserted(c).get("expect_artifacts")
     if want_n is None:
         return False, ("no `expect_artifacts`: the cited set is then a maximum rather than a "
                        "requirement, and dropping a co-cited document passes")
@@ -101,7 +113,7 @@ def m_grep(c, ev):
 
 HF_API = re.compile(r"^https://huggingface\.co/api/models/([^/]+/[^/]+)/revision/([0-9a-f]{40})$")
 HF_DS_TREE = re.compile(
-    r"^https://huggingface\.co/api/datasets/([^/]+/[^/]+)/tree/([0-9a-f]{40})/(.+)$")
+    r"^https://huggingface\.co/api/datasets/([^/]+/[^/]+)/tree/([0-9a-f]{40})(?:/(.+))?$")
 HF_FILE = re.compile(r"^https://huggingface\.co/([^/]+/[^/]+)/(?:raw|resolve)/([0-9a-f]{40})/(.+)$")
 # safetensors begins with a little-endian u64 header length, then '{"' of the JSON header. A
 # .bin shard is a zip (PK) or a pickle. "Not a Git-LFS pointer" was the old test and it accepts
@@ -371,7 +383,7 @@ def m_range(c, ev, ctx=None):
     # relabelling the ranged url to ANY of them still anchored: right host, right corpus, right
     # length, wrong object -- the CoreML shape a third time. The bind step records WHICH position
     # in the enumeration the bytes came from, and the url must be the path at that position.
-    idx = c["check"].get("enumerated_index")
+    idx = _asserted(c).get("enumerated_index")
     anchored = []
     for e in others:
         hay = _bytes_for(e)
@@ -412,7 +424,7 @@ def m_range(c, ev, ctx=None):
     # What the bytes DO carry: 512 uint32 token ids, every one below the tokenizer's vocabulary
     # bound, with a maximum recorded at bind time. That discriminates -- the same 2 KB taken from
     # any weights file in this census has 510 of its 512 words above the bound.
-    bp = c["check"].get("byte_property")
+    bp = _asserted(c).get("byte_property")
     if not isinstance(bp, dict):
         return False, ("no `byte_property`: nothing ties these bytes to this corpus, so any 2 KB "
                        "with the right length and digest would anchor")
@@ -450,13 +462,13 @@ def m_corpus_item_digests(c, ev, ctx=None):
     asks for "per-item OR aggregate digests", not for every item, which is why a bounded
     enumeration settles it where axis 13's explicit "EVERY weight shard" would not.
     """
-    want_n = c["check"].get("expect_files")
+    want_n = _asserted(c).get("expect_files")
     if not want_n:
         return False, ("no `expect_files`: nothing to recompute, so the method name is a label")
-    want_repo = c["check"].get("expect_repo")
+    want_repo = _asserted(c).get("expect_repo")
     if not want_repo:
         return False, "no `expect_repo`: nothing ties this enumeration to a declared corpus"
-    want_sha = c["check"].get("expect_evidence_sha256")
+    want_sha = _asserted(c).get("expect_evidence_sha256")
     if not want_sha:
         return False, ("no `expect_evidence_sha256`: nothing ties this check to the artifact it "
                        "is about")
@@ -465,6 +477,7 @@ def m_corpus_item_digests(c, ev, ctx=None):
     if len(trees) != 1:
         return False, "expected exactly one pinned dataset tree response, found %d" % len(trees)
     repo, rev, path = HF_DS_TREE.match(trees[0]["url"]).groups()
+    path = path or "the repository root"
     if repo != want_repo:
         return False, "the enumeration is of %s; the cell declares %s" % (repo, want_repo)
     if trees[0]["sha256"] != want_sha:
@@ -486,6 +499,23 @@ def m_corpus_item_digests(c, ev, ctx=None):
     # "does the host ever publish a digest", which is a question about the host.
     missing = [e.get("path") for e in files
                if not (isinstance(e.get("lfs"), dict) and e["lfs"].get("oid"))]
+
+    # ⛔ THE NEGATIVE CASE. A cell carrying a `bound` is asserting that the digests are NOT
+    # there, and until now this executor could only confirm that they were -- so an axis-2 zero
+    # stayed prose while an axis-2 two was replayable. `expect_items_with_digest` is recomputed
+    # here; it is not read back from the cell.
+    if isinstance(c.get("bound"), dict):
+        want_d = c["bound"].get("expect_items_with_digest")
+        if want_d is None:
+            return False, ("a bound on this method needs `expect_items_with_digest`, or the "
+                           "absence it claims is not checked against anything")
+        got_d = len(files) - len(missing)
+        if got_d != want_d:
+            return False, ("%d of %d enumerated file(s) carry a publisher digest; the cell "
+                           "claims %d" % (got_d, len(files), want_d))
+        return True, ("%d file(s) at %s@%s, %d of them carrying a Git-LFS sha256 oid, as claimed"
+                      % (len(files), repo, rev[:12], got_d))
+
     if missing:
         return False, ("%d of %d enumerated corpus file(s) carry NO publisher digest: %s"
                        % (len(missing), len(files), missing[:2]))
@@ -495,7 +525,7 @@ def m_corpus_item_digests(c, ev, ctx=None):
 
 def m_weight_object(c, ev, ctx=None):
     """Axis 12: a real weight range, from a file THIS SUBJECT's repository enumerates."""
-    want = c["check"].get("expect_range_bytes")
+    want = _asserted(c).get("expect_range_bytes")
     # ⛔ A MISSING EXPECTATION USED TO DEMOTE, NOT REJECT. Returning None marks the cell
     # "shape-verified only" and leaves its evidence unconstrained -- so deleting one key disarmed
     # the check, which is the round-6 defect. It was repaired at the VALIDATOR by making the field
@@ -540,14 +570,14 @@ def m_weight_object(c, ev, ctx=None):
     # ⛔ `if want_sha` MADE THE FIELD OPTIONAL, which is the optional-field failure mode
     # for the fourth time in this project: deleting the key turned the control off and the
     # executor returned True. I introduced it in the same round that added the field.
-    want_sha = c["check"].get("expect_evidence_sha256")
+    want_sha = _asserted(c).get("expect_evidence_sha256")
     if not want_sha:
         return False, ("no `expect_evidence_sha256`: nothing ties this check block to the "
                        "artifact it is about")
     if r[0]["sha256"] != want_sha:
         return False, ("this check declares evidence %s; the cell cites %s"
                        % (want_sha[:12], r[0]["sha256"][:12]))
-    want_file = c["check"].get("expect_file")
+    want_file = _asserted(c).get("expect_file")
     if not want_file:
         return False, ("no `expect_file`: this check block carries nothing that distinguishes one "
                        "subject's weights from another's")
@@ -586,7 +616,7 @@ def m_weight_object(c, ev, ctx=None):
 
 def m_all_shard_digests(c, ev, ctx=None):
     """Axis 13: the cited pointers must BE this subject's shard set -- exactly, and distinctly."""
-    want = c["check"].get("expect_shards")
+    want = _asserted(c).get("expect_shards")
     # ⛔ A MISSING EXPECTATION USED TO DEMOTE, NOT REJECT. Returning None marks the cell
     # "shape-verified only" and leaves its evidence unconstrained -- so deleting one key disarmed
     # the check, which is the round-6 defect. It was repaired at the VALIDATOR by making the field
@@ -614,7 +644,7 @@ def m_all_shard_digests(c, ev, ctx=None):
                        % (len(shards), want))
 
     _api = [e for e in ev if HF_API.match(e["url"])]
-    want_sha = c["check"].get("expect_evidence_sha256")
+    want_sha = _asserted(c).get("expect_evidence_sha256")
     if not want_sha:
         return False, ("no `expect_evidence_sha256`: nothing ties this check block to the "
                        "artifact it is about")
@@ -667,8 +697,8 @@ def m_count(c, ev):
     """⚠️ THIS DISPATCHED TO THE GREP EXECUTOR, so a method named `count_in_retrieved` never
     counted anything. No score-2 cell uses it today, which is exactly why nobody noticed -- a
     registry entry that is never exercised is a claim nobody has tested."""
-    exp = c["check"].get("expect")
-    n = c["check"].get("expect_count")
+    exp = _asserted(c).get("expect")
+    n = _asserted(c).get("expect_count")
     if not exp or n is None:
         return None, "needs both `expect` (a pattern) and `expect_count`"
     hay = [b for b in (_bytes_for(e) for e in ev) if b is not None]
@@ -680,6 +710,116 @@ def m_count(c, ev):
     return True, "counted %d, as claimed" % got
 
 
+def _commit_fingerprint(raw):
+    """The issuer fingerprint of a git commit's OpenPGP signature, or None if it carries none."""
+    import base64
+    if b"gpgsig" not in raw:
+        return None
+    body = raw.split(b"gpgsig ", 1)[1]
+    out = []
+    for line in body.split(bytes([10])):
+        out.append(line[1:] if line.startswith(b" ") else line)
+        if line.strip() == b"-----END PGP SIGNATURE-----":
+            break
+    armour = bytes([10]).join(out)
+    try:
+        b64 = b"".join(armour.split(bytes([10, 10]), 1)[1].split(b"-----END")[0].split())
+    except IndexError:
+        return "unparsed"
+    pkt = None
+    for pad in (b"", b"=", b"=="):
+        try:
+            pkt = base64.b64decode(b64 + pad)
+            break
+        except Exception:                                                   # noqa: BLE001
+            continue
+    if pkt is None:
+        return "unparsed"
+    for m in re.finditer(r"2104([0-9a-f]{40})", pkt.hex()):
+        return m.group(1).upper()
+    return "no-issuer-subpacket"
+
+
+def m_signed_commit(c, ev, ctx=None):
+    """Axis 14: a signature over the weights by a key THE PUBLISHER bound to itself.
+
+    ⛔ WHY THIS EXISTS, AND WHY IT CONFIRMS A ZERO RATHER THAN OVERTURNING ONE. A round-13
+    reviewer reported that the Hugging Face revisions credited on axes 12 and 13 are verified
+    signed commits, and that axis 14 therefore could not be universally zero. Half of that was
+    right: the axis had no method able to see a signature, so its zero was guaranteed by the
+    instrument rather than by the world, which is the defect this census is arranged against.
+
+    Fetching the commit objects settled the other half. Four signed repositories, four unrelated
+    publishers, ONE signing key -- C8A817860F8BA646BF0612916A528E38E0733467, with committer
+    `system <system@huggingface.co>`. It is the hosting platform's key, signing the platform's own
+    record of an upload. The axis asks for a key THE PUBLISHER has bound to ITSELF, and that key
+    is retrievable nowhere: not from the publisher's profile, not from any Hugging Face endpoint,
+    and not from the public keyservers -- 404 from both, against positive controls that returned
+    26 KB and 45 KB of real key material for a known fingerprint, so the lookup demonstrably works.
+
+    ⚠ SO THE BADGE AND THE AXIS MEASURE DIFFERENT THINGS. "Verified" on a commit page means the
+    host verified its own signature over its own commit. It does not mean the publisher signed the
+    weights, and nobody reading the page can check the key, because the key is not published. That
+    distinction is the one axis 14 exists to draw.
+
+    ⚠ ON SHA-1. The self-authentication below is git's object id, and inherits SHA-1's
+    weaknesses. It establishes that these archived bytes are the object the census pins -- a
+    consistency binding against silent substitution, not a cryptographic guarantee against a
+    motivated forger.
+    """
+    chk = c.get("bound") or c.get("check") or {}
+    want_rev = chk.get("expect_revision")
+    want_sha = chk.get("expect_evidence_sha256")
+    if not want_rev:
+        return False, "no `expect_revision`: nothing ties these bytes to a pinned revision"
+    if not want_sha:
+        return False, "no `expect_evidence_sha256`: the evidence is unconstrained"
+
+    recs = [e for e in ev if e.get("sha256") == want_sha]
+    if len(recs) != 1:
+        return False, "expected exactly one archived commit object, found %d" % len(recs)
+    raw = _bytes_for(recs[0])
+    if raw is None:
+        return None, "the commit object is not archived"
+
+    got = hashlib.sha1(b"commit " + str(len(raw)).encode() + bytes([0]) + raw).hexdigest()
+    if got != want_rev:
+        return False, ("these bytes are revision %s; the cell declares %s"
+                       % (got[:12], want_rev[:12]))
+
+    # ⛔ THESE WERE OPTIONAL, AND AN OPTIONAL EXPECTATION IS NOT A CHECK. Extending the mutation
+    # tester to bound blocks caught it within a minute: DELETING `expect_signed` left
+    # `bool(None)` == False, which matched the unsigned subject and passed; CORRUPTING it to a
+    # string left `bool("zzzz")` == True, which matched every signed subject and passed. The field
+    # must be present and a real boolean, and it is compared by identity, not truthiness.
+    if not isinstance(chk.get("expect_signed"), bool):
+        return False, ("`expect_signed` must be present and a boolean; a missing or non-boolean "
+                       "value silently matches whatever the bytes happen to say")
+    want_committer = chk.get("expect_committer")
+    if not want_committer:
+        return False, ("no `expect_committer`: the committer identity is the whole finding here "
+                       "-- a platform signing its own record is not a publisher signing weights")
+    m = re.search(bytes([94]) + b"committer .+? <(.+?)>", raw, re.M)
+    committer = m.group(1).decode() if m else "?"
+    if committer != want_committer:
+        return False, "committed by %s; the cell declares %s" % (committer, want_committer)
+
+    signed = b"gpgsig" in raw
+    if signed is not chk["expect_signed"]:
+        return False, ("the cell claims expect_signed=%s; the object %s a signature"
+                       % (chk["expect_signed"], "carries" if signed else "carries no"))
+    if not signed:
+        return True, ("revision %s self-authenticates, was committed by %s, and carries NO "
+                      "signature at all" % (want_rev[:12], committer))
+
+    fpr = _commit_fingerprint(raw)
+    if fpr != chk.get("expect_signer_fingerprint"):
+        return False, ("signed by %s; the cell declares %s"
+                       % (fpr, chk.get("expect_signer_fingerprint")))
+    return True, ("revision %s self-authenticates, is signed by %s, and was committed by %s"
+                  % (want_rev[:12], fpr[:16], committer))
+
+
 DISPATCH = {
     "grep_retrieved": m_grep,
     "count_in_retrieved": m_count,
@@ -687,6 +827,7 @@ DISPATCH = {
     "hf_probe.weight_object": m_weight_object,
     "hf_probe.all_shard_digests": m_all_shard_digests,
     "hf_probe.corpus_item_digests": m_corpus_item_digests,
+    "hf_probe.signed_commit": m_signed_commit,
 }
 
 
@@ -1050,7 +1191,7 @@ def main():
             else:
                 asserted_ok += 1
             continue
-        meth = c["check"]["method"]
+        meth = _asserted(c)["method"]
         fn = DISPATCH.get(meth)
         where = "%s/axis%d" % (c["subject"], c["axis"])
         if fn is None:
@@ -1074,6 +1215,45 @@ def main():
         else:
             print("  ~     %-26s %s" % (where, why))
             unreplayable += 1
+    # ⛔ THE SECOND PASS, AND THE REASON IT DID NOT EXIST. The loop above begins
+    # `if not c.get("score"): continue`, and 0 IS FALSY -- so every negative in the census fell
+    # through a guard that reads as though it were skipping unscored cells. 69% of the instrument
+    # was never executed by the tool whose name is replay.
+    nb_ok = nb_fail = nb_un = 0
+    bounded = [c for c in led["cells"] if isinstance(c.get("bound"), dict)]
+    if bounded:
+        print()
+        print("=" * 78)
+        print("  replaying every BOUNDED NEGATIVE -- a zero that can fail")
+        print("=" * 78)
+        print()
+        for c in bounded:
+            where = "%s/axis%d" % (c["subject"], c["axis"])
+            meth = c["bound"].get("method")
+            fn = DISPATCH.get(meth)
+            if fn is None:
+                print("  " + chr(0x26D4) + " %-26s bound method %r has no executor" % (where, meth))
+                nb_fail += 1
+                continue
+            res, why = fn(c, c.get("evidence") or [], ctx)
+            if res is True:
+                print("  ok    %-26s %s" % (where, why))
+                nb_ok += 1
+            elif res is False:
+                print("  " + chr(0x26D4) + " FAIL %-24s %s" % (where, why))
+                nb_fail += 1
+            else:
+                print("  ~     %-26s %s" % (where, why))
+                nb_un += 1
+        _z = [c for c in led["cells"] if c.get("score") == 0]
+        print()
+        print("  %d bounded negative(s) replayed: %d ok, %d FAILED, %d unreplayable"
+              % (len(bounded), nb_ok, nb_fail, nb_un))
+        print("  coverage: %d of %d zeros carry a bound (%.0f%%). The rest are ASSERTED -- see"
+              % (len(bounded), len(_z), 100.0 * len(bounded) / max(1, len(_z))))
+        print("  the limitations section; an unbounded zero is not a measurement.")
+        failed += nb_fail
+
     print()
     print("=" * 78)
     print("  %d replayed and passed, %d FAILED, %d shape-verified only"

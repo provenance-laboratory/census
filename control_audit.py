@@ -52,6 +52,7 @@ SUITE = (
     (["stress_test.py"], "stress"),
     (["check_facts.py"], "facts"),
     (["test_executors.py"], "executors"),
+    (["test_bound_rules.py"], "bounds"),
 )
 
 

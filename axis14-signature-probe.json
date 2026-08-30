@@ -1,0 +1,63 @@
+{
+  "_readme": "WHAT THIS SETTLES. Round-13 review reported a counterexample: the Hugging Face revisions already\ncredited on axes 12 and 13 carry VERIFIED SIGNED COMMITS, so axis 14 -- \"are the weights signed by\nan identifiable key?\" -- could not be universally zero, and the registry had no method able to see\na signature at all. The blindness was real. The conclusion was not.",
+  "as_of": "2026-08-30",
+  "keyserver_positive_control": {
+    "fingerprint": "EB4C1BFD4F042F6DDDCCEC917721F63BD38B4796",
+    "keys.openpgp.org": "200, 26351 bytes of PGP PUBLIC KEY BLOCK",
+    "keyserver.ubuntu.com": "200, 45075 bytes of PGP PUBLIC KEY BLOCK",
+    "why": "the signer's fingerprint returns 404 from both. These controls prove the lookup works and the endpoints answer, so that 404 is a fact about the key rather than about the query."
+  },
+  "platform_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
+  "subjects": {
+    "bloom-176b": {
+      "bytes": 445,
+      "committer": "system@users.noreply.huggingface.co",
+      "fpr": null,
+      "repo": "bigscience/bloom",
+      "rev": "7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+      "sha256": "039a984949154b7df446a9078bb90b7d8e6b2c9bd8fcb9c1005aaeb3bdd0a3d0",
+      "signed": false,
+      "url": "https://huggingface.co/bigscience/bloom/commit/7f10a99ce7c08f03c7719a586cb2cbda1433ac05"
+    },
+    "mistral-7b-v0.3": {
+      "bytes": 1106,
+      "committer": "system@huggingface.co",
+      "fpr": "C8A817860F8BA646BF0612916A528E38E0733467",
+      "repo": "mistralai/Mistral-7B-v0.3",
+      "rev": "caa1feb0e54d415e2df31207e5f4e273e33509b1",
+      "sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2",
+      "signed": true,
+      "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/commit/caa1feb0e54d415e2df31207e5f4e273e33509b1"
+    },
+    "olmo-2-13b": {
+      "bytes": 1106,
+      "committer": "system@huggingface.co",
+      "fpr": "C8A817860F8BA646BF0612916A528E38E0733467",
+      "repo": "allenai/OLMo-2-1124-13B",
+      "rev": "3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+      "sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995",
+      "signed": true,
+      "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/commit/3fefddc1bf18a30e1d9b91000271630718f2aa8b"
+    },
+    "pythia-12b": {
+      "bytes": 1315,
+      "committer": "system@huggingface.co",
+      "fpr": "C8A817860F8BA646BF0612916A528E38E0733467",
+      "repo": "EleutherAI/pythia-12b",
+      "rev": "bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+      "sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8",
+      "signed": true,
+      "url": "https://huggingface.co/EleutherAI/pythia-12b/commit/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6"
+    },
+    "qwen2.5-7b": {
+      "bytes": 1301,
+      "committer": "system@huggingface.co",
+      "fpr": "C8A817860F8BA646BF0612916A528E38E0733467",
+      "repo": "Qwen/Qwen2.5-7B",
+      "rev": "d149729398750b98c0af14eb82c78cfe92750796",
+      "sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953",
+      "signed": true,
+      "url": "https://huggingface.co/Qwen/Qwen2.5-7B/commit/d149729398750b98c0af14eb82c78cfe92750796"
+    }
+  }
+}

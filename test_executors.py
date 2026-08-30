@@ -41,9 +41,18 @@ NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
 
 
+def _blk_name(cell):
+    """Which block this cell asserts: a positive carries `check`, a negative carries `bound`."""
+    return "bound" if isinstance(cell.get("bound"), dict) else "check"
+
+
+def _blk_of(cell):
+    return cell.get(_blk_name(cell)) or {}
+
+
 def _call(cell, ctx, led):
     """Invoke the executor for this cell exactly as replay.main does, minus the gate."""
-    fn = R.DISPATCH.get((cell.get("check") or {}).get("method"))
+    fn = R.DISPATCH.get(_blk_of(cell).get("method"))
     if fn is None:
         return None, "no executor"
     try:
@@ -56,7 +65,11 @@ def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
     ctx = R.subject_context(led)
-    cells = [c for c in led["cells"] if c.get("score") == 2 and c.get("check")]
+    # ⛔ THIS SELECTED VERIFIED CELLS ONLY, so the moment negatives became executable there
+    # were six load-bearing check-blocks that no mutation ever touched. The selection projects
+    # over BOTH kinds now: whatever an executor can be asked to settle, this file mutates.
+    cells = [c for c in led["cells"]
+             if (c.get("score") == 2 and c.get("check")) or isinstance(c.get("bound"), dict)]
 
     print("=" * 78)
     print("  EXECUTORS, CALLED DIRECTLY -- the validator is not consulted")
@@ -82,13 +95,17 @@ def main():
     unread = []
     for c in cells:
         where = "%s/axis%d" % (c["subject"], c["axis"])
-        keys = [k for k in (c.get("check") or {}) if k not in ("method", "asserts", "observed")]
+        blk = _blk_name(c)
+        # `searched` and `as_of` are enforced by mp_metric.validate, not by an executor -- see
+        # _controls_bounds.py, which watches each of those rules fail.
+        keys = [k for k in _blk_of(c)
+                if k not in ("method", "asserts", "observed", "searched", "as_of")]
 
         for k in keys:
             # (a) DELETE the declared expectation. The executor must refuse: a check whose
             #     expectation is absent is a method name, not a check.
             d = copy.deepcopy(c)
-            d["check"].pop(k, None)
+            d[blk].pop(k, None)
             res, _why = _call(d, ctx, led)
             if res is False:
                 ok += 1
@@ -99,8 +116,8 @@ def main():
             # (b) PERTURB it. Deleting can be caught by a blanket "required field" test while
             #     the value itself is never compared; changing it cannot.
             d2 = copy.deepcopy(c)
-            v = d2["check"][k]
-            d2["check"][k] = (v + 1 if isinstance(v, int) and not isinstance(v, bool)
+            v = d2[blk][k]
+            d2[blk][k] = (v + 1 if isinstance(v, int) and not isinstance(v, bool)
                               else ("zzzz" + str(v))[:64] if isinstance(v, str)
                               else ["zzzz"] if isinstance(v, list) else "zzzz")
             res2, _why2 = _call(d2, ctx, led)

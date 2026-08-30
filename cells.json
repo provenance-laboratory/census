@@ -1010,7 +1010,30 @@
       "subject": "pythia-12b",
       "axis": 2,
       "score": 0,
-      "note": "No corpus digest was found. Searched: dataset card or equivalent, project README, and the release's paper or technical report."
+      "note": "No corpus digest, because the declared corpus repository publishes no corpus files: EleutherAI/pile at 148e1d5e8349 holds only .gitattributes, README.md and a loader script. Searched the pinned root tree, the siblings list, the dataset card and the paper, 2026-08-30.",
+      "bound": {
+        "method": "hf_probe.corpus_item_digests",
+        "asserts": "the declared corpus repository publishes no per-item or aggregate digest for its contents at a pinned revision",
+        "observed": "The declared corpus source `hfds:EleutherAI/pile` resolves to a repository holding THREE files at revision 148e1d5e8349: .gitattributes, README.md and pile.py. It is a LOADER SCRIPT, not a corpus -- the data it names was served from a third-party host, not from this repository -- so there are no corpus files here to carry Git-LFS digests, and 0 of 3 do. This is why the score is 0: not that a digest was looked for in prose and not mentioned, but that the corpus is not published as files at the address the release declares. Contrast olmo-2-13b, where the same method finds digests on every enumerated file.",
+        "searched": [
+          "https://huggingface.co/api/datasets/EleutherAI/pile/tree/148e1d5e8349977c76f673190424a2faf6980a1d",
+          "https://huggingface.co/api/datasets/EleutherAI/pile (siblings list)",
+          "the dataset card at the same pinned revision",
+          "the release's paper and project README"
+        ],
+        "as_of": "2026-08-30",
+        "expect_files": 3,
+        "expect_repo": "EleutherAI/pile",
+        "expect_evidence_sha256": "02772cfa32f3139c083fc4348eee8cba27dc42f191f2f56ec4fc1c9584f80fc4",
+        "expect_items_with_digest": 0
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/api/datasets/EleutherAI/pile/tree/148e1d5e8349977c76f673190424a2faf6980a1d",
+          "retrieved": "2026-08-30",
+          "sha256": "02772cfa32f3139c083fc4348eee8cba27dc42f191f2f56ec4fc1c9584f80fc4"
+        }
+      ]
     },
     {
       "subject": "pythia-12b",
@@ -1157,7 +1180,32 @@
       "subject": "pythia-12b",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+      "note": "No signature by a key the publisher has bound to itself. The commit IS signed, by the HOSTING PLATFORM's key -- one key shared across four unrelated publishers here -- and that key is published nowhere. Searched: the git commit object at the pinned revision, the publisher's profile, both Hugging Face user-key endpoints, and two public keyservers, on 2026-08-30. See axis14-signature-probe.json.",
+      "bound": {
+        "method": "hf_probe.signed_commit",
+        "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "searched": [
+          "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
+          "the publisher's Hugging Face profile page, for a published key or fingerprint",
+          "https://huggingface.co/api/users/system/gpg-keys and /gpgkeys",
+          "https://keys.openpgp.org/vks/v1/by-fingerprint/C8A817860F8BA646BF0612916A528E38E0733467 and by-keyid",
+          "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC8A817860F8BA646BF0612916A528E38E0733467"
+        ],
+        "as_of": "2026-08-30",
+        "expect_revision": "bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+        "expect_evidence_sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8",
+        "expect_signed": true,
+        "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
+        "expect_committer": "system@huggingface.co"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/EleutherAI/pythia-12b/commit/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+          "retrieved": "2026-08-30",
+          "sha256": "11755696ee65297b609b65e13f56334a896063de3f5e6e0141568eea2a9be0e8"
+        }
+      ]
     },
     {
       "subject": "pythia-12b",
@@ -1536,7 +1584,32 @@
       "subject": "olmo-2-13b",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+      "note": "No signature by a key the publisher has bound to itself. The commit IS signed, by the HOSTING PLATFORM's key -- one key shared across four unrelated publishers here -- and that key is published nowhere. Searched: the git commit object at the pinned revision, the publisher's profile, both Hugging Face user-key endpoints, and two public keyservers, on 2026-08-30. See axis14-signature-probe.json.",
+      "bound": {
+        "method": "hf_probe.signed_commit",
+        "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "searched": [
+          "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
+          "the publisher's Hugging Face profile page, for a published key or fingerprint",
+          "https://huggingface.co/api/users/system/gpg-keys and /gpgkeys",
+          "https://keys.openpgp.org/vks/v1/by-fingerprint/C8A817860F8BA646BF0612916A528E38E0733467 and by-keyid",
+          "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC8A817860F8BA646BF0612916A528E38E0733467"
+        ],
+        "as_of": "2026-08-30",
+        "expect_revision": "3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+        "expect_evidence_sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995",
+        "expect_signed": true,
+        "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
+        "expect_committer": "system@huggingface.co"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/allenai/OLMo-2-1124-13B/commit/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+          "retrieved": "2026-08-30",
+          "sha256": "2bd1dec0be247d67b40c80c2d4e46f1909aec867f5e24aeb061b9fcc305f6995"
+        }
+      ]
     },
     {
       "subject": "olmo-2-13b",
@@ -1897,7 +1970,31 @@
       "subject": "bloom-176b",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+      "note": "No signature by a key the publisher has bound to itself. This revision carries no signature at all, which makes it the negative control for this check. Searched: the git commit object at the pinned revision, the publisher's profile, both Hugging Face user-key endpoints, and two public keyservers, on 2026-08-30. See axis14-signature-probe.json.",
+      "bound": {
+        "method": "hf_probe.signed_commit",
+        "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
+        "observed": "The commit at this revision carries no signature of any kind -- no gpgsig header -- and its committer is `system <system@users.noreply.huggingface.co>`. Unlike the four signed repositories in this census it does not even carry the platform's signature, so it is a NEGATIVE CONTROL on this method: the check distinguishes signed from unsigned rather than reporting the same answer for both. No publisher key was found by any route in `searched`. Score 0.",
+        "searched": [
+          "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
+          "the publisher's Hugging Face profile page, for a published key or fingerprint",
+          "https://huggingface.co/api/users/system/gpg-keys and /gpgkeys",
+          "https://keys.openpgp.org/vks/v1/by-fingerprint/C8A817860F8BA646BF0612916A528E38E0733467 and by-keyid",
+          "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC8A817860F8BA646BF0612916A528E38E0733467"
+        ],
+        "as_of": "2026-08-30",
+        "expect_revision": "7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+        "expect_evidence_sha256": "039a984949154b7df446a9078bb90b7d8e6b2c9bd8fcb9c1005aaeb3bdd0a3d0",
+        "expect_signed": false,
+        "expect_committer": "system@users.noreply.huggingface.co"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/bigscience/bloom/commit/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "retrieved": "2026-08-30",
+          "sha256": "039a984949154b7df446a9078bb90b7d8e6b2c9bd8fcb9c1005aaeb3bdd0a3d0"
+        }
+      ]
     },
     {
       "subject": "bloom-176b",
@@ -3118,7 +3215,32 @@
       "subject": "mistral-7b-v0.3",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+      "note": "No signature by a key the publisher has bound to itself. The commit IS signed, by the HOSTING PLATFORM's key -- one key shared across four unrelated publishers here -- and that key is published nowhere. Searched: the git commit object at the pinned revision, the publisher's profile, both Hugging Face user-key endpoints, and two public keyservers, on 2026-08-30. See axis14-signature-probe.json.",
+      "bound": {
+        "method": "hf_probe.signed_commit",
+        "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "searched": [
+          "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
+          "the publisher's Hugging Face profile page, for a published key or fingerprint",
+          "https://huggingface.co/api/users/system/gpg-keys and /gpgkeys",
+          "https://keys.openpgp.org/vks/v1/by-fingerprint/C8A817860F8BA646BF0612916A528E38E0733467 and by-keyid",
+          "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC8A817860F8BA646BF0612916A528E38E0733467"
+        ],
+        "as_of": "2026-08-30",
+        "expect_revision": "caa1feb0e54d415e2df31207e5f4e273e33509b1",
+        "expect_evidence_sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2",
+        "expect_signed": true,
+        "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
+        "expect_committer": "system@huggingface.co"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/mistralai/Mistral-7B-v0.3/commit/caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "retrieved": "2026-08-30",
+          "sha256": "6d5f60fdd36c3df83696895b350ebbf15f2da68429938da260baa79645242cc2"
+        }
+      ]
     },
     {
       "subject": "mistral-7b-v0.3",
@@ -3343,7 +3465,32 @@
       "subject": "qwen2.5-7b",
       "axis": 14,
       "score": 0,
-      "note": "No signature over the weights, and no publisher key bound to the release, was found."
+      "note": "No signature by a key the publisher has bound to itself. The commit IS signed, by the HOSTING PLATFORM's key -- one key shared across four unrelated publishers here -- and that key is published nowhere. Searched: the git commit object at the pinned revision, the publisher's profile, both Hugging Face user-key endpoints, and two public keyservers, on 2026-08-30. See axis14-signature-probe.json.",
+      "bound": {
+        "method": "hf_probe.signed_commit",
+        "asserts": "the weights at the pinned revision carry no signature by a key the publisher has bound to itself",
+        "observed": "The commit at this revision IS signed, and the badge on its page reads 'verified'. The signature is not the publisher's. It is key C8A817860F8BA646BF0612916A528E38E0733467, with committer `system <system@huggingface.co>` -- the SAME key that signs the pinned revisions of three other, unrelated publishers in this census (EleutherAI, AllenAI, Mistral AI, Qwen). It is the hosting platform's key, signing the platform's own record of an upload. The key is retrievable nowhere: 404 from the publisher's profile, from both Hugging Face user-key endpoints, and from keys.openpgp.org and keyserver.ubuntu.com -- against positive controls on both keyservers that returned 26,351 and 45,075 bytes of real key material for a known fingerprint, so the lookup works and the 404 is a fact about the key. A reader therefore cannot verify this signature at all, and if they could it would attest that Hugging Face recorded an upload, not that the publisher vouched for the bytes. Axis 14 asks for the second. Score 0.",
+        "searched": [
+          "the git commit object at the revision axes 12 and 13 pin, fetched with git and archived here",
+          "the publisher's Hugging Face profile page, for a published key or fingerprint",
+          "https://huggingface.co/api/users/system/gpg-keys and /gpgkeys",
+          "https://keys.openpgp.org/vks/v1/by-fingerprint/C8A817860F8BA646BF0612916A528E38E0733467 and by-keyid",
+          "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC8A817860F8BA646BF0612916A528E38E0733467"
+        ],
+        "as_of": "2026-08-30",
+        "expect_revision": "d149729398750b98c0af14eb82c78cfe92750796",
+        "expect_evidence_sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953",
+        "expect_signed": true,
+        "expect_signer_fingerprint": "C8A817860F8BA646BF0612916A528E38E0733467",
+        "expect_committer": "system@huggingface.co"
+      },
+      "evidence": [
+        {
+          "url": "https://huggingface.co/Qwen/Qwen2.5-7B/commit/d149729398750b98c0af14eb82c78cfe92750796",
+          "retrieved": "2026-08-30",
+          "sha256": "17f3c191d7e44c52a8d1bb3e2e719937c69c042d9f534dc6608f3c2b3f8a7953"
+        }
+      ]
     },
     {
       "subject": "qwen2.5-7b",
@@ -4750,5 +4897,11 @@
   "_axis_literals_readme": "\u26d4 WHERE SEVERAL AXES REST ON THE SAME DOCUMENT, binding the document is not enough: olmo's hyperparameter, environment, data-order and eval-disjointness cells all rest on one training config, so a swap between them moved only the CHECK. These are the literal strings each (subject, axis) may look for. \u26a0 WHAT THIS MECHANISM IS: tamper-evidence between a cell and a declaration held on the subject record, which a transplant cannot move. It is NOT an independent confirmation that the document supports the claim -- a human read the document and wrote the policy, and the policy records that reading.",
   "_axis_method_readme": "The method each (subject, axis) may use, null where the cell names none. An ASSERTED cell names no mechanical check BY DEFINITION -- the paper says so -- but one of them legitimately carries a check block that documents why it was DEMOTED from 2, so 'no check on a 1' would be the wrong rule. This is the right one: whatever check a cell carries must be the one its subject declares for that axis. A transplanted check block is then visible even where the documents coincide.",
   "_axis_file_readme": "\u26d4 THE AXIS-12 CHECK BLOCK CARRIED NOTHING SUBJECT-SPECIFIC. Its method, assertion and expected length are identical across all seven subjects, so transplanting one onto another changed only the prose `observed` field and survived. The paper attributed all 44 survivors to prose being unbindable -- true of 2 of them, and a MISSING FIELD for the other 42. A round-9 reviewer pointed out that m_weight_object already computes the shard filename and already holds the range digest, so declaring one costs nothing and closes 95% of the residual. Calling a residual irreducible when most of it is reducible is closing an argument early.",
-  "_axis_evidence_readme": "\u26d4 THE LAST FOUR SURVIVORS WERE COLLISIONS, not prose. mistral and qwen publish the same number of shards; bert and gpt-2 name the same primary weight file. So a filename or a count discriminates six subjects out of seven and stops. The digest of the artifact each check is ABOUT does not collide, and the executor already holds it -- a transplanted check block then declares a digest the destination's own evidence does not carry."
+  "_axis_evidence_readme": "\u26d4 THE LAST FOUR SURVIVORS WERE COLLISIONS, not prose. mistral and qwen publish the same number of shards; bert and gpt-2 name the same primary weight file. So a filename or a count discriminates six subjects out of seven and stops. The digest of the artifact each check is ABOUT does not collide, and the executor already holds it -- a transplanted check block then declares a digest the destination's own evidence does not carry.",
+  "zero_bounds_floor": {
+    "_readme": "How many of this census's zeros carry a replayable bound. It may rise. If it falls, mp_metric reports a defect: a bound was deleted and a negative became unfalsifiable again. Lower it only deliberately, in a commit that says why.",
+    "bounded_zeros": 6,
+    "total_zeros": 182,
+    "recorded": "2026-08-30"
+  }
 }
