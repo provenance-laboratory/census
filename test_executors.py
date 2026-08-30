@@ -96,10 +96,12 @@ def main():
     for c in cells:
         where = "%s/axis%d" % (c["subject"], c["axis"])
         blk = _blk_name(c)
-        # `searched` and `as_of` are enforced by mp_metric.validate, not by an executor -- see
-        # _controls_bounds.py, which watches each of those rules fail.
-        keys = [k for k in _blk_of(c)
-                if k not in ("method", "asserts", "observed", "searched", "as_of")]
+        # ⛔ THIS WAS AN EXCLUSION LIST AND IT BROKE THE MOMENT A FIELD WAS RENAMED. `searched`
+        # became `searched_archived` and `searched_live` in round 14, and the stale list let 59
+        # mutations of validator-only fields be reported as executor misses -- noise that would
+        # have buried a real one. What an EXECUTOR reads is the expectations; everything else is
+        # mp_metric's business and is watched by test_bound_rules.py. Projected, not enumerated.
+        keys = [k for k in _blk_of(c) if k.startswith("expect")]
 
         for k in keys:
             # (a) DELETE the declared expectation. The executor must refuse: a check whose

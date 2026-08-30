@@ -109,7 +109,11 @@ def read_axes(root, led, axes, paper_src):
 
 
 def main():
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    # line_buffering, because this tool runs for twenty minutes and a block-buffered run that is
+    # interrupted loses EVERY line -- which happened: a background run exited 0 having written
+    # nothing at all, and the absence of output was indistinguishable from the absence of a result.
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace",
+                                  line_buffering=True)
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
     zeros = [c for c in led["cells"] if c.get("score") == 0]
     bounded = [c for c in zeros if isinstance(c.get("bound"), dict)]

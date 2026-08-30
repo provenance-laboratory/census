@@ -96,6 +96,23 @@ def all_cited(led, include_facts=True):
                 yield "fact:" + name, one
 
 
+def _absent(block, field):
+    """Is a required field MISSING, as opposed to legitimately zero or false?
+
+    ⛔ `if not block.get(field)` COULD NOT TELL 0 FROM ABSENT, and 0 is exactly what a negative
+    bound carries: `expect_matches: 0` means "we enumerated every published file and none matched",
+    which is the whole measurement. Seven axis-15 bounds were reported as missing a field they
+    declared. Emptiness still counts as absence for containers -- an empty `expect` list is a
+    method name with nothing to replay -- but a number is present when it is there.
+    """
+    v = block.get(field)
+    if v is None:
+        return True
+    if isinstance(v, (str, bytes, list, tuple, dict, set)) and not v:
+        return True
+    return False
+
+
 def validate(led):
     """Return a list of defects. ANY defect means the census is not scoreable.
 
@@ -259,7 +276,7 @@ def validate(led):
                 # `expect_range_bytes` used to demote the check to unreplayable and leave the
                 # evidence unconstrained.
                 for _f in A.required_fields(meth):
-                    if not chk.get(_f):
+                    if _absent(chk, _f):
                         d.append(f"{where}: method {meth!r} requires `{_f}`; without it nothing "
                                  f"can be replayed and the evidence is unconstrained")
 
@@ -297,18 +314,51 @@ def validate(led):
                 d.append(f"{where}: bound.method {meth!r} cannot settle this axis "
                          f"({A.BY_ID[ax][2]}). Valid: {sorted(A.methods_for(ax)) or 'NONE'}")
             for _f in A.required_fields(meth):
-                if not b.get(_f):
+                if _absent(b, _f):
                     d.append(f"{where}: bound.method {meth!r} requires `{_f}`; without it the "
                              f"negative cannot be replayed")
             for k in ("asserts", "observed", "as_of"):
                 if not str(b.get(k, "")).strip():
                     d.append(f"{where}: bound.{k} is empty. A zero with no {k} is the "
                              f"circular negative this instrument exists to refuse")
-            if not b.get("searched"):
-                d.append(f"{where}: bound has no `searched` list. 'We looked and found nothing' "
-                         f"is not a measurement until WHERE is written down -- see "
-                         f"negative_search.py, where naming the bound is what exposed that the "
-                         f"axis-16 search could not have found anything.")
+            # ⛔ A `searched` LIST WAS PROSE AND NOTHING CHECKED IT. A round-14 reviewer
+            # replaced five real search locations with ["nothing-but-a-nonempty-placeholder"] and
+            # asserts/observed with "x", and the validator and replay both passed -- so the bounds
+            # tested STRUCTURE, not substance, and counting them as replayable proofs of a zero was
+            # ceremony. Their word, and it was fair.
+            #
+            # ⚠ AND THE OBVIOUS FIX WAS WRONG. Requiring every searched url to have an archived
+            # response would have forced a keyserver 404 into the evidence store -- and an empty
+            # body proves nothing, because every 404 hashes alike. A negative about a live external
+            # service CANNOT be made offline-replayable by storing bytes. Pretending otherwise
+            # would be the proxy defect one level deeper.
+            #
+            # ⛔ SO THE TWO KINDS ARE SEPARATED AND BOTH ARE DECLARED. `searched_archived` names
+            # locations whose responses are in the evidence store and which replay re-runs
+            # offline. `searched_live` names lookups that can only be re-run against the network,
+            # each with the date it was made. A bound with nothing archived is not a bound; a bound
+            # that hides live lookups among archived ones overstates what it proves.
+            _arch = [str(x) for x in (b.get("searched_archived") or [])]
+            _live = [str(x) for x in (b.get("searched_live") or [])]
+            _byurl = {str(e.get("url")) for e in (c.get("evidence") or [])}
+            if not _arch:
+                d.append(f"{where}: bound declares no `searched_archived`. Every location is live "
+                         f"or prose, so nothing about this negative can be re-run offline -- which "
+                         f"is the circular zero this instrument exists to refuse")
+            _missing = [u for u in _arch if u not in _byurl]
+            if _missing:
+                d.append(f"{where}: bound.searched_archived names {len(_missing)} location(s) "
+                         f"with no evidence record: {_missing[:2]}. Archived means archived")
+            for _u in _live:
+                if _u in _byurl:
+                    d.append(f"{where}: {_u[:60]} is listed as a LIVE lookup and is also archived. "
+                             f"Move it to searched_archived; understating what is verifiable is "
+                             f"still a misdescription of the bound")
+            if b.get("searched"):
+                d.append(f"{where}: bound still carries the old flat `searched` list. Split it "
+                         f"into searched_archived and searched_live so the bound's strength is "
+                         f"visible rather than averaged")
+
             if not (c.get("evidence") or []):
                 d.append(f"{where}: bound with NO evidence record. The bytes searched must be "
                          f"archived or the negative cannot be re-run against them.")

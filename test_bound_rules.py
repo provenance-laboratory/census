@@ -32,9 +32,27 @@ def find(led, sub, ax):
 
 
 MUTATIONS = [
-    ("delete bound.searched",
-     lambda L: find(L, "pythia-12b", 14)["bound"].pop("searched"),
-     "mp_metric.py", "no `searched` list"),
+    # ⛔ THE ROUND-14 REVIEWER'S EXACT ATTACK. They replaced pythia axis 14's five-item searched
+    # list with ["nothing-but-a-nonempty-placeholder"] and asserts/observed with "x", and BOTH the
+    # validator and replay passed -- the bounds tested structure, not substance. It is a control
+    # now, so the hole cannot reopen silently.
+    ("the reviewer's placeholder attack, verbatim",
+     lambda L: (find(L, "pythia-12b", 14)["bound"].__setitem__(
+         "searched_archived", ["nothing-but-a-nonempty-placeholder"]),
+         find(L, "pythia-12b", 14)["bound"].__setitem__("asserts", "x"),
+         find(L, "pythia-12b", 14)["bound"].__setitem__("observed", "x")),
+     "mp_metric.py", "Archived means archived"),
+    ("delete bound.searched_archived",
+     lambda L: find(L, "pythia-12b", 14)["bound"].pop("searched_archived"),
+     "mp_metric.py", "declares no `searched_archived`"),
+    ("pass off a live lookup as archived",
+     lambda L: find(L, "olmo-2-13b", 15)["bound"]["searched_archived"].append(
+         "https://keys.openpgp.org/vks/v1/by-fingerprint/DEADBEEF"),
+     "mp_metric.py", "no evidence record"),
+    ("understate an archived location as live",
+     lambda L: find(L, "olmo-2-13b", 15)["bound"]["searched_live"].append(
+         find(L, "olmo-2-13b", 15)["bound"]["searched_archived"][0]),
+     "mp_metric.py", "is still a misdescription"),
     ("blank bound.observed",
      lambda L: find(L, "pythia-12b", 14)["bound"].__setitem__("observed", "  "),
      "mp_metric.py", "bound.observed is empty"),

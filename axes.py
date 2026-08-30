@@ -165,6 +165,10 @@ CHECK_METHODS = {
     "grep_retrieved":           "search retrieved bytes for a pattern and record the match",
     "count_in_retrieved":       "count occurrences of a pattern in retrieved bytes",
     "hash_compare":             "recompute a digest over retrieved bytes and compare to a published one",
+    "hf_probe.release_artifacts": "enumerate every file published at a pinned revision and count "
+                                  "those matching a declared class of artifact -- signatures, "
+                                  "timestamp proofs, attestations -- so their ABSENCE is a "
+                                  "measurement rather than an assumption",
     "repo_tree_probe":          "enumerate a source repository's tree at a pinned commit and "
                                 "require the named training entrypoints to exist as files, with a "
                                 "dependency manifest -- the artifact, not a document about it",
@@ -322,6 +326,18 @@ METHOD_AXES = {
     # one demoted the cells and re-scored to show what it cost. A string's presence in a document
     # is compatible with the named repository being absent, empty, or unrelated.
     "repo_tree_probe": {6},
+    # ⛔ THE THIRD AND FOURTH REGISTRY-BLIND AXES, found by both round-14 reviewers
+    # independently after round 13 found the second. Axis 3's bar names a file format outright --
+    # "An OpenTimestamps proof, or a dated signed publication" -- and permitted only grep and
+    # count. An OTS proof is not greppable. Axis 15 asks for "a timestamp a third party can verify
+    # without trusting the publisher's clock" and permitted grep, count and hash_compare, of which
+    # hash_compare HAD NO EXECUTOR -- so the axis's registry looked richer than it was.
+    #
+    # ⛔ AND THE SHARPEST FORM OF IT: this census ships SELECTION-RULE.md.ots and
+    # SELECTION-RULE-AMENDMENT-1.md.ots, and mp_metric.py names the OpenTimestamps anchor as one
+    # of three mechanisms covering this project. It anchored its own pre-registration by exactly
+    # the mechanism it had no method to observe in a subject.
+    "hf_probe.release_artifacts": {3, 14, 15},
 }
 
 
@@ -365,6 +381,9 @@ REQUIRED_FIELDS = {
     "hf_probe.signed_commit": ("expect_revision", "expect_evidence_sha256"),
     "repo_tree_probe": ("expect_repo", "expect_commit", "expect_paths",
                         "expect_evidence_sha256"),
+    "hf_probe.release_artifacts": ("expect_repo", "expect_revision", "expect_patterns",
+                                   "expect_matches", "expect_pattern_probe",
+                                   "expect_evidence_sha256"),
 }
 
 

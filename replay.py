@@ -751,6 +751,101 @@ GH_TREE = re.compile(
     r"^https://api\.github\.com/repos/([^/]+/[^/]+)/git/trees/([0-9a-f]{40})\?recursive=1$")
 
 
+HF_REVISION = re.compile(
+    r"^https://huggingface\.co/api/models/([^/]+/[^/]+)/revision/([0-9a-f]{40})$")
+
+
+def m_release_artifacts(c, ev, ctx=None):
+    """Axes 3, 14, 15: does the release publish signature or timestamp artifacts at all?
+
+    ⛔ WHY THIS EXISTS. Axis 3's bar names a file format -- "An OpenTimestamps proof, or a dated
+    signed publication" -- and its only registered methods were grep and count. An OTS proof is not
+    greppable. Axis 15 asks for a timestamp a third party can verify, and its one non-prose method
+    had no executor. Both universal zeros were made by the registry rather than by the world, which
+    is the third and fourth instance of a defect this census has now found in four consecutive
+    rounds. Both round-14 reviewers found them independently.
+
+    ⚠ THIS SETTLES AN ABSENCE, AND ABSENCE IS ALL IT SETTLES. It enumerates every file published
+    at a pinned revision and counts those matching a declared class of artifact. A count of zero
+    means the release ships no signature, proof or attestation FILE at that revision -- it does not
+    mean no timestamp exists anywhere, and the cell's `searched` says where it looked. The patterns
+    are declared in the cell and recomputed here, so the bound is visible and testable rather than
+    described.
+
+    ⚠ AND THE SEARCH COULD HAVE RETURNED A POSITIVE, which is what makes the zero worth having.
+    Model publishers do ship Sigstore bundles, detached .sig files and in-toto attestations; the
+    patterns cover them. None of the seven revisions enumerated here carries one.
+    """
+    chk = _asserted(c)
+    want_repo = chk.get("expect_repo")
+    want_rev = chk.get("expect_revision")
+    pats = chk.get("expect_patterns")
+    want_n = chk.get("expect_matches")
+    want_ev = chk.get("expect_evidence_sha256")
+    if not (want_repo and want_rev and pats and want_ev) or want_n is None:
+        return False, ("needs expect_repo, expect_revision, expect_patterns, expect_matches and "
+                       "expect_evidence_sha256; an absence with no declared search is an opinion")
+
+    recs = [e for e in ev if HF_REVISION.match(str(e.get("url", "")))]
+    if len(recs) != 1:
+        return False, "expected exactly one pinned revision response, found %d" % len(recs)
+    repo, rev = HF_REVISION.match(recs[0]["url"]).groups()
+    if repo != want_repo:
+        return False, "the enumeration is of %s; the cell declares %s" % (repo, want_repo)
+    if rev != want_rev:
+        return False, "the enumeration is at %s; the cell declares %s" % (rev[:12], want_rev[:12])
+    if recs[0]["sha256"] != want_ev:
+        return False, ("this check declares evidence %s; the cell cites %s"
+                       % (want_ev[:12], recs[0]["sha256"][:12]))
+
+    b = _bytes_for(recs[0])
+    if b is None:
+        return None, "the revision response is not archived"
+    try:
+        d = json.loads(b.decode("utf-8"))
+    except Exception:                                                       # noqa: BLE001
+        return False, "the archived revision response is not JSON"
+    files = [s.get("rfilename", "") for s in (d.get("siblings") or [])]
+    if not files:
+        return False, "the archived response enumerates no files, so it settles nothing"
+
+    # ⛔ THE PATTERNS COULD BE NONSENSE AND THE ZERO WOULD STILL PASS. Corrupting expect_patterns
+    # to ["zzzz"] left 0 matches against an expected 0, and the check reported success -- a
+    # NEGATIVE GUARANTEED BY ITS OWN BOUND, inside the executor written to stop exactly that. The
+    # mutation tester found it the moment the field became mutable.
+    #
+    # ⚠ SO THE SEARCH MUST PROVE IT COULD HAVE HIT. The cell declares exemplar filenames, one per
+    # class it claims to look for; every pattern must match at least one exemplar and every
+    # exemplar must be matched. They are synthetic and must NOT appear in the real listing, or the
+    # control would be measuring the subject instead of the search.
+    probe = _asserted(c).get("expect_pattern_probe")
+    if not probe:
+        return False, ("no `expect_pattern_probe`: without exemplars this search cannot be shown "
+                       "capable of returning a positive, and a zero it produces means nothing")
+    dead = [q for q in pats if not any(re.search(q, x, re.I) for x in probe)]
+    if dead:
+        return False, ("%d declared pattern(s) match NONE of the exemplars, so they cannot detect "
+                       "the artifact they name: %s" % (len(dead), dead[:2]))
+    unmatched = [x for x in probe if not any(re.search(q, x, re.I) for q in pats)]
+    if unmatched:
+        return False, ("exemplar(s) %s match no declared pattern; the probe and the search "
+                       "disagree about what is being looked for" % unmatched[:2])
+    leaked = [x for x in probe if x in files]
+    if leaked:
+        return False, ("exemplar %s is in the real listing, so the positive control is measuring "
+                       "the subject rather than the search" % leaked[:1])
+
+    hits = sorted({f for f in files for q in pats if re.search(q, f, re.I)})
+    if len(hits) != want_n:
+        return False, ("%d file(s) match the declared patterns; the cell claims %d: %s"
+                       % (len(hits), want_n, hits[:4]))
+    if want_n == 0:
+        return True, ("%d file(s) published at %s@%s, NONE matching any of %d declared "
+                      "signature/timestamp patterns" % (len(files), repo, rev[:12], len(pats)))
+    return True, ("%d of %d published file(s) match the declared patterns at %s@%s: %s"
+                  % (len(hits), len(files), repo, rev[:12], hits[:3]))
+
+
 def m_repo_tree(c, ev, ctx=None):
     """Axis 6: the training source EXISTS as files at a pinned commit, not as a word in a README.
 
@@ -967,6 +1062,7 @@ DISPATCH = {
     "hf_probe.corpus_item_digests": m_corpus_item_digests,
     "hf_probe.signed_commit": m_signed_commit,
     "repo_tree_probe": m_repo_tree,
+    "hf_probe.release_artifacts": m_release_artifacts,
 }
 
 
