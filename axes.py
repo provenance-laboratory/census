@@ -165,6 +165,9 @@ CHECK_METHODS = {
     "grep_retrieved":           "search retrieved bytes for a pattern and record the match",
     "count_in_retrieved":       "count occurrences of a pattern in retrieved bytes",
     "hash_compare":             "recompute a digest over retrieved bytes and compare to a published one",
+    "repo_tree_probe":          "enumerate a source repository's tree at a pinned commit and "
+                                "require the named training entrypoints to exist as files, with a "
+                                "dependency manifest -- the artifact, not a document about it",
     "hf_probe.signed_commit":   "read the git commit object at a pinned revision and establish "
                                 "whether it is signed, by which key, and whether that key is the "
                                 "publisher's or the hosting platform's",
@@ -313,6 +316,12 @@ METHOD_AXES = {
     # 12 and 13 already pin and concluded the axis could not be universally zero. The blindness was
     # real; the conclusion was not. See m_signed_commit in replay.py for what the evidence showed.
     "hf_probe.signed_commit": {14},
+    # ⛔ AXIS 6 ASKS FOR SOURCE AND COULD ONLY READ PROSE ABOUT SOURCE. Its bar contrasts source
+    # with "a description of it", and every score-2 cell was a grep of a README for one literal --
+    # 'gpt-neox', 'torchrun', 'Megatron-DeepSpeed'. Two round-14 reviewers found this independently;
+    # one demoted the cells and re-scored to show what it cost. A string's presence in a document
+    # is compatible with the named repository being absent, empty, or unrelated.
+    "repo_tree_probe": {6},
 }
 
 
@@ -333,6 +342,11 @@ def methods_for(axis_id):
 # A permitted-set says which methods MAY settle an axis. That is not enough where one method binds
 # identity and another does not. These axes name the method that MUST be used.
 REQUIRED_METHOD = {
+    # ⛔ A 2 ON AXIS 6 MUST READ THE SOURCE TREE. Its bar contrasts source with "a description of
+    # it", so a grep of a document about the source can support a 1 and never a 2. Registering the
+    # method was not enough on its own: axis 2's round-12 repair added a method and left the old
+    # prose cells scoring beside it, and this is the same shape.
+    6: {"repo_tree_probe"},
     12: {"hf_probe.weight_object"},
     13: {"hf_probe.all_shard_digests"},
 }
@@ -349,6 +363,8 @@ REQUIRED_FIELDS = {
     "hf_probe.corpus_item_digests": ("expect_files", "expect_repo",
                                      "expect_evidence_sha256"),
     "hf_probe.signed_commit": ("expect_revision", "expect_evidence_sha256"),
+    "repo_tree_probe": ("expect_repo", "expect_commit", "expect_paths",
+                        "expect_evidence_sha256"),
 }
 
 

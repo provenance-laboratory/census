@@ -16,6 +16,15 @@
       "stored": true,
       "whole_object_bytes": 1743968224
     },
+    "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1": {
+      "bytes": 77398,
+      "cells": [
+        "pythia-12b/axis6"
+      ],
+      "note": "the repository's own tree at a pinned commit, from the GitHub API. It is archived because axis 6 asks for SOURCE, and a README naming a repository is a description of source rather than source.",
+      "sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6",
+      "stored": true
+    },
     "https://api.github.com/repos/EleutherAI/lm-evaluation-harness/releases/latest": {
       "bytes": 17902,
       "cells": [
@@ -24,12 +33,30 @@
       "sha256": "7ee1752d7056bd59f906ebcd9080a231b47a37daa74d7918319467bb4a7bbf87",
       "stored": true
     },
+    "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1": {
+      "bytes": 504786,
+      "cells": [
+        "olmo-2-13b/axis6"
+      ],
+      "note": "the repository's own tree at a pinned commit, from the GitHub API. It is archived because axis 6 asks for SOURCE, and a README naming a repository is a description of source rather than source.",
+      "sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60",
+      "stored": true
+    },
     "https://api.github.com/repos/anthropics/evals": {
       "bytes": 7135,
       "cells": [
         "claude-3.5-sonnet/axis18"
       ],
       "sha256": "34acd8b5d3e2d69c7f0becaea90d92e065b9025d04032a5c7552b279779cc24e",
+      "stored": true
+    },
+    "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1": {
+      "bytes": 5013,
+      "cells": [
+        "bert-base-uncased/axis6"
+      ],
+      "note": "the repository's own tree at a pinned commit, from the GitHub API. It is archived because axis 6 asks for SOURCE, and a README naming a repository is a description of source rather than source.",
+      "sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340",
       "stored": true
     },
     "https://api.github.com/repos/openai/simple-evals": {

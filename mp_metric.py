@@ -200,9 +200,16 @@ def validate(led):
                              f"({u[:70]}...). Run pin_urls.py; a branch is a moving pointer and "
                              f"'retrieved at a pinned revision' is false of it.")
 
-        # ⛔ VERIFIED requires a REGISTERED method, not a sentence. Round-1 review passed every
+        # {D} VERIFIED requires a REGISTERED method, not a sentence. Round-1 review passed every
         # score-2 cell with check="read a document" and this validator reported no defect.
-        if val == 2:
+        #
+        # {D} AND A CHECK ON A NON-VERIFIED CELL WAS VALIDATED BY NOTHING, which is the same hole
+        # `bound` had before round 13. It matters now: round 14 demoted five cells from 2 to 1
+        # because their checks did not establish their axis's bar, and those checks STAY on the
+        # cells as the record of what was actually tested. Unvalidated, they would be prose again
+        # the moment anyone edited them. Every cell carrying a `check` is held to the method rules;
+        # only the VERIFIED-specific ones below remain gated on val == 2.
+        if isinstance(c.get("check"), dict) or val == 2:
             chk = c.get("check")
             if not isinstance(chk, dict):
                 d.append(f"{where}: VERIFIED requires a `check` OBJECT "
@@ -238,8 +245,14 @@ def validate(led):
                 # NOT ACCEPTABLE. Round-6 review moved a weights cell to `http_range` -- which is
                 # registered, and which axes.py declared legal for that axis -- and every identity
                 # check was bypassed with no defect reported anywhere.
+                # ⛔ REQUIRED-METHOD IS A RULE ABOUT VERIFIED CELLS ONLY. A score-1 cell may
+                # legitimately record a weaker check as the record of what was tested -- bloom's
+                # axis 6 greps a README, and that IS the finding: the declared repository holds
+                # BLOOM's launch script and chronicles, not the trainer, which lives in an
+                # undeclared repository. Demanding the strong method there would delete the
+                # distinction this axis now draws.
                 _req = A.required_method(ax)
-                if _req and meth not in _req:
+                if val == 2 and _req and meth not in _req:
                     d.append(f"{where}: axis {ax} REQUIRES {sorted(_req)}; {meth!r} is registered "
                              f"and permitted but does not bind this axis's identity")
                 # A cell missing what its own method needs is a DEFECT, not a weaker cell. Deleting

@@ -1,0 +1,54 @@
+{
+  "_readme": "Each subject's declared source tree at a pinned commit. BLOOM is absent deliberately: its declared repository holds the launch script and chronicles, not the trainer, which lives in Megatron-DeepSpeed -- a repository the subject does not declare. That cell scores 1 and the asymmetry is the finding.",
+  "as_of": "2026-08-31",
+  "subjects": {
+    "bert-base-uncased": {
+      "blobs": 21,
+      "commit": "8028c0459485299fa1ae6692b2300922a3fa2bad",
+      "manifest": "requirements.txt",
+      "paths": [
+        "run_pretraining.py",
+        "create_pretraining_data.py"
+      ],
+      "repo": "google-research/bert",
+      "sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340",
+      "sizes": {
+        "create_pretraining_data.py": 16475,
+        "run_pretraining.py": 18667
+      },
+      "url": "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1"
+    },
+    "olmo-2-13b": {
+      "blobs": 1354,
+      "commit": "4bf8f90c26dd180095f66d0764636e00d8bae4c1",
+      "manifest": "pyproject.toml",
+      "paths": [
+        "scripts/train.py",
+        "olmo/train.py"
+      ],
+      "repo": "allenai/OLMo",
+      "sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60",
+      "sizes": {
+        "olmo/train.py": 59922,
+        "scripts/train.py": 18905
+      },
+      "url": "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1"
+    },
+    "pythia-12b": {
+      "blobs": 277,
+      "commit": "5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb",
+      "manifest": "requirements/requirements.txt",
+      "paths": [
+        "train.py",
+        "megatron/training.py"
+      ],
+      "repo": "EleutherAI/gpt-neox",
+      "sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6",
+      "sizes": {
+        "megatron/training.py": 64821,
+        "train.py": 1423
+      },
+      "url": "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1"
+    }
+  }
+}

@@ -93,8 +93,7 @@
           "https://huggingface.co/datasets/EleutherAI/pile/raw/148e1d5e8349977c76f673190424a2faf6980a1d/README.md"
         ],
         "6": [
-          "https://raw.githubusercontent.com/EleutherAI/gpt-neox/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb/README.md",
-          "https://raw.githubusercontent.com/EleutherAI/pythia/e204ae87eabcc6994ccd93622716525a7005ba17/README.md"
+          "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1"
         ],
         "7": [
           "https://raw.githubusercontent.com/EleutherAI/pythia/55e1182be2856e34e5044e5eb8ac96002e9e40f3/models/12B/pythia-12b.yml"
@@ -136,9 +135,7 @@
           "PubMed"
         ],
         "4": [],
-        "6": [
-          "gpt-neox"
-        ],
+        "6": [],
         "7": [],
         "8": [
           "1234"
@@ -155,7 +152,7 @@
       "axis_method": {
         "1": "grep_retrieved",
         "4": null,
-        "6": "grep_retrieved",
+        "6": "repo_tree_probe",
         "7": null,
         "8": "grep_retrieved",
         "10": null,
@@ -170,7 +167,8 @@
       },
       "axis_evidence_sha256": {
         "12": "01d4829682a02bc7d813310ed3f56554d04b2e3d15e357cae548a206e3d55381",
-        "13": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71"
+        "13": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71",
+        "6": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6"
       }
     },
     {
@@ -235,7 +233,7 @@
           "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
         ],
         "6": [
-          "https://raw.githubusercontent.com/allenai/OLMo/4bf8f90c26dd180095f66d0764636e00d8bae4c1/README.md"
+          "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1"
         ],
         "7": [
           "https://raw.githubusercontent.com/allenai/OLMo/600a8d096b8b77a3fdf126c8ad0f7c8e56b3ea91/configs/official-1124/OLMo2-13B-stage1.yaml"
@@ -291,16 +289,16 @@
           "open-web-math"
         ],
         "4": [],
-        "6": [
-          "torchrun"
-        ],
+        "6": [],
         "7": [],
         "8": [
           "seed: 6198"
         ],
         "9": [],
         "10": [],
-        "11": [],
+        "11": [
+          "seed: 6198"
+        ],
         "12": [],
         "13": [],
         "18": [],
@@ -310,7 +308,7 @@
       "axis_method": {
         "1": "grep_retrieved",
         "4": "http_range",
-        "6": "grep_retrieved",
+        "6": "repo_tree_probe",
         "7": null,
         "8": "grep_retrieved",
         "9": null,
@@ -328,7 +326,8 @@
       "axis_evidence_sha256": {
         "12": "df21d04baa23cab835578296f64e83129c610030c3da2462641e42f5c2e5abb8",
         "13": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3",
-        "2": "427b951862f6d7aa78fdce283d4320bc624cc7c1f2ca3a8e79bcdb2e2a1c69e0"
+        "2": "427b951862f6d7aa78fdce283d4320bc624cc7c1f2ca3a8e79bcdb2e2a1c69e0",
+        "6": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60"
       }
     },
     {
@@ -878,7 +877,7 @@
           "https://huggingface.co/google-bert/bert-base-uncased/raw/86b5e0934494bd15c9632b12f734a8a67f723594/README.md"
         ],
         "6": [
-          "https://raw.githubusercontent.com/google-research/bert/8028c0459485299fa1ae6692b2300922a3fa2bad/README.md"
+          "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1"
         ],
         "7": [
           "https://arxiv.org/abs/1810.04805",
@@ -898,10 +897,7 @@
           "Wikipedia"
         ],
         "4": [],
-        "6": [
-          "create_pretraining_data.py",
-          "run_pretraining.py"
-        ],
+        "6": [],
         "7": [],
         "12": [],
         "17": []
@@ -909,7 +905,7 @@
       "axis_method": {
         "1": "grep_retrieved",
         "4": null,
-        "6": "grep_retrieved",
+        "6": "repo_tree_probe",
         "7": null,
         "17": null,
         "12": "hf_probe.weight_object"
@@ -918,7 +914,8 @@
         "12": "model.safetensors"
       },
       "axis_evidence_sha256": {
-        "12": "a312ded84642890d49cb0163900d4e7779f350da778e6f6f0a918d5aa705c059"
+        "12": "a312ded84642890d49cb0163900d4e7779f350da778e6f6f0a918d5aa705c059",
+        "6": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340"
       }
     },
     {
@@ -1066,29 +1063,26 @@
       "axis": 6,
       "score": 2,
       "check": {
-        "method": "grep_retrieved",
-        "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "GPT-NeoX is public and the release names it as the code that produced the weights.",
-        "expect": [
-          "gpt-neox"
+        "method": "repo_tree_probe",
+        "asserts": "the declared source repository contains the training entrypoints and a dependency manifest, as files, at a pinned commit",
+        "observed": "EleutherAI/gpt-neox at 5150809878f0 lists 277 blobs, among them train.py 1,423 bytes, megatron/training.py 64,821 bytes, with the dependency manifest requirements/requirements.txt. \u26d4 THIS REPLACES A GREP OF A README FOR 'gpt-neox', which was the whole basis of the previous 2. A literal's presence in a document is compatible with the named repository being absent, empty, or unrelated; two round-14 reviewers found this independently and one demoted the cells to show what it cost. \u26a0 WHAT THIS ESTABLISHES AND WHAT IT DOES NOT: the source is published at a pinned revision and is structurally complete -- an artifact rather than a description, which is the contrast the axis's bar actually draws. Nothing here EXECUTES it, so a 2 on this axis does not mean 'we ran it'. \u26a0 THE README IS NO LONGER CITED HERE. It was kept as co-evidence after the method changed, and the mutation tester showed why that is wrong: repointing its digest changed no verdict, because the executor reads the tree and never looks at it. Evidence nothing checks is evidence nothing protects.",
+        "expect_repo": "EleutherAI/gpt-neox",
+        "expect_commit": "5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb",
+        "expect_paths": [
+          "train.py",
+          "megatron/training.py"
         ],
-        "expect_artifacts": 2
+        "expect_manifest": "requirements/requirements.txt",
+        "expect_evidence_sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6"
       },
       "evidence": [
         {
-          "url": "https://raw.githubusercontent.com/EleutherAI/gpt-neox/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "109d01c252722a45edf38170866e45c5a91caae17dad13c81f26be06c6852d60",
-          "pinned_commit": "5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb"
-        },
-        {
-          "url": "https://raw.githubusercontent.com/EleutherAI/pythia/e204ae87eabcc6994ccd93622716525a7005ba17/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "04a0ab8f9ee82a4a0f03f98ac8c08645759a406d2662c1d535b31272c897206d",
-          "pinned_commit": "e204ae87eabcc6994ccd93622716525a7005ba17"
+          "url": "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1",
+          "retrieved": "2026-08-31",
+          "sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6"
         }
       ],
-      "note": "GPT-NeoX is public and the release names it as the code that produced the weights."
+      "note": "The training source is published as files at a pinned commit of the declared repository, with a dependency manifest -- verified against the repository's own tree, not against a document naming it."
     },
     {
       "subject": "pythia-12b",
@@ -1150,15 +1144,16 @@
     {
       "subject": "pythia-12b",
       "axis": 11,
-      "score": 2,
+      "score": 1,
       "check": {
         "method": "grep_retrieved",
-        "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "utils/batch_viewer.py is published: the tool for viewing the exact portions of the training dataloader used by all models.",
+        "asserts": "the retrieved document contains 'batch_viewer' -- which is a fact about the DOCUMENT, not about the axis's bar",
+        "observed": "'batch_viewer' found in the retrieved document, and the check establishes nothing beyond that. \u26d4 SCORED 1, NOT 2, AND THE PREVIOUS 2 WAS WRONG. This axis's level-2 bar is 'enough to reconstruct the exact sequence of examples'. A grep for a literal cannot reach it: the string's presence is compatible with the named artifact being absent, empty, or unrelated. The earlier cell carried this same evidence and claimed a 2 while its own `asserts` said only that 'the retrieved document contains the material' -- stating what a check does not establish is honest, and keeping the 2 anyway is not. Two round-14 reviewers found this independently; one demonstrated it by demoting the cells and re-scoring. TO EARN A 2: generate the example sequence from the published seed and sampler and compare it, ordered, against the release's own. A tool's NAME appearing in a README does not establish that the tool reproduces the order.",
         "expect": [
           "batch_viewer"
         ],
-        "expect_artifacts": 2
+        "expect_artifacts": 2,
+        "what_would_earn_2": "generate the example sequence from the published seed and sampler and compare it, ordered, against the release's own. A tool's NAME appearing in a README does not establish that the tool reproduces the order."
       },
       "evidence": [
         {
@@ -1174,7 +1169,7 @@
           "pinned_commit": "e204ae87eabcc6994ccd93622716525a7005ba17"
         }
       ],
-      "note": "utils/batch_viewer.py is published: the tool for viewing the exact portions of the training dataloader used by all models."
+      "note": "The material is named in a published document, which is asserted rather than verified: the check finds a literal and the axis asks for enough to reconstruct the exact sequence of examples. See check.observed."
     },
     {
       "subject": "pythia-12b",
@@ -1469,23 +1464,26 @@
       "axis": 6,
       "score": 2,
       "check": {
-        "method": "grep_retrieved",
-        "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The repository gives a reproduce invocation against published configs.",
-        "expect": [
-          "torchrun"
+        "method": "repo_tree_probe",
+        "asserts": "the declared source repository contains the training entrypoints and a dependency manifest, as files, at a pinned commit",
+        "observed": "allenai/OLMo at 4bf8f90c26dd lists 1354 blobs, among them scripts/train.py 18,905 bytes, olmo/train.py 59,922 bytes, with the dependency manifest pyproject.toml. \u26d4 THIS REPLACES A GREP OF A README FOR 'torchrun', which was the whole basis of the previous 2. A literal's presence in a document is compatible with the named repository being absent, empty, or unrelated; two round-14 reviewers found this independently and one demoted the cells to show what it cost. \u26a0 WHAT THIS ESTABLISHES AND WHAT IT DOES NOT: the source is published at a pinned revision and is structurally complete -- an artifact rather than a description, which is the contrast the axis's bar actually draws. Nothing here EXECUTES it, so a 2 on this axis does not mean 'we ran it'. \u26a0 THE README IS NO LONGER CITED HERE. It was kept as co-evidence after the method changed, and the mutation tester showed why that is wrong: repointing its digest changed no verdict, because the executor reads the tree and never looks at it. Evidence nothing checks is evidence nothing protects.",
+        "expect_repo": "allenai/OLMo",
+        "expect_commit": "4bf8f90c26dd180095f66d0764636e00d8bae4c1",
+        "expect_paths": [
+          "scripts/train.py",
+          "olmo/train.py"
         ],
-        "expect_artifacts": 1
+        "expect_manifest": "pyproject.toml",
+        "expect_evidence_sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60"
       },
       "evidence": [
         {
-          "url": "https://raw.githubusercontent.com/allenai/OLMo/4bf8f90c26dd180095f66d0764636e00d8bae4c1/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "a144f4ca427a5edcd97e13e009be0a101fde59b17d887259a6c11f692ad4a33f",
-          "pinned_commit": "4bf8f90c26dd180095f66d0764636e00d8bae4c1"
+          "url": "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1",
+          "retrieved": "2026-08-31",
+          "sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60"
         }
       ],
-      "note": "The repository gives a reproduce invocation against published configs."
+      "note": "The training source is published as files at a pinned commit of the declared repository, with a dependency manifest -- verified against the repository's own tree, not against a document naming it."
     },
     {
       "subject": "olmo-2-13b",
@@ -1571,7 +1569,10 @@
       "check": {
         "method": "grep_retrieved",
         "asserts": "the published training config carries a SEED and an ordered enumeration of the data files",
-        "observed": "`seed: 6198` appears in the config together with 1122 data-file paths in order. \u26d4 SCORED 1, NOT 2, AND THE PREVIOUS 2 WAS WRONG. This axis asks whether sharding and shuffle are DERIVABLE, and its level-2 bar is 'enough to reconstruct the exact sequence of examples'. What was checked is that the material is published -- which is axis 8's question, satisfied by the SAME GREP ON THE SAME FILE. Reconstructing the order additionally requires the sampler and shuffler to be deterministic given this seed, which this census does not execute. The earlier cell stated that disclaimer in its own observed field and kept the 2: stating what a check does not establish is honest, and it does not convert the check into a check of the axis. Both round-3 reviewers reached this independently and both were right."
+        "observed": "`seed: 6198` appears in the config together with 1122 data-file paths in order. \u26d4 SCORED 1, NOT 2, AND THE PREVIOUS 2 WAS WRONG. This axis asks whether sharding and shuffle are DERIVABLE, and its level-2 bar is 'enough to reconstruct the exact sequence of examples'. What was checked is that the material is published -- which is axis 8's question, satisfied by the SAME GREP ON THE SAME FILE. Reconstructing the order additionally requires the sampler and shuffler to be deterministic given this seed, which this census does not execute. The earlier cell stated that disclaimer in its own observed field and kept the 2: stating what a check does not establish is honest, and it does not convert the check into a check of the axis. Both round-3 reviewers reached this independently and both were right. \u26a0 ROUND 14: this check named `grep_retrieved` and carried NO `expect` list, so nothing could be replayed and the method name was a label. It went unvalidated because every check-rule was gated on score 2 and this cell is a 1 -- the same hole `bound` had. The literal is declared now and replay confirms it against the archived config.",
+        "expect": [
+          "seed: 6198"
+        ]
       },
       "evidence": [
         {
@@ -1892,15 +1893,16 @@
     {
       "subject": "bloom-176b",
       "axis": 6,
-      "score": 2,
+      "score": 1,
       "check": {
         "method": "grep_retrieved",
-        "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The training record gives the launch command against a public Megatron-DeepSpeed fork.",
+        "asserts": "the retrieved document contains 'Megatron-DeepSpeed' -- which is a fact about the DOCUMENT, not about the axis's bar",
+        "observed": "'Megatron-DeepSpeed' found in the retrieved document, and the check establishes nothing beyond that. \u26d4 SCORED 1, AND UNLIKE THE OTHER THREE THIS ONE CANNOT BE RAISED BY READING THE TREE. The declared source `gh:bigscience-workshop/bigscience` at 39ed8110482e holds 527 blobs: the launch script `train/tr11-176B-ml.slurm`, the chronicles, the reshaping logs -- real artifacts, and NOT the trainer. The trainer is Megatron-DeepSpeed, a separate repository this subject does not declare as a source. So what is published here is the CONFIGURATION of the run, which is more than a description and less than the source the axis asks for. \u26a0 The asymmetry with pythia, olmo and bert is the finding, and it only became visible once the axis could read a tree instead of a README. TO EARN A 2: declare the trainer's repository as a source and pin it, or show the launch script is sufficient without it.",
         "expect": [
           "Megatron-DeepSpeed"
         ],
-        "expect_artifacts": 1
+        "expect_artifacts": 1,
+        "what_would_earn_2": "archive the pinned source tree the document points at, and execute a check that DISCRIMINATES source from mention -- a dry-run, a build, or the presence of a training entrypoint plus the config it requires. Finding a repository name in a README is compatible with the repository being empty, archived, or unrelated."
       },
       "evidence": [
         {
@@ -1910,7 +1912,7 @@
           "pinned_commit": "39ed8110482e9eb87d0e094ede05e4d02c40e298"
         }
       ],
-      "note": "The training record gives the launch command against a public Megatron-DeepSpeed fork."
+      "note": "The run's launch configuration is published; the trainer is in a repository this release does not declare. Asserted, not verified. See check.observed."
     },
     {
       "subject": "bloom-176b",
@@ -4515,24 +4517,26 @@
       "axis": 6,
       "score": 2,
       "check": {
-        "method": "grep_retrieved",
-        "asserts": "the retrieved document contains the material the axis asks to be published",
-        "observed": "The repository ships create_pretraining_data.py and run_pretraining.py.",
-        "expect": [
-          "create_pretraining_data.py",
-          "run_pretraining.py"
+        "method": "repo_tree_probe",
+        "asserts": "the declared source repository contains the training entrypoints and a dependency manifest, as files, at a pinned commit",
+        "observed": "google-research/bert at 8028c0459485 lists 21 blobs, among them run_pretraining.py 18,667 bytes, create_pretraining_data.py 16,475 bytes, with the dependency manifest requirements.txt. \u26d4 THIS REPLACES A GREP OF A README FOR 'create_pretraining_data.py', which was the whole basis of the previous 2. A literal's presence in a document is compatible with the named repository being absent, empty, or unrelated; two round-14 reviewers found this independently and one demoted the cells to show what it cost. \u26a0 WHAT THIS ESTABLISHES AND WHAT IT DOES NOT: the source is published at a pinned revision and is structurally complete -- an artifact rather than a description, which is the contrast the axis's bar actually draws. Nothing here EXECUTES it, so a 2 on this axis does not mean 'we ran it'. \u26a0 THE README IS NO LONGER CITED HERE. It was kept as co-evidence after the method changed, and the mutation tester showed why that is wrong: repointing its digest changed no verdict, because the executor reads the tree and never looks at it. Evidence nothing checks is evidence nothing protects.",
+        "expect_repo": "google-research/bert",
+        "expect_commit": "8028c0459485299fa1ae6692b2300922a3fa2bad",
+        "expect_paths": [
+          "run_pretraining.py",
+          "create_pretraining_data.py"
         ],
-        "expect_artifacts": 1
+        "expect_manifest": "requirements.txt",
+        "expect_evidence_sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340"
       },
       "evidence": [
         {
-          "url": "https://raw.githubusercontent.com/google-research/bert/8028c0459485299fa1ae6692b2300922a3fa2bad/README.md",
-          "retrieved": "2026-08-28",
-          "sha256": "43b560935cfaef7427ae15d5c2c089b46d857e9e51fce5f20c93a9a74f99b756",
-          "pinned_commit": "8028c0459485299fa1ae6692b2300922a3fa2bad"
+          "url": "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1",
+          "retrieved": "2026-08-31",
+          "sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340"
         }
       ],
-      "note": "The repository ships create_pretraining_data.py and run_pretraining.py."
+      "note": "The training source is published as files at a pinned commit of the declared repository, with a dependency manifest -- verified against the repository's own tree, not against a document naming it."
     },
     {
       "subject": "bert-base-uncased",

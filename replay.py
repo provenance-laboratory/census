@@ -747,6 +747,86 @@ def _commit_fingerprint(raw):
     return "no-issuer-subpacket"
 
 
+GH_TREE = re.compile(
+    r"^https://api\.github\.com/repos/([^/]+/[^/]+)/git/trees/([0-9a-f]{40})\?recursive=1$")
+
+
+def m_repo_tree(c, ev, ctx=None):
+    """Axis 6: the training source EXISTS as files at a pinned commit, not as a word in a README.
+
+    ⛔ WHY THIS EXISTS. Axis 6's bar is "source sufficient to run the described procedure, not a
+    description of it", and every score-2 cell settled it by grepping a README for a single
+    literal. Finding 'gpt-neox' in a document is compatible with the repository being absent,
+    empty, or unrelated -- and the cells' own `asserts` said only that "the retrieved document
+    contains the material", which is a fact about the document. Two round-14 reviewers found it
+    independently.
+
+    ⚠ WHAT THIS DOES AND DOES NOT ESTABLISH. It reads the repository's own tree at a pinned
+    commit and requires the declared training entrypoints to be present as non-trivial blobs,
+    alongside a dependency manifest. That clears the bar's stated contrast -- an artifact rather
+    than a description -- and it does NOT prove the code runs. Nothing here executes it. An axis-6
+    two means "the source is published at a pinned revision and structurally complete"; it does
+    not mean "we ran it".
+
+    ⚠ AND IT IS NOT AUTOMATIC. bigscience-workshop/bigscience holds BLOOM's launch script and
+    chronicles, and NOT the trainer -- Megatron-DeepSpeed is a different repository the subject
+    does not declare. That cell stays at 1, which is the distinction this method exists to draw.
+    """
+    chk = _asserted(c)
+    want_repo = chk.get("expect_repo")
+    want_sha = chk.get("expect_commit")
+    want_paths = chk.get("expect_paths")
+    want_ev = chk.get("expect_evidence_sha256")
+    if not (want_repo and want_sha and want_paths and want_ev):
+        return False, ("needs expect_repo, expect_commit, expect_paths and "
+                       "expect_evidence_sha256; without them the tree is unconstrained")
+
+    recs = [e for e in ev if GH_TREE.match(str(e.get("url", "")))]
+    if len(recs) != 1:
+        return False, "expected exactly one pinned repository tree response, found %d" % len(recs)
+    repo, sha = GH_TREE.match(recs[0]["url"]).groups()
+    if repo != want_repo:
+        return False, "the tree is of %s; the cell declares %s" % (repo, want_repo)
+    if sha != want_sha:
+        return False, "the tree is at %s; the cell declares %s" % (sha[:12], want_sha[:12])
+    if recs[0]["sha256"] != want_ev:
+        return False, ("this check declares evidence %s; the cell cites %s"
+                       % (want_ev[:12], recs[0]["sha256"][:12]))
+
+    b = _bytes_for(recs[0])
+    if b is None:
+        return None, "the tree response is not archived"
+    try:
+        tree = json.loads(b.decode("utf-8"))
+    except Exception:                                                       # noqa: BLE001
+        return False, "the archived tree response is not JSON"
+    if tree.get("truncated"):
+        return False, ("the archived tree is TRUNCATED, so an absent path proves nothing about "
+                       "the repository")
+    blobs = {x["path"]: x for x in tree.get("tree", []) if x.get("type") == "blob"}
+
+    missing = [q for q in want_paths if q not in blobs]
+    if missing:
+        return False, ("%d declared path(s) are NOT in the tree at %s@%s: %s"
+                       % (len(missing), repo, sha[:12], missing[:3]))
+    tiny = [q for q in want_paths if int(blobs[q].get("size") or 0) < 512]
+    if tiny:
+        return False, ("%s present but under 512 bytes -- a stub is not source" % tiny[:2])
+
+    want_man = chk.get("expect_manifest")
+    if not want_man:
+        return False, ("no `expect_manifest`: source without a declared dependency manifest is "
+                       "not shown to be runnable-shaped, and this axis's bar is about running")
+    if want_man not in blobs:
+        return False, "the declared manifest %r is not in the tree" % want_man
+
+    return True, ("%d declared entrypoint(s) present as blobs at %s@%s (%s), with manifest %s -- "
+                  "the source artifact, not a document naming it"
+                  % (len(want_paths), repo, sha[:12],
+                     ", ".join("%s %dB" % (q, blobs[q].get("size", 0)) for q in want_paths[:2]),
+                     want_man))
+
+
 def m_signed_commit(c, ev, ctx=None):
     """Axis 14: a signature over the weights by a key THE PUBLISHER bound to itself.
 
@@ -886,6 +966,7 @@ DISPATCH = {
     "hf_probe.all_shard_digests": m_all_shard_digests,
     "hf_probe.corpus_item_digests": m_corpus_item_digests,
     "hf_probe.signed_commit": m_signed_commit,
+    "repo_tree_probe": m_repo_tree,
 }
 
 
