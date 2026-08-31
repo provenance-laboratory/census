@@ -245,7 +245,18 @@ def main():
                 _kind, _keys = "MATERIAL", ["bytes unavailable for comparison"]
             else:
                 _kind, _keys = drift_kind(_old_bytes, _live)
-            if _kind == "METADATA":
+            if _kind == "NONE":
+                # ⛔ BYTES DIFFER, PARSED CONTENT IS IDENTICAL. A JSON API may reorder keys or
+                # change whitespace between responses; the archived claim is unaffected. This was
+                # falling through to MATERIAL with an EMPTY differing-key list -- a finding that
+                # named nothing, which is how the 403 rate-limit bodies were nearly filed as
+                # three changed source trees.
+                meta_drift += 1
+                print("  ser    %s" % label)
+                print("         the bytes differ and the PARSED CONTENT IS IDENTICAL -- key order "
+                      "or whitespace. The claim is unaffected.")
+                findings.append((url, "serialisation only: parsed content identical", cells))
+            elif _kind == "METADATA":
                 meta_drift += 1
                 print("  meta   %s" % label)
                 print("         differs ONLY in %s -- host metadata, not evidence this census "

@@ -117,6 +117,25 @@ def looks_like_a_wall(body, status):
     return None
 
 
+def _throttled(status, body):
+    """Is this the channel refusing, rather than the resource answering?
+
+    ⛔ 429 and 503 were the whole list. GitHub uses 403 with a body saying "API rate limit
+    exceeded", and that body was hashed as evidence -- three artifacts reported as drifted that a
+    later fetch showed were byte-for-byte identical. The status code alone is not enough to tell a
+    refusal from an answer; the body has to be read.
+    """
+    if str(status) in ("429", "503"):
+        return True
+    if str(status) == "403" and body:
+        try:
+            low = body[:2000].decode("utf-8", "replace").lower()
+        except Exception:                                                   # noqa: BLE001
+            return False
+        return "rate limit" in low or "abuse detection" in low
+    return False
+
+
 def evidence(url, retries=2):
     """⛔ A RATE LIMIT IS NOT A FINDING ABOUT THE ARTIFACT. Re-fetching 226 artifacts hits Hugging
     Face's limiter, and two came back HTTP 429 -- which the drift report then filed as
@@ -126,11 +145,16 @@ def evidence(url, retries=2):
     import time as _t
     for attempt in range(retries + 1):
         status, body, err = fetch(url)
-        if str(status) in ("429", "503") and attempt < retries:
+        # ⛔ GITHUB SIGNALS RATE LIMITING WITH 403, NOT 429, and its error body was hashed as
+        # if it were the artifact -- so three source trees were reported as DRIFTED when a later
+        # fetch proved them byte-for-byte identical. That is this project's bot-wall defect
+        # exactly: a throttled host's error page treated as the answer. A 403 whose body says
+        # "rate limit" is the channel talking, not the resource.
+        if _throttled(status, body) and attempt < retries:
             _t.sleep(5 * (attempt + 1))
             continue
         break
-    if str(status) in ("429", "503"):
+    if _throttled(status, body):
         return None, ("RATE-LIMITED (HTTP %s) after %d attempts -- a fact about the channel, not "
                       "about the artifact" % (status, retries + 1))
     if err:

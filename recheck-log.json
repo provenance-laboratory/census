@@ -893,6 +893,113 @@
           "recorded_sha256": "0c993bc7336e2cd0330036b4da9c6bd8ce9d6cccd2b7f26dccb3abc9a8e5df0f"
         }
       ]
+    },
+    {
+      "at": "2026-08-31T07:10:04Z",
+      "artifacts": 318,
+      "unchanged": 218,
+      "drifted": 0,
+      "unretrievable": 0,
+      "volatile": 90,
+      "rate_limited": 0,
+      "complete": true,
+      "metadata_drift": 10,
+      "covered": "50300cbbc27ab8fa5ff42963b3fbd4e3e6953c422ac87a6160d720e91870c95d",
+      "subject_filter": null,
+      "findings": [
+        {
+          "url": "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1",
+          "what": "serialisation only: parsed content identical",
+          "cells": [
+            "pythia-12b/axis6"
+          ],
+          "recorded_sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6"
+        },
+        {
+          "url": "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1",
+          "what": "serialisation only: parsed content identical",
+          "cells": [
+            "olmo-2-13b/axis6"
+          ],
+          "recorded_sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60"
+        },
+        {
+          "url": "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1",
+          "what": "serialisation only: parsed content identical",
+          "cells": [
+            "bert-base-uncased/axis6"
+          ],
+          "recorded_sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340"
+        },
+        {
+          "url": "https://huggingface.co/api/models/EleutherAI/pythia-12b/revision/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+          "what": "metadata drift: downloads",
+          "cells": [
+            "pythia-12b/axis15",
+            "pythia-12b/axis12",
+            "pythia-12b/axis13"
+          ],
+          "recorded_sha256": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71"
+        },
+        {
+          "url": "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796",
+          "what": "metadata drift: downloads, likes",
+          "cells": [
+            "qwen2.5-7b/axis15",
+            "qwen2.5-7b/axis12",
+            "qwen2.5-7b/axis13"
+          ],
+          "recorded_sha256": "c12581151f4234bd051e16831c3dcd782f5ff623e9a0213dfe7d55b7a8fc15d9"
+        },
+        {
+          "url": "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+          "what": "metadata drift: downloads",
+          "cells": [
+            "olmo-2-13b/axis15",
+            "olmo-2-13b/axis12",
+            "olmo-2-13b/axis13"
+          ],
+          "recorded_sha256": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3"
+        },
+        {
+          "url": "https://huggingface.co/api/models/bigscience/bloom/revision/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "bloom-176b/axis15",
+            "bloom-176b/axis12",
+            "bloom-176b/axis13"
+          ],
+          "recorded_sha256": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29"
+        },
+        {
+          "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/86b5e0934494bd15c9632b12f734a8a67f723594",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "bert-base-uncased/axis15",
+            "bert-base-uncased/axis12"
+          ],
+          "recorded_sha256": "7ee96aab76282c64d70436d1344b749d0721975f2e57cd801f726b0cf8c97715"
+        },
+        {
+          "url": "https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/revision/caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "what": "metadata drift: downloads, spaces",
+          "cells": [
+            "mistral-7b-v0.3/axis15",
+            "mistral-7b-v0.3/axis12",
+            "mistral-7b-v0.3/axis13"
+          ],
+          "recorded_sha256": "65652618c2c1d9fcb19dfaf3c1b9e0ff46ce6e21490a53c6f34fea852171b4bd"
+        },
+        {
+          "url": "https://huggingface.co/api/models/openai-community/gpt2-xl/revision/15ea56dee5df4983c59b2538573817e1667135e2",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "gpt-2-1.5b/axis15",
+            "gpt-2-1.5b/axis12"
+          ],
+          "recorded_sha256": "0c993bc7336e2cd0330036b4da9c6bd8ce9d6cccd2b7f26dccb3abc9a8e5df0f"
+        }
+      ]
     }
   ]
 }
