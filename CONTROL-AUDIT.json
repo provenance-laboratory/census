@@ -28,17 +28,21 @@
     ],
     [
       "test_bound_rules.py"
+    ],
+    [
+      "reach_controls.py",
+      "--quick"
     ]
   ],
   "previous": {
-    "controls_total": 131,
-    "watched": 77
+    "controls_total": 173,
+    "watched": 96
   },
   "controls_total": 173,
-  "watched": 96,
-  "unwatched": 77,
-  "redundant": 23,
-  "never_executes": 54,
+  "watched": 138,
+  "unwatched": 35,
+  "redundant": 12,
+  "never_executes": 23,
   "survivors": [
     {
       "file": "mp_metric.py",
@@ -91,13 +95,6 @@
     },
     {
       "file": "replay.py",
-      "line": 75,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"literal(s) too short to discriminate anything: %s (minimum %d characters",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
       "line": 224,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" a subject is named `_led`, which this context reserves.\")",
@@ -105,86 +102,9 @@
     },
     {
       "file": "replay.py",
-      "line": 272,
-      "kind": "reports a defect",
-      "source": "bad.append(\"%s is from %s, which %s does not declare%s\"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 277,
-      "kind": "reports a defect",
-      "source": "bad.append(\"%s is from %s, which this subject declares for axis %s, not for axis %d\"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
       "line": 286,
       "kind": "reports a defect",
       "source": "bad.append(\"%s/axis%d has no declared axis_documents\" % (cell[\"subject\"], cell[\"axis\"]))",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 292,
-      "kind": "reports a defect",
-      "source": "bad.append(\"the cited documents are not those this subject declares for axis %d\"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 321,
-      "kind": "reports a defect",
-      "source": "bad.append(\"axis %d carries method %r; this subject declares %r for it\"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 329,
-      "kind": "reports a defect",
-      "source": "bad.append(\"axis %d declares evidence %s; the cell expects %s\"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 336,
-      "kind": "reports a defect",
-      "source": "bad.append(\"axis %d declares file %r; the cell expects %r\"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 375,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"the ranged artifact is cited alone, so nothing in the ledger says this \"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 385,
-      "kind": "rejects in an executor",
-      "source": "return False, \"archived range is %d bytes, the record claims %d\" % (len(b), want)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 387,
-      "kind": "rejects in an executor",
-      "source": "return False, \"archived bytes do not hash to the recorded digest\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 403,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"the cell records enumeration index %d and the co-cited document \"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 414,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"the cell records no `enumerated_index`, so the url could name any of the",
       "class": "NEVER EXECUTES"
     },
     {
@@ -203,13 +123,6 @@
     },
     {
       "file": "replay.py",
-      "line": 447,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"%d of %d words are not valid token ids below %d -- these bytes are not a",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
       "line": 477,
       "kind": "rejects in an executor",
       "source": "return False, \"no `expect_repo`: nothing ties this enumeration to a declared corpus\"",
@@ -217,66 +130,10 @@
     },
     {
       "file": "replay.py",
-      "line": 485,
-      "kind": "rejects in an executor",
-      "source": "return False, \"expected exactly one pinned dataset tree response, found %d\" % len(trees)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 500,
-      "kind": "rejects in an executor",
-      "source": "return False, \"the archived tree response is not JSON\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 527,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"%d of %d enumerated corpus file(s) carry NO publisher digest: %s\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 546,
-      "kind": "rejects in an executor",
-      "source": "return False, why",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 555,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"this is %s's evidence; the cell is scored for %s, which the ledger \"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 561,
-      "kind": "rejects in an executor",
-      "source": "return False, \"expected exactly one ranged artifact, found %d\" % len(r)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
       "line": 564,
       "kind": "rejects in an executor",
       "source": "return False, \"the ranged artifact is not a pinned Hugging Face file url\"",
       "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 569,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"the range is from %s@%s, the enumeration is from %s@%s\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 589,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"no `expect_file`: this check block carries nothing that distinguishes on",
-      "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
@@ -301,30 +158,9 @@
     },
     {
       "file": "replay.py",
-      "line": 604,
-      "kind": "rejects in an executor",
-      "source": "return False, \"archived range is %d bytes, the cell claims %d\" % (len(b), want)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 606,
-      "kind": "rejects in an executor",
-      "source": "return False, \"the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
       "line": 611,
       "kind": "rejects in an executor",
       "source": "return False, \"too short to carry a safetensors header\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 614,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"the archived bytes do not begin with a safetensors header \"",
       "class": "NEVER EXECUTES"
     },
     {
@@ -333,27 +169,6 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the archived bytes do not look like weight data (first bytes %r)\" % b[:16",
       "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 619,
-      "kind": "rejects in an executor",
-      "source": "return False, \"archived bytes do not hash to the recorded digest\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 637,
-      "kind": "rejects in an executor",
-      "source": "return False, why",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 646,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"this is %s's evidence; the cell is scored for %s, which the ledger \"",
-      "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
@@ -367,27 +182,6 @@
       "line": 670,
       "kind": "reports a defect",
       "source": "bad.append(\"%s is from %s@%s\" % (pfile, prepo, prev[:12]))",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 681,
-      "kind": "reports a defect",
-      "source": "bad.append(\"%s carries no sha256 oid\" % pfile)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 683,
-      "kind": "reports a defect",
-      "source": "bad.append(\"%s oid does not match the ledger\" % pfile)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 685,
-      "kind": "reports a defect",
-      "source": "bad.append(\"%s archived bytes do not hash to the recorded digest\" % pfile)",
       "class": "NEVER EXECUTES"
     },
     {
@@ -413,93 +207,9 @@
     },
     {
       "file": "replay.py",
-      "line": 826,
-      "kind": "reports a defect",
-      "source": "bad.append(\"a response carries no totalResults\")",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 831,
-      "kind": "rejects in an executor",
-      "source": "return False, \"; \".join(bad[:2])",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
       "line": 835,
       "kind": "rejects in an executor",
       "source": "return False, \"no archived response for declared term(s) %s\" % missing[:3]",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 838,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"%d term(s) return a different total than recorded: %s. arXiv grows, so \"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 902,
-      "kind": "rejects in an executor",
-      "source": "return False, \"expected exactly one pinned enumeration, found %d\" % len(recs)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 922,
-      "kind": "rejects in an executor",
-      "source": "return False, \"the archived revision response is not JSON\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 929,
-      "kind": "rejects in an executor",
-      "source": "return False, \"the archived response enumerates no files, so it settles nothing\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 946,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"%d declared pattern(s) match NONE of the exemplars, so they cannot detec",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 950,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"exemplar(s) %s match no declared pattern; the probe and the search \"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 954,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"exemplar %s is in the real listing, so the positive control is measuring",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 1000,
-      "kind": "rejects in an executor",
-      "source": "return False, \"expected exactly one pinned repository tree response, found %d\" % len(rec",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 1016,
-      "kind": "rejects in an executor",
-      "source": "return False, \"the archived tree response is not JSON\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 1018,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"the archived tree is TRUNCATED, so an absent path proves nothing about \"",
       "class": "NEVER EXECUTES"
     },
     {
