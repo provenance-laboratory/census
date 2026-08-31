@@ -757,7 +757,11 @@ HF_REVISION = re.compile(
 
 ARXIV_Q = re.compile(r"^https://export\.arxiv\.org/api/query\?")
 _TOTAL = re.compile(rb"<opensearch:totalResults[^>]*>(\d+)<")
-_ENTRY = re.compile(rb"<entry>")
+# ⛔ THIS REGEX WAS COMPILED AND NEVER CALLED, while the docstring below asserted that
+# entries were counted. A round-17 reviewer grepped the project, found one occurrence, and named
+# it exactly: a compiled pattern as a promise nothing keeps. The counting is real now and goes
+# through here, so the pattern and the check cannot drift apart again.
+_ENTRY = re.compile(rb"<entry[ >]")
 
 
 def m_reproduction_search(c, ev, ctx=None):
@@ -795,10 +799,47 @@ def m_reproduction_search(c, ev, ctx=None):
         return False, ("this cell is scored 0 and declares %r adjudicated positive(s). A search "
                        "that found a reproduction report does not support a zero" % (pos,))
 
+    # ⛔ THE ADJUDICATION EXISTS TWICE AND NOTHING COMPARED THE COPIES. `negative-search.json`
+    # records, per subject, whether the search found a reproduction report; the ledger records the
+    # same fact again as a SCORE. A round-16 reviewer edited Pythia's search record from no-hit to
+    # a positive with a url and a quotation, and both advertised verifiers stayed green -- one
+    # checks only that a positive cites something, the other read the cell's own scalar.
+    #
+    # ⚠ AND THE FIRST VERSION OF THIS CHECK WAS WRONG IN THE WAY THIS PROJECT KEEPS FINDING. It
+    # compared the subject-level adjudication against AXIS 16's `expect_adjudicated_positive` and
+    # failed BERT and GPT-2 -- whose hits (RoBERTa, llm.c) answer AXIS 17's question, not axis
+    # 16's. A subject-level fact is not an axis-level one, and treating one as the other is the
+    # same substitution the census is about. The adjudication speaks to axis 17: it is bound to
+    # axis 17's score, which is the quantity it can actually contradict.
+    _nsf = HERE / "negative-search.json"
+    if _nsf.exists():
+        _ns = json.loads(_nsf.read_text(encoding="utf-8"))
+        _rec = (_ns.get("subjects") or {}).get(c["subject"])
+        if _rec is not None:
+            _hit = bool((_rec.get("adjudication") or {}).get("hit"))
+            _led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
+            _a17 = next((x for x in _led.get("cells", [])
+                         if x.get("subject") == c["subject"] and x.get("axis") == 17), None)
+            if _a17 is not None:
+                _scored = bool(_a17.get("score"))
+                if _hit != _scored:
+                    return False, (
+                        "negative-search.json records %s for this subject and axis 17 is scored "
+                        "%s. The adjudication is stored twice -- once as a search verdict and "
+                        "once as a score -- and these two copies disagree."
+                        % ("a reproduction report" if _hit else "no reproduction report",
+                           _a17.get("score")))
+
     recs = [e for e in ev if ARXIV_Q.match(str(e.get("url", "")))]
-    if len(recs) != want_q:
-        return False, ("%d archived query response(s); the cell declares %d"
-                       % (len(recs), want_q))
+    # ⛔ THIS COUNTED RESPONSES AND CALLED THEM QUERIES, which held only while every query fit
+    # in one page. A paginated query is several responses and one query, so counting responses
+    # made the correct archive look wrong -- and, before pagination was archived at all, made the
+    # truncated archive look right. The count is over distinct TERMS; the pages themselves are
+    # bound by the digest-set equality below.
+    _terms = {term_of(e["url"]) for e in recs}
+    if len(_terms) != want_q:
+        return False, ("%d distinct archived quer(ies); the cell declares %d"
+                       % (len(_terms), want_q))
 
     # ⛔ AND THE BYTES MUST BE THE ONES THE CELL MEANS. Repointing an evidence digest used to
     # return "unreplayable" rather than a failure -- a cell citing bytes that are not in the store
@@ -807,12 +848,18 @@ def m_reproduction_search(c, ev, ctx=None):
     if not isinstance(want_dig, dict) or not want_dig:
         return False, ("no `expect_response_digests`: without them any archived response could be "
                        "substituted for any other and the search would still 'replay'")
+    # ⛔ A TERM DECLARED EXACTLY ONE DIGEST, which is why a paginated query could only ever
+    # record its first page: the shape of the field made the truncation unrepresentable. A value
+    # is one page or a list of them now, and the count below is summed across all of them.
+    _want = set()
+    for v in want_dig.values():
+        _want.update([v] if isinstance(v, str) else v)
     got_dig = {str(e.get("sha256")) for e in recs}
-    if got_dig != set(want_dig.values()):
+    if got_dig != _want:
         return False, ("the cited response digests are not those this cell declares (%d of %d "
-                       "match)" % (len(got_dig & set(want_dig.values())), len(want_dig)))
+                       "match)" % (len(got_dig & _want), len(_want)))
 
-    seen, bad = {}, []
+    seen, counted, bad = {}, {}, []
     for e in recs:
         b = _bytes_for(e)
         if b is None:
@@ -826,7 +873,8 @@ def m_reproduction_search(c, ev, ctx=None):
             bad.append("a response carries no totalResults")
             continue
         term = term_of(e["url"])
-        seen[term] = int(m.group(1))
+        seen[term] = max(seen.get(term, 0), int(m.group(1)))
+        counted[term] = counted.get(term, 0) + len(_ENTRY.findall(b))
     if bad:
         return False, "; ".join(bad[:2])
 
@@ -838,10 +886,28 @@ def m_reproduction_search(c, ev, ctx=None):
         return False, ("%d term(s) return a different total than recorded: %s. arXiv grows, so "
                        "this is expected over time -- but the CELL must then say what was true "
                        "when, not what is true now" % (len(moved), list(moved.items())[:2]))
+    # ⛔ THIS EXECUTOR READ ARXIV'S HEADER COUNT AND NEVER COUNTED THE RESULTS. Two reviewers
+    # found it independently in round 16, and one demonstrated it: strip every <entry> from an
+    # archived feed, leave <opensearch:totalResults> intact, re-hash, and this returned ok with
+    # "325 results screened" over an archive containing none. Every --verify passed too, because
+    # each re-hashes what IS stored and nothing counted what SHOULD be. It was live, not only
+    # theoretical -- one archived response held 100 entries under a header saying 121, and the 21
+    # missing were all stage-1 positives.
+    #
+    # ⚠ THE HEADER IS A CLAIM THE FEED MAKES ABOUT ITSELF. Believing it is the same error as
+    # trusting a self-asserted field anywhere else in this project. The results are the evidence;
+    # the count of them is the only thing that binds the bound to the bytes.
+    short = {k: (counted.get(k, 0), seen[k]) for k in seen if counted.get(k, 0) != seen[k]}
+    if short:
+        return False, ("%d term(s) archive a DIFFERENT NUMBER OF RESULTS than their own header "
+                       "claims: %s (counted, header). The bound is not replayable against these "
+                       "bytes -- a feed can carry any header over any body."
+                       % (len(short), list(short.items())[:2]))
     if pos != 0:
-        return True, ("%d archived queries for %r, totals as recorded, and the cell declares %d "
-                      "adjudicated positive(s)" % (len(recs), name, pos))
-    return True, ("%d archived queries for %r replay to the recorded totals (%d results screened); "
+        return True, ("%d archived queries for %r, totals as recorded and COUNTED in the bodies, "
+                      "and the cell declares %d adjudicated positive(s)" % (len(recs), name, pos))
+    return True, ("%d archived queries for %r replay to totals COUNTED in the archived bodies "
+                  "(%d results screened); "
                   "0 adjudicated as a reproduction report, BY READING -- that half is human"
                   % (len(recs), name, sum(seen.values())))
 
@@ -1305,6 +1371,22 @@ def selftest():
             res, _why = gate(c, ctx, owners, d)
             if res is False:
                 return False
+        # ⛔ AND THE BOUNDED NEGATIVES WERE INVISIBLE TO EVERY ATTACK. They are scored 0, the
+        # loop above skips score 0, and 37 of the 209 zeros carry an executable bound -- the
+        # cells section 9.1 calls the census's strongest zeros, precisely because they can fail.
+        # Nothing in 44 attacks could make one fail, so the emptied-feed attack "passed" while
+        # the executor it targets refuses it when called directly. A suite that cannot reach the
+        # claim it is defending reports its own blind spot as a pass.
+        for c in d["cells"]:
+            if c.get("score"):
+                continue
+            blk = c.get("bound") or {}
+            fn = DISPATCH.get(blk.get("method"))
+            if fn is None:
+                continue
+            res, _why = fn(c, c.get("evidence") or [], ctx)
+            if res is False:
+                return False
         return True
 
     def _stub_html(d):
@@ -1322,10 +1404,40 @@ def selftest():
         e = _find(d, "mistral-7b-v0.3", 12)["evidence"][0]
         e["sha256"] = _h.sha256(page).hexdigest()
 
+    def _empty_feed(d):
+        """⛔ ROUND-16 REVIEW, DEMONSTRATED BY TWO REVIEWERS INDEPENDENTLY: strip every <entry>
+        from an archived feed, leave <opensearch:totalResults> intact, re-hash. The executor read
+        the header and never counted the results, so a cell whose archived responses contained
+        NOTHING replayed identically to one containing 325 abstracts, and every --verify passed
+        because each re-hashes what is stored rather than counting what should be. Kept so it runs
+        on every invocation instead of once.
+        """
+        import hashlib as _h
+        import re as _re
+        c = _find(d, "bert-base-uncased", 16)
+        e = c["evidence"][0]
+        body = _bytes_for(e)
+        if body is None:
+            return
+        gutted = _re.sub(b"<entry>.*?</entry>", b"", body, flags=_re.S)
+        blob = STORE / (_h.sha256(gutted).hexdigest() + ".gz")
+        blob.write_bytes(gzip.compress(gutted, 9))
+        _temp_blobs.append(blob)
+        old = e["sha256"]
+        e["sha256"] = _h.sha256(gutted).hexdigest()
+        blk = c.get("check") or c.get("bound")
+        dg = blk["expect_response_digests"]
+        for k, v in list(dg.items()):
+            if isinstance(v, str) and v == old:
+                dg[k] = e["sha256"]
+            elif isinstance(v, list) and old in v:
+                dg[k] = [e["sha256"] if x == old else x for x in v]
+
     def _find(d, sub, ax):
         return [c for c in d["cells"] if c["subject"] == sub and c["axis"] == ax][0]
 
     attacks = [
+        ("an archived feed whose entries are stripped, header intact", _empty_feed),
         ("a fabricated but well-formed shard digest",
          lambda d: _find(d, "mistral-7b-v0.3", 13)["evidence"][2].update({"sha256": "b" * 64})),
         ("one shard pointer removed from a cited enumeration",

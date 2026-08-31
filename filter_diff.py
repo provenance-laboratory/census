@@ -18,8 +18,11 @@ import urllib.request
 
 D = chr(0x26D4)
 W = chr(0x26A0)
-C = pathlib.Path("c:/Users/Yoga/Desktop/workspace/vscode_workspace_bitcoin-proton/"
-                 "provenance-laboratory/census")
+# ⛔ THIS WAS AN ABSOLUTE PATH TO THE AUTHOR'S DISK. Run from the deposit it died on
+# the first read, so the tool behind the round-17 headline claim could not be executed by
+# anyone but the author -- which is the definition of an ASSERTED cell, in a paper whose
+# subject is that distinction. Every other tool in this census resolves relative to itself.
+C = pathlib.Path(__file__).resolve().parent
 UA = "mp-metric-bound-probe (mailto:parthms.id@gmail.com)"
 POLITE = 3.1
 API = ("https://export.arxiv.org/api/query?search_query=%s&start=0&max_results=100")

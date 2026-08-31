@@ -7,7 +7,8 @@ category can.
 import json, re, time, urllib.parse, urllib.request, collections, pathlib
 
 UA = "mp-metric-bound-probe (mailto:parthms.id@gmail.com)"
-d = json.load(open("filter-diff.json", encoding="utf-8"))
+HERE = pathlib.Path(__file__).resolve().parent
+d = json.load(open(HERE / "filter-diff.json", encoding="utf-8"))
 ids = {}
 for subj, hits in d.items():
     for url in hits:
@@ -55,6 +56,6 @@ for s in sorted(per_subj):
     adj = sum(n for c, n in per_subj[s].items() if c in ML)
     print("    %-20s %3d of %3d excluded are adjacent CS/ML  %s"
           % (s, adj, tot, ",".join("%s:%d" % (c, n) for c, n in per_subj[s].most_common(3))))
-json.dump({"cats": cats, "ids": ids}, open("filter-cats.json", "w", encoding="utf-8"), indent=1)
+json.dump({"cats": cats, "ids": ids}, open(HERE / "filter-cats.json", "w", encoding="utf-8"), indent=1)
 print()
 print("  wrote filter-cats.json")

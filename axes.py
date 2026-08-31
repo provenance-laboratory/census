@@ -417,3 +417,15 @@ def required_method(axis_id):
 
 def required_fields(method):
     return REQUIRED_FIELDS.get(method, ())
+
+
+def score_name(score):
+    """The name and definition of a score. ⚠ SCORES was defined and read by nothing -- the
+    rubric the whole census rests on existed as documentation that happened to be Python. Anything
+    printing a score name goes through here so the rubric and the code cannot diverge."""
+    return SCORES.get(score, ("UNKNOWN", "no definition for this score"))
+
+
+def group_name(axis_group):
+    """The name of an axis group. ⚠ Same as SCORES: defined, never read."""
+    return GROUPS.get(axis_group, "ungrouped")

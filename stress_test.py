@@ -13,7 +13,10 @@ property ever stops holding, the scoring changed and the paper's warning is stal
 
     python stress_test.py       exit 0 = every attack was caught and the honest census passed
 """
+import ast
 import io
+import json
+import pathlib
 import sys
 
 import axes as A
@@ -384,6 +387,119 @@ except SystemExit:
 print(("  ok    " if _fired else "  FAIL  ")
       + "a subject field no policy key covers stops the fingerprint")
 passed, failed = (passed + 1, failed) if _fired else (passed, failed + 1)
+
+
+# ⛔ A MECHANISM THAT IS DEFINED AND NEVER CALLED. `replay.py` compiled `_ENTRY =
+# re.compile(rb"<entry>")` and its docstring stated that entries were counted; the regex was never
+# used and nothing counted anything. A round-17 reviewer grepped the project, found the single
+# occurrence, and named the class: a compiled pattern standing in for the check it looks like.
+#
+# ⚠ This cannot tell a described check from a real one in general. It catches the specific shape
+# that has now occurred: a module-level name that exists to do work and is never loaded. Ad hoc
+# when it found _ENTRY; a control now, because a defect found by grepping once is found by
+# grepping every time or not at all.
+# ⚠ AND THE FIRST VERSION OF THIS CONTROL CRIED WOLF, which is the failure mode this project
+# has hit four times in two days. It scanned each file for loads WITHIN that file, and reported
+# axes.py's SCORES, GROUPS, NA_PERMITTED and CHECK_METHODS as dead -- names whose entire purpose is
+# to be read by other modules as `A.SCORES`. A name unused in its own file may be the whole point
+# of the file. Usage is collected across the package, attribute access included.
+_files = sorted(pathlib.Path(__file__).resolve().parent.glob("*.py"))
+_trees = {}
+for _f in _files:
+    try:
+        _trees[_f] = ast.parse(_f.read_text(encoding="utf-8"))
+    except SyntaxError:
+        pass
+_used_anywhere = set()
+for _tr in _trees.values():
+    for _n in ast.walk(_tr):
+        if isinstance(_n, ast.Name) and isinstance(_n.ctx, ast.Load):
+            _used_anywhere.add(_n.id)
+        elif isinstance(_n, ast.Attribute):
+            _used_anywhere.add(_n.attr)
+        elif isinstance(_n, ast.ImportFrom):
+            for _a in _n.names:
+                _used_anywhere.add(_a.name)
+_dead = []
+for _f, _tr in _trees.items():
+    for _n in ast.walk(_tr):
+        if (isinstance(_n, ast.Assign) and len(_n.targets) == 1
+                and isinstance(_n.targets[0], ast.Name)):
+            _nm = _n.targets[0].id
+            if (_nm.isupper() or _nm.startswith("_")) and _nm not in ("NL", "_", "D", "W"):
+                if _nm not in _used_anywhere:
+                    _dead.append("%s:%d %s" % (_f.name, _n.lineno, _nm))
+# ⛔ EVIDENCE FROM ONE ENDPOINT MUST BE CLASSIFIED THE SAME WAY. A second page of an arXiv query
+# was bound into the ledger by hand and carried no `volatile` flag, while its seven siblings on the
+# identical endpoint all carried volatile=true. recheck.py then reported it as DRIFTED -- a real
+# finding about the record, produced by adding evidence outside the tool that sets the properties.
+# Two records of the same endpoint disagreeing about their own nature is a substitution vector.
+# ⚠ AND THE FIRST GRAIN WAS WRONG. Grouping by HOST flagged api.github.com and
+# huggingface.co, whose tree and metadata endpoints are different things -- a host standing in for
+# an endpoint, which is the substitution this project keeps finding. Grouping by URL found the
+# real defect underneath: SEVEN urls were recorded with volatile=true in one cell and unset in
+# another, the SAME artifact classified two ways, so recheck.py would suppress a digest change for
+# one citing cell and report it for another.
+_vol = []
+_led = json.loads((pathlib.Path(__file__).resolve().parent / "cells.json").read_text("utf-8"))
+_byurl = {}
+for _c in _led.get("cells", []):
+    for _e in (_c.get("evidence") or []):
+        _byurl.setdefault(_e.get("url", ""), set()).add(str(_e.get("volatile")))
+for _u, _flags in sorted(_byurl.items()):
+    if len(_flags) > 1:
+        _vol.append("%s -> %s" % (_u[-56:], sorted(_flags)))
+if _vol:
+    print("  " + chr(0x26D4) + " %d url(s) recorded with more than one volatility flag:" % len(_vol))
+    for _v in _vol[:4]:
+        print("      " + _v)
+    print("      One artifact cannot be both volatile and stable. Whichever flag is read last")
+    print("      decides whether a real change is reported or suppressed.")
+    failed += 1
+else:
+    passed += 1
+    print("  ok    every url carries one volatility classification")
+
+# ⛔ AND A TOOL THAT ONLY RUNS ON THE AUTHOR'S DISK. `filter_diff.py` hardcoded an absolute
+# path into this workspace, so the producer of the paper's newest bound could not be executed from
+# the deposit at all -- a round-17 reviewer ran it and got FileNotFoundError. Every other tool here
+# resolves relative to itself; nothing checked that they all did.
+_abs = []
+for _f in _files:
+    _src = _f.read_text(encoding="utf-8")
+    for _ln, _line in enumerate(_src.splitlines(), 1):
+        _s = _line.strip()
+        if _s.startswith("#"):
+            continue
+        _low = _line.lower()
+        # ⚠ BUILT, NOT WRITTEN. The first version spelled these needles as literals and
+        # then matched itself -- a detector that reports its own definition is a false positive
+        # generator, and this project has now had four of those in two days.
+        _needles = ("c:" + "/users", "c:" + chr(92) + "users",
+                    chr(47) + "home" + chr(47), chr(47) + "Users".lower() + chr(47))
+        if any(_n in _low for _n in _needles):
+            _abs.append("%s:%d" % (_f.name, _ln))
+if _abs:
+    print("  " + chr(0x26D4) + " %d absolute path(s) into one machine: %s"
+          % (len(_abs), ", ".join(_abs[:4])))
+    print("      A tool that only runs on the author's disk cannot be re-run from the deposit,")
+    print("      which is the difference between a bound and an assertion.")
+    failed += 1
+else:
+    passed += 1
+    print("  ok    no tool hardcodes a path into one machine")
+
+if _dead:
+    print("  " + chr(0x26D4) + " %d module-level name(s) defined and never used anywhere:"
+          % len(_dead))
+    for _d in sorted(_dead)[:8]:
+        print("      " + _d)
+    print("      A name that looks like a mechanism and is never called is a promise nothing")
+    print("      keeps -- the shape of the _ENTRY regex a reviewer found in round 17.")
+    failed += 1
+else:
+    passed += 1
+    print("  ok    no module-level name is defined and left uncalled")
 
 print()
 print("=" * 78)

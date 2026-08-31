@@ -69,9 +69,21 @@ def measure():
 
     per_subject, terms = {}, []
     for name, entries in items:
+        # ⛔ THIS ASSIGNED ONE RESPONSE PER TERM, so a paginated query contributed whichever
+        # page came last and the identifier set was silently capped at one page. A round-16
+        # reviewer spotted the tell before the archive was even fixed: this file printed
+        # "from scratch": 100 beside negative-search.json's 121, two files claiming to measure
+        # the same bytes, and nothing compared them. The pages of one query are UNIONED now --
+        # the measurement of how wide the search was must not itself read a truncated copy.
         by_term = {}
         for e in entries:
-            by_term[e["term"]] = ids_for(e["sha256"])
+            got = ids_for(e["sha256"])
+            if got is None:
+                by_term[e["term"]] = None
+                continue
+            prev = by_term.get(e["term"])
+            by_term[e["term"]] = got if prev is None and e["term"] not in by_term else (
+                (prev | got) if prev is not None else got)
         terms = terms or list(by_term)
         per_subject[name] = by_term
 
@@ -180,14 +192,31 @@ def main():
             print("  " + D + " %s is absent; nothing to verify against." % OUT.name)
             return 1
         rec = json.loads(OUT.read_text(encoding="utf-8"))
-        drift = [k for k in ("terms_issued", "terms_distinct", "queries_issued",
-                             "queries_distinct") if rec.get(k) != got[k]]
+        # ⛔ THIS COMPARED FOUR SCALARS AND PRINTED "the record matches what the archived
+        # responses say", which is a claim about the whole file. A round-16 reviewer flipped the
+        # stored control's `passes` from true to false and --verify still exited 0: `passes` is
+        # RECOMPUTED live a few lines above, so the stored value was never read by anything. The
+        # groups, the per-subject counts, the evidence and the control were all unchecked.
+        #
+        # ⚠ `as_of` and `_readme` are excluded BY NAME and for a stated reason -- one is a date
+        # and the other is prose, and neither is recomputable from the archive. Everything that
+        # IS recomputed is compared, by projecting over the recomputed record's own keys rather
+        # than over a list somebody maintains.
+        _skip = {"as_of", "_readme"}
+        drift = sorted(k for k in set(got) | (set(rec) - _skip)
+                       if k not in _skip and rec.get(k) != got.get(k))
         if drift:
             print("  " + D + " the record disagrees with the bytes on: %s" % ", ".join(drift))
             for k in drift:
-                print("      %-18s recorded %s, recomputed %s" % (k, rec.get(k), got[k]))
+                a, b = rec.get(k), got.get(k)
+                if isinstance(a, (dict, list)) or isinstance(b, (dict, list)):
+                    print("      %-18s recorded and recomputed differ in structure" % k)
+                else:
+                    print("      %-18s recorded %s, recomputed %s" % (k, a, b))
             return 1
-        print("  ok  the record matches what the archived responses say.")
+        print("  ok  every recomputable field matches what the archived responses say")
+        print("      (%d field(s) compared; as_of and _readme are not recomputable)"
+              % len(set(got) - _skip))
         return 0
 
     OUT.write_text(json.dumps(got, indent=2) + NL, encoding="utf-8")

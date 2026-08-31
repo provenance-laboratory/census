@@ -1,7 +1,7 @@
 {
   "_readme": "\u26d4 WHY. `negative-search.json` records what each query returned -- totals, candidates,\nadjudications -- and the queries themselves are LIVE urls against a growing corpus. A round-14\nreviewer proposed binding the 22 axis-16/17 zeros to that protocol, which is right and takes\ncoverage from 13 of 182 to 35. But under the rule that reviewer's own critique motivated, a bound\nwhose every search location is live has nothing anybody can re-run offline -- which is the ceremony\nthey objected to, wearing a different noun.",
   "as_of": "2026-08-31",
-  "queries": 84,
+  "queries": 85,
   "subjects": {
     "bert-base-uncased": [
       {
@@ -51,6 +51,14 @@
         "total_in_response": 121,
         "total_recorded": 121,
         "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100"
+      },
+      {
+        "bytes": 55249,
+        "sha256": "af87b153461fe0d93d71aa766507d4d81ce1ac7801db30018a711f9a4272a56f",
+        "term": "from scratch",
+        "total_in_response": 121,
+        "total_recorded": 121,
+        "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=100&max_results=100"
       },
       {
         "bytes": 28432,

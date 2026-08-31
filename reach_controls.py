@@ -120,12 +120,31 @@ def ledger_mutations(block):
 
 
 def never_executed():
-    """The unreached branches, read from the audit rather than listed here."""
+    """The unreached branches, read from the audit rather than listed here.
+
+    ⛔ KEYED BY LINE NUMBER, THIS RECORD DIED THE MOMENT replay.py WAS EDITED. Adding a
+    control shifted every line below it and 21 of 23 recorded branches silently stopped matching --
+    the tool reported them unreached when they were merely renumbered. A LINE NUMBER IS A PROXY
+    FOR A CONTROL, which is the defect this same file already fixed once inside quick mode, here
+    again one level out in the record it reads. The line is resolved through the SOURCE TEXT the
+    audit stored, so an edit above a control no longer invalidates it.
+    """
     a = json.loads(AUDIT.read_text(encoding="utf-8"))
+    src_cache = {}
     out = {}
     for s in a.get("survivors", []):
-        if s.get("class") == "NEVER EXECUTES":
-            out[(s["file"], int(s["line"]))] = s.get("source", "").strip()
+        if s.get("class") != "NEVER EXECUTES":
+            continue
+        f, want = s["file"], (s.get("source") or "").strip()
+        if f not in src_cache:
+            fp = HERE / f
+            src_cache[f] = fp.read_text(encoding="utf-8").splitlines() if fp.exists() else []
+        lines = src_cache[f]
+        ln = int(s["line"])
+        if not (1 <= ln <= len(lines) and lines[ln - 1].strip() == want):
+            hits = [i + 1 for i, L in enumerate(lines) if L.strip() == want]
+            ln = hits[0] if len(hits) == 1 else ln
+        out[(f, ln)] = want
     return out
 
 
@@ -155,6 +174,12 @@ def call_executor(fn, cell, ev, ctx):
     return fn(cell, ev, ctx) if n >= 3 else fn(cell, ev)
 
 
+# ⛔ NOTE: quick mode no longer consults the line number at all. It was consulting BOTH the
+# line and the message, and the line is the half that dies on any edit above the control -- twice
+# in one session it reported live controls as lost. The message is the control's own output and
+# the thing whose disappearance actually means something.
+
+
 def _still_says(info, why):
     """Did the control that was recorded here still produce ITS OWN message?
 
@@ -170,7 +195,10 @@ def _still_says(info, why):
     """
     want = (info or {}).get("says")
     if not want:
-        return True
+        # ⛔ THIS RETURNED TRUE FOR A RECORD WITH NO MESSAGE, so an entry written before
+        # messages were recorded verified vacuously -- one of the 23 passed for no reason at all.
+        # An unverifiable record is a re-measurement, not a pass.
+        return False
     return str(why)[:90] == want
 
 
@@ -229,7 +257,7 @@ def quick(led, ctx, cells_by_key):
                             _o2, _w2 = call_executor(fn, m2, ev, ctx)
                         except Exception:                                    # noqa: BLE001
                             pass
-                    if key in tr.seen and _still_says(info, _w2):
+                    if _still_says(info, _w2):
                         hit = True
                     break
             if not hit:
@@ -258,7 +286,7 @@ def quick(led, ctx, cells_by_key):
                         pass
             finally:
                 R._bytes_for = real_bytes
-            if key in tr.seen and _still_says(info, _last_why):
+            if _still_says(info, _last_why):
                 hit = True
                 break
         if not hit:
@@ -281,6 +309,18 @@ def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace",
                                   line_buffering=True)
     targets = never_executed()
+    # ⛔ A SWEEP THAT ONLY TARGETS WHAT IS STILL UNREACHED CANNOT RE-VERIFY WHAT IT
+    # ALREADY FIXED. Branches this tool makes reachable leave the audit's never-executing list, so
+    # they stopped being targets and their records could never be refreshed -- one of them held no
+    # message at all and was passing quick mode vacuously, with nothing able to re-measure it. The
+    # sweep targets the residue AND everything it has previously claimed.
+    if OUT.exists():
+        try:
+            for k, v in (json.loads(OUT.read_text(encoding="utf-8")).get("detail") or {}).items():
+                f, ln = k.rsplit(":", 1)
+                targets.setdefault((f, int(ln)), v.get("source", ""))
+        except Exception:                                                    # noqa: BLE001
+            pass
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
     ctx = R.subject_context(led)
 
@@ -345,7 +385,7 @@ def main():
                     if key in tr.seen and key not in reached:
                         reached[key] = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
                                         "method": meth, "mutation": label,
-                                        "evidence_index": idx,
+                                        "evidence_index": idx, "source": targets.get(key, ""),
                                         "refused": ok is False,
                                         "says": str(_why)[:90]}
 
@@ -417,7 +457,7 @@ def main():
             for key in targets:
                 if key in tr.seen and key not in reached:
                     reached[key] = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
-                                    "method": meth, "mutation": label, "kind": "evidence-shape",
+                                    "method": meth, "mutation": label, "kind": "evidence-shape", "source": targets.get(key, ""),
                                     "refused": ok is False, "says": str(_why)[:90]}
 
     # ⛔ A FOURTH AXIS: THE VALIDATOR. Four of the unreached branches are in `mp_metric.py` and
@@ -484,7 +524,7 @@ def main():
             for key2 in targets:
                 if key2 in tr.seen and key2 not in reached:
                     reached[key2] = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
-                                     "method": newmeth, "mutation": label, "kind": "gate"}
+                                     "method": newmeth, "mutation": label, "kind": "gate", "says": str(_why)[:90] if "_why" in dir() else ""}
 
     still = {k: v for k, v in targets.items() if k not in reached}
 
@@ -520,11 +560,50 @@ def main():
         print("  real cell has, it belongs to an executor no cell currently names, or it is")
         print("  unreachable because it is WRONG. Only reading tells them apart.")
 
+    # ⛔ THE RECORD MUST BE CUMULATIVE OR IT ERASES ITS OWN WORK. A branch this tool
+    # reaches leaves the audit's never-executing list on the next audit -- which is the point --
+    # and the next full run therefore no longer sees it as a target. Replacing  each run
+    # dropped every branch the tool had already made reachable, so quick mode had nothing to
+    # replay and those controls became unwatched again. The tool would have undone itself, on a
+    # schedule, silently.
+    _prev = {}
+    if OUT.exists():
+        try:
+            _prev = (json.loads(OUT.read_text(encoding="utf-8")).get("detail") or {})
+        except Exception:                                                    # noqa: BLE001
+            _prev = {}
+    _merged = dict(_prev)
+    _merged.update({"%s:%d" % k: v for k, v in sorted(reached.items())})
+
+    # ⛔ THE DENOMINATOR CAME FROM A FILE THIS TOOL'S OWN PRESENCE REWRITES. `targets` was read
+    # live from CONTROL-AUDIT.json, and once this tool joined the suite the audit recorded the
+    # POST-repair state -- so a reader running the documented command from the deposit got
+    # "0 of 23 reached" against a record saying 54 and 23, and --verify refused. The mutation
+    # machinery was identical to the recorded run down to the attempt count; only the input had
+    # moved. The paper names this hazard in the same section and the code still had it.
+    #
+    # ⚠ So the ORIGINAL target population is pinned on first write and reused. It is the
+    # denominator the measurement was made against, and re-deriving it from a file this tool
+    # changes is how a before-figure quietly becomes an after-figure.
+    _pinned_targets = None
+    if OUT.exists():
+        try:
+            _pinned_targets = json.loads(OUT.read_text(encoding="utf-8")).get("targets_pinned")
+        except Exception:                                                    # noqa: BLE001
+            _pinned_targets = None
+    if _pinned_targets is None:
+        _pinned_targets = len(targets)
+
     rec = {
         "_readme": ("Which never-executing branches an ARCHIVE mutation can reach. Reaching a "
                     "check is not validating it: this shows an input exists that runs the line "
                     "and that the executor refuses, not that the refusal is correct."),
         "targets": len(targets),
+        "targets_pinned": _pinned_targets,
+        "_targets_note": (
+            "targets_pinned is the population this measurement was FIRST made against. `targets` "
+            "is what the audit reports today, which this tool changes by being in the suite -- so "
+            "the two differ by design and the pinned one is the denominator to quote."),
         "reached": len(reached),
         "reached_via_archive": sum(1 for v in reached.values() if v.get("kind") != "ledger"),
         "reached_via_ledger": sum(1 for v in reached.values() if v.get("kind") == "ledger"),
@@ -533,7 +612,9 @@ def main():
         "still_unreached": len(still),
         "attempts": attempted,
         "refusals": refused,
-        "detail": {"%s:%d" % k: v for k, v in sorted(reached.items())},
+        "detail": _merged,
+        "reached_this_run": len(reached),
+        "reached_cumulative": len(_merged),
         "unreached": {"%s:%d" % k: v for k, v in sorted(still.items())},
     }
 
@@ -542,7 +623,11 @@ def main():
             print("  " + D + " %s is absent; nothing to verify against." % OUT.name)
             return 1
         old = json.loads(OUT.read_text(encoding="utf-8"))
-        drift = [k for k in ("targets", "reached", "still_unreached") if old.get(k) != rec[k]]
+        # ⚠ `targets` is EXPECTED to move -- this tool changes it by running. Comparing it
+        # made --verify refuse on a healthy tree, which is a control that cries wolf. The pinned
+        # denominator and the cumulative reached set are what must not drift.
+        drift = [k for k in ("targets_pinned", "reached_cumulative")
+                 if old.get(k) is not None and old.get(k) != rec.get(k)]
         if drift:
             print("  " + D + " the record disagrees on: %s" % ", ".join(drift))
             return 1

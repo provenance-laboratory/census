@@ -309,9 +309,16 @@ def main():
                 start += PAGE
                 time.sleep(3)
             if total is not None:
+                # ⛔ THIS RECORDED ONLY `query(name, term, 0)`. The loop above walks every page
+                # and the record kept the first, so the archiver -- which projects over exactly
+                # these urls -- stored page 1 and discarded the rest. The fetch was exhaustive and
+                # the EVIDENCE was not, which is the gap a digest cannot see: re-hashing proves
+                # the stored bytes did not move, never that they are all of them.
+                _pages = [query(name, term, st) for st in range(0, max(total, 1), PAGE)][:MAX_PAGES]
                 rec["queries"].append({"term": term, "total": total, "retrieved": got,
                                        "complete": got >= total,
-                                       "url": query(name, term, 0)})
+                                       "url": query(name, term, 0),
+                                       "pages": _pages})
                 print("  %-20s %-20s total=%-5s retrieved=%-4d %s"
                       % (s, term, total, got, "" if got >= total else "⛔ TRUNCATED"))
             time.sleep(3)

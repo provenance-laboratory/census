@@ -157,6 +157,16 @@
       "sha256": "6330ab6904410b7d8059a751967106ab67cce0b1f268019ba4f7718df46e9dda",
       "stored": true
     },
+    "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=100&max_results=100": {
+      "bytes": 55249,
+      "cells": [
+        "bert-base-uncased/axis16",
+        "bert-base-uncased/axis17"
+      ],
+      "note": "one arXiv API query from the reproduction search. Archived so an axis-16/17 zero can be re-run offline against what the corpus returned ON THE DATE SEARCHED, rather than against a live corpus that has since grown.",
+      "sha256": "af87b153461fe0d93d71aa766507d4d81ce1ac7801db30018a711f9a4272a56f",
+      "stored": true
+    },
     "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100": {
       "bytes": 28432,
       "cells": [

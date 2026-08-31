@@ -41,7 +41,22 @@ import time
 
 NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
-TARGETS = ("mp_metric.py", "replay.py", "axes.py", "sweep.py")
+def _targets():
+    """Every module in this directory, PROJECTED -- not four names.
+
+    ⛔ THIS WAS A FOUR-NAME TUPLE AND TWO OF THE FOUR CONTRIBUTE NOTHING, so "173 control
+    sites" was mp_metric.py plus replay.py and the docstring said "audit every control". A
+    round-16 reviewer applied this file's OWN detector to the whole directory and found 206.
+    The 33 outside the window included every file involved in that round's two live findings.
+
+    ⚠ The tool warns at the top of this file that a hand-kept list of controls would
+    reproduce the enumeration defect it exists to audit. It then kept a hand-kept list of
+    FILES, which is the same defect one level out.
+    """
+    return tuple(sorted(f.name for f in HERE.glob("*.py")))
+
+
+TARGETS = _targets()
 
 # The suite that must notice. Deliberately the FAST ones: sweep.py takes ten minutes and its
 # verdict is already implied by validate() refusing the mutation.

@@ -120,6 +120,23 @@ def validate(led):
     cell and a cell scored 0 are different claims -- 'nobody looked' is not 'we looked and found
     nothing' -- and writing them identically is how a census becomes an opinion.
     """
+    # ⛔ `DATE_RE` WAS COMPILED AT MODULE LEVEL AND NEVER APPLIED -- a date validator, inside
+    # the validator, checking no dates. Found by the dead-mechanism control written after a
+    # round-17 reviewer found the same shape in `replay.py`'s `_ENTRY`. The ledger's `as_of` and
+    # every cell's `as_of` are dates a reader relies on to know WHEN a claim was true.
+    _d = []
+    _as = led.get("as_of")
+    if _as is not None and not DATE_RE.match(str(_as)):
+        _d.append("the ledger's as_of is %r, which is not an ISO date" % (_as,))
+    for _c in led.get("cells", []):
+        _blk = _c.get("bound") or _c.get("check") or {}
+        _v = _blk.get("as_of") if isinstance(_blk, dict) else None
+        if _v is not None and not DATE_RE.match(str(_v)):
+            _d.append("%s/axis%s: as_of is %r, which is not an ISO date"
+                      % (_c.get("subject"), _c.get("axis"), _v))
+    if _d:
+        return _d
+
     d = []
     subjects = [s["id"] for s in led.get("subjects", [])]
     if len(set(subjects)) != len(subjects):

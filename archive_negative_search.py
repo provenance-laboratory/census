@@ -44,8 +44,14 @@ def queries():
     out = []
     for sub, rec in sorted(n["subjects"].items()):
         for q in rec.get("queries") or []:
-            if q.get("url"):
-                out.append((sub, q["term"], q["url"], q))
+            # ⛔ THIS TOOK q["url"] -- ONE PAGE PER (SUBJECT, TERM) -- while the fetcher had
+            # walked several. For bert-base-uncased / "from scratch" the header said 121 and the
+            # archive held 100, and every --verify passed, because each one re-hashes what IS
+            # stored and nothing counted what SHOULD be. A page url the record names but the
+            # store lacks is now a fetch, not a silence.
+            pages = q.get("pages") or ([q["url"]] if q.get("url") else [])
+            for u in pages:
+                out.append((sub, q["term"], u, q))
     return out
 
 
@@ -99,9 +105,39 @@ def main():
         if total is not None and q.get("total") is not None and total != q["total"]:
             print("  %s %-18s %-22s archived total %s, protocol recorded %s"
                   % (W, sub, term, total, q["total"]))
+        # ⛔ `total_in_response` IS PARSED FROM THE HEADER AND THE ONLY COMPARISON WAS AGAINST
+        # `q["total"]` -- the protocol's copy of the same number. Two operands held to the same
+        # value cannot disagree, and nothing anywhere counted the <entry> elements, so an archived
+        # body holding 100 results under a header saying 121 passed every check this project has.
+        # The count is recorded here so the record describes the BYTES and not the header.
+        entries = raw.count(b"<entry>")
         index.setdefault(sub, []).append(
             {"term": term, "url": url, "sha256": sha, "bytes": len(raw),
+             "entries_in_response": entries,
              "total_in_response": total, "total_recorded": q.get("total")})
+
+    # ⚠ AND THE PAGES OF ONE QUERY MUST ACCOUNT FOR ITS WHOLE TOTAL. Per-response this cannot
+    # be checked -- a first page legitimately holds 100 of 121 -- so it is checked per (subject,
+    # term) across every page archived for it.
+    _short = []
+    for sub, rows in index.items():
+        _by = {}
+        for r in rows:
+            a, b = _by.get(r["term"], (0, 0))
+            _by[r["term"]] = (a + (r["entries_in_response"] or 0),
+                              max(b, r["total_in_response"] or 0))
+        for term, (got, want) in sorted(_by.items()):
+            if want and got != want:
+                _short.append("%s/%s: %d entries archived, header says %d" % (sub, term, got, want))
+    if _short:
+        print()
+        for s in _short[:6]:
+            print("  " + D + " " + s)
+        print("  " + D + " %d quer(ies) archive fewer results than their own header claims. The"
+              % len(_short))
+        print("  bound is not replayable against these bytes. Re-run negative_search.py so every")
+        print("  page url is recorded, then archive again.")
+        return 1
 
     for sub, rows in index.items():
         for r in rows:
