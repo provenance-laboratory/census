@@ -218,6 +218,15 @@ def suite_passes(_cwd=None):
     return True, None
 
 
+def _predecessor(old, total_now, watched_now):
+    """The last audit whose numbers DIFFER from this one, carried forward if they do not."""
+    if not isinstance(old, dict):
+        return None
+    if old.get("controls_total") == total_now and old.get("watched") == watched_now:
+        return old.get("previous")
+    return {"controls_total": old.get("controls_total"), "watched": old.get("watched")}
+
+
 def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     targets = TARGETS[:1] if "--quick" in sys.argv else TARGETS
@@ -342,9 +351,12 @@ def main():
            # until the audit was committed, after which HEAD held the CURRENT record and the
            # comparison became a figure against itself. The record carries its own predecessor now,
            # so the comparison does not depend on when anything was committed.
-           "previous": ({"controls_total": _old.get("controls_total"),
-                         "watched": _old.get("watched")}
-                        if isinstance(locals().get("_old"), dict) else None),
+           # ⛔ TWO AUDITS IN ONE ROUND MADE THE RECORD ITS OWN PREDECESSOR. The second run
+           # recorded 173/96 as the previous of 173/96, so the paper's sentence about the watched
+           # SHARE falling would have compared a figure with itself. When the counts are
+           # unchanged the predecessor is carried FORWARD, so "previous" means the last time the
+           # number actually moved rather than the last time this tool ran.
+           "previous": _predecessor(_old, watched + len(unwatched), watched),
            "controls_total": watched + len(unwatched),
            "watched": watched,
            "unwatched": len(unwatched),

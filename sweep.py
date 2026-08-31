@@ -174,7 +174,11 @@ def main():
     print("                               -- reported separately, because")
     print("                               moving both operands is outside what a policy inside")
     print("                               the ledger can prevent")
-    if show and survivors:
+    # ⛔ THE LISTING WAS BEHIND --list, SO A SURVIVOR APPEARED ONLY AS A COUNT. When the figure
+    # went from 0 to 1 the log said "1 SURVIVED" and never which one -- the count-without-a-cover
+    # defect this file's own comment names, in this file's own output. Held-fixed survivors are
+    # few and are ALWAYS listed now; only the policy-moved family is capped.
+    if survivors:
         # ⚠️ THE CAP EMITTED THE POLICY-MOVED SURVIVORS FIRST, so the ones the paper actually
         # reports never appeared in the listing. A count without a cover is the defect section 6.5
         # repairs in recheck.py; the same fault reached this tool's own output.

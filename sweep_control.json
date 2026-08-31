@@ -8,8 +8,8 @@
   ],
   "command": "git checkout -- cells.json replay.py axes.py && python sweep.py",
   "survivors_before_repair": 44,
-  "survivors_after_repair": 0,
-  "measured": "2026-08-30",
+  "survivors_after_repair": 1,
+  "measured": "2026-08-31",
   "_note": "Re-running this restores the working tree afterwards and verifies the three digests match; it was run that way. 42 of the 44 were axis-12 transplants that survived because the check block carried no subject-specific field at all; the remaining 2 pairs collide on the field that discriminates the other five subjects (bert and gpt-2 name the same primary weight file; mistral and qwen publish the same shard count).",
   "gate_reached_before_repair": 62,
   "gate_reached_after_repair": 0,
@@ -18,5 +18,6 @@
   "survivors_after_filename_declared": 4,
   "closed_by_filename": 40,
   "closed_by_evidence_digest": 4,
-  "_split_note": "MEASURED, not predicted. A reviewer expected 42 reducible and 2 irreducible. Declaring the shard filename took 44 to 4; declaring the digest of the artifact each check is about took 4 to 0. So the split is 40 and 4: forty survived because the check block named nothing subject-specific, and four because the field that discriminates the other five subjects COLLIDES for two pairs (bert and gpt-2 name the same primary weight file, mistral and qwen publish the same shard count). Reporting the reviewer's 42/2 would have been repeating a prediction as a measurement."
+  "_split_note": "MEASURED, not predicted. A reviewer expected 42 reducible and 2 irreducible. Declaring the shard filename took 44 to 4; declaring the digest of the artifact each check is about took 4 to 0. So the split is 40 and 4: forty survived because the check block named nothing subject-specific, and four because the field that discriminates the other five subjects COLLIDES for two pairs (bert and gpt-2 name the same primary weight file, mistral and qwen publish the same shard count). Reporting the reviewer's 42/2 would have been repeating a prediction as a measurement.",
+  "_round14_survivor": "olmo-2-13b/axis11 given axis8's check block. It survives because the two checks are IDENTICAL -- the same grep for `seed: 6198` in the same archived config -- and the census already said so: axis 11's own `observed` field states that what was checked 'is axis 8's question, satisfied by the same grep on the same file'. The sweep independently rediscovered a limitation the ledger had asserted in prose, which is the strongest form that assertion could take. It appeared only when round 14 gave axis 11 a replayable `expect` list; before that the check was a method name with nothing to run, so nothing could be transplanted onto it. Reported as 1, not repaired to 0: making the two checks artificially distinguishable would hide a real redundancy that section 6.3 discusses."
 }

@@ -4,7 +4,7 @@
     "mp_metric.py": "7199659fba1cb8dfecc8717adf6e7dc41788d1c28cb040a27bcf36fadb32b9fa",
     "replay.py": "7c030e73d98a55535e2a66ac76c6f07baa3476ee877519b3011a0d290664ce48",
     "axes.py": "73a55b1648f05a56b73de3b7397e1acdb103ad06d90a9110f6e2936d131d0bf2",
-    "sweep.py": "78a2a3913f89c801fe469f72919da7cb692ab2cf247cc94000e4b8c609ca8a15"
+    "sweep.py": "e12da439e1b1f23de24b8a4f99431b886148850500d94186d626b38aa37ac65c"
   },
   "suite": [
     [
@@ -30,6 +30,10 @@
       "test_bound_rules.py"
     ]
   ],
+  "previous": {
+    "controls_total": 131,
+    "watched": 77
+  },
   "controls_total": 173,
   "watched": 96,
   "unwatched": 77,
@@ -579,9 +583,5 @@
   "_dispositions": {
     "REDUNDANT": "the line executes during the suite and deleting it changes no verdict: another control rejects the same input first",
     "NEVER EXECUTES": "no input the suite can build reaches the line. Either the branch is unreachable given this ledger, or nothing fixtures the state it guards -- and those are still two things"
-  },
-  "previous": {
-    "controls_total": 131,
-    "watched": 77
   }
 }
