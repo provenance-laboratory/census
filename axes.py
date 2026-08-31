@@ -59,9 +59,22 @@ AXES = [
      "A published mechanism that answers membership without trusting an assertion.",
      False),
 
+    # ⛔ THE BAR SAID "SUFFICIENT TO RUN" AND NOTHING HERE CAN OBSERVE SUFFICIENCY. Round 14
+    # replaced a README grep with `probe_source_trees.py`, which archives each declared repository
+    # at a pinned commit and checks that the trainer entrypoints and a dependency manifest are
+    # present -- a large improvement, and still not the stated bar. A round-5 reviewer named the
+    # gap exactly: the check establishes that a tree is RUNNABLE-SHAPED, not that it runs.
+    #
+    # ⚠ SO THE BAR IS CORRECTED TO WHAT IS MEASURED, rather than the measurement being described
+    # as more than it is. Establishing sufficiency would mean executing a training run for each
+    # subject, which this census does not do and does not claim to. A bar the registry cannot
+    # observe produces scores guaranteed by the instrument -- the defect this project has now
+    # found on axes 2, 3, 14 and 15, and this is the same one stated in the opposite direction:
+    # not a zero the method forced, but a two the method could not have earned.
     (6, 2, "training code released",
      "Is the code that produced the weights published?",
-     "Source sufficient to run the described procedure, not a description of it.",
+     "A declared repository, archived at a pinned commit, containing the trainer entrypoints and "
+     "a dependency manifest -- runnable-SHAPED. Sufficiency to run is not established here.",
      False),
     (7, 2, "hyperparameters fully specified",
      "Are all hyperparameters given, not a subset?",

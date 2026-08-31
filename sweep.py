@@ -42,6 +42,11 @@ NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
 
 
+NL = chr(10)
+D = chr(0x26D4)
+W = chr(0x26A0)
+
+
 def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     show = "--list" in sys.argv
@@ -128,8 +133,22 @@ def main():
                 res, _why = R.gate(tgt, ctx, None, d)
                 if res is not False:
                     tally[band]["survived"] += 1
+                    # ⛔ A SURVIVOR OF THE FULL GATE AND A SURVIVOR OF THE ASSERTED SHORTCUT WERE
+                    # ONE NUMBER. `replay.gate` returns True for a score-1 cell as soon as its
+                    # evidence is from a declared source -- correctly, because an ASSERTED cell
+                    # claims no mechanical check and the method and field requirements below that
+                    # line are about REPLAY. But a transplant onto such a cell then "survives"
+                    # without ever meeting the identity checks the survivor count is read as
+                    # being about, and both were tallied together.
+                    #
+                    # ⚠ THE SPLIT IS REPORTED, NOT SUBTRACTED. Dropping the asserted survivors
+                    # would flatter the sweep; they are real transplants that a policy inside the
+                    # ledger did not stop. What was wrong was presenting them as the same
+                    # measurement as a survivor that passed method, field and executor checks.
+                    tally[band]["survived_asserted"] = tally[band].get(
+                        "survived_asserted", 0) + (tgt.get("score") == 1)
                     survivors.append((band, dst["subject"], dst["axis"],
-                                      src["subject"], src["axis"]))
+                                      src["subject"], src["axis"], tgt.get("score")))
 
     total = surv = 0
     for band in sorted(tally):
@@ -174,6 +193,18 @@ def main():
     print("                               -- reported separately, because")
     print("                               moving both operands is outside what a policy inside")
     print("                               the ledger can prevent")
+    held_a = sum(t2.get("survived_asserted", 0) for b, t2 in tally.items() if "policy" not in b)
+    moved_a = sum(t2.get("survived_asserted", 0) for b, t2 in tally.items() if "policy" in b)
+    print()
+    print("  of those survivors, the destination cell was ASSERTED (score 1) in %d held-fixed"
+          % held_a)
+    print("  and %d policy-moved case(s)." % moved_a)
+    print("  " + W + " AN ASSERTED CELL TAKES A SHORTER PATH THROUGH THE GATE. It claims no")
+    print("  mechanical check, so the gate returns as soon as the evidence is from a declared")
+    print("  source, before the method, field and executor requirements below. Those survivors")
+    print("  are real -- a policy inside the ledger did not stop them -- but they did NOT meet")
+    print("  the identity checks a survivor count is naturally read as being about, and")
+    print("  reporting the two as one number said more than the sweep had measured.")
     # ⛔ THE LISTING WAS BEHIND --list, SO A SURVIVOR APPEARED ONLY AS A COUNT. When the figure
     # went from 0 to 1 the log said "1 SURVIVED" and never which one -- the count-without-a-cover
     # defect this file's own comment names, in this file's own output. Held-fixed survivors are
@@ -184,8 +215,9 @@ def main():
         # repairs in recheck.py; the same fault reached this tool's own output.
         print()
         held = [s2 for s2 in survivors if "policy" not in s2[0]]
-        for bd, a, b, c2, d2 in held:
-            print("      [%s] %s/axis%d carries %s/axis%d's material" % (bd, a, b, c2, d2))
+        for bd, a, b, c2, d2, sc in held:
+            print("      [%s] %s/axis%d (%s) carries %s/axis%d's material"
+                  % (bd, a, b, "ASSERTED" if sc == 1 else "verified", c2, d2))
         if moved_s:
             print("      ... and %d more with the policy moved too, not listed" % moved_s)
     print("=" * 78)
