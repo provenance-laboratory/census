@@ -1,0 +1,77 @@
+{
+ "_readme": "What the cs.CL/cs.LG category filter removes, measured rather than argued. The filter's stated justification is that Pythia is also a particle-physics event generator. This tests whether that justification transfers to the other eleven subjects.",
+ "method": "For each subject scoring 0 on axis 16 or 17, every distinct probe term was run WITH and WITHOUT the category filter; the difference set was screened for the subject's name and a reproduction verb in the same abstract, and each survivor's PRIMARY CATEGORY fetched.",
+ "headline": "The justification is true for exactly ONE subject. 0 of Pythia's 91 excluded papers are in an adjacent CS/ML category -- they are hep-ph, hep-ex and nucl-ex, exactly the homonym the filter was justified by. For the other eleven the excluded papers are overwhelmingly NEIGHBOURING ML LITERATURE (cs.AI, cs.CV, cs.SE, cs.IR), which the stated justification does not cover: 42 of 43 for Qwen2.5, 72 of 80 for GPT-4o.",
+ "does_it_change_any_score": "No. 12 of the 182 adjacent-category exclusions carry a reproduction word in the title; all 12 were read, and none reports an independent reproduction of the subject model. The axis 16 and 17 zeros stand -- but they now stand on a bound that was TESTED rather than one that was merely stated.",
+ "limits": "\u26a0 The screen is mechanical (a name and a verb in one abstract) and the adjudication is not: 12 abstracts were read by hand. A reproduction reported without any of these verbs in its abstract would still be missed, by this probe and by the census alike.",
+ "per_subject": {
+  "bert-base-uncased": {
+   "excluded": 19,
+   "adjacent_cs_ml": 14,
+   "adjacent_with_reproduction_word_in_title": 4
+  },
+  "bloom-176b": {
+   "excluded": 29,
+   "adjacent_cs_ml": 12,
+   "adjacent_with_reproduction_word_in_title": 1
+  },
+  "claude-3.5-sonnet": {
+   "excluded": 9,
+   "adjacent_cs_ml": 7,
+   "adjacent_with_reproduction_word_in_title": 1
+  },
+  "gemini-1.5-pro": {
+   "excluded": 3,
+   "adjacent_cs_ml": 2,
+   "adjacent_with_reproduction_word_in_title": 0
+  },
+  "gemma-2-9b": {
+   "excluded": 3,
+   "adjacent_cs_ml": 3,
+   "adjacent_with_reproduction_word_in_title": 0
+  },
+  "gpt-2-1.5b": {
+   "excluded": 13,
+   "adjacent_cs_ml": 11,
+   "adjacent_with_reproduction_word_in_title": 1
+  },
+  "gpt-4o": {
+   "excluded": 80,
+   "adjacent_cs_ml": 72,
+   "adjacent_with_reproduction_word_in_title": 4
+  },
+  "llama-3.1-8b": {
+   "excluded": 5,
+   "adjacent_cs_ml": 4,
+   "adjacent_with_reproduction_word_in_title": 0
+  },
+  "mistral-7b-v0.3": {
+   "excluded": 33,
+   "adjacent_cs_ml": 27,
+   "adjacent_with_reproduction_word_in_title": 1
+  },
+  "olmo-2-13b": {
+   "excluded": 2,
+   "adjacent_cs_ml": 1,
+   "adjacent_with_reproduction_word_in_title": 0
+  },
+  "pythia-12b": {
+   "excluded": 91,
+   "adjacent_cs_ml": 0,
+   "adjacent_with_reproduction_word_in_title": 0
+  },
+  "qwen2.5-7b": {
+   "excluded": 43,
+   "adjacent_cs_ml": 42,
+   "adjacent_with_reproduction_word_in_title": 0
+  }
+ },
+ "adjudication": {
+  "read": 12,
+  "reproduce_the_subject_model": 0,
+  "what_they_are": "Every one reproduces a PAPER OR SYSTEM THAT USES the model, not the model's training: a TAR method built on BERT, distillation strategies evaluated with BERT, an evaluation framework in which GPT-4o is a component, a Boolean-query study using Mistral. Two are homonyms of a new kind -- 'state machine REPLICATION' in distributed systems, and 'assisted REPRODUCTIVE technology' in medicine -- which is the Pythia problem moved from the SUBJECT to the VERB."
+ },
+ "counting": "A paper can match more than one subject, so the per-subject figures sum to 195 subject-paper PAIRS while there are 182 DISTINCT excluded papers in an adjacent CS/ML category (out of 315 distinct excluded papers in total). The paper cites the distinct count; the per-subject rows are pairs. Reporting one as the other would inflate the adjacent set by 13.",
+ "distinct_excluded": 315,
+ "distinct_adjacent_cs_ml": 182
+}
