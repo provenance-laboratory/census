@@ -1,0 +1,172 @@
+{
+  "_readme": "Measured from the archived response bodies, not asserted. Terms whose arXiv identifier sets coincide on every comparable subject are ONE probe. The control pair must DIFFER, or an identical result would be indistinguishable from a broken parser.",
+  "as_of": "2026-08-31",
+  "terms_issued": 7,
+  "terms_distinct": 6,
+  "queries_issued": 84,
+  "queries_distinct": 72,
+  "groups": [
+    {
+      "terms": [
+        "reproduce"
+      ],
+      "evidence": {}
+    },
+    {
+      "terms": [
+        "reproduction"
+      ],
+      "evidence": {}
+    },
+    {
+      "terms": [
+        "replicate",
+        "replication"
+      ],
+      "evidence": {
+        "replication": {
+          "subjects_compared": 12,
+          "identical": 12,
+          "both_non_empty": 12
+        }
+      }
+    },
+    {
+      "terms": [
+        "reimplementation"
+      ],
+      "evidence": {}
+    },
+    {
+      "terms": [
+        "from scratch"
+      ],
+      "evidence": {}
+    },
+    {
+      "terms": [
+        "independently trained"
+      ],
+      "evidence": {}
+    }
+  ],
+  "control": {
+    "pair": [
+      "reproduce",
+      "reproduction"
+    ],
+    "compared": 12,
+    "differ": 12,
+    "passes": true
+  },
+  "subjects": {
+    "bert-base-uncased": {
+      "reproduce": 97,
+      "reproduction": 9,
+      "replicate": 42,
+      "replication": 42,
+      "reimplementation": 3,
+      "from scratch": 100,
+      "independently trained": 11
+    },
+    "bloom-176b": {
+      "reproduce": 12,
+      "reproduction": 0,
+      "replicate": 3,
+      "replication": 3,
+      "reimplementation": 0,
+      "from scratch": 7,
+      "independently trained": 0
+    },
+    "claude-3.5-sonnet": {
+      "reproduce": 12,
+      "reproduction": 1,
+      "replicate": 7,
+      "replication": 7,
+      "reimplementation": 0,
+      "from scratch": 6,
+      "independently trained": 0
+    },
+    "gemini-1.5-pro": {
+      "reproduce": 10,
+      "reproduction": 0,
+      "replicate": 6,
+      "replication": 6,
+      "reimplementation": 0,
+      "from scratch": 2,
+      "independently trained": 0
+    },
+    "gemma-2-9b": {
+      "reproduce": 8,
+      "reproduction": 2,
+      "replicate": 12,
+      "replication": 12,
+      "reimplementation": 0,
+      "from scratch": 4,
+      "independently trained": 2
+    },
+    "gpt-2-1.5b": {
+      "reproduce": 47,
+      "reproduction": 5,
+      "replicate": 15,
+      "replication": 15,
+      "reimplementation": 2,
+      "from scratch": 57,
+      "independently trained": 4
+    },
+    "gpt-4o": {
+      "reproduce": 90,
+      "reproduction": 6,
+      "replicate": 53,
+      "replication": 53,
+      "reimplementation": 1,
+      "from scratch": 12,
+      "independently trained": 1
+    },
+    "llama-3.1-8b": {
+      "reproduce": 38,
+      "reproduction": 4,
+      "replicate": 33,
+      "replication": 33,
+      "reimplementation": 0,
+      "from scratch": 10,
+      "independently trained": 2
+    },
+    "mistral-7b-v0.3": {
+      "reproduce": 47,
+      "reproduction": 1,
+      "replicate": 28,
+      "replication": 28,
+      "reimplementation": 0,
+      "from scratch": 14,
+      "independently trained": 1
+    },
+    "olmo-2-13b": {
+      "reproduce": 9,
+      "reproduction": 1,
+      "replicate": 7,
+      "replication": 7,
+      "reimplementation": 0,
+      "from scratch": 3,
+      "independently trained": 0
+    },
+    "pythia-12b": {
+      "reproduce": 18,
+      "reproduction": 4,
+      "replicate": 10,
+      "replication": 10,
+      "reimplementation": 0,
+      "from scratch": 10,
+      "independently trained": 2
+    },
+    "qwen2.5-7b": {
+      "reproduce": 60,
+      "reproduction": 5,
+      "replicate": 33,
+      "replication": 33,
+      "reimplementation": 0,
+      "from scratch": 21,
+      "independently trained": 4
+    }
+  }
+}
