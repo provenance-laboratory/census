@@ -326,6 +326,573 @@
       "covered": "75c21b433447ae039e426028a9fdb95af6f7a75c22c22d64c27c495922d5a772",
       "subject_filter": null,
       "findings": []
+    },
+    {
+      "at": "2026-08-31T06:49:29Z",
+      "artifacts": 318,
+      "unchanged": 218,
+      "drifted": 43,
+      "unretrievable": 0,
+      "volatile": 6,
+      "rate_limited": 44,
+      "complete": false,
+      "metadata_drift": 7,
+      "covered": "50300cbbc27ab8fa5ff42963b3fbd4e3e6953c422ac87a6160d720e91870c95d",
+      "subject_filter": null,
+      "findings": [
+        {
+          "url": "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1",
+          "what": "digest moved: ",
+          "cells": [
+            "pythia-12b/axis6"
+          ],
+          "recorded_sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6"
+        },
+        {
+          "url": "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1",
+          "what": "digest moved: ",
+          "cells": [
+            "olmo-2-13b/axis6"
+          ],
+          "recorded_sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60"
+        },
+        {
+          "url": "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1",
+          "what": "digest moved: ",
+          "cells": [
+            "bert-base-uncased/axis6"
+          ],
+          "recorded_sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bert-base-uncased/axis16"
+          ],
+          "recorded_sha256": "6330ab6904410b7d8059a751967106ab67cce0b1f268019ba4f7718df46e9dda"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bert-base-uncased/axis16"
+          ],
+          "recorded_sha256": "08e61fc78e855f7f4c57029ad347b08ff93689c35984d9828e2ca9747293da86"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bert-base-uncased/axis16"
+          ],
+          "recorded_sha256": "a84efe2c1dd0a1a1dc0d1e8ab0a5a42fa6eaf98a1cd6e7729163a4aa44b44771"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bert-base-uncased/axis16"
+          ],
+          "recorded_sha256": "e9742e463909e96074fabc475a81b23b11bd3bee914fb28563ea4715b27fbecc"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bert-base-uncased/axis16"
+          ],
+          "recorded_sha256": "444e945d7fa64207f25c99d5b1c33739d94d03b8bb6a456c7e053eb75b20a85a"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bert-base-uncased/axis16"
+          ],
+          "recorded_sha256": "2ee527889d808ad1d13afff7a489b96d70b38825128b1a6e2fa9d1eda601139e"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bert-base-uncased/axis16"
+          ],
+          "recorded_sha256": "5041a4608cd37b706fd9372dec4ba634d7d3bc1cda8c342fe529cf0f6bbe812a"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bloom-176b/axis16",
+            "bloom-176b/axis17"
+          ],
+          "recorded_sha256": "339d9a86b5d90b32bf9862472856c29ab20d0d2797b843fe395a480afb3b56dd"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bloom-176b/axis16",
+            "bloom-176b/axis17"
+          ],
+          "recorded_sha256": "d12c34016c4351a04759f442affb624a5ad84cd015cbcb5b536d9a1c16383cda"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bloom-176b/axis16",
+            "bloom-176b/axis17"
+          ],
+          "recorded_sha256": "ceae04b45fe5ebbadea43cea417d551eb9f00d06c19ff626e5e15dc016882b10"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bloom-176b/axis16",
+            "bloom-176b/axis17"
+          ],
+          "recorded_sha256": "8823d74abc28ecb5200615ea93f60b8b9aefefe41321d54b3a28c96bfb36388d"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bloom-176b/axis16",
+            "bloom-176b/axis17"
+          ],
+          "recorded_sha256": "b4ef0a60430f6180befd32c14a017f554945c1cb6d8dac342171f49c9e3614c7"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bloom-176b/axis16",
+            "bloom-176b/axis17"
+          ],
+          "recorded_sha256": "23c3fef60cc163164ec3cc10db38051b2d558ab1f92e920481fd8a009d055dbd"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "bloom-176b/axis16",
+            "bloom-176b/axis17"
+          ],
+          "recorded_sha256": "a438977468b66b5a3aabed820c9b296e653f635dd113eebae4e83cbaf4620c94"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "claude-3.5-sonnet/axis16",
+            "claude-3.5-sonnet/axis17"
+          ],
+          "recorded_sha256": "80ba2db68603e78738240ace14b03d457ff13604b46c6700633af0b9b23688ea"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "claude-3.5-sonnet/axis16",
+            "claude-3.5-sonnet/axis17"
+          ],
+          "recorded_sha256": "074d4c906d725bed8f3df49dd3ff7c833c08b87cf48496e13b2ce669b962bef8"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "claude-3.5-sonnet/axis16",
+            "claude-3.5-sonnet/axis17"
+          ],
+          "recorded_sha256": "6b5a618a9e7f9240cd51012ffdc59bf1f444220fb3b818092bb1292f8f78f448"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "claude-3.5-sonnet/axis16",
+            "claude-3.5-sonnet/axis17"
+          ],
+          "recorded_sha256": "9b8e86044663e43a93f7883a8a56517f3c9f94d670744185a0322406eb047165"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "claude-3.5-sonnet/axis16",
+            "claude-3.5-sonnet/axis17"
+          ],
+          "recorded_sha256": "7e39e047e1c9f205e79ffac2e20f7e1208aff98c4efb3404907edcf2583e0442"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "claude-3.5-sonnet/axis16",
+            "claude-3.5-sonnet/axis17"
+          ],
+          "recorded_sha256": "b72549b828890bf015ea6fd3f0f4c1e7b08605dcb0ded14d30ebee2fc4efdea2"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "gemma-2-9b/axis16",
+            "gemma-2-9b/axis17"
+          ],
+          "recorded_sha256": "c1f69e7ac0591227316b60f5665a6536b0200d8e3fb46c76de7dc695ec388e24"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "gemma-2-9b/axis16",
+            "gemma-2-9b/axis17"
+          ],
+          "recorded_sha256": "08ac44efd1db9a9e3048f6559d36c462ac8462af866a2c21f1d77eb682a451dd"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "gemma-2-9b/axis16",
+            "gemma-2-9b/axis17"
+          ],
+          "recorded_sha256": "c16e1ae1f7b4c92d2f4274d3cff9f619af5e5a8e81476780b89c9fc6f6a33102"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "gemma-2-9b/axis16",
+            "gemma-2-9b/axis17"
+          ],
+          "recorded_sha256": "0e9c8318d484c9fad9bd01014e854df2e9c7e502ad273b6550b314885889a3b8"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "gemma-2-9b/axis16",
+            "gemma-2-9b/axis17"
+          ],
+          "recorded_sha256": "01daf1d2aac698a4d8428fc94d8171fb5478a9c6925d24343a2478a1c968b24b"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "llama-3.1-8b/axis16",
+            "llama-3.1-8b/axis17"
+          ],
+          "recorded_sha256": "bf8bad1b1dedb32c02db9246bf385f64f51692e5a6a9dd0acfdcf9ed6e536206"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "llama-3.1-8b/axis16",
+            "llama-3.1-8b/axis17"
+          ],
+          "recorded_sha256": "8f485a4007f3eea4eb801cf944f312119450af67cb42e36d906979ba5dc33139"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "llama-3.1-8b/axis16",
+            "llama-3.1-8b/axis17"
+          ],
+          "recorded_sha256": "97f00d66780d56094303d6d03d95437d3b19ed4e7cb600aa19bc138383e5d1d8"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "llama-3.1-8b/axis16",
+            "llama-3.1-8b/axis17"
+          ],
+          "recorded_sha256": "402d5a2516b2499bec175c72c422b9356910c2f8f871cfd805f92447fb2516fc"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "llama-3.1-8b/axis16",
+            "llama-3.1-8b/axis17"
+          ],
+          "recorded_sha256": "aaba8522cddc3fd35658a9bc707c2911fca6198ac6da2b1ee390204e43e5110a"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "llama-3.1-8b/axis16",
+            "llama-3.1-8b/axis17"
+          ],
+          "recorded_sha256": "04a5c7060f816730f0f4507f8c971a532e91ce23ee0b3c62ad461b9a5d631f3b"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "llama-3.1-8b/axis16",
+            "llama-3.1-8b/axis17"
+          ],
+          "recorded_sha256": "2000d37dc5c06edc3314fa074acb2dbb143ceee5f59cba764316484f54fb13b1"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "mistral-7b-v0.3/axis16",
+            "mistral-7b-v0.3/axis17"
+          ],
+          "recorded_sha256": "bb045f018938a8851d4b56838c640bdf537940d60f91b1c1b434a00633895051"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "mistral-7b-v0.3/axis16",
+            "mistral-7b-v0.3/axis17"
+          ],
+          "recorded_sha256": "adbd3f6104cb07a123fa535966a811ea288d567847de35d19d4f859dc19572cb"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "qwen2.5-7b/axis16",
+            "qwen2.5-7b/axis17"
+          ],
+          "recorded_sha256": "25a7013afc3c0ee23d64b96bcc04a330266167dba1ae07b4514b88d360cfcc62"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "qwen2.5-7b/axis16",
+            "qwen2.5-7b/axis17"
+          ],
+          "recorded_sha256": "168ac6565a64110d45dbbc84968af75a5d29963acbd2998c5e1f2bafc8af08de"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "qwen2.5-7b/axis16",
+            "qwen2.5-7b/axis17"
+          ],
+          "recorded_sha256": "7a68dc5d3e11f9fb420b7a4a2b17340af77b428750d66a20adaa8161b5b94ae3"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "qwen2.5-7b/axis16",
+            "qwen2.5-7b/axis17"
+          ],
+          "recorded_sha256": "54a622d1e614afb559da0b0af13e671e1edbcfcc422f97e7fb39928432735ace"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "qwen2.5-7b/axis16",
+            "qwen2.5-7b/axis17"
+          ],
+          "recorded_sha256": "6d88fd17fe847778260e902b3b40259bc6728b4d90ed3a2c8295a3da3c88f435"
+        },
+        {
+          "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
+          "what": "digest moved: not JSON: the whole body differs",
+          "cells": [
+            "qwen2.5-7b/axis16",
+            "qwen2.5-7b/axis17"
+          ],
+          "recorded_sha256": "749ddc94c4c98a064682c91c91a5d4726107da43b07181ede8c3bf021fa8b664"
+        },
+        {
+          "url": "https://huggingface.co/api/models/EleutherAI/pythia-12b/revision/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+          "what": "metadata drift: downloads, spaces",
+          "cells": [
+            "pythia-12b/axis15",
+            "pythia-12b/axis12",
+            "pythia-12b/axis13"
+          ],
+          "recorded_sha256": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71"
+        },
+        {
+          "url": "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796",
+          "what": "metadata drift: downloads, likes",
+          "cells": [
+            "qwen2.5-7b/axis15",
+            "qwen2.5-7b/axis12",
+            "qwen2.5-7b/axis13"
+          ],
+          "recorded_sha256": "c12581151f4234bd051e16831c3dcd782f5ff623e9a0213dfe7d55b7a8fc15d9"
+        },
+        {
+          "url": "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+          "what": "metadata drift: downloads",
+          "cells": [
+            "olmo-2-13b/axis15",
+            "olmo-2-13b/axis12",
+            "olmo-2-13b/axis13"
+          ],
+          "recorded_sha256": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3"
+        },
+        {
+          "url": "https://huggingface.co/api/models/bigscience/bloom/revision/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "what": "metadata drift: downloads, likes",
+          "cells": [
+            "bloom-176b/axis15",
+            "bloom-176b/axis12",
+            "bloom-176b/axis13"
+          ],
+          "recorded_sha256": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29"
+        },
+        {
+          "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/86b5e0934494bd15c9632b12f734a8a67f723594",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "bert-base-uncased/axis15",
+            "bert-base-uncased/axis12"
+          ],
+          "recorded_sha256": "7ee96aab76282c64d70436d1344b749d0721975f2e57cd801f726b0cf8c97715"
+        },
+        {
+          "url": "https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/revision/caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "what": "metadata drift: downloads, spaces",
+          "cells": [
+            "mistral-7b-v0.3/axis15",
+            "mistral-7b-v0.3/axis12",
+            "mistral-7b-v0.3/axis13"
+          ],
+          "recorded_sha256": "65652618c2c1d9fcb19dfaf3c1b9e0ff46ce6e21490a53c6f34fea852171b4bd"
+        },
+        {
+          "url": "https://huggingface.co/api/models/openai-community/gpt2-xl/revision/15ea56dee5df4983c59b2538573817e1667135e2",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "gpt-2-1.5b/axis15",
+            "gpt-2-1.5b/axis12"
+          ],
+          "recorded_sha256": "0c993bc7336e2cd0330036b4da9c6bd8ce9d6cccd2b7f26dccb3abc9a8e5df0f"
+        }
+      ]
+    },
+    {
+      "at": "2026-08-31T06:59:44Z",
+      "artifacts": 318,
+      "unchanged": 218,
+      "drifted": 3,
+      "unretrievable": 0,
+      "volatile": 90,
+      "rate_limited": 0,
+      "complete": true,
+      "metadata_drift": 7,
+      "covered": "50300cbbc27ab8fa5ff42963b3fbd4e3e6953c422ac87a6160d720e91870c95d",
+      "subject_filter": null,
+      "findings": [
+        {
+          "url": "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1",
+          "what": "digest moved: ",
+          "cells": [
+            "pythia-12b/axis6"
+          ],
+          "recorded_sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6"
+        },
+        {
+          "url": "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1",
+          "what": "digest moved: ",
+          "cells": [
+            "olmo-2-13b/axis6"
+          ],
+          "recorded_sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60"
+        },
+        {
+          "url": "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1",
+          "what": "digest moved: ",
+          "cells": [
+            "bert-base-uncased/axis6"
+          ],
+          "recorded_sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340"
+        },
+        {
+          "url": "https://huggingface.co/api/models/EleutherAI/pythia-12b/revision/bb1e3e710cdf6b524461d543cfb5ba773f0a81b6",
+          "what": "metadata drift: downloads",
+          "cells": [
+            "pythia-12b/axis15",
+            "pythia-12b/axis12",
+            "pythia-12b/axis13"
+          ],
+          "recorded_sha256": "769ac310651eb6981f685bed4db9efe2dc8852fffd7d8e3eafedc50cea270d71"
+        },
+        {
+          "url": "https://huggingface.co/api/models/Qwen/Qwen2.5-7B/revision/d149729398750b98c0af14eb82c78cfe92750796",
+          "what": "metadata drift: downloads, likes",
+          "cells": [
+            "qwen2.5-7b/axis15",
+            "qwen2.5-7b/axis12",
+            "qwen2.5-7b/axis13"
+          ],
+          "recorded_sha256": "c12581151f4234bd051e16831c3dcd782f5ff623e9a0213dfe7d55b7a8fc15d9"
+        },
+        {
+          "url": "https://huggingface.co/api/models/allenai/OLMo-2-1124-13B/revision/3fefddc1bf18a30e1d9b91000271630718f2aa8b",
+          "what": "metadata drift: downloads",
+          "cells": [
+            "olmo-2-13b/axis15",
+            "olmo-2-13b/axis12",
+            "olmo-2-13b/axis13"
+          ],
+          "recorded_sha256": "ee61d2ecf8b6e7f656edb72d8cd92948ef2783950cc2fdb26f218ece5d25b6d3"
+        },
+        {
+          "url": "https://huggingface.co/api/models/bigscience/bloom/revision/7f10a99ce7c08f03c7719a586cb2cbda1433ac05",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "bloom-176b/axis15",
+            "bloom-176b/axis12",
+            "bloom-176b/axis13"
+          ],
+          "recorded_sha256": "c83dda085738162bb324d1ec1ccc8745cd6bea253793945703994686173afc29"
+        },
+        {
+          "url": "https://huggingface.co/api/models/google-bert/bert-base-uncased/revision/86b5e0934494bd15c9632b12f734a8a67f723594",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "bert-base-uncased/axis15",
+            "bert-base-uncased/axis12"
+          ],
+          "recorded_sha256": "7ee96aab76282c64d70436d1344b749d0721975f2e57cd801f726b0cf8c97715"
+        },
+        {
+          "url": "https://huggingface.co/api/models/mistralai/Mistral-7B-v0.3/revision/caa1feb0e54d415e2df31207e5f4e273e33509b1",
+          "what": "metadata drift: downloads, spaces",
+          "cells": [
+            "mistral-7b-v0.3/axis15",
+            "mistral-7b-v0.3/axis12",
+            "mistral-7b-v0.3/axis13"
+          ],
+          "recorded_sha256": "65652618c2c1d9fcb19dfaf3c1b9e0ff46ce6e21490a53c6f34fea852171b4bd"
+        },
+        {
+          "url": "https://huggingface.co/api/models/openai-community/gpt2-xl/revision/15ea56dee5df4983c59b2538573817e1667135e2",
+          "what": "metadata drift: downloads, likes, spaces",
+          "cells": [
+            "gpt-2-1.5b/axis15",
+            "gpt-2-1.5b/axis12"
+          ],
+          "recorded_sha256": "0c993bc7336e2cd0330036b4da9c6bd8ce9d6cccd2b7f26dccb3abc9a8e5df0f"
+        }
+      ]
     }
   ]
 }

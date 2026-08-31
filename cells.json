@@ -1350,37 +1350,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8c011b881ac5884c5f9cc820fbcef4b2ed7a4bec4a7127d690f9caba6355be7e"
+          "sha256": "8c011b881ac5884c5f9cc820fbcef4b2ed7a4bec4a7127d690f9caba6355be7e",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "46997b58cea5f04ae88c323715d5dc2d4cd6fbf51531c7d1e044d9970358176a"
+          "sha256": "46997b58cea5f04ae88c323715d5dc2d4cd6fbf51531c7d1e044d9970358176a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "c27b579032ab352ad8828a7db7d154bebc0313e0518706344db3849185166152"
+          "sha256": "c27b579032ab352ad8828a7db7d154bebc0313e0518706344db3849185166152",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "74717ef8340f2d2a2b3439945ef1308a4aa78ed0f246ed79a50b5d57d90e97b1"
+          "sha256": "74717ef8340f2d2a2b3439945ef1308a4aa78ed0f246ed79a50b5d57d90e97b1",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8fb2a402fa9079bdfc1647cda4e4db5427ebca387f1f7f8af1e5f74f53d859c5"
+          "sha256": "8fb2a402fa9079bdfc1647cda4e4db5427ebca387f1f7f8af1e5f74f53d859c5",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6c2c28228f86d773612e99faebf7bfb383b5f7562ef39680aed656f2c81394ce"
+          "sha256": "6c2c28228f86d773612e99faebf7bfb383b5f7562ef39680aed656f2c81394ce",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "68794abe7b4a7ab04fed758088b6329694b60bcba0db6765cd520a9f2d17bb4e"
+          "sha256": "68794abe7b4a7ab04fed758088b6329694b60bcba0db6765cd520a9f2d17bb4e",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -1432,37 +1446,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8c011b881ac5884c5f9cc820fbcef4b2ed7a4bec4a7127d690f9caba6355be7e"
+          "sha256": "8c011b881ac5884c5f9cc820fbcef4b2ed7a4bec4a7127d690f9caba6355be7e",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "46997b58cea5f04ae88c323715d5dc2d4cd6fbf51531c7d1e044d9970358176a"
+          "sha256": "46997b58cea5f04ae88c323715d5dc2d4cd6fbf51531c7d1e044d9970358176a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "c27b579032ab352ad8828a7db7d154bebc0313e0518706344db3849185166152"
+          "sha256": "c27b579032ab352ad8828a7db7d154bebc0313e0518706344db3849185166152",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "74717ef8340f2d2a2b3439945ef1308a4aa78ed0f246ed79a50b5d57d90e97b1"
+          "sha256": "74717ef8340f2d2a2b3439945ef1308a4aa78ed0f246ed79a50b5d57d90e97b1",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8fb2a402fa9079bdfc1647cda4e4db5427ebca387f1f7f8af1e5f74f53d859c5"
+          "sha256": "8fb2a402fa9079bdfc1647cda4e4db5427ebca387f1f7f8af1e5f74f53d859c5",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6c2c28228f86d773612e99faebf7bfb383b5f7562ef39680aed656f2c81394ce"
+          "sha256": "6c2c28228f86d773612e99faebf7bfb383b5f7562ef39680aed656f2c81394ce",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "68794abe7b4a7ab04fed758088b6329694b60bcba0db6765cd520a9f2d17bb4e"
+          "sha256": "68794abe7b4a7ab04fed758088b6329694b60bcba0db6765cd520a9f2d17bb4e",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -2004,37 +2032,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "a3d2000c3ed681b35e6d8d47861c9392f5f7ea44c8edbed6a3e3337d2d35547b"
+          "sha256": "a3d2000c3ed681b35e6d8d47861c9392f5f7ea44c8edbed6a3e3337d2d35547b",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "e0ccac234414109aca9fa963a40472e6cb2a047255286c60d6e7115504fa748c"
+          "sha256": "e0ccac234414109aca9fa963a40472e6cb2a047255286c60d6e7115504fa748c",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "039c58a5d4f20d3139c7091f85d3dced67dec8a4d43a438d73f34d29d6b2b644"
+          "sha256": "039c58a5d4f20d3139c7091f85d3dced67dec8a4d43a438d73f34d29d6b2b644",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "59dc41ab09f9f287bd1f59075a5ef2cfe73b1d5445179c747f7076232543586c"
+          "sha256": "59dc41ab09f9f287bd1f59075a5ef2cfe73b1d5445179c747f7076232543586c",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bc0dee501610a00e86d166d751ab6e022e65d1ab0949e8aaf40978ee13b43f3f"
+          "sha256": "bc0dee501610a00e86d166d751ab6e022e65d1ab0949e8aaf40978ee13b43f3f",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163"
+          "sha256": "016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "d714d656934b0f38ca58acfafe414bfc705f777bb934d6a6720eb92163364ac6"
+          "sha256": "d714d656934b0f38ca58acfafe414bfc705f777bb934d6a6720eb92163364ac6",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -2086,37 +2128,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "a3d2000c3ed681b35e6d8d47861c9392f5f7ea44c8edbed6a3e3337d2d35547b"
+          "sha256": "a3d2000c3ed681b35e6d8d47861c9392f5f7ea44c8edbed6a3e3337d2d35547b",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "e0ccac234414109aca9fa963a40472e6cb2a047255286c60d6e7115504fa748c"
+          "sha256": "e0ccac234414109aca9fa963a40472e6cb2a047255286c60d6e7115504fa748c",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "039c58a5d4f20d3139c7091f85d3dced67dec8a4d43a438d73f34d29d6b2b644"
+          "sha256": "039c58a5d4f20d3139c7091f85d3dced67dec8a4d43a438d73f34d29d6b2b644",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "59dc41ab09f9f287bd1f59075a5ef2cfe73b1d5445179c747f7076232543586c"
+          "sha256": "59dc41ab09f9f287bd1f59075a5ef2cfe73b1d5445179c747f7076232543586c",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bc0dee501610a00e86d166d751ab6e022e65d1ab0949e8aaf40978ee13b43f3f"
+          "sha256": "bc0dee501610a00e86d166d751ab6e022e65d1ab0949e8aaf40978ee13b43f3f",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163"
+          "sha256": "016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "d714d656934b0f38ca58acfafe414bfc705f777bb934d6a6720eb92163364ac6"
+          "sha256": "d714d656934b0f38ca58acfafe414bfc705f777bb934d6a6720eb92163364ac6",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -2589,37 +2645,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "23c3fef60cc163164ec3cc10db38051b2d558ab1f92e920481fd8a009d055dbd"
+          "sha256": "23c3fef60cc163164ec3cc10db38051b2d558ab1f92e920481fd8a009d055dbd",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "a438977468b66b5a3aabed820c9b296e653f635dd113eebae4e83cbaf4620c94"
+          "sha256": "a438977468b66b5a3aabed820c9b296e653f635dd113eebae4e83cbaf4620c94",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8823d74abc28ecb5200615ea93f60b8b9aefefe41321d54b3a28c96bfb36388d"
+          "sha256": "8823d74abc28ecb5200615ea93f60b8b9aefefe41321d54b3a28c96bfb36388d",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "b4ef0a60430f6180befd32c14a017f554945c1cb6d8dac342171f49c9e3614c7"
+          "sha256": "b4ef0a60430f6180befd32c14a017f554945c1cb6d8dac342171f49c9e3614c7",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "ceae04b45fe5ebbadea43cea417d551eb9f00d06c19ff626e5e15dc016882b10"
+          "sha256": "ceae04b45fe5ebbadea43cea417d551eb9f00d06c19ff626e5e15dc016882b10",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "339d9a86b5d90b32bf9862472856c29ab20d0d2797b843fe395a480afb3b56dd"
+          "sha256": "339d9a86b5d90b32bf9862472856c29ab20d0d2797b843fe395a480afb3b56dd",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "d12c34016c4351a04759f442affb624a5ad84cd015cbcb5b536d9a1c16383cda"
+          "sha256": "d12c34016c4351a04759f442affb624a5ad84cd015cbcb5b536d9a1c16383cda",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -2671,37 +2741,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "23c3fef60cc163164ec3cc10db38051b2d558ab1f92e920481fd8a009d055dbd"
+          "sha256": "23c3fef60cc163164ec3cc10db38051b2d558ab1f92e920481fd8a009d055dbd",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "a438977468b66b5a3aabed820c9b296e653f635dd113eebae4e83cbaf4620c94"
+          "sha256": "a438977468b66b5a3aabed820c9b296e653f635dd113eebae4e83cbaf4620c94",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8823d74abc28ecb5200615ea93f60b8b9aefefe41321d54b3a28c96bfb36388d"
+          "sha256": "8823d74abc28ecb5200615ea93f60b8b9aefefe41321d54b3a28c96bfb36388d",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "b4ef0a60430f6180befd32c14a017f554945c1cb6d8dac342171f49c9e3614c7"
+          "sha256": "b4ef0a60430f6180befd32c14a017f554945c1cb6d8dac342171f49c9e3614c7",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "ceae04b45fe5ebbadea43cea417d551eb9f00d06c19ff626e5e15dc016882b10"
+          "sha256": "ceae04b45fe5ebbadea43cea417d551eb9f00d06c19ff626e5e15dc016882b10",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "339d9a86b5d90b32bf9862472856c29ab20d0d2797b843fe395a480afb3b56dd"
+          "sha256": "339d9a86b5d90b32bf9862472856c29ab20d0d2797b843fe395a480afb3b56dd",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "d12c34016c4351a04759f442affb624a5ad84cd015cbcb5b536d9a1c16383cda"
+          "sha256": "d12c34016c4351a04759f442affb624a5ad84cd015cbcb5b536d9a1c16383cda",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -4036,37 +4120,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "a5b2adaf91a5cd97477f38f694e9492706fd2d6e1217a164ca749a51f6629288"
+          "sha256": "a5b2adaf91a5cd97477f38f694e9492706fd2d6e1217a164ca749a51f6629288",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "45d1921760fb86a8eb55ffd7697e6515e7b1f91372a158df0b013d995fe27c5c"
+          "sha256": "45d1921760fb86a8eb55ffd7697e6515e7b1f91372a158df0b013d995fe27c5c",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "e4d837b8197d599ce87b3867376be78ab9fc37c7fed9d4e19279e2e4008d4169"
+          "sha256": "e4d837b8197d599ce87b3867376be78ab9fc37c7fed9d4e19279e2e4008d4169",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "49a821cbb323c83570002c76fabbaab2ec990aae04e7b0615be9dbb79ab74eb5"
+          "sha256": "49a821cbb323c83570002c76fabbaab2ec990aae04e7b0615be9dbb79ab74eb5",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9796d1579d7f3079c6020115af4c6ca7e8297c4c799ab65f4e6b35d08f84432e"
+          "sha256": "9796d1579d7f3079c6020115af4c6ca7e8297c4c799ab65f4e6b35d08f84432e",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bb045f018938a8851d4b56838c640bdf537940d60f91b1c1b434a00633895051"
+          "sha256": "bb045f018938a8851d4b56838c640bdf537940d60f91b1c1b434a00633895051",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "adbd3f6104cb07a123fa535966a811ea288d567847de35d19d4f859dc19572cb"
+          "sha256": "adbd3f6104cb07a123fa535966a811ea288d567847de35d19d4f859dc19572cb",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -4118,37 +4216,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "a5b2adaf91a5cd97477f38f694e9492706fd2d6e1217a164ca749a51f6629288"
+          "sha256": "a5b2adaf91a5cd97477f38f694e9492706fd2d6e1217a164ca749a51f6629288",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "45d1921760fb86a8eb55ffd7697e6515e7b1f91372a158df0b013d995fe27c5c"
+          "sha256": "45d1921760fb86a8eb55ffd7697e6515e7b1f91372a158df0b013d995fe27c5c",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "e4d837b8197d599ce87b3867376be78ab9fc37c7fed9d4e19279e2e4008d4169"
+          "sha256": "e4d837b8197d599ce87b3867376be78ab9fc37c7fed9d4e19279e2e4008d4169",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "49a821cbb323c83570002c76fabbaab2ec990aae04e7b0615be9dbb79ab74eb5"
+          "sha256": "49a821cbb323c83570002c76fabbaab2ec990aae04e7b0615be9dbb79ab74eb5",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9796d1579d7f3079c6020115af4c6ca7e8297c4c799ab65f4e6b35d08f84432e"
+          "sha256": "9796d1579d7f3079c6020115af4c6ca7e8297c4c799ab65f4e6b35d08f84432e",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bb045f018938a8851d4b56838c640bdf537940d60f91b1c1b434a00633895051"
+          "sha256": "bb045f018938a8851d4b56838c640bdf537940d60f91b1c1b434a00633895051",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "adbd3f6104cb07a123fa535966a811ea288d567847de35d19d4f859dc19572cb"
+          "sha256": "adbd3f6104cb07a123fa535966a811ea288d567847de35d19d4f859dc19572cb",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -4487,37 +4599,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6d88fd17fe847778260e902b3b40259bc6728b4d90ed3a2c8295a3da3c88f435"
+          "sha256": "6d88fd17fe847778260e902b3b40259bc6728b4d90ed3a2c8295a3da3c88f435",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "749ddc94c4c98a064682c91c91a5d4726107da43b07181ede8c3bf021fa8b664"
+          "sha256": "749ddc94c4c98a064682c91c91a5d4726107da43b07181ede8c3bf021fa8b664",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "7a68dc5d3e11f9fb420b7a4a2b17340af77b428750d66a20adaa8161b5b94ae3"
+          "sha256": "7a68dc5d3e11f9fb420b7a4a2b17340af77b428750d66a20adaa8161b5b94ae3",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "54a622d1e614afb559da0b0af13e671e1edbcfcc422f97e7fb39928432735ace"
+          "sha256": "54a622d1e614afb559da0b0af13e671e1edbcfcc422f97e7fb39928432735ace",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "168ac6565a64110d45dbbc84968af75a5d29963acbd2998c5e1f2bafc8af08de"
+          "sha256": "168ac6565a64110d45dbbc84968af75a5d29963acbd2998c5e1f2bafc8af08de",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9bd7ed45d145a3e445919ed600d4a86b0d31586ac1baf13af749d995601bf692"
+          "sha256": "9bd7ed45d145a3e445919ed600d4a86b0d31586ac1baf13af749d995601bf692",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "25a7013afc3c0ee23d64b96bcc04a330266167dba1ae07b4514b88d360cfcc62"
+          "sha256": "25a7013afc3c0ee23d64b96bcc04a330266167dba1ae07b4514b88d360cfcc62",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -4569,37 +4695,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6d88fd17fe847778260e902b3b40259bc6728b4d90ed3a2c8295a3da3c88f435"
+          "sha256": "6d88fd17fe847778260e902b3b40259bc6728b4d90ed3a2c8295a3da3c88f435",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "749ddc94c4c98a064682c91c91a5d4726107da43b07181ede8c3bf021fa8b664"
+          "sha256": "749ddc94c4c98a064682c91c91a5d4726107da43b07181ede8c3bf021fa8b664",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "7a68dc5d3e11f9fb420b7a4a2b17340af77b428750d66a20adaa8161b5b94ae3"
+          "sha256": "7a68dc5d3e11f9fb420b7a4a2b17340af77b428750d66a20adaa8161b5b94ae3",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "54a622d1e614afb559da0b0af13e671e1edbcfcc422f97e7fb39928432735ace"
+          "sha256": "54a622d1e614afb559da0b0af13e671e1edbcfcc422f97e7fb39928432735ace",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "168ac6565a64110d45dbbc84968af75a5d29963acbd2998c5e1f2bafc8af08de"
+          "sha256": "168ac6565a64110d45dbbc84968af75a5d29963acbd2998c5e1f2bafc8af08de",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9bd7ed45d145a3e445919ed600d4a86b0d31586ac1baf13af749d995601bf692"
+          "sha256": "9bd7ed45d145a3e445919ed600d4a86b0d31586ac1baf13af749d995601bf692",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "25a7013afc3c0ee23d64b96bcc04a330266167dba1ae07b4514b88d360cfcc62"
+          "sha256": "25a7013afc3c0ee23d64b96bcc04a330266167dba1ae07b4514b88d360cfcc62",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -4874,37 +5014,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "04a5c7060f816730f0f4507f8c971a532e91ce23ee0b3c62ad461b9a5d631f3b"
+          "sha256": "04a5c7060f816730f0f4507f8c971a532e91ce23ee0b3c62ad461b9a5d631f3b",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "2000d37dc5c06edc3314fa074acb2dbb143ceee5f59cba764316484f54fb13b1"
+          "sha256": "2000d37dc5c06edc3314fa074acb2dbb143ceee5f59cba764316484f54fb13b1",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "402d5a2516b2499bec175c72c422b9356910c2f8f871cfd805f92447fb2516fc"
+          "sha256": "402d5a2516b2499bec175c72c422b9356910c2f8f871cfd805f92447fb2516fc",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "aaba8522cddc3fd35658a9bc707c2911fca6198ac6da2b1ee390204e43e5110a"
+          "sha256": "aaba8522cddc3fd35658a9bc707c2911fca6198ac6da2b1ee390204e43e5110a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "97f00d66780d56094303d6d03d95437d3b19ed4e7cb600aa19bc138383e5d1d8"
+          "sha256": "97f00d66780d56094303d6d03d95437d3b19ed4e7cb600aa19bc138383e5d1d8",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bf8bad1b1dedb32c02db9246bf385f64f51692e5a6a9dd0acfdcf9ed6e536206"
+          "sha256": "bf8bad1b1dedb32c02db9246bf385f64f51692e5a6a9dd0acfdcf9ed6e536206",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8f485a4007f3eea4eb801cf944f312119450af67cb42e36d906979ba5dc33139"
+          "sha256": "8f485a4007f3eea4eb801cf944f312119450af67cb42e36d906979ba5dc33139",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -4956,37 +5110,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "04a5c7060f816730f0f4507f8c971a532e91ce23ee0b3c62ad461b9a5d631f3b"
+          "sha256": "04a5c7060f816730f0f4507f8c971a532e91ce23ee0b3c62ad461b9a5d631f3b",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "2000d37dc5c06edc3314fa074acb2dbb143ceee5f59cba764316484f54fb13b1"
+          "sha256": "2000d37dc5c06edc3314fa074acb2dbb143ceee5f59cba764316484f54fb13b1",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "402d5a2516b2499bec175c72c422b9356910c2f8f871cfd805f92447fb2516fc"
+          "sha256": "402d5a2516b2499bec175c72c422b9356910c2f8f871cfd805f92447fb2516fc",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "aaba8522cddc3fd35658a9bc707c2911fca6198ac6da2b1ee390204e43e5110a"
+          "sha256": "aaba8522cddc3fd35658a9bc707c2911fca6198ac6da2b1ee390204e43e5110a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "97f00d66780d56094303d6d03d95437d3b19ed4e7cb600aa19bc138383e5d1d8"
+          "sha256": "97f00d66780d56094303d6d03d95437d3b19ed4e7cb600aa19bc138383e5d1d8",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bf8bad1b1dedb32c02db9246bf385f64f51692e5a6a9dd0acfdcf9ed6e536206"
+          "sha256": "bf8bad1b1dedb32c02db9246bf385f64f51692e5a6a9dd0acfdcf9ed6e536206",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "8f485a4007f3eea4eb801cf944f312119450af67cb42e36d906979ba5dc33139"
+          "sha256": "8f485a4007f3eea4eb801cf944f312119450af67cb42e36d906979ba5dc33139",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -5197,37 +5365,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "0e9c8318d484c9fad9bd01014e854df2e9c7e502ad273b6550b314885889a3b8"
+          "sha256": "0e9c8318d484c9fad9bd01014e854df2e9c7e502ad273b6550b314885889a3b8",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "01daf1d2aac698a4d8428fc94d8171fb5478a9c6925d24343a2478a1c968b24b"
+          "sha256": "01daf1d2aac698a4d8428fc94d8171fb5478a9c6925d24343a2478a1c968b24b",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "08ac44efd1db9a9e3048f6559d36c462ac8462af866a2c21f1d77eb682a451dd"
+          "sha256": "08ac44efd1db9a9e3048f6559d36c462ac8462af866a2c21f1d77eb682a451dd",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "c16e1ae1f7b4c92d2f4274d3cff9f619af5e5a8e81476780b89c9fc6f6a33102"
+          "sha256": "c16e1ae1f7b4c92d2f4274d3cff9f619af5e5a8e81476780b89c9fc6f6a33102",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "c1f69e7ac0591227316b60f5665a6536b0200d8e3fb46c76de7dc695ec388e24"
+          "sha256": "c1f69e7ac0591227316b60f5665a6536b0200d8e3fb46c76de7dc695ec388e24",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "3076b53c8cac1dc0ce3dc2d8a4e9c856809b9a883ea4913db6302f2af5463174"
+          "sha256": "3076b53c8cac1dc0ce3dc2d8a4e9c856809b9a883ea4913db6302f2af5463174",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "d2f454b50695f953f45baf8079afe7996a75d94dc75aa17629b5219605c32592"
+          "sha256": "d2f454b50695f953f45baf8079afe7996a75d94dc75aa17629b5219605c32592",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -5279,37 +5461,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "0e9c8318d484c9fad9bd01014e854df2e9c7e502ad273b6550b314885889a3b8"
+          "sha256": "0e9c8318d484c9fad9bd01014e854df2e9c7e502ad273b6550b314885889a3b8",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "01daf1d2aac698a4d8428fc94d8171fb5478a9c6925d24343a2478a1c968b24b"
+          "sha256": "01daf1d2aac698a4d8428fc94d8171fb5478a9c6925d24343a2478a1c968b24b",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "08ac44efd1db9a9e3048f6559d36c462ac8462af866a2c21f1d77eb682a451dd"
+          "sha256": "08ac44efd1db9a9e3048f6559d36c462ac8462af866a2c21f1d77eb682a451dd",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "c16e1ae1f7b4c92d2f4274d3cff9f619af5e5a8e81476780b89c9fc6f6a33102"
+          "sha256": "c16e1ae1f7b4c92d2f4274d3cff9f619af5e5a8e81476780b89c9fc6f6a33102",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "c1f69e7ac0591227316b60f5665a6536b0200d8e3fb46c76de7dc695ec388e24"
+          "sha256": "c1f69e7ac0591227316b60f5665a6536b0200d8e3fb46c76de7dc695ec388e24",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "3076b53c8cac1dc0ce3dc2d8a4e9c856809b9a883ea4913db6302f2af5463174"
+          "sha256": "3076b53c8cac1dc0ce3dc2d8a4e9c856809b9a883ea4913db6302f2af5463174",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "d2f454b50695f953f45baf8079afe7996a75d94dc75aa17629b5219605c32592"
+          "sha256": "d2f454b50695f953f45baf8079afe7996a75d94dc75aa17629b5219605c32592",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -5504,37 +5700,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "e475bb8dc03457db5e32d5396a6f41075452da09df176a64ec0c03d32f6282a3"
+          "sha256": "e475bb8dc03457db5e32d5396a6f41075452da09df176a64ec0c03d32f6282a3",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "17768c4016b3b33d4332e387d23c78fe3ad367a2cea1b7ba6dc89f725ba1d051"
+          "sha256": "17768c4016b3b33d4332e387d23c78fe3ad367a2cea1b7ba6dc89f725ba1d051",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "b7aab2d345a707e0fcb249874d41e65d66bb7bbe04ec73ac00d1e59cd6376397"
+          "sha256": "b7aab2d345a707e0fcb249874d41e65d66bb7bbe04ec73ac00d1e59cd6376397",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "67c8f00c61954016db53c858580ac58513698b51fb8603c679880241bddff928"
+          "sha256": "67c8f00c61954016db53c858580ac58513698b51fb8603c679880241bddff928",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "7315d321762cb4fae9b14278911cee8bd85a98b6553d52c775c04a16ff2b7afb"
+          "sha256": "7315d321762cb4fae9b14278911cee8bd85a98b6553d52c775c04a16ff2b7afb",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9d2271d6f01a673fe8e55bffee339b86a8b21b7ff7109d30826cf25a7875bddf"
+          "sha256": "9d2271d6f01a673fe8e55bffee339b86a8b21b7ff7109d30826cf25a7875bddf",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "3f7b39c295af88fb8b69312cf9f4d493ab89e2cba11c3323be5941f2976c567d"
+          "sha256": "3f7b39c295af88fb8b69312cf9f4d493ab89e2cba11c3323be5941f2976c567d",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -5586,37 +5796,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "e475bb8dc03457db5e32d5396a6f41075452da09df176a64ec0c03d32f6282a3"
+          "sha256": "e475bb8dc03457db5e32d5396a6f41075452da09df176a64ec0c03d32f6282a3",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "17768c4016b3b33d4332e387d23c78fe3ad367a2cea1b7ba6dc89f725ba1d051"
+          "sha256": "17768c4016b3b33d4332e387d23c78fe3ad367a2cea1b7ba6dc89f725ba1d051",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "b7aab2d345a707e0fcb249874d41e65d66bb7bbe04ec73ac00d1e59cd6376397"
+          "sha256": "b7aab2d345a707e0fcb249874d41e65d66bb7bbe04ec73ac00d1e59cd6376397",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "67c8f00c61954016db53c858580ac58513698b51fb8603c679880241bddff928"
+          "sha256": "67c8f00c61954016db53c858580ac58513698b51fb8603c679880241bddff928",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "7315d321762cb4fae9b14278911cee8bd85a98b6553d52c775c04a16ff2b7afb"
+          "sha256": "7315d321762cb4fae9b14278911cee8bd85a98b6553d52c775c04a16ff2b7afb",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9d2271d6f01a673fe8e55bffee339b86a8b21b7ff7109d30826cf25a7875bddf"
+          "sha256": "9d2271d6f01a673fe8e55bffee339b86a8b21b7ff7109d30826cf25a7875bddf",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "3f7b39c295af88fb8b69312cf9f4d493ab89e2cba11c3323be5941f2976c567d"
+          "sha256": "3f7b39c295af88fb8b69312cf9f4d493ab89e2cba11c3323be5941f2976c567d",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -5816,37 +6040,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "b72549b828890bf015ea6fd3f0f4c1e7b08605dcb0ded14d30ebee2fc4efdea2"
+          "sha256": "b72549b828890bf015ea6fd3f0f4c1e7b08605dcb0ded14d30ebee2fc4efdea2",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "4cb3c89795811608ea8b18491cd7c766123a1bf93f17847569b0ad0005d3bb91"
+          "sha256": "4cb3c89795811608ea8b18491cd7c766123a1bf93f17847569b0ad0005d3bb91",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9b8e86044663e43a93f7883a8a56517f3c9f94d670744185a0322406eb047165"
+          "sha256": "9b8e86044663e43a93f7883a8a56517f3c9f94d670744185a0322406eb047165",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "7e39e047e1c9f205e79ffac2e20f7e1208aff98c4efb3404907edcf2583e0442"
+          "sha256": "7e39e047e1c9f205e79ffac2e20f7e1208aff98c4efb3404907edcf2583e0442",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6b5a618a9e7f9240cd51012ffdc59bf1f444220fb3b818092bb1292f8f78f448"
+          "sha256": "6b5a618a9e7f9240cd51012ffdc59bf1f444220fb3b818092bb1292f8f78f448",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "80ba2db68603e78738240ace14b03d457ff13604b46c6700633af0b9b23688ea"
+          "sha256": "80ba2db68603e78738240ace14b03d457ff13604b46c6700633af0b9b23688ea",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "074d4c906d725bed8f3df49dd3ff7c833c08b87cf48496e13b2ce669b962bef8"
+          "sha256": "074d4c906d725bed8f3df49dd3ff7c833c08b87cf48496e13b2ce669b962bef8",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -5898,37 +6136,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "b72549b828890bf015ea6fd3f0f4c1e7b08605dcb0ded14d30ebee2fc4efdea2"
+          "sha256": "b72549b828890bf015ea6fd3f0f4c1e7b08605dcb0ded14d30ebee2fc4efdea2",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "4cb3c89795811608ea8b18491cd7c766123a1bf93f17847569b0ad0005d3bb91"
+          "sha256": "4cb3c89795811608ea8b18491cd7c766123a1bf93f17847569b0ad0005d3bb91",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "9b8e86044663e43a93f7883a8a56517f3c9f94d670744185a0322406eb047165"
+          "sha256": "9b8e86044663e43a93f7883a8a56517f3c9f94d670744185a0322406eb047165",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "7e39e047e1c9f205e79ffac2e20f7e1208aff98c4efb3404907edcf2583e0442"
+          "sha256": "7e39e047e1c9f205e79ffac2e20f7e1208aff98c4efb3404907edcf2583e0442",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6b5a618a9e7f9240cd51012ffdc59bf1f444220fb3b818092bb1292f8f78f448"
+          "sha256": "6b5a618a9e7f9240cd51012ffdc59bf1f444220fb3b818092bb1292f8f78f448",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "80ba2db68603e78738240ace14b03d457ff13604b46c6700633af0b9b23688ea"
+          "sha256": "80ba2db68603e78738240ace14b03d457ff13604b46c6700633af0b9b23688ea",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "074d4c906d725bed8f3df49dd3ff7c833c08b87cf48496e13b2ce669b962bef8"
+          "sha256": "074d4c906d725bed8f3df49dd3ff7c833c08b87cf48496e13b2ce669b962bef8",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -6123,37 +6375,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "ed42b6cf382292edf9e590b6d7cfcf6c31f2392df01d494fad899aec1914b67a"
+          "sha256": "ed42b6cf382292edf9e590b6d7cfcf6c31f2392df01d494fad899aec1914b67a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "5f3f2561c445f94dae0d48db0dd0080b710a51083015a50fbf6f95382217d1e0"
+          "sha256": "5f3f2561c445f94dae0d48db0dd0080b710a51083015a50fbf6f95382217d1e0",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6f6327a40fafeaeed3e5fc236542b1ed64c04b23202d224bd1821993029bd3da"
+          "sha256": "6f6327a40fafeaeed3e5fc236542b1ed64c04b23202d224bd1821993029bd3da",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "53edb336ed995daa68a24a765ac2099e9901a5f867aa21074f8c81a52ddacf85"
+          "sha256": "53edb336ed995daa68a24a765ac2099e9901a5f867aa21074f8c81a52ddacf85",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bf87a7ce6ecc4031cb4b67a820c5501456f7bd58ca8b13caf045f02767bd3965"
+          "sha256": "bf87a7ce6ecc4031cb4b67a820c5501456f7bd58ca8b13caf045f02767bd3965",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "522112addedec0f0d610fbfc16b8baafbbc5f28201b73cf153ba58c63e74db24"
+          "sha256": "522112addedec0f0d610fbfc16b8baafbbc5f28201b73cf153ba58c63e74db24",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6074f90e65e75526d7359658f0e7a147f5ee8276231019dafea45ca70da2bb71"
+          "sha256": "6074f90e65e75526d7359658f0e7a147f5ee8276231019dafea45ca70da2bb71",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -6205,37 +6471,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "ed42b6cf382292edf9e590b6d7cfcf6c31f2392df01d494fad899aec1914b67a"
+          "sha256": "ed42b6cf382292edf9e590b6d7cfcf6c31f2392df01d494fad899aec1914b67a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "5f3f2561c445f94dae0d48db0dd0080b710a51083015a50fbf6f95382217d1e0"
+          "sha256": "5f3f2561c445f94dae0d48db0dd0080b710a51083015a50fbf6f95382217d1e0",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6f6327a40fafeaeed3e5fc236542b1ed64c04b23202d224bd1821993029bd3da"
+          "sha256": "6f6327a40fafeaeed3e5fc236542b1ed64c04b23202d224bd1821993029bd3da",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "53edb336ed995daa68a24a765ac2099e9901a5f867aa21074f8c81a52ddacf85"
+          "sha256": "53edb336ed995daa68a24a765ac2099e9901a5f867aa21074f8c81a52ddacf85",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "bf87a7ce6ecc4031cb4b67a820c5501456f7bd58ca8b13caf045f02767bd3965"
+          "sha256": "bf87a7ce6ecc4031cb4b67a820c5501456f7bd58ca8b13caf045f02767bd3965",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "522112addedec0f0d610fbfc16b8baafbbc5f28201b73cf153ba58c63e74db24"
+          "sha256": "522112addedec0f0d610fbfc16b8baafbbc5f28201b73cf153ba58c63e74db24",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6074f90e65e75526d7359658f0e7a147f5ee8276231019dafea45ca70da2bb71"
+          "sha256": "6074f90e65e75526d7359658f0e7a147f5ee8276231019dafea45ca70da2bb71",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -6523,37 +6803,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "2ee527889d808ad1d13afff7a489b96d70b38825128b1a6e2fa9d1eda601139e"
+          "sha256": "2ee527889d808ad1d13afff7a489b96d70b38825128b1a6e2fa9d1eda601139e",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "5041a4608cd37b706fd9372dec4ba634d7d3bc1cda8c342fe529cf0f6bbe812a"
+          "sha256": "5041a4608cd37b706fd9372dec4ba634d7d3bc1cda8c342fe529cf0f6bbe812a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "e9742e463909e96074fabc475a81b23b11bd3bee914fb28563ea4715b27fbecc"
+          "sha256": "e9742e463909e96074fabc475a81b23b11bd3bee914fb28563ea4715b27fbecc",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "444e945d7fa64207f25c99d5b1c33739d94d03b8bb6a456c7e053eb75b20a85a"
+          "sha256": "444e945d7fa64207f25c99d5b1c33739d94d03b8bb6a456c7e053eb75b20a85a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "a84efe2c1dd0a1a1dc0d1e8ab0a5a42fa6eaf98a1cd6e7729163a4aa44b44771"
+          "sha256": "a84efe2c1dd0a1a1dc0d1e8ab0a5a42fa6eaf98a1cd6e7729163a4aa44b44771",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6330ab6904410b7d8059a751967106ab67cce0b1f268019ba4f7718df46e9dda"
+          "sha256": "6330ab6904410b7d8059a751967106ab67cce0b1f268019ba4f7718df46e9dda",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "08e61fc78e855f7f4c57029ad347b08ff93689c35984d9828e2ca9747293da86"
+          "sha256": "08e61fc78e855f7f4c57029ad347b08ff93689c35984d9828e2ca9747293da86",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },
@@ -6853,37 +7147,51 @@
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22reproduce%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "02e122e0631c2c97d298538e8c327e5dd56f3691c8e095c10ee1bcdb59fd281a"
+          "sha256": "02e122e0631c2c97d298538e8c327e5dd56f3691c8e095c10ee1bcdb59fd281a",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22reproduction%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "6ad98af57229d401c23b3c65b0032191471ce25c887ecb25192b0a26b4507d2d"
+          "sha256": "6ad98af57229d401c23b3c65b0032191471ce25c887ecb25192b0a26b4507d2d",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22replicate%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "f56a64103b92cbc0fd2e20c9b827475867691581a4efd90c7686a5b3cc2b608f"
+          "sha256": "f56a64103b92cbc0fd2e20c9b827475867691581a4efd90c7686a5b3cc2b608f",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22replication%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "5e04bc19abd6eff8902847cc0f395830b92399cde6b7c8288cbff9383d635397"
+          "sha256": "5e04bc19abd6eff8902847cc0f395830b92399cde6b7c8288cbff9383d635397",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22reimplementation%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "26c43b853835009f58e87a49e8d2fb90bc7ee4196ed585d4cf41450987814a32"
+          "sha256": "26c43b853835009f58e87a49e8d2fb90bc7ee4196ed585d4cf41450987814a32",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22from%20scratch%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "16dd957b389503bda4f8e02db0a317ee3b69a9bca0b66c8989d9b601da566ceb"
+          "sha256": "16dd957b389503bda4f8e02db0a317ee3b69a9bca0b66c8989d9b601da566ceb",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         },
         {
           "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22independently%20trained%22%20AND%20%28cat%3Acs.CL%20OR%20cat%3Acs.LG%29&start=0&max_results=100",
           "retrieved": "2026-08-31",
-          "sha256": "1e5e71a3012e417169edb70b1287afe4bd3cddbc565911d8816d5875bcc463ab"
+          "sha256": "1e5e71a3012e417169edb70b1287afe4bd3cddbc565911d8816d5875bcc463ab",
+          "volatile": true,
+          "volatile_reason": "an arXiv API query against a corpus that GROWS. The archived response is the record of what this query returned ON THE DATE SEARCHED, which is the claim the bound makes; a later fetch returning more results is the corpus working, not the evidence moving."
         }
       ]
     },

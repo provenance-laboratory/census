@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+# the recheck lockfile and run logs. The lock exists because three copies of
+# recheck.py once ran at once against one evidence store and one log, turning
+# 10 drifted artifacts into 74 without the world changing at all.
+.recheck.lock
+*.log
