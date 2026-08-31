@@ -1,11 +1,11 @@
 {
   "_readme": "Which never-executing branches an ARCHIVE mutation can reach. Reaching a check is not validating it: this shows an input exists that runs the line and that the executor refuses, not that the refusal is correct.",
-  "targets": 85,
+  "targets": 84,
   "targets_pinned": 85,
   "_targets_note": "targets_pinned is the population this measurement was FIRST made against. `targets` is what the audit reports today, which this tool changes by being in the suite -- so the two differ by design and the pinned one is the denominator to quote.",
-  "reached": 19,
+  "reached": 18,
   "reached_via_archive": 17,
-  "reached_via_ledger": 2,
+  "reached_via_ledger": 1,
   "behind_the_validator": 1,
   "still_unreached": 66,
   "attempts": 8664,
@@ -197,20 +197,6 @@
       "refused": true,
       "says": "expected exactly one pinned repository tree response, found 0"
     },
-    "replay.py:1016": {
-      "cell": "pythia-12b/axis3",
-      "method": "hf_probe.release_artifacts",
-      "mutation": "expect_patterns missing one entry",
-      "kind": "ledger",
-      "validator_would_catch_it_first": true
-    },
-    "replay.py:1018": {
-      "cell": "pythia-12b/axis3",
-      "method": "hf_probe.release_artifacts",
-      "mutation": "as_of altered",
-      "kind": "ledger",
-      "validator_would_catch_it_first": false
-    },
     "replay.py:985": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
@@ -219,10 +205,19 @@
       "source": "return False, (\"exemplar %s is in the real listing, so the positive control is measuring",
       "refused": true,
       "says": "the archived revision response is not JSON"
+    },
+    "replay.py:1016": {
+      "cell": "pythia-12b/axis3",
+      "method": "hf_probe.release_artifacts",
+      "mutation": "expect_patterns missing one entry",
+      "kind": "ledger",
+      "says": "exemplar(s) ['corpus.ots', 'MANIFEST.json.asc'] match no declared pattern; the probe and t",
+      "source": "return False, (\"exemplar(s) %s match no declared pattern; the probe and the search \"",
+      "validator_would_catch_it_first": true
     }
   },
-  "reached_this_run": 19,
-  "reached_cumulative": 24,
+  "reached_this_run": 18,
+  "reached_cumulative": 23,
   "unreached": {
     "archive_evidence.py:83": "bad.append(\"%s: not in the manifest at all\" % url)",
     "archive_evidence.py:86": "bad.append(\"%s: manifest %s, ledger %s\" % (url, m[\"sha256\"][:12], rec[\"sha256\"][:12]))",
@@ -242,9 +237,9 @@
     "fetch_artifact.py:207": "raise SystemExit(1 if refused else 0)",
     "filter_diff.py:50": "raise SystemExit(\"cannot identify the subject label for %s from %r\" % (k, found))",
     "mp_metric.py:60": "raise SystemExit(",
-    "mp_metric.py:335": "d.append(f\"{where}: bound.method {meth!r} requires `{_f}`; without it the \"",
-    "mp_metric.py:375": "d.append(f\"{where}: bound still carries the old flat `searched` list. Split it \"",
-    "mp_metric.py:380": "d.append(f\"{where}: bound with NO evidence record. The bytes searched must be \"",
+    "mp_metric.py:337": "d.append(f\"{where}: bound.method {meth!r} requires `{_f}`; without it the \"",
+    "mp_metric.py:377": "d.append(f\"{where}: bound still carries the old flat `searched` list. Split it \"",
+    "mp_metric.py:382": "d.append(f\"{where}: bound with NO evidence record. The bytes searched must be \"",
     "negative_search.py:209": "trunc.append(\"%s: stage2 holds %d record(s), recomputing from the candidates \"",
     "negative_search.py:220": "trunc.append(\"%s: stage3 holds %d record(s), recomputing from the stored stage-2 \"",
     "negative_search.py:224": "trunc.append(\"stage3_total says %s, recomputation gives %d\"",

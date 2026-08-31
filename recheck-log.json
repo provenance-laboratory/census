@@ -1337,6 +1337,45 @@
           "recorded_sha256": "0c993bc7336e2cd0330036b4da9c6bd8ce9d6cccd2b7f26dccb3abc9a8e5df0f"
         }
       ]
+    },
+    {
+      "at": "2026-08-31T18:26:33Z",
+      "artifacts": 319,
+      "unchanged": 218,
+      "drifted": 0,
+      "unretrievable": 0,
+      "volatile": 98,
+      "rate_limited": 0,
+      "complete": true,
+      "metadata_drift": 3,
+      "covered": "48fe4b02cf0be9021ba4251a5d0be4d4db5fcdb80d29e911374e5c1fa6172b87",
+      "subject_filter": null,
+      "findings": [
+        {
+          "url": "https://api.github.com/repos/EleutherAI/gpt-neox/git/trees/5150809878f0cb6bd36e0e7dc2fc73dde1c3c7bb?recursive=1",
+          "what": "serialisation only: parsed content identical",
+          "cells": [
+            "pythia-12b/axis6"
+          ],
+          "recorded_sha256": "bf1236d262fe2afc723dd90b317f8db2de657d9ec486d95e340dbe6d9050fad6"
+        },
+        {
+          "url": "https://api.github.com/repos/allenai/OLMo/git/trees/4bf8f90c26dd180095f66d0764636e00d8bae4c1?recursive=1",
+          "what": "serialisation only: parsed content identical",
+          "cells": [
+            "olmo-2-13b/axis6"
+          ],
+          "recorded_sha256": "03f412730654e62dc12c5650a20694cf98a1540ee1f3fbe617d43ec7d4bb2c60"
+        },
+        {
+          "url": "https://api.github.com/repos/google-research/bert/git/trees/8028c0459485299fa1ae6692b2300922a3fa2bad?recursive=1",
+          "what": "serialisation only: parsed content identical",
+          "cells": [
+            "bert-base-uncased/axis6"
+          ],
+          "recorded_sha256": "9d679c36344d1124404c516ce359f08e73a0d44480e8c9e83f925e2c0fa78340"
+        }
+      ]
     }
   ]
 }

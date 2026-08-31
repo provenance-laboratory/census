@@ -1,0 +1,637 @@
+{
+ "_readme": "The UNFILTERED counterpart of every reproduction query. The census applies a cs.CL/cs.LG filter; these are the same queries without it, archived so the filter's cost is recomputable offline rather than asserted.",
+ "subjects": {
+  "bert-base-uncased": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "2bb8b6c0540f4175da3b267251e5da68417d1951463e3c780ed8beba3454824c",
+    "start": 0,
+    "entries": 100,
+    "total": 108
+   },
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reproduce%22&start=100&max_results=100",
+    "sha256": "32e50d3f92611c8bd4c5572671647fa36409b3a159aecdd272df6d7b41f82184",
+    "start": 100,
+    "entries": 8,
+    "total": 108
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "95a9154a19bd689d90b7143999d14c204bd3100226ff064f7d002a34db0b65b4",
+    "start": 0,
+    "entries": 11,
+    "total": 11
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "8e662d612824864ddac8aa06efeaa97f5e27bacc076e9ff322cc76552405e3f5",
+    "start": 0,
+    "entries": 48,
+    "total": 48
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "ab24b4e99451efb999fd45f6054e4bc473f36fd3fb3ff9b635ea9a2d7b66d83d",
+    "start": 0,
+    "entries": 3,
+    "total": 3
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "1fb14c87430f7687505505890e66961b80aff4de83d8b8fb0dafe9a1593e6833",
+    "start": 0,
+    "entries": 100,
+    "total": 127
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22from%20scratch%22&start=100&max_results=100",
+    "sha256": "2d3973b391e8791eb9179c4fce701f0746125beb8ab4c9063ec1542ccfae307e",
+    "start": 100,
+    "entries": 27,
+    "total": 127
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BERT%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "b5b94c33d306a46345a61619d6edc20cfe7838b7af43d8e6f8c6618256b7cf1b",
+    "start": 0,
+    "entries": 11,
+    "total": 11
+   }
+  ],
+  "bloom-176b": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "7bb7cde6bba81dffad26d106d05a164448f109347d11fabefce3f8552f9e41b5",
+    "start": 0,
+    "entries": 33,
+    "total": 33
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "ac5dcb8f304625568cf87c9e40969351a9523326b9404c67c29451fecf5cd596",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "04449bf9b4bf2cf0bbc8163171052365288c121c9d986d6812c4c415a2e5bd60",
+    "start": 0,
+    "entries": 10,
+    "total": 10
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "84150e9bebc8bac320e85e397704ef514a04ab317f4e15b851e4760eb29b6d91",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "09e4b485e790538285bb72b6a9a9a24c0b2346b8311c56075d6c65af341254c5",
+    "start": 0,
+    "entries": 8,
+    "total": 8
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22BLOOM%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "a57c52736bdf9868bb22806a8443a5d8409da3922c1a04ef69a5e05ee0c1c77e",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   }
+  ],
+  "claude-3.5-sonnet": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "4ae11d2b8902ce6be47f759cae8c675c1cca1f4f06e0387ac1cebe10f9ee6c0f",
+    "start": 0,
+    "entries": 18,
+    "total": 18
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "51837676c2e9533d876e507fba1230855943d2607c96f023ec10ba680360da6a",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "aa561cdb59747413a9d0224d4479169515786026b33693c3ac4b969fe3e1fac2",
+    "start": 0,
+    "entries": 12,
+    "total": 12
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "42bea9edde6091db814b890dfcf6a6b476b02d40934f059a39accacb803b2e8b",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "c8bb655ab1d921b0bc45b5f5fcf85ab42787a0511b8af24bb2be10d5cf30fed0",
+    "start": 0,
+    "entries": 6,
+    "total": 6
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Claude%203.5%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "79a3dca1873332ddb649f026f4abb0ac0f2c52b5b328873ad844fd44c42b1f15",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   }
+  ],
+  "gemini-1.5-pro": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "522bc442785157dd470146afb1bf6db18fb6752b79aab22738b141cf4222cf59",
+    "start": 0,
+    "entries": 12,
+    "total": 12
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "62560012ba0e24b5f8b8abeec25a7458d0f941a952ea2c739bcd02987e36d327",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "fe4443c4da56ba72aa747990f364b271649309d0f81dc76fd499656071e59f5a",
+    "start": 0,
+    "entries": 7,
+    "total": 7
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "8069056f307572b43f1728d33d9dbbae0c9c9805a3df2558b5bc74354cae1020",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "aba3f6b2d909cb64b9923c7f229c15eb6b49122aa3211803f4e1ac7a17350372",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemini%201.5%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "c5152a0e0b6e41a38b65c66601bd69cc6b1ed37368ed40ce3616f7e8ff1a8599",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   }
+  ],
+  "gemma-2-9b": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "90768216a215d25b7edfedf1eba705a979a64694a1e5bb90323eda51e21f8212",
+    "start": 0,
+    "entries": 12,
+    "total": 12
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "4a7f770ae0d85ee644ec4a013d688f0e06294aa899394fb8e9f5bdefab242e6f",
+    "start": 0,
+    "entries": 3,
+    "total": 3
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "4705d0f8095a8659d7aed13dfc10b77c2df7553897ba5f5d479dd82bcfe56093",
+    "start": 0,
+    "entries": 12,
+    "total": 12
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "d1feefa7e5caf67910df8afb1517570c65b9419442e396b2be7bec3f17fa5e14",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "2844dc2b746f340c174d88dc3630e887bea2f70e376abad60b4385f2ad7f88d4",
+    "start": 0,
+    "entries": 4,
+    "total": 4
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Gemma%202%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "441fd0728d653a81ee480a4857e1065d4aee4dfbcc3122670c4ed8e3ed36c3d8",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   }
+  ],
+  "gpt-2-1.5b": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "d13e0478f331b9436a2146401131b0d5b5987b0285a32b835f4900a52d95f89c",
+    "start": 0,
+    "entries": 51,
+    "total": 51
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "58fdc3dc8bed3cfc7d8774ddbaa0c70eb7473fd908ecd32cca037a6d09effdc5",
+    "start": 0,
+    "entries": 5,
+    "total": 5
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "1f5bd3291898253f33ddd48e5f4f51ce65757c01caf1c9820a18ac51d84be87a",
+    "start": 0,
+    "entries": 17,
+    "total": 17
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "e9a6095a4ddf60bf302dae4fc9738b857b224546c48d3c6f758c34310f2e7e9f",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "d47b0ec0d5cde227d1ef4528d9d2ceb695a58c571c31628f19ae060bdcdad7c5",
+    "start": 0,
+    "entries": 65,
+    "total": 65
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-2%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "0ac1b95dd70c03b435d73c2c75958fb92c932f7f7cd96e308c16b14df850ee2b",
+    "start": 0,
+    "entries": 5,
+    "total": 5
+   }
+  ],
+  "gpt-4o": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "9cf90594ddfee44c0d64d84cdc907692318143b7ab4ad0eed9bc710cbca5b231",
+    "start": 0,
+    "entries": 100,
+    "total": 158
+   },
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reproduce%22&start=100&max_results=100",
+    "sha256": "6fa5c8c0993345342182507e33793c06c582ceafd126cf5e200d846a9ccb7aed",
+    "start": 100,
+    "entries": 58,
+    "total": 158
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "bc80ecb20a0e466edadc357ef226afa986a57eed3cbc079fbf300a82b521ff2a",
+    "start": 0,
+    "entries": 16,
+    "total": 16
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "f730ae0943dee7e2f9f6a7f46684f095d32d4c90d6b24f4077f6e5213505121e",
+    "start": 0,
+    "entries": 83,
+    "total": 83
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "a9b98343307eb84d234916b5b678d745a4f4edde4d220786bce4c060e10d5fc3",
+    "start": 0,
+    "entries": 1,
+    "total": 1
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "a00a28e9b44c16ae67f8afc6a63e5f92992c4b9e0a39949500fc41039611951b",
+    "start": 0,
+    "entries": 19,
+    "total": 19
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22GPT-4o%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "ee6bed5b30332097ffb70791a3cecb0caee211efe81046d9d359c04db57bc8e1",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   }
+  ],
+  "llama-3.1-8b": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "be29507a105f00e644adb941295c8200b30b8e9866aaa8842ee2943e8eee54d3",
+    "start": 0,
+    "entries": 48,
+    "total": 48
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "6c2c15069980e92d053cc585ec6b9eb5d811fb2c421f4c2ecab714ae0551c809",
+    "start": 0,
+    "entries": 6,
+    "total": 6
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "cf868366c528feecf139a7a31c7ebe7dd8872c0325445eac05eddfa33dab2f58",
+    "start": 0,
+    "entries": 41,
+    "total": 41
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "10da6c1a4f82e1755bef1caf88ef509b6dc98e5098d3ac7e0b5e320de9f80dab",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "47a9e2ababedbc112f76349615ccafafd6d8a637957bec5921c63ed77b6e8f0c",
+    "start": 0,
+    "entries": 12,
+    "total": 12
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Llama%203.1%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "435c6df3ee1fd428a1e6722749ed65eae29bc10761da3f1cdfc17e2fe5178edf",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   }
+  ],
+  "mistral-7b-v0.3": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "45dd76da2afa69f82f70ce1612519fe6983f0eb2c2192c3691622023058253e4",
+    "start": 0,
+    "entries": 67,
+    "total": 67
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "3efa9ed1fa5d2bf09b557802c9ef95c4a1862a8e799604c8e2c4ea27e3126546",
+    "start": 0,
+    "entries": 3,
+    "total": 3
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "3776cce3c7e8ac278c2ef53e30768bafd631607292c4fa5cdb44728257162618",
+    "start": 0,
+    "entries": 40,
+    "total": 40
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "a9ce9a7ed8bec6b1ed69743352107695621d2fb400053a7b9f7ecaa9d79ebd61",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "3a0c88c736f87e06e7f3c45f0250fc2ba30529245e183484070e9c49afcc4c19",
+    "start": 0,
+    "entries": 16,
+    "total": 16
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Mistral%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "d3a373b6909baaa70d5666810e895e0cbcf0e391ff3e3885013f7964e1b97358",
+    "start": 0,
+    "entries": 1,
+    "total": 1
+   }
+  ],
+  "olmo-2-13b": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "e4ced9f59b76ecb10eb11453402de40f202a723b71c3a1cad6fbfca58bd37c9d",
+    "start": 0,
+    "entries": 10,
+    "total": 10
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "bed2ef31daa4c5105bf74b8168e81bdf5f68e76eaa4cc4e6ae0f5e9118107dd5",
+    "start": 0,
+    "entries": 1,
+    "total": 1
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "9e10bcec278c57b33d0633360579f0b76e762f8ed5824fd8cf26caf6d9d9560b",
+    "start": 0,
+    "entries": 8,
+    "total": 8
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "bef0d1dadbff71a0d8df58aa172213d43b6536b8b0f14d7e61fe4ac46a028eb2",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "ddd4366330beabfb92bc5d4f6f77af48e76adf4fe8c44da64853e7b1790d531e",
+    "start": 0,
+    "entries": 3,
+    "total": 3
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22OLMo%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "b043839c3e4c6a8cbe5aed747e7d0cae44c12d2980c2ef2d044fe8504bc142ff",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   }
+  ],
+  "pythia-12b": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "5fc9a521cd96522884f4fc6512a6de0ebe9cc4438ac4b9a3c8c6f8a00e28c230",
+    "start": 0,
+    "entries": 100,
+    "total": 125
+   },
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reproduce%22&start=100&max_results=100",
+    "sha256": "16e9f62fee2258d4636ded516c9d9c79cfcde25e9057b3a74552cd3fe0709176",
+    "start": 100,
+    "entries": 25,
+    "total": 125
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "66cf9cce8e0468d75ea1cf2730d4bf5c525ad9aff645fd107c4d28ce4503cb86",
+    "start": 0,
+    "entries": 5,
+    "total": 5
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "1ed08ca896ed7c72300fef71f7f7256af984b342870db1f0db151d017362e3d5",
+    "start": 0,
+    "entries": 11,
+    "total": 11
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "ab9354409fa77fe616aa323e985c495d463f66a8ff7075b86b85377781489232",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "67704363c60b525556376f9c137cbc4d338d0f1789fc4dabb01a7aeafc5e7bdc",
+    "start": 0,
+    "entries": 10,
+    "total": 10
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Pythia%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "42b881f5b0fe7d91e846f1157b10e5c67de75a4769785ce55f98e347bc4e66ef",
+    "start": 0,
+    "entries": 2,
+    "total": 2
+   }
+  ],
+  "qwen2.5-7b": [
+   {
+    "term": "reproduce",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduce%22&start=0&max_results=100",
+    "sha256": "91c588b6fceaf0d2cdcdab1e620c4217b2f1354f216d5a90ae0ffc1b793b9a26",
+    "start": 0,
+    "entries": 87,
+    "total": 87
+   },
+   {
+    "term": "reproduction",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reproduction%22&start=0&max_results=100",
+    "sha256": "fd2a7b26ded7e857a6acac78cf2594cf267db5d2b751f33c52c8878c79d4c8c3",
+    "start": 0,
+    "entries": 9,
+    "total": 9
+   },
+   {
+    "term": "replicate",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22replicate%22&start=0&max_results=100",
+    "sha256": "bd76f355dfffa8c6a189d8375e79e2b3439a3cc969f4a1cb8386811a74870540",
+    "start": 0,
+    "entries": 44,
+    "total": 44
+   },
+   {
+    "term": "reimplementation",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22reimplementation%22&start=0&max_results=100",
+    "sha256": "584e4889faebd7d93530d2e8641ab8d1773e63f03901bebb1ad13e1cdd0dc08e",
+    "start": 0,
+    "entries": 0,
+    "total": 0
+   },
+   {
+    "term": "from scratch",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22from%20scratch%22&start=0&max_results=100",
+    "sha256": "589de4fff8017336dc78368e41eb74cf7895a466c8c1fa42c931e29681f6cd0b",
+    "start": 0,
+    "entries": 23,
+    "total": 23
+   },
+   {
+    "term": "independently trained",
+    "url": "https://export.arxiv.org/api/query?search_query=abs%3A%22Qwen2.5%22%20AND%20abs%3A%22independently%20trained%22&start=0&max_results=100",
+    "sha256": "0be43efd8c524649d2e870f014262d83b3bfe6468fa53f2cd65071f0930d03eb",
+    "start": 0,
+    "entries": 6,
+    "total": 6
+   }
+  ]
+ }
+}

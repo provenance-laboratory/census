@@ -54,9 +54,61 @@ cells = json.loads((C / "cells.json").read_text(encoding="utf-8"))["cells"]
 ZERO = sorted({c["subject"] for c in cells if c["axis"] in (16, 17) and c["score"] == 0})
 
 
-def fetch(q):
-    req = urllib.request.Request(API % urllib.parse.quote(q, safe=""),
-                                 headers={"User-Agent": UA})
+ARCHIVE = C / "filter-probe-archive.json"
+FILTERED = C / "negative-search-archive.json"
+STORE = C / "evidence"
+
+
+def _stored(sha):
+    import gzip
+    f = STORE / (sha + ".gz")
+    return gzip.decompress(f.read_bytes()).decode("utf-8", "replace") if f.exists() else None
+
+
+def _offline_index():
+    """url -> archived body, for both the filtered and unfiltered sweeps.
+
+    ⛔ THE PRODUCER OF THIS PAPER'S NEWEST BOUND NEEDED THE NETWORK AND AN ABSOLUTE PATH INTO ONE
+    MACHINE. A round-17 reviewer ran it from the deposit and got FileNotFoundError, which made the
+    strongest new claim in the paper an ASSERTED one by the census's own definition. The unfiltered
+    responses are archived now, the same way the filtered ones have been since round 3, and this
+    reads them.
+    """
+    idx = {}
+    for f, key in ((ARCHIVE, "subjects"), (FILTERED, "subjects")):
+        if not f.exists():
+            continue
+        for _sub, rows in json.loads(f.read_text(encoding="utf-8")).get(key, {}).items():
+            for r in rows:
+                b = _stored(r.get("sha256", ""))
+                if b is not None:
+                    idx[r["url"]] = b
+    return idx
+
+
+_IDX = None
+_FROM_NET = False
+# ⚠ POLITENESS IS FOR THE NETWORK. The delay ran on archive reads too,
+# so a fully offline recomputation waited seven minutes for nothing.
+
+
+def fetch(q, url=None):
+    """⚠ OFFLINE FIRST. The network is the fallback, not the source: a reader must be able to
+    recompute this from the deposit alone, and an author must not be able to get a different
+    answer by being online."""
+    global _IDX
+    if _IDX is None:
+        _IDX = _offline_index()
+    u = url or (API % urllib.parse.quote(q, safe=""))
+    if u in _IDX:
+        global _FROM_NET
+        _FROM_NET = False
+        return _IDX[u]
+    if "--offline" in sys.argv:
+        raise SystemExit(D + " %s is not in the archive and --offline was given. Run "
+                         "archive_filter_probe.py first." % u[:80])
+    _FROM_NET = True
+    req = urllib.request.Request(u, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=90) as r:
         return r.read().decode("utf-8", "replace")
 
@@ -89,9 +141,11 @@ for name in ZERO:
         base = 'abs:"%s" AND abs:"%s"' % (label, term)
         try:
             filt = entries(fetch(base + " AND (cat:cs.CL OR cat:cs.LG)"))
-            time.sleep(POLITE)
+            if _FROM_NET:
+                time.sleep(POLITE)
             unfilt = entries(fetch(base))
-            time.sleep(POLITE)
+            if _FROM_NET:
+                time.sleep(POLITE)
         except Exception as e:                                              # noqa: BLE001
             print("  %s %s / %s: %s" % (D, name, term, str(e)[:60]))
             continue

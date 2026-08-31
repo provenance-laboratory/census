@@ -177,6 +177,30 @@ def call_executor(fn, cell, ev, ctx):
 # ⛔ NOTE: quick mode no longer consults the line number at all. It was consulting BOTH the
 # line and the message, and the line is the half that dies on any edit above the control -- twice
 # in one session it reported live controls as lost. The message is the control's own output and
+def apply_ledger_mutation(cell, label, led):
+    """Apply ONE named ledger mutation to a cell and return (mutant, probe_ledger).
+
+    ⛔ THE FULL SWEEP AND QUICK MODE EACH BUILT THIS THEMSELVES, and they disagreed: the sweep
+    reached replay.py:1018 by 'as_of altered' and the replay of that exact record said it no
+    longer did. Two implementations of one mutation is the same defect as the three proof parsers
+    in the sibling project -- a repair to one cannot reach the other. One implementation, two
+    callers.
+    """
+    blk = R._asserted(cell) or {}
+    for lab, key, newval in ledger_mutations(blk):
+        if lab != label:
+            continue
+        mutant = copy.deepcopy(cell)
+        holder = mutant.get("bound") or mutant.get("check") or {}
+        holder[key] = newval
+        probe = copy.deepcopy(led)
+        for i, c in enumerate(probe["cells"]):
+            if c["subject"] == cell["subject"] and c["axis"] == cell["axis"]:
+                probe["cells"][i] = mutant
+        return mutant, probe
+    return None, None
+
+
 # the thing whose disappearance actually means something.
 
 
@@ -245,21 +269,16 @@ def quick(led, ctx, cells_by_key):
             variants.append((ev, mut, sha))
         elif info.get("kind") == "ledger":
             # a LEDGER mutation: rebuild it from the block's own keys and find the label again
-            blk = R._asserted(cell) or {}
-            for lab, k2, newval in ledger_mutations(blk):
-                if lab == info.get("mutation"):
-                    m2 = copy.deepcopy(cell)
-                    holder = m2.get("bound") or m2.get("check") or {}
-                    holder[k2] = newval
-                    _w2 = None
-                    with Tracer() as tr:
-                        try:
-                            _o2, _w2 = call_executor(fn, m2, ev, ctx)
-                        except Exception:                                    # noqa: BLE001
-                            pass
-                    if _still_says(info, _w2):
-                        hit = True
-                    break
+            m2, _probe = apply_ledger_mutation(cell, info.get("mutation"), led)
+            if m2 is not None:
+                _w2 = None
+                with Tracer() as tr:
+                    try:
+                        _o2, _w2 = call_executor(fn, m2, ev, ctx)
+                    except Exception:                                        # noqa: BLE001
+                        pass
+                if _still_says(info, _w2):
+                    hit = True
             if not hit:
                 lost.append((where, "ledger mutation %r no longer reaches it"
                              % info.get("mutation")))
@@ -428,6 +447,12 @@ def main():
                         "cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
                         "method": meth, "mutation": label,
                         "kind": "ledger",
+                        # ⚠ RECORD WHAT THE CONTROL SAID. Two ledger-kind entries were
+                        # written without this field, and once _still_says began failing closed on
+                        # a record it cannot verify, quick mode refused them -- correctly. A
+                        # record that cannot be re-checked is a re-measurement, not a pass.
+                        "says": str(_why)[:90],
+                        "source": targets.get(key2, ""),
                         "validator_would_catch_it_first": bool(validator_catches)}
 
     # ⛔ A THIRD AXIS: THE EVIDENCE LIST ITSELF. Several checks ask how MANY artifacts a cell
