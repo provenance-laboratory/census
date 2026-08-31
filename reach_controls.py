@@ -201,6 +201,31 @@ def apply_ledger_mutation(cell, label, led):
     return None, None
 
 
+def _record(reached, targets, key, cell, method, mutation, kind=None, why=None, **extra):
+    """The ONE place a reached branch is recorded.
+
+    ⛔ FIVE CALL SITES BUILT THIS DICT AND ONLY SOME SET `source`, so entries written by the
+    other paths could not be identified after an edit moved their line numbers -- and --verify
+    reported them as no longer reached when they were reached, at a different line, by the same
+    mutation. The fix for one wrong call site is not a sixth correct one.
+
+    ⚠ `source` is the control's own text and is what identifies it across an edit; `says` is
+    what it emitted and is what identifies it across a rewrite. A record with neither cannot be
+    re-checked at all, and is refused rather than believed.
+    """
+    if key in reached:
+        return
+    rec = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]) if cell else "-",
+           "method": method, "mutation": mutation,
+           "source": targets.get(key, "")}
+    if kind:
+        rec["kind"] = kind
+    if why is not None:
+        rec["says"] = str(why)[:90]
+    rec.update(extra)
+    reached[key] = rec
+
+
 # the thing whose disappearance actually means something.
 
 
@@ -267,6 +292,26 @@ def quick(led, ctx, cells_by_key):
             idx = info.get("evidence_index", 0)
             sha = ev[idx].get("sha256") if idx < len(ev) else None
             variants.append((ev, mut, sha))
+        elif info.get("kind") == "validator":
+            # ⛔ QUICK MODE KNEW THREE OF THE FOUR KINDS. A validator-kind branch fell through to
+            # the evidence-shape path, which cannot produce a validator complaint, so a branch the
+            # full sweep reaches was reported lost every time. The sweep and the replay have to
+            # cover the same axes or the replay is measuring a smaller thing and calling it the
+            # same name.
+            m2, probe = apply_ledger_mutation(cell, info.get("mutation"), led)
+            if m2 is not None:
+                _cs = []
+                with Tracer() as tr:
+                    try:
+                        _cs = M.validate(probe) or []
+                    except Exception:                                        # noqa: BLE001
+                        pass
+                if _still_says(info, "; ".join(str(x) for x in _cs)):
+                    hit = True
+            if not hit:
+                lost.append((where, "validator mutation %r no longer reaches it"
+                             % info.get("mutation")))
+            continue
         elif info.get("kind") == "ledger":
             # a LEDGER mutation: rebuild it from the block's own keys and find the label again
             m2, _probe = apply_ledger_mutation(cell, info.get("mutation"), led)
@@ -402,11 +447,8 @@ def main():
                 refused += ok is False
                 for key in targets:
                     if key in tr.seen and key not in reached:
-                        reached[key] = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
-                                        "method": meth, "mutation": label,
-                                        "evidence_index": idx, "source": targets.get(key, ""),
-                                        "refused": ok is False,
-                                        "says": str(_why)[:90]}
+                        _record(reached, targets, key, cell, meth, label,
+                                why=_why, evidence_index=idx, refused=ok is False)
 
     # ⛔ A SECOND AXIS, AND THE POINT IS THE DISTINCTION IT DRAWS. Many of these branches check
     # that the LEDGER'S CLAIM disagrees with intact bytes -- a recorded length, a recorded digest,
@@ -443,17 +485,9 @@ def main():
             refused += ok is False
             for key2 in targets:
                 if key2 in tr.seen and key2 not in reached:
-                    reached[key2] = {
-                        "cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
-                        "method": meth, "mutation": label,
-                        "kind": "ledger",
-                        # ⚠ RECORD WHAT THE CONTROL SAID. Two ledger-kind entries were
-                        # written without this field, and once _still_says began failing closed on
-                        # a record it cannot verify, quick mode refused them -- correctly. A
-                        # record that cannot be re-checked is a re-measurement, not a pass.
-                        "says": str(_why)[:90],
-                        "source": targets.get(key2, ""),
-                        "validator_would_catch_it_first": bool(validator_catches)}
+                    _record(reached, targets, key2, cell, meth, label, kind="ledger",
+                            why=_why,
+                            validator_would_catch_it_first=bool(validator_catches))
 
     # ⛔ A THIRD AXIS: THE EVIDENCE LIST ITSELF. Several checks ask how MANY artifacts a cell
     # cites -- "expected exactly one pinned enumeration, found %d", "the ranged artifact is cited
@@ -481,9 +515,8 @@ def main():
             refused += ok is False
             for key in targets:
                 if key in tr.seen and key not in reached:
-                    reached[key] = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
-                                    "method": meth, "mutation": label, "kind": "evidence-shape", "source": targets.get(key, ""),
-                                    "refused": ok is False, "says": str(_why)[:90]}
+                    _record(reached, targets, key, cell, meth, label,
+                            kind="evidence-shape", why=_why, refused=ok is False)
 
     # ⛔ A FOURTH AXIS: THE VALIDATOR. Four of the unreached branches are in `mp_metric.py` and
     # are complaints the VALIDATOR makes, not refusals an executor returns. Running executors
@@ -511,16 +544,21 @@ def main():
                 if c["subject"] == cell["subject"] and c["axis"] == cell["axis"]:
                     probe["cells"][i] = mutant
             attempted += 1
+            _complaints = []
             with Tracer() as tr:
                 try:
-                    M.validate(probe)
+                    _complaints = M.validate(probe) or []
                 except Exception:                                            # noqa: BLE001
                     pass
+            # ⛔ THIS RECORDED THE LITERAL STRING "validator complaint" as the message, so quick
+            # mode had nothing to compare and fell back to the line number -- and deleting the
+            # control left the line executing as `pass`, so the positive control MISSED. The
+            # complaint itself is the control's output and is what identifies it.
+            _vsay = "; ".join(str(x) for x in _complaints)[:90]
             for key2 in targets:
                 if key2 in tr.seen and key2 not in reached:
-                    reached[key2] = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
-                                     "method": (block or {}).get("method"),
-                                     "mutation": label, "kind": "validator"}
+                    _record(reached, targets, key2, cell, (block or {}).get("method"), label,
+                            kind="validator", why=_vsay)
 
     # ⛔ A FIFTH AXIS: THE GATE. Three branches live in `gate()` and ask whether a method binds
     # its axis at all -- "method %r has no executor", "method %r cannot settle this axis". No
@@ -548,8 +586,8 @@ def main():
                     pass
             for key2 in targets:
                 if key2 in tr.seen and key2 not in reached:
-                    reached[key2] = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]),
-                                     "method": newmeth, "mutation": label, "kind": "gate", "says": str(_why)[:90] if "_why" in dir() else ""}
+                    _record(reached, targets, key2, cell, newmeth, label, kind="gate",
+                            why="gate refusal")
 
     still = {k: v for k, v in targets.items() if k not in reached}
 
@@ -597,8 +635,27 @@ def main():
             _prev = (json.loads(OUT.read_text(encoding="utf-8")).get("detail") or {})
         except Exception:                                                    # noqa: BLE001
             _prev = {}
-    _merged = dict(_prev)
-    _merged.update({"%s:%d" % k: v for k, v in sorted(reached.items())})
+    # ⛔ THE MERGE WAS MADE CUMULATIVE TO STOP THE TOOL ERASING ITS OWN WORK, and that turned
+    # the record into one that can only grow. Four branches stopped being reachable this round for
+    # a real reason -- the new entry-count guard fires EARLIER in the same guard sequence, so
+    # mutations that used to reach "a response carries no totalResults" are now deflected before
+    # it -- and a union kept claiming them. **A record that only accumulates cannot be falsified**,
+    # which is the property this whole project exists to refuse.
+    #
+    # ⚠ The reason for the merge is gone anyway: targets now include everything the record
+    # claims, so a still-reachable branch is re-measured every run and survives on its own merits.
+    # An entry that is targeted and NOT reached is dropped, and named.
+    _dropped = sorted(k for k in _prev if k not in {"%s:%d" % kk for kk in reached})
+    _merged = {"%s:%d" % k: v for k, v in sorted(reached.items())}
+    if _dropped:
+        print()
+        print("  " + W + " %d branch(es) this record claimed are NO LONGER REACHED and have been"
+              % len(_dropped))
+        print("  dropped rather than carried forward:")
+        for _k in _dropped[:6]:
+            print("      %-18s %s" % (_k, (_prev[_k].get("says") or "")[:52]))
+        print("  A guard added earlier in the same sequence deflects the mutation that used to")
+        print("  reach these. That is a real change in what is reachable, not bookkeeping.")
 
     # ⛔ THE DENOMINATOR CAME FROM A FILE THIS TOOL'S OWN PRESENCE REWRITES. `targets` was read
     # live from CONTROL-AUDIT.json, and once this tool joined the suite the audit recorded the
@@ -651,10 +708,49 @@ def main():
         # ⚠ `targets` is EXPECTED to move -- this tool changes it by running. Comparing it
         # made --verify refuse on a healthy tree, which is a control that cries wolf. The pinned
         # denominator and the cumulative reached set are what must not drift.
-        drift = [k for k in ("targets_pinned", "reached_cumulative")
-                 if old.get(k) is not None and old.get(k) != rec.get(k)]
+        # ⛔ THIS COMPARED `reached_cumulative`, AN INTEGER PRODUCED BY MERGING the stored record
+        # with the current run -- so its value depends on how the merge behaves, not on whether
+        # anything is still true. Run from a clean extraction it disagreed (22 against 23) while
+        # every recorded branch was in fact still reached, which is a control failing for a reason
+        # unrelated to its claim. A round-17 reviewer predicted this precise shape: "the finding
+        # most likely to have a subtle repair that looks right and isn't."
+        #
+        # ⚠ What must hold is: the population this was measured against has not moved, and every
+        # branch the record CLAIMS is reachable still executes and still says what it said. Both
+        # are properties of the world, not of an update rule.
+        drift = []
+        if old.get("targets_pinned") is not None                 and old.get("targets_pinned") != rec.get("targets_pinned"):
+            drift.append("targets_pinned (%s -> %s)"
+                         % (old.get("targets_pinned"), rec.get("targets_pinned")))
+        # ⛔ AND COMPARING THESE BY LINE NUMBER WAS THE SAME DEFECT A THIRD TIME. Editing
+        # `replay.py` moved every control below the edit, so five branches that ARE reached --
+        # at new line numbers, by the same mutation, emitting the same message -- were reported
+        # lost. A line number is a proxy for a control; the control's own source text is not.
+        def _ident(entry, key):
+            # ⚠ SOURCE FIRST, THEN THE MESSAGE. The control's own text survives a line
+            # move; its emitted message survives a line move too and only fails if the message is
+            # rewritten. Records written before  existed still carry , so they stay
+            # checkable instead of being refused wholesale -- a record that CAN be identified by a
+            # weaker key is not the same as one that cannot be identified at all.
+            e = entry or {}
+            f = key.rsplit(":", 1)[0]
+            return (f, e.get("source") or e.get("says") or "")
+
+        _claimed = {_ident(v, k) for k, v in (old.get("detail") or {}).items()}
+        _now = {(f, (reached[(f, ln)].get("source") or targets.get((f, ln))
+                     or reached[(f, ln)].get("says") or ""))
+                for (f, ln) in reached}
+        _now |= {(f, reached[(f, ln)].get("says") or "") for (f, ln) in reached}
+        _lost = sorted(a for a in _claimed - _now if a[1])
+        _unident = sorted(a for a in _claimed - _now if not a[1])
+        if _lost:
+            drift.append("%d recorded control(s) not reached this run: %s"
+                         % (len(_lost), [x[1][:44] for x in _lost[:3]]))
+        if _unident:
+            drift.append("%d recorded entr(ies) carry no source text and cannot be identified "
+                         "across an edit: %s" % (len(_unident), [x[0] for x in _unident[:3]]))
         if drift:
-            print("  " + D + " the record disagrees on: %s" % ", ".join(drift))
+            print("  " + D + " the record disagrees on: %s" % "; ".join(drift))
             return 1
         print("  ok  the record matches this run.")
         return 0

@@ -1,228 +1,226 @@
 {
   "_readme": "Which never-executing branches an ARCHIVE mutation can reach. Reaching a check is not validating it: this shows an input exists that runs the line and that the executor refuses, not that the refusal is correct.",
-  "targets": 84,
+  "targets": 92,
   "targets_pinned": 85,
   "_targets_note": "targets_pinned is the population this measurement was FIRST made against. `targets` is what the audit reports today, which this tool changes by being in the suite -- so the two differ by design and the pinned one is the denominator to quote.",
-  "reached": 18,
-  "reached_via_archive": 17,
+  "reached": 22,
+  "reached_via_archive": 21,
   "reached_via_ledger": 1,
   "behind_the_validator": 1,
-  "still_unreached": 66,
+  "still_unreached": 70,
   "attempts": 8664,
   "refusals": 6814,
   "detail": {
+    "mp_metric.py:141": {
+      "cell": "pythia-12b/axis2",
+      "method": "hf_probe.corpus_item_digests",
+      "mutation": "as_of altered",
+      "source": "d.append(\"%s/axis%s: as_of is %r, which is not an ISO date\"",
+      "kind": "validator",
+      "says": "pythia-12b/axis2: as_of is '2026-08-30X', which is not an ISO date"
+    },
     "replay.py:375": {
       "cell": "olmo-2-13b/axis4",
       "method": "http_range",
       "mutation": "first artifact dropped",
-      "kind": "evidence-shape",
       "source": "",
-      "refused": true,
-      "says": "the ranged artifact is cited alone, so nothing in the ledger says this url belongs to this"
+      "kind": "evidence-shape",
+      "says": "the ranged artifact is cited alone, so nothing in the ledger says this url belongs to this",
+      "refused": true
     },
     "replay.py:385": {
       "cell": "olmo-2-13b/axis4",
       "method": "http_range",
       "mutation": "empty",
-      "evidence_index": 1,
       "source": "",
-      "refused": true,
-      "says": "archived range is 0 bytes, the record claims 2048"
+      "says": "archived range is 0 bytes, the record claims 2048",
+      "evidence_index": 1,
+      "refused": true
     },
     "replay.py:387": {
       "cell": "olmo-2-13b/axis4",
       "method": "http_range",
       "mutation": "one byte flipped mid-body",
-      "evidence_index": 1,
       "source": "",
-      "refused": true,
-      "says": "archived bytes do not hash to the recorded digest"
+      "says": "archived bytes do not hash to the recorded digest",
+      "evidence_index": 1,
+      "refused": true
     },
     "replay.py:485": {
       "cell": "pythia-12b/axis2",
       "method": "hf_probe.corpus_item_digests",
       "mutation": "evidence list emptied",
-      "kind": "evidence-shape",
       "source": "",
-      "refused": true,
-      "says": "expected exactly one pinned dataset tree response, found 0"
+      "kind": "evidence-shape",
+      "says": "expected exactly one pinned dataset tree response, found 0",
+      "refused": true
     },
     "replay.py:500": {
       "cell": "pythia-12b/axis2",
       "method": "hf_probe.corpus_item_digests",
       "mutation": "empty",
-      "evidence_index": 0,
       "source": "",
-      "refused": true,
-      "says": "the archived tree response is not JSON"
+      "says": "the archived tree response is not JSON",
+      "evidence_index": 0,
+      "refused": true
     },
     "replay.py:546": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "evidence list emptied",
-      "kind": "evidence-shape",
       "source": "",
-      "refused": true,
-      "says": "cited artifacts span 0 different repository/revision pairs: []"
+      "kind": "evidence-shape",
+      "says": "cited artifacts span 0 different repository/revision pairs: []",
+      "refused": true
     },
     "replay.py:561": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "first artifact duplicated",
-      "kind": "evidence-shape",
       "source": "",
-      "refused": true,
-      "says": "expected exactly one ranged artifact, found 2"
+      "kind": "evidence-shape",
+      "says": "expected exactly one ranged artifact, found 2",
+      "refused": true
     },
     "replay.py:604": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "empty",
-      "evidence_index": 0,
       "source": "",
-      "refused": true,
-      "says": "archived range is 0 bytes, the cell claims 2048"
+      "says": "archived range is 0 bytes, the cell claims 2048",
+      "evidence_index": 0,
+      "refused": true
     },
     "replay.py:606": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "an LFS pointer, same length",
-      "evidence_index": 0,
       "source": "",
-      "refused": true,
-      "says": "the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect"
+      "says": "the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect",
+      "evidence_index": 0,
+      "refused": true
     },
     "replay.py:614": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "zero bytes, same length",
-      "evidence_index": 0,
       "source": "",
-      "refused": true,
-      "says": "the archived bytes do not begin with a safetensors header (first bytes b'\\x00\\x00\\x00\\x00\\"
+      "says": "the archived bytes do not begin with a safetensors header (first bytes b'\\x00\\x00\\x00\\x00\\",
+      "evidence_index": 0,
+      "refused": true
     },
     "replay.py:619": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "one byte flipped mid-body",
-      "evidence_index": 0,
       "source": "",
-      "refused": true,
-      "says": "archived bytes do not hash to the recorded digest"
+      "says": "archived bytes do not hash to the recorded digest",
+      "evidence_index": 0,
+      "refused": true
     },
     "replay.py:637": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "evidence list emptied",
-      "kind": "evidence-shape",
       "source": "",
-      "refused": true,
-      "says": "cited artifacts span 0 different repository/revision pairs: []"
+      "kind": "evidence-shape",
+      "says": "cited artifacts span 0 different repository/revision pairs: []",
+      "refused": true
     },
     "replay.py:681": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "empty",
-      "evidence_index": 1,
       "source": "",
-      "refused": true,
-      "says": "model-00001-of-00003.safetensors carries no sha256 oid; model-00001-of-00003.safetensors a"
+      "says": "model-00001-of-00003.safetensors carries no sha256 oid; model-00001-of-00003.safetensors a",
+      "evidence_index": 1,
+      "refused": true
     },
     "replay.py:683": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "a git-LFS pointer",
-      "evidence_index": 1,
       "source": "",
-      "refused": true,
-      "says": "model-00001-of-00003.safetensors oid does not match the ledger; model-00001-of-00003.safet"
+      "says": "model-00001-of-00003.safetensors oid does not match the ledger; model-00001-of-00003.safet",
+      "evidence_index": 1,
+      "refused": true
     },
     "replay.py:685": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "empty",
-      "evidence_index": 1,
       "source": "",
-      "refused": true,
-      "says": "model-00001-of-00003.safetensors carries no sha256 oid; model-00001-of-00003.safetensors a"
-    },
-    "replay.py:826": {
-      "cell": "pythia-12b/axis16",
-      "method": "reproduction_search",
-      "mutation": "empty",
-      "evidence_index": 0,
-      "refused": true,
-      "says": "a response carries no totalResults"
+      "says": "model-00001-of-00003.safetensors carries no sha256 oid; model-00001-of-00003.safetensors a",
+      "evidence_index": 1,
+      "refused": true
     },
     "replay.py:902": {
       "cell": "pythia-12b/axis16",
       "method": "reproduction_search",
       "mutation": "truncated to half",
-      "evidence_index": 0,
       "source": "",
-      "refused": true,
-      "says": "1 term(s) archive a DIFFERENT NUMBER OF RESULTS than their own header claims: [('reproduce"
+      "says": "1 term(s) archive a DIFFERENT NUMBER OF RESULTS than their own header claims: [('reproduce",
+      "evidence_index": 0,
+      "refused": true
     },
-    "replay.py:922": {
+    "replay.py:968": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
-      "mutation": "absent from the store",
-      "evidence_index": 0,
-      "source": "",
-      "refused": false,
-      "says": "the revision response is not archived"
-    },
-    "replay.py:929": {
-      "cell": "pythia-12b/axis3",
-      "method": "hf_probe.release_artifacts",
-      "mutation": "JSON empty list",
-      "evidence_index": 0,
-      "refused": true,
-      "says": "the archived response enumerates no files, so it settles nothing"
-    },
-    "replay.py:950": {
-      "cell": "pythia-12b/axis3",
-      "method": "hf_probe.release_artifacts",
-      "mutation": "empty",
-      "evidence_index": 0,
-      "source": "",
-      "refused": true,
-      "says": "the archived revision response is not JSON"
-    },
-    "replay.py:1000": {
-      "cell": "pythia-12b/axis6",
-      "method": "repo_tree_probe",
       "mutation": "evidence list emptied",
+      "source": "return False, \"expected exactly one pinned enumeration, found %d\" % len(recs)",
       "kind": "evidence-shape",
-      "refused": true,
-      "says": "expected exactly one pinned repository tree response, found 0"
+      "says": "expected exactly one pinned enumeration, found 0",
+      "refused": true
     },
     "replay.py:985": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
       "mutation": "empty",
-      "evidence_index": 0,
       "source": "return False, (\"exemplar %s is in the real listing, so the positive control is measuring",
-      "refused": true,
-      "says": "the archived revision response is not JSON"
+      "says": "the archived revision response is not JSON",
+      "evidence_index": 0,
+      "refused": true
     },
     "replay.py:1016": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
       "mutation": "expect_patterns missing one entry",
+      "source": "return False, (\"exemplar(s) %s match no declared pattern; the probe and the search \"",
       "kind": "ledger",
       "says": "exemplar(s) ['corpus.ots', 'MANIFEST.json.asc'] match no declared pattern; the probe and t",
-      "source": "return False, (\"exemplar(s) %s match no declared pattern; the probe and the search \"",
       "validator_would_catch_it_first": true
+    },
+    "replay.py:1082": {
+      "cell": "pythia-12b/axis6",
+      "method": "repo_tree_probe",
+      "mutation": "empty",
+      "source": "return False, \"the archived tree response is not JSON\"",
+      "says": "the archived tree response is not JSON",
+      "evidence_index": 0,
+      "refused": true
+    },
+    "replay.py:1084": {
+      "cell": "pythia-12b/axis6",
+      "method": "repo_tree_probe",
+      "mutation": "JSON tree marked TRUNCATED",
+      "source": "return False, (\"the archived tree is TRUNCATED, so an absent path proves nothing about \"",
+      "says": "the archived tree is TRUNCATED, so an absent path proves nothing about the repository",
+      "evidence_index": 0,
+      "refused": true
     }
   },
-  "reached_this_run": 18,
-  "reached_cumulative": 23,
+  "reached_this_run": 22,
+  "reached_cumulative": 22,
   "unreached": {
     "archive_evidence.py:83": "bad.append(\"%s: not in the manifest at all\" % url)",
     "archive_evidence.py:86": "bad.append(\"%s: manifest %s, ledger %s\" % (url, m[\"sha256\"][:12], rec[\"sha256\"][:12]))",
     "archive_evidence.py:92": "bad.append(\"%s: manifest says stored, %s is missing\" % (url, blob.name))",
     "archive_evidence.py:96": "bad.append(\"%s: STORED BYTES HASH TO %s, ledger says %s -- the archive does not \"",
+    "archive_filter_probe.py:58": "raise SystemExit(D + \" cannot identify the subject label for %s from %r\" % (sub, found))",
+    "archive_filter_probe.py:109": "bad.append(\"%s/%s start=%d is not archived\" % (sub, term, start))",
+    "archive_filter_probe.py:113": "bad.append(\"%s/%s start=%d does not hash to its name\" % (sub, term, start))",
+    "archive_filter_probe.py:119": "bad.append(\"%s/%s: %s\" % (sub, term, str(e)[:50]))",
+    "archive_filter_probe.py:136": "bad.append(\"%s/%s: %d entries archived, header says %d\" % (sub, term, got, total))",
     "archive_negative_search.py:77": "bad.append(\"%s/%s: stored bytes do not hash to the manifest digest\" % (sub, term))",
     "archive_negative_search.py:80": "bad.append(\"%s/%s: not archived, and --verify fetches nothing\" % (sub, term))",
     "archive_negative_search.py:88": "bad.append(\"%s/%s: %s\" % (sub, term, str(e)[:60]))",
@@ -236,7 +234,9 @@
     "control_audit.py:238": "return False, _name",
     "fetch_artifact.py:207": "raise SystemExit(1 if refused else 0)",
     "filter_diff.py:50": "raise SystemExit(\"cannot identify the subject label for %s from %r\" % (k, found))",
+    "filter_diff.py:108": "raise SystemExit(D + \" %s is not in the archive and --offline was given. Run \"",
     "mp_metric.py:60": "raise SystemExit(",
+    "mp_metric.py:136": "d.append(\"the ledger's as_of is %r, which is not an ISO date\" % (_as,))",
     "mp_metric.py:337": "d.append(f\"{where}: bound.method {meth!r} requires `{_f}`; without it the \"",
     "mp_metric.py:377": "d.append(f\"{where}: bound still carries the old flat `searched` list. Split it \"",
     "mp_metric.py:382": "d.append(f\"{where}: bound with NO evidence record. The bytes searched must be \"",
@@ -271,13 +271,10 @@
     "replay.py:670": "bad.append(\"%s is from %s@%s\" % (pfile, prepo, prev[:12]))",
     "replay.py:691": "bad.append(\"duplicate shard pointer(s): %s\" % dup[:3])",
     "replay.py:716": "return False, \"counted %d occurrence(s), the cell claims %d\" % (got, n)",
-    "replay.py:826": "",
+    "replay.py:826": "return False, (",
     "replay.py:883": "return False, \"no archived response for declared term(s) %s\" % missing[:3]",
     "replay.py:886": "return False, (\"%d term(s) return a different total than recorded: %s. arXiv grows, so \"",
-    "replay.py:922": "",
-    "replay.py:929": "",
-    "replay.py:950": "",
-    "replay.py:1000": "",
+    "replay.py:1020": "return False, (\"exemplar %s is in the real listing, so the positive control is measuring",
     "replay.py:1094": "return False, (\"%s present but under 512 bytes -- a stub is not source\" % tiny[:2])",
     "replay.py:1227": "return False, (\"this cell claims %s is a SHARED platform key, but it signs only %d \"",
     "replay.py:1294": "return False, (\"axis %d REQUIRES %s; %r is registered and permitted but does not bind \"",
