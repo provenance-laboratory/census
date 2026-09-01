@@ -102,6 +102,39 @@ SUITE = (
 )
 
 
+def _exit_status_returns(tree):
+    """Returns whose value becomes the PROCESS EXIT STATUS, found semantically.
+
+    ⛔ THE FIRST VERSION OF THIS RULE WAS PURELY SYNTACTIC AND IT COUNTED `return True`. `bool`
+    subclasses `int`, so `True not in (0, False)` is true -- five ordinary success predicates were
+    registered as refusals, including an "is this field absent?" helper. The converse failed too:
+    `return 1 if bad else 0` was invisible while the equivalent `if bad: return 1` was counted, so
+    two spellings of one control produced two different registries. A round-20 reviewer named it
+    as another registry deciding what the instrument can see.
+
+    ⇒ A status-code refusal is not a shape, it is a ROLE: a non-zero integer returned by a
+    function whose result is handed to `SystemExit`. That is discoverable -- find the entry
+    functions, then look only inside them -- and it does not care how the return is spelled.
+
+    ⚠ It still cannot see a refusal that exits through a variable computed elsewhere. That is a
+    narrower blind spot than the one it replaces, and it is a bound rather than a claim.
+    """
+    entries = set()
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Raise) and isinstance(n.exc, ast.Call) \
+                and isinstance(n.exc.func, ast.Name) and n.exc.func.id == "SystemExit" \
+                and n.exc.args and isinstance(n.exc.args[0], ast.Call) \
+                and isinstance(n.exc.args[0].func, ast.Name):
+            entries.add(n.exc.args[0].func.id)
+    out = set()
+    for fn in ast.walk(tree):
+        if isinstance(fn, ast.FunctionDef) and fn.name in entries:
+            for n in ast.walk(fn):
+                if isinstance(n, ast.Return):
+                    out.add(n)
+    return out
+
+
 def controls(src, path):
     """Every statement in `src` that REPORTS a defect, with its line number.
 
@@ -109,6 +142,7 @@ def controls(src, path):
     a `return False, ...` inside an executor, or a `raise SystemExit(...)`.
     """
     tree = ast.parse(src)
+    _status_returns = _exit_status_returns(tree)
     out = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
@@ -121,8 +155,10 @@ def controls(src, path):
             first = node.value.elts[0] if node.value.elts else None
             if isinstance(first, ast.Constant) and first.value is False:
                 out.append((node.lineno, node.end_lineno, "rejects in an executor"))
-        elif (isinstance(node, ast.Return) and isinstance(node.value, ast.Constant)
-              and isinstance(node.value.value, int) and node.value.value not in (0, False)):
+        elif (isinstance(node, ast.Return) and node in _status_returns
+              and isinstance(node.value, ast.Constant)
+              and not isinstance(node.value.value, bool)
+              and isinstance(node.value.value, int) and node.value.value != 0):
             # ⛔ THE DETECTOR COULD NOT SEE THE CONTROL THAT CATCHES THE FABRICATED FIGURE.
             # `build_filter_bound.py` refuses a tampered record with `print(...); return 1` -- a
             # STATUS-CODE refusal -- and this recognised accumulator appends, `return False, ...`
@@ -316,6 +352,10 @@ def _root_for_baseline():
         w = pathlib.Path(_tf.mkdtemp(prefix="control-audit-"))
         _sh.copytree(HERE, w / "census", dirs_exist_ok=True)
         _WORK["root"] = w / "census"
+        # ⛔ THE BASELINE TREE WAS NEVER REGISTERED FOR CLEANUP, so the repair for a leak left
+        # one tree per run behind -- a reviewer watched the retained count go 1, 2, 3 across
+        # consecutive runs. The fix for the leak had the leak.
+        _TREES.append(w)
     return _WORK["root"]
 
 
