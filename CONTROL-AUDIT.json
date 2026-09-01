@@ -10,7 +10,7 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "a8cd562854c31a85f897d4d4ac704516bffa7830d3fff39d807d5e5cfb5701c5",
+    "control_audit.py": "2e7f2cd6f91f44c4f767bd72fdf985ff75af7033136b9acba4ecf03ac7e58fbb",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -59,7 +59,7 @@
       "--quick"
     ]
   ],
-  "source_fingerprint": "cc3ef82d2897e969",
+  "source_fingerprint": "86c10ccfc79c2b96",
   "previous": {
     "controls_total": 252,
     "watched": 119,
@@ -283,28 +283,28 @@
     },
     {
       "file": "control_audit.py",
-      "line": 308,
+      "line": 335,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 316,
+      "line": 343,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 322,
+      "line": 349,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 354,
+      "line": 381,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
