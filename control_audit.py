@@ -245,7 +245,13 @@ def _predecessor(old, total_now, watched_now):
         return None
     if old.get("controls_total") == total_now and old.get("watched") == watched_now:
         return old.get("previous")
-    return {"controls_total": old.get("controls_total"), "watched": old.get("watched")}
+    # ⛔  STORED ONLY THE TWO NUMBERS, so nothing in the toolchain could
+    # substantiate or refute the paper sentence claiming an earlier ratio came from a SMALLER
+    # WINDOW. It did not -- 215 and 218 were measured across an identical 28-module set -- and
+    # the excuse suppressed an unflattering real comparison for two rounds. The fact that
+    # falsifies it shipped in history.bundle and nothing read it. The window is recorded now.
+    return {"controls_total": old.get("controls_total"), "watched": old.get("watched"),
+            "modules": len(old.get("targets") or [])}
 
 
 def main():

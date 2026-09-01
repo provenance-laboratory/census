@@ -56,6 +56,7 @@ def _bytes_for(e):
     return gzip.decompress(blob.read_bytes())
 
 
+_LEDGER_CACHE = None
 MIN_LITERAL = 4
 
 
@@ -817,7 +818,14 @@ def m_reproduction_search(c, ev, ctx=None):
         _rec = (_ns.get("subjects") or {}).get(c["subject"])
         if _rec is not None:
             _hit = bool((_rec.get("adjudication") or {}).get("hit"))
-            _led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
+            # ⚠ READ ONCE. This parsed the whole ledger on every executor call -- 680
+            # times in test_executors alone, and the control audit runs the suite once per
+            # control. A correctness fix that makes the audit too slow to run is how an audit
+            # stops being run.
+            global _LEDGER_CACHE
+            if _LEDGER_CACHE is None:
+                _LEDGER_CACHE = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
+            _led = _LEDGER_CACHE
             _a17 = next((x for x in _led.get("cells", [])
                          if x.get("subject") == c["subject"] and x.get("axis") == 17), None)
             if _a17 is not None:

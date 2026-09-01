@@ -161,7 +161,15 @@ for name in ZERO:
         print("       %s" % ti[:96])
         print("       %s" % k)
 
-out = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "filter-diff.json")
+# ⛔ `sys.argv[1]` TOOK THE FLAG AS A FILENAME. The documented command is
+# `python filter_diff.py --offline`, and this wrote its report to a file literally named
+# `--offline` while leaving `filter-diff.json` -- the input `filter_categories.py` reads, and the
+# chain section 8's figures come from -- untouched. So the advertised re-run exited 0 and could
+# never refresh the thing it was advertised to refresh; a reviewer set
+# `filter-bound.json["distinct_excluded"]` to 999 and the command still went green. The junk file
+# was committed, in the commit titled "the filter bound is recomputable, not taken".
+_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+out = C / (_args[0] if _args else "filter-diff.json")
 out.write_text(json.dumps(report, indent=2) + chr(10), encoding="utf-8")
 print()
 print("  wrote %s" % out)

@@ -373,6 +373,12 @@ def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace",
                                   line_buffering=True)
     targets = never_executed()
+    _pinned_targets = None
+    if OUT.exists():
+        try:
+            _pinned_targets = json.loads(OUT.read_text(encoding="utf-8")).get("targets_pinned")
+        except Exception:                                                    # noqa: BLE001
+            _pinned_targets = None
     # ⛔ A SWEEP THAT ONLY TARGETS WHAT IS STILL UNREACHED CANNOT RE-VERIFY WHAT IT
     # ALREADY FIXED. Branches this tool makes reachable leave the audit's never-executing list, so
     # they stopped being targets and their records could never be refreshed -- one of them held no
@@ -400,7 +406,19 @@ def main():
     print("  REACHING THE CHECKS THAT HAVE NEVER EXECUTED")
     print("=" * 78)
     print()
-    print("  %d branch(es) the control audit reports as unreachable by the suite." % len(targets))
+    # ⛔ THIS LABELLED A MIXED POPULATION AS THE AUDIT'S. `targets` is the audit's current
+    # never-executing set PLUS every branch this record already claims -- a regression-replay set,
+    # constructed so previously-fixed branches keep being re-measured. Calling it "what the audit
+    # reports as unreachable" made the paper quote 92, which is neither the pinned baseline (85)
+    # nor the audit's current answer (76). Three populations, one name.
+    _audit_now = len(never_executed())
+    print("  %d branch(es) the control audit currently reports as never executing." % _audit_now)
+    print("  %d in the REGRESSION SET: that, plus every branch this record already claims, so a"
+          % len(targets))
+    print("  branch once made reachable keeps being re-measured instead of dropping out of view.")
+    print("  %s is the PINNED BASELINE -- the population first measured against, and the"
+          % (_pinned_targets if "_pinned_targets" in dir() else "?"))
+    print("  denominator to quote for a before/after.")
     print("  " + W + " Every mutation this project makes attacks the LEDGER, and the validator")
     print("  refuses those before an executor runs. These branches defend the ARCHIVE, and")
     print("  nothing here has ever mutated the evidence store.")
@@ -667,7 +685,6 @@ def main():
     # ⚠ So the ORIGINAL target population is pinned on first write and reused. It is the
     # denominator the measurement was made against, and re-deriving it from a file this tool
     # changes is how a before-figure quietly becomes an after-figure.
-    _pinned_targets = None
     if OUT.exists():
         try:
             _pinned_targets = json.loads(OUT.read_text(encoding="utf-8")).get("targets_pinned")
