@@ -19,7 +19,7 @@
     "pin_urls.py": "1626659f01bbe7001bf7ecc4812f6639a12411e5cf09aca300ebc66f3ff63036",
     "probe_signatures.py": "50d72e4b51eebe9715ec6c10f3b70f9a8fe69e362bad02bbea24700b822e4906",
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
-    "reach_controls.py": "aba487bdb82d33e48961e6b41ace5f134bb4f81cba88a240e93fd11fc52d44e8",
+    "reach_controls.py": "7be76486b57df37c3839cbfea47b6428d06b83a4c63df6fc9bfae43b5b234893",
     "recheck.py": "5d8d831cbd28d389a01fde1330e81043ec023efa74790d51acf30d189b27356c",
     "referee.py": "99a7f0c208fbee450a904b12847479832c26af6d30fbb854d2601bffb5abf5f2",
     "replay.py": "810b0dd7b26e1817b742bc4b426d376abbcefdcfdb4cc05936a758b643b08f58",
@@ -59,14 +59,14 @@
     ]
   ],
   "previous": {
-    "controls_total": 206,
-    "watched": 120
+    "controls_total": 215,
+    "watched": 118
   },
-  "controls_total": 215,
+  "controls_total": 218,
   "watched": 118,
-  "unwatched": 97,
-  "redundant": 23,
-  "never_executes": 74,
+  "unwatched": 100,
+  "redundant": 24,
+  "never_executes": 76,
   "survivors": [
     {
       "file": "archive_evidence.py",
@@ -224,7 +224,7 @@
     },
     {
       "file": "filter_diff.py",
-      "line": 103,
+      "line": 108,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" %s is not in the archive and --offline was given. Run \"",
       "class": "NEVER EXECUTES"
@@ -241,13 +241,6 @@
       "line": 136,
       "kind": "reports a defect",
       "source": "d.append(\"the ledger's as_of is %r, which is not an ISO date\" % (_as,))",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "mp_metric.py",
-      "line": 141,
-      "kind": "reports a defect",
-      "source": "d.append(\"%s/axis%s: as_of is %r, which is not an ISO date\"",
       "class": "NEVER EXECUTES"
     },
     {
@@ -367,6 +360,27 @@
       "line": 62,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" %s@%s does not contain %s\" % (repo, sha[:12], missing))",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 723,
+      "kind": "reports a defect",
+      "source": "drift.append(\"targets_pinned (%s -> %s)\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 747,
+      "kind": "reports a defect",
+      "source": "drift.append(\"%d recorded control(s) not reached this run: %s\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 750,
+      "kind": "reports a defect",
+      "source": "drift.append(\"%d recorded entr(ies) carry no source text and cannot be identified \"",
       "class": "NEVER EXECUTES"
     },
     {
@@ -602,6 +616,20 @@
     },
     {
       "file": "replay.py",
+      "line": 873,
+      "kind": "reports a defect",
+      "source": "bad.append(\"a response carries no totalResults\")",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 879,
+      "kind": "rejects in an executor",
+      "source": "return False, \"; \".join(bad[:2])",
+      "class": "REDUNDANT"
+    },
+    {
+      "file": "replay.py",
       "line": 883,
       "kind": "rejects in an executor",
       "source": "return False, \"no archived response for declared term(s) %s\" % missing[:3]",
@@ -616,9 +644,9 @@
     },
     {
       "file": "replay.py",
-      "line": 968,
+      "line": 995,
       "kind": "rejects in an executor",
-      "source": "return False, \"expected exactly one pinned enumeration, found %d\" % len(recs)",
+      "source": "return False, \"the archived response enumerates no files, so it settles nothing\"",
       "class": "NEVER EXECUTES"
     },
     {
@@ -637,16 +665,9 @@
     },
     {
       "file": "replay.py",
-      "line": 1082,
+      "line": 1066,
       "kind": "rejects in an executor",
-      "source": "return False, \"the archived tree response is not JSON\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 1084,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"the archived tree is TRUNCATED, so an absent path proves nothing about \"",
+      "source": "return False, \"expected exactly one pinned repository tree response, found %d\" % len(rec",
       "class": "NEVER EXECUTES"
     },
     {
