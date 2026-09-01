@@ -126,6 +126,45 @@ def entries(body):
     return out
 
 
+def _all_pages(q):
+    """Every archived page of one query, concatenated into one entry map.
+
+    ⛔ `fetch()` BUILDS ONE URL SHAPE -- start=0 -- AND LOOKS IT UP BY EXACT URL. Round 17's
+    repair taught the ARCHIVER to paginate and did not teach the CONSUMER, so four queries have a
+    second page sitting in the deposit that nothing ever asked for: 45 subject-paper pairs, 39
+    distinct papers. A round-18 reviewer recomputed with them and the distinct-excluded figure goes
+    315 -> 354.
+
+    ⇒ And because start=0 was baked into the constant, the ORIGINAL ONLINE RUN was page-one too.
+    Making the measurement re-runnable made it faithfully reproduce a figure that was truncated
+    from the start: replay confirmed the computation was stable and never asked whether the input
+    was complete. That is this paper's own CHECKED-versus-CLAIMED distinction turned on itself.
+
+    ⚠ No score moves -- the reviewer screened all 45 additions for a reproduction word in the
+    title and found none -- but the reported bound was wrong: `method` described a complete
+    difference set and `limits` declared only a vocabulary bound. Neither declared a first-100
+    window.
+    """
+    global _IDX
+    if _IDX is None:
+        _IDX = _offline_index()
+    out = {}
+    start = 0
+    while True:
+        url = API % (urllib.parse.quote(q, safe=""), start) if "%d" in API             else "https://export.arxiv.org/api/query?search_query=%s&start=%d&max_results=100" % (
+                urllib.parse.quote(q, safe=""), start)
+        if url not in _IDX:
+            break
+        got = entries(_IDX[url])
+        out.update(got)
+        if len(got) < 100:
+            break
+        start += 100
+    if not out and start == 0:
+        out = entries(fetch(q))
+    return out
+
+
 VERB = re.compile(r"\b(reproduc\w+|replicat\w+|reimplement\w+|from scratch|independently trained)\b",
                   re.I)
 
@@ -140,10 +179,10 @@ for name in ZERO:
     for term in TERMS:
         base = 'abs:"%s" AND abs:"%s"' % (label, term)
         try:
-            filt = entries(fetch(base + " AND (cat:cs.CL OR cat:cs.LG)"))
+            filt = _all_pages(base + " AND (cat:cs.CL OR cat:cs.LG)")
             if _FROM_NET:
                 time.sleep(POLITE)
-            unfilt = entries(fetch(base))
+            unfilt = _all_pages(base)
             if _FROM_NET:
                 time.sleep(POLITE)
         except Exception as e:                                              # noqa: BLE001

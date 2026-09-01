@@ -4,10 +4,14 @@ A homonym (Pythia the physics generator) and a neighbouring ML category (cs.CV) 
 the same rule for very different reasons. Counting exclusions cannot tell them apart; the primary
 category can.
 """
+import gzip
+import hashlib
+import sys
 import json, re, time, urllib.parse, urllib.request, collections, pathlib
 
 UA = "mp-metric-bound-probe (mailto:parthms.id@gmail.com)"
 HERE = pathlib.Path(__file__).resolve().parent
+STORE = HERE / "evidence"
 d = json.load(open(HERE / "filter-diff.json", encoding="utf-8"))
 ids = {}
 for subj, hits in d.items():
@@ -23,9 +27,25 @@ for i in range(0, len(todo), 80):
     chunk = todo[i:i+80]
     u = ("https://export.arxiv.org/api/query?id_list=%s&max_results=100"
          % urllib.parse.quote(",".join(chunk), safe=","))
-    req = urllib.request.Request(u, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=120) as r:
-        body = r.read().decode("utf-8", "replace")
+    # ⛔ THIS FETCHED LIVE AND ARCHIVED NOTHING, so the figures section 8 actually turns on --
+    # 0 of Pythia's exclusions adjacent, 42 of Qwen's 43 -- were not reproducible offline even
+    # after the round-17 repair made the EXCLUSION SETS reproducible. The offline command borrowed
+    # credit from a different control: it recomputed the sets and left the numerators unchecked.
+    #
+    # ⚠ Archived by digest, exactly like every other response in this census, and read before the
+    # network so a reader recomputes from bytes rather than from arXiv's mood today.
+    _key = hashlib.sha256(u.encode("utf-8")).hexdigest()
+    _blob = STORE / ("catprobe-" + _key + ".gz")
+    if _blob.exists():
+        body = gzip.decompress(_blob.read_bytes()).decode("utf-8", "replace")
+    elif "--offline" in sys.argv:
+        raise SystemExit(chr(0x26D4) + " a category lookup is not archived and --offline was "
+                         "given. Run filter_categories.py once with network to archive it.")
+    else:
+        req = urllib.request.Request(u, headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=120) as r:
+            body = r.read().decode("utf-8", "replace")
+        _blob.write_bytes(gzip.compress(body.encode("utf-8"), mtime=0))
     for m in re.finditer(r"<entry>(.*?)</entry>", body, re.S):
         e = m.group(1)
         i2 = re.search(r"<id>([^<]+)</id>", e)
