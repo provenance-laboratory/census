@@ -588,6 +588,49 @@ def main():
                "NEVER EXECUTES": ("no input the suite can build reaches the line. Either the "
                                   "branch is unreachable given this ledger, or nothing fixtures "
                                   "the state it guards -- and those are still two things")}}
+    # ⛔ THE FINGERPRINT BINDS THE INPUTS AND NOTHING BOUND THE CLAIMED OUTPUT. A round-20
+    # reviewer ran this from a clean extraction and got a different classification set than the
+    # deposited record carried, with the fingerprints agreeing -- because the record had been
+    # written by one version of this file and shipped beside another. A record whose inputs are
+    # certified says nothing about whether its verdicts are the ones this code produces, and a
+    # hand-edited record with a valid fingerprint would pass every check there was.
+    #
+    # ⚠ `--verify` re-runs the whole audit and compares the COMPLETE per-site set: identity and
+    # classification, not counts. It is as expensive as the audit because it IS the audit; that is
+    # the honest price of the claim, and it is why the audit was made affordable first.
+    if "--verify" in sys.argv:
+        old_path = HERE / "CONTROL-AUDIT.json"
+        if not old_path.exists():
+            print("  " + D + " no record to verify against.")
+            return 1
+        prev = json.loads(old_path.read_text(encoding="utf-8"))
+        def _ident(r):
+            return {(s["file"], (s.get("source") or "").strip(), s["class"])
+                    for s in r.get("survivors", [])}
+        drift = []
+        for k in ("controls_total", "watched", "unwatched", "redundant", "never_executes"):
+            if prev.get(k) != rec.get(k):
+                drift.append("%s: recorded %s, recomputed %s" % (k, prev.get(k), rec.get(k)))
+        a, b = _ident(prev), _ident(rec)
+        if a != b:
+            drift.append("%d survivor(s) recorded that this run does not produce, and %d the "
+                         "other way" % (len(a - b), len(b - a)))
+        if drift:
+            print()
+            print("  " + D + " THE DEPOSITED RECORD IS NOT WHAT THIS CODE PRODUCES:")
+            for _d in drift:
+                print("      " + _d)
+            for x in sorted(a - b)[:3]:
+                print("      only in the record : %s %s" % (x[0], x[1][:44]))
+            for x in sorted(b - a)[:3]:
+                print("      only in this run   : %s %s" % (x[0], x[1][:44]))
+            return 1
+        print()
+        print("  ok  the record is exactly what this code produces: %d site(s), %d watched,"
+              % (rec["controls_total"], rec["watched"]))
+        print("  and every survivor identity and classification agrees.")
+        return 0
+
     (HERE / "CONTROL-AUDIT.json").write_text(json.dumps(rec, indent=2) + NL,
                                              encoding="utf-8", newline=NL)
     print("  written to CONTROL-AUDIT.json")
