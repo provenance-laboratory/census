@@ -103,6 +103,11 @@ for s in sorted(per_subj):
     adj = sum(n for c, n in per_subj[s].items() if c in ML)
     print("    %-20s %3d of %3d excluded are adjacent CS/ML  %s"
           % (s, adj, tot, ",".join("%s:%d" % (c, n) for c, n in per_subj[s].most_common(3))))
-json.dump({"cats": cats, "ids": ids}, open(HERE / "filter-cats.json", "w", encoding="utf-8"), indent=1)
+# ⚠ json.dump(open(...)) DOES NOT PIN THE NEWLINE EITHER. The write_text fix swept
+# five modules and missed this one, because it is a different call shape -- the same class of
+# defect surviving a sweep aimed at one of its spellings.
+(HERE / "filter-cats.json").write_text(
+    json.dumps({"cats": cats, "ids": ids}, indent=1) + chr(10),
+    encoding="utf-8", newline=chr(10))
 print()
 print("  wrote filter-cats.json")
