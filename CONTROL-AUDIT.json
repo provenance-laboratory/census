@@ -8,23 +8,24 @@
     "archive_negative_search.py": "27829d661ca183638000675fe183382b2f23f75888d8359e9258e9caf9ead30b",
     "axes.py": "5dc7b460b63627c33736828064cf2e461136d42789f73d09fa046dddf2563ece",
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
+    "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "84a97cc1b02cfeb8ebabfc646af30fdc64f48ae4180cfe757f39c5a6f0d6306f",
+    "control_audit.py": "7ec1e5f66a8a8f658546226cb327be759861a7043a8cd3a817f528dc347be857",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
-    "filter_categories.py": "4ce63da679525bed20ca10c4f971daf7161d131160f1769cae930abc88f6cf1e",
-    "filter_diff.py": "f2fabaec8e07f79e859964cc644304da46632342b308b3afe10fd9bb602a8d04",
+    "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
+    "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
     "hf_probe.py": "5dd4c7a472d2b0040319e5bd443631f38782e07faa919cc36dd8fd816686a34b",
     "mp_metric.py": "c0fea2a1bce225be1a7ec518922b060492659c94251ab76e9eff461e9f24fed5",
     "negative_search.py": "3c58738efe74288f684b98213f770978a8f7835cb80a5ca145de2e173005fea1",
     "pin_urls.py": "1626659f01bbe7001bf7ecc4812f6639a12411e5cf09aca300ebc66f3ff63036",
     "probe_signatures.py": "50d72e4b51eebe9715ec6c10f3b70f9a8fe69e362bad02bbea24700b822e4906",
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
-    "reach_controls.py": "1d53e262053c6ad9f6aee8aed423473924444cf0400a9e16c19b1bdf113fd442",
-    "recheck.py": "5d8d831cbd28d389a01fde1330e81043ec023efa74790d51acf30d189b27356c",
+    "reach_controls.py": "c37c70bf2ee3537efdcb97cdecd713579af13da1355433a2109a3b387d58fd93",
+    "recheck.py": "61125cdc7f85c5d0fafa96ab00e843716a32b8db17ed7bf298dd7740f8fdd75b",
     "referee.py": "99a7f0c208fbee450a904b12847479832c26af6d30fbb854d2601bffb5abf5f2",
     "replay.py": "c747532482c1c0f838f154c6d15c6f997daab247a03159215eba7708567479e8",
-    "stem_equivalence.py": "216b8d9589274d1d567acb8e6a88b963583e214d6d18dabf72c48020761cb5c0",
-    "stress_test.py": "e37f2cbac76f1dd647fd3efb58c687410b9af08a57b08475abc54efdfb67165b",
+    "stem_equivalence.py": "81397532510bc70facc7bbd863bb896653842c49aed5cdaaeac4d2c0c1a8d780",
+    "stress_test.py": "c863abff83a78bc3770b2a56b31a5d6f66131f231b75942ae4150a8e01aa89cd",
     "sweep.py": "f02192207e2bcef589536892dba3e9dae4763c5bbda8f6665853adbcf4cf1fe6",
     "test_bound_rules.py": "bb88e913bace7411275a88132aff2c163313e9278589ab00f2f42fa07b683619",
     "test_executors.py": "d0ebdbc8639e2fcc538eaa49172ad03ecb3005606c09d00f87220a44807896cc",
@@ -58,17 +59,53 @@
       "--quick"
     ]
   ],
+  "source_fingerprint": "8abf1c9706a6e3dd",
   "previous": {
-    "controls_total": 218,
+    "controls_total": 219,
     "watched": 118,
     "modules": 28
   },
-  "controls_total": 219,
-  "watched": 118,
-  "unwatched": 101,
+  "controls_total": 252,
+  "watched": 119,
+  "unwatched": 133,
   "redundant": 24,
-  "never_executes": 77,
+  "never_executes": 109,
   "survivors": [
+    {
+      "file": "add_evidence.py",
+      "line": 81,
+      "kind": "refuses with a status code",
+      "source": "return 2",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "add_evidence.py",
+      "line": 87,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "add_evidence.py",
+      "line": 96,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "apply_negative_search.py",
+      "line": 71,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "apply_negative_search.py",
+      "line": 98,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
     {
       "file": "archive_evidence.py",
       "line": 83,
@@ -133,6 +170,13 @@
       "class": "NEVER EXECUTES"
     },
     {
+      "file": "archive_filter_probe.py",
+      "line": 146,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
       "file": "archive_negative_search.py",
       "line": 77,
       "kind": "reports a defect",
@@ -151,6 +195,48 @@
       "line": 88,
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s: %s\" % (sub, term, str(e)[:60]))",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "archive_negative_search.py",
+      "line": 140,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "archive_negative_search.py",
+      "line": 163,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "bind_probe_evidence.py",
+      "line": 147,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "bind_probe_evidence.py",
+      "line": 158,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "build_filter_bound.py",
+      "line": 96,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "build_filter_bound.py",
+      "line": 102,
+      "kind": "refuses with a status code",
+      "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
@@ -190,23 +276,37 @@
     },
     {
       "file": "control_audit.py",
-      "line": 224,
+      "line": 257,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 232,
+      "line": 265,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 238,
+      "line": 271,
       "kind": "rejects in an executor",
       "source": "return False, _name",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 303,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "fetch_artifact.py",
+      "line": 129,
+      "kind": "refuses with a status code",
+      "source": "return True",
       "class": "NEVER EXECUTES"
     },
     {
@@ -218,7 +318,14 @@
     },
     {
       "file": "filter_categories.py",
-      "line": 42,
+      "line": 56,
+      "kind": "refuses to proceed",
+      "source": "raise SystemExit(chr(0x26D4) + \" an archived category response does not hash to its \"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "filter_categories.py",
+      "line": 65,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(chr(0x26D4) + \" a category lookup is not archived and --offline was \"",
       "class": "NEVER EXECUTES"
@@ -242,6 +349,13 @@
       "line": 60,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "mp_metric.py",
+      "line": 112,
+      "kind": "refuses with a status code",
+      "source": "return True",
       "class": "NEVER EXECUTES"
     },
     {
@@ -295,6 +409,20 @@
     },
     {
       "file": "negative_search.py",
+      "line": 145,
+      "kind": "refuses with a status code",
+      "source": "return True",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "negative_search.py",
+      "line": 184,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "negative_search.py",
       "line": 209,
       "kind": "reports a defect",
       "source": "trunc.append(\"%s: stage2 holds %d record(s), recomputing from the candidates \"",
@@ -330,9 +458,23 @@
     },
     {
       "file": "pin_urls.py",
+      "line": 128,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "pin_urls.py",
       "line": 138,
       "kind": "reports a defect",
       "source": "drift.append((e[\"url\"], e[\"sha256\"], got))",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "pin_urls.py",
+      "line": 148,
+      "kind": "refuses with a status code",
+      "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
@@ -372,23 +514,58 @@
     },
     {
       "file": "reach_controls.py",
-      "line": 740,
+      "line": 296,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 391,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 425,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 748,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 765,
       "kind": "reports a defect",
       "source": "drift.append(\"targets_pinned (%s -> %s)\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "reach_controls.py",
-      "line": 764,
+      "line": 789,
       "kind": "reports a defect",
       "source": "drift.append(\"%d recorded control(s) not reached this run: %s\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "reach_controls.py",
-      "line": 767,
+      "line": 792,
       "kind": "reports a defect",
       "source": "drift.append(\"%d recorded entr(ies) carry no source text and cannot be identified \"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "reach_controls.py",
+      "line": 796,
+      "kind": "refuses with a status code",
+      "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
@@ -396,6 +573,20 @@
       "line": 108,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "recheck.py",
+      "line": 341,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "referee.py",
+      "line": 97,
+      "kind": "refuses with a status code",
+      "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
@@ -756,8 +947,36 @@
       "class": "NEVER EXECUTES"
     },
     {
+      "file": "replay.py",
+      "line": 1398,
+      "kind": "refuses with a status code",
+      "source": "return True",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "stem_equivalence.py",
+      "line": 188,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "stem_equivalence.py",
+      "line": 193,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "stem_equivalence.py",
+      "line": 216,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
       "file": "stress_test.py",
-      "line": 510,
+      "line": 527,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(1 if failed else 0)",
       "class": "REDUNDANT"
@@ -767,6 +986,13 @@
       "line": 31,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"no such cell\")",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "unread_notes.py",
+      "line": 163,
+      "kind": "refuses with a status code",
+      "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
