@@ -34,10 +34,33 @@ for i in range(0, len(todo), 80):
     #
     # ⚠ Archived by digest, exactly like every other response in this census, and read before the
     # network so a reader recomputes from bytes rather than from arXiv's mood today.
+    # ⛔ THE BLOB WAS NAMED BY THE REQUEST URL AND NEVER BY ITS CONTENT. A round-19 reviewer
+    # changed the bytes of an archived category response without changing the ids or categories it
+    # parses to, and every control stayed green -- `--offline` resolved 354, `--verify` said the
+    # record matched, `archive_evidence.py --verify` agreed. The derivation was replayable and the
+    # SOURCE BYTES were unprotected, in the one census whose subject is that distinction. And the
+    # blobs were in no manifest, so archive_evidence counted them among files referenced by
+    # nothing.
+    #
+    # ⚠ URL -> body digest is recorded beside the store, and a body that does not hash to its
+    # record is refused rather than parsed.
     _key = hashlib.sha256(u.encode("utf-8")).hexdigest()
     _blob = STORE / ("catprobe-" + _key + ".gz")
+    _man = HERE / "filter-cats-archive.json"
+    _reg = json.loads(_man.read_text(encoding="utf-8")) if _man.exists() else {"responses": {}}
     if _blob.exists():
-        body = gzip.decompress(_blob.read_bytes()).decode("utf-8", "replace")
+        _raw = gzip.decompress(_blob.read_bytes())
+        _got = hashlib.sha256(_raw).hexdigest()
+        _want = (_reg["responses"].get(u) or {}).get("sha256")
+        if _want and _got != _want:
+            raise SystemExit(chr(0x26D4) + " an archived category response does not hash to its "
+                             "record: %s says %s, the bytes are %s. The derivation would still "
+                             "have replayed." % (u[:60], _want[:16], _got[:16]))
+        if not _want:
+            _reg["responses"][u] = {"sha256": _got, "bytes": len(_raw)}
+            _man.write_text(json.dumps(_reg, indent=1, sort_keys=True) + chr(10),
+                            encoding="utf-8", newline=chr(10))
+        body = _raw.decode("utf-8", "replace")
     elif "--offline" in sys.argv:
         raise SystemExit(chr(0x26D4) + " a category lookup is not archived and --offline was "
                          "given. Run filter_categories.py once with network to archive it.")
@@ -45,7 +68,11 @@ for i in range(0, len(todo), 80):
         req = urllib.request.Request(u, headers={"User-Agent": UA})
         with urllib.request.urlopen(req, timeout=120) as r:
             body = r.read().decode("utf-8", "replace")
-        _blob.write_bytes(gzip.compress(body.encode("utf-8"), mtime=0))
+        _raw = body.encode("utf-8")
+        _blob.write_bytes(gzip.compress(_raw, mtime=0))
+        _reg["responses"][u] = {"sha256": hashlib.sha256(_raw).hexdigest(), "bytes": len(_raw)}
+        _man.write_text(json.dumps(_reg, indent=1, sort_keys=True) + chr(10),
+                        encoding="utf-8", newline=chr(10))
     for m in re.finditer(r"<entry>(.*?)</entry>", body, re.S):
         e = m.group(1)
         i2 = re.search(r"<id>([^<]+)</id>", e)

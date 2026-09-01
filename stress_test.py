@@ -460,6 +460,23 @@ else:
     passed += 1
     print("  ok    every url carries one volatility classification")
 
+# ⛔ BYTE-REPRODUCIBILITY HELD ONLY ON THE PLATFORM THAT WROTE IT. Six modules wrote JSON with
+# `write_text(...)` and no `newline=`, which emits CRLF on Windows and LF everywhere else, so two
+# DOCUMENTED commands rewrote deposited records with different bytes and identical content. The
+# digest the manuscript cites would not reproduce for a replicator, and nothing in the deposit
+# gave them a way to learn that -- the byte-identical check is gated on a zip a distribution
+# cannot contain, and is skipped silently rather than counted as not-runnable.
+_crlf = sorted(f.name for f in pathlib.Path(__file__).resolve().parent.glob("*.json")
+               if b"" + chr(13).encode() + chr(10).encode() in f.read_bytes())
+if _crlf:
+    print("  " + chr(0x26D4) + " %d record(s) contain CRLF: %s" % (len(_crlf), _crlf[:4]))
+    print("      A writer that does not pin its newline produces different BYTES for identical")
+    print("      CONTENT on another platform, so the cited digest reproduces only here.")
+    failed += 1
+else:
+    passed += 1
+    print("  ok    no census record carries platform-dependent line endings")
+
 # ⛔ AND A TOOL THAT ONLY RUNS ON THE AUTHOR'S DISK. `filter_diff.py` hardcoded an absolute
 # path into this workspace, so the producer of the paper's newest bound could not be executed from
 # the deposit at all -- a round-17 reviewer ran it and got FileNotFoundError. Every other tool here

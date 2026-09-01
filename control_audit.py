@@ -202,7 +202,7 @@ def executed_lines(scripts):
     seen = set()
     td = pathlib.Path(tempfile.mkdtemp(prefix="trace-"))
     runner = td / "runner.py"
-    runner.write_text(TRACER, encoding="utf-8")
+    runner.write_text(TRACER, encoding="utf-8", newline="\n")
     for argv in scripts:
         out = td / ("t%d" % len(seen))
         r = subprocess.run([sys.executable, "-X", "utf8", str(runner),

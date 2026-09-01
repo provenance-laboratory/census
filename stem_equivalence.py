@@ -219,7 +219,7 @@ def main():
               % len(set(got) - _skip))
         return 0
 
-    OUT.write_text(json.dumps(got, indent=2) + NL, encoding="utf-8")
+    OUT.write_text(json.dumps(got, indent=2) + NL, encoding="utf-8", newline="\n")
     print("  wrote %s" % OUT.name)
     return 0
 

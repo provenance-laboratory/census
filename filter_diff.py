@@ -209,7 +209,7 @@ for name in ZERO:
 # was committed, in the commit titled "the filter bound is recomputable, not taken".
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 out = C / (_args[0] if _args else "filter-diff.json")
-out.write_text(json.dumps(report, indent=2) + chr(10), encoding="utf-8")
+out.write_text(json.dumps(report, indent=2) + chr(10), encoding="utf-8", newline="\n")
 print()
 print("  wrote %s" % out)
 print("  " + W + " These are CANDIDATES for reading, not findings. The screen is a name and a")

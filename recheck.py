@@ -111,7 +111,7 @@ def take_lock():
                 "log. Wait for it, or stop it and confirm with the process table -- a stop that "
                 "returns success is not a process that has exited." % pid)
         print("  " + W + " a stale lock from pid %d was left behind; taking it over." % pid)
-    LOCK.write_text("%d" % os.getpid(), encoding="utf-8")
+    LOCK.write_text("%d" % os.getpid(), encoding="utf-8", newline="\n")
 
 
 def drop_lock():

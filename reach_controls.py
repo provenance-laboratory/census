@@ -797,7 +797,7 @@ def main():
         print("  ok  the record matches this run.")
         return 0
 
-    OUT.write_text(json.dumps(rec, indent=2) + NL, encoding="utf-8")
+    OUT.write_text(json.dumps(rec, indent=2) + NL, encoding="utf-8", newline="\n")
     print("  wrote %s" % OUT.name)
     return 0
 

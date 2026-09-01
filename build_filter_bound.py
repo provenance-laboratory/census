@@ -102,7 +102,7 @@ def main():
             return 1
         print("  ok  the record matches what the archived responses say.")
         return 0
-    OUT.write_text(json.dumps(rec, indent=1) + NL, encoding="utf-8")
+    OUT.write_text(json.dumps(rec, indent=1) + NL, encoding="utf-8", newline="\n")
     print("  wrote %s" % OUT.name)
     return 0
 
