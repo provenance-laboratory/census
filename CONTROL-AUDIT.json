@@ -10,7 +10,7 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "7643231a1863d6c020adf619ae495d208a735b4ce00e8c6c657b4009a1ccb475",
+    "control_audit.py": "06380b63356a9b4790a81cd8b82a7596d17840e63abdeadff90448ab7494a0e9",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -59,17 +59,17 @@
       "--quick"
     ]
   ],
-  "source_fingerprint": "a2fded1110f46422",
+  "source_fingerprint": "1230cc4cfd8a1bf7",
   "previous": {
-    "controls_total": 253,
-    "watched": 119,
+    "controls_total": 246,
+    "watched": 105,
     "modules": 29
   },
-  "controls_total": 246,
+  "controls_total": 250,
   "watched": 105,
-  "unwatched": 141,
+  "unwatched": 145,
   "redundant": 23,
-  "never_executes": 118,
+  "never_executes": 122,
   "survivors": [
     {
       "file": "add_evidence.py",
@@ -276,35 +276,63 @@
     },
     {
       "file": "control_audit.py",
-      "line": 292,
+      "line": 299,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 375,
+      "line": 382,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 383,
+      "line": 390,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 389,
+      "line": 396,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 421,
+      "line": 428,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 612,
+      "kind": "refuses with a status code",
+      "source": "return 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 620,
+      "kind": "reports a defect",
+      "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 623,
+      "kind": "reports a defect",
+      "source": "drift.append(\"%d survivor(s) recorded that this run does not produce, and %d the \"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 634,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
