@@ -42,6 +42,13 @@ import time
 
 NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
+# ⛔ D AND W WERE NEVER DEFINED AT MODULE LEVEL, and three error paths in main()
+# referenced them -- including the audit's own "the control count fell" warning and both
+# --verify refusals. Each would have raised NameError instead of reporting the thing it exists
+# to report: a control that crashes on its own failure path, which is precisely the defect a
+# round-7 reviewer found in anchor_status.py in the sibling project.
+D = chr(0x26D4)
+W = chr(0x26A0)
 def source_fingerprint():
     """A digest of the module set this measurement was taken against.
 
@@ -290,7 +297,7 @@ def _worker_tree():
         free = _sh.disk_usage(_tf.gettempdir()).free
         if free < _MIN_FREE_BYTES:
             raise SystemExit(
-                D + " %d MB free on the temp volume and this needs a %d MB census copy per "
+                chr(0x26D4) + " %d MB free on the temp volume and this needs a %d MB census copy per "
                 "worker. Refusing to start rather than dying halfway through and leaving a "
                 "truncated tree behind." % (free // (1024 * 1024), _tree_mb()))
         w = pathlib.Path(_tf.mkdtemp(prefix="control-audit-"))
