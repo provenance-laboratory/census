@@ -36,6 +36,7 @@ import json
 import pathlib
 import shutil
 import subprocess
+import threading
 import sys
 import time
 
@@ -223,6 +224,83 @@ def neutered(src, lo, hi):
 
 
 _WORK = {"root": None}
+_TREES = []
+_LOCAL = threading.local()
+_TREE_LOCK = threading.Lock()
+_MIN_FREE_BYTES = 700 * 1024 * 1024
+
+
+def _worker_tree():
+    """A census copy private to this thread.
+
+    ⛔ EVERY CONTROL MUTATED ONE SHARED TREE, which is the only reason this had to be sequential.
+
+    ⛔ AND THE FIRST VERSION OF THIS CREATED `threading.local()` LAZILY INSIDE THE FUNCTION, so
+    racing threads each built their own and none of them ever saw a cached root: a fresh 21 MB
+    copy PER CONTROL, 252 controls, and the machine ran out of disk mid-audit. A thread-local that
+    is constructed per call is not a thread-local -- it is an expensive way to write a global. It
+    is built once, at module scope, where it cannot race.
+
+    ⚠ AND THE RESOURCE IS PRE-FLIGHTED. This project has hit zero free disk twice, and both
+    times the failure was silent until something downstream wrote a truncated file. A step that
+    can die halfway is checked before it starts, not after.
+    """
+    import shutil as _sh
+    import tempfile as _tf
+    root = getattr(_LOCAL, "root", None)
+    if root is not None:
+        return root
+    with _TREE_LOCK:
+        free = _sh.disk_usage(_tf.gettempdir()).free
+        if free < _MIN_FREE_BYTES:
+            raise SystemExit(
+                D + " %d MB free on the temp volume and this needs a %d MB census copy per "
+                "worker. Refusing to start rather than dying halfway through and leaving a "
+                "truncated tree behind." % (free // (1024 * 1024), _tree_mb()))
+        w = pathlib.Path(_tf.mkdtemp(prefix="control-audit-"))
+        _sh.copytree(HERE, w / "census", dirs_exist_ok=True)
+        _TREES.append(w)
+    root = w / "census"
+    _LOCAL.root = root
+    return root
+
+
+def _tree_mb():
+    return sum(f.stat().st_size for f in HERE.rglob("*") if f.is_file()) // (1024 * 1024)
+
+
+def _cleanup_trees():
+    """Remove the worker trees, and SAY SO if any survive.
+
+    ⛔ `ignore_errors=True` IS A CLEANUP THAT REPORTS SUCCESS FOR DOING NOTHING. Nine of eight
+    trees survived the first parallel run and the tool said nothing, because a Windows handle can
+    keep a directory alive and the flag swallows exactly that. This project has now leaked 2,141
+    temp directories -- 13 GB, on a machine that hit zero free disk twice in one day -- through a
+    silence of this shape.
+
+    ⚠ A retry, then a count, then a printed number. The leak is allowed to happen; it is not
+    allowed to be invisible.
+    """
+    import shutil as _sh
+    import time as _t
+    left = []
+    for w in _TREES:
+        for _attempt in range(3):
+            _sh.rmtree(w, ignore_errors=True)
+            if not w.exists():
+                break
+            _t.sleep(0.3)
+        if w.exists():
+            left.append(w)
+    del _TREES[:]
+    if left:
+        print()
+        print("  " + W + " %d worker tree(s) could not be removed and are still on disk:"
+              % len(left))
+        for w in left[:3]:
+            print("      %s" % w)
+        print("  Something still holds a handle. They are named rather than ignored, because a")
+        print("  leak nobody prints is how this directory reached 13 GB.")
 
 
 def _root_for_baseline():
@@ -333,27 +411,66 @@ def main():
     print()
 
     unwatched, watched, t0 = [], 0, time.time()
+
+    # ⛔ FLATTENED, SO THE WORK IS A LIST OF INDEPENDENT ITEMS. The sequential nesting was the
+    # only thing making this look serial; nothing about one control's verdict depends on another.
+    _work = []
+    _srcs = {}
     for name in targets:
-        p = _root / name
-        src = (HERE / name).read_text(encoding="utf-8")
-        sites = controls(src, name)
+        _srcs[name] = (HERE / name).read_text(encoding="utf-8")
+        sites = controls(_srcs[name], name)
         print("  %-14s %d control(s)" % (name, len(sites)))
-        backup = src
         for lo, hi, kind in sites:
-            p.write_text(neutered(src, lo, hi), encoding="utf-8", newline=NL)
-            try:
-                still, _n = suite_passes(_root)
-            finally:
-                p.write_text(backup, encoding="utf-8", newline=NL)
-            if still:
-                line = src.splitlines()[lo - 1].strip()
-                ran = any(f.endswith(name) and n0 == lo for f, n0 in _hit)
-                unwatched.append((name, lo, kind, line[:88],
-                                  "REDUNDANT" if ran else "NEVER EXECUTES"))
-                print("      " + chr(0x26D4) + " line %-4d NOTHING NOTICED  %s" % (lo, line[:60]))
-            else:
-                watched += 1
-        print()
+            _work.append((name, lo, hi, kind))
+    print()
+
+    def _one(item):
+        name, lo, hi, kind = item
+        root = _worker_tree()
+        p = root / name
+        src = _srcs[name]
+        p.write_text(neutered(src, lo, hi), encoding="utf-8", newline=NL)
+        try:
+            still, _n = suite_passes(root)
+        finally:
+            p.write_text(src, encoding="utf-8", newline=NL)
+        return (name, lo, kind, still)
+
+    # ⚠ THREADS, NOT PROCESSES, because every second of this is spent waiting on `subprocess`
+    # -- the GIL is released there, and threads avoid pickling the module state. `--jobs 1` runs
+    # the identical code path with one worker, so the sequential result stays reproducible.
+    import concurrent.futures as _cf
+    _jobs = 1
+    for _i, _a in enumerate(sys.argv):
+        if _a == "--jobs" and _i + 1 < len(sys.argv):
+            _jobs = max(1, int(sys.argv[_i + 1]))
+    if _jobs == 1 and "--jobs" not in sys.argv:
+        _jobs = min(8, (__import__("os").cpu_count() or 2))
+    print("  running %d control site(s) across %d worker tree(s)" % (len(_work), _jobs))
+    print()
+
+    try:
+        if _jobs == 1:
+            _results = [_one(w) for w in _work]
+        else:
+            with _cf.ThreadPoolExecutor(max_workers=_jobs) as _ex:
+                _results = list(_ex.map(_one, _work))
+    finally:
+        _cleanup_trees()
+
+    # ⚠ SORTED, so the record does not depend on which worker finished first. A parallel audit
+    # whose output order varies would make every diff unreadable and every digest unstable.
+    for name, lo, kind, still in sorted(_results, key=lambda r: (r[0], r[1])):
+        if still:
+            line = _srcs[name].splitlines()[lo - 1].strip()
+            ran = any(f.endswith(name) and n0 == lo for f, n0 in _hit)
+            unwatched.append((name, lo, kind, line[:88],
+                              "REDUNDANT" if ran else "NEVER EXECUTES"))
+            print("      " + chr(0x26D4) + " %-14s line %-4d NOTHING NOTICED  %s"
+                  % (name, lo, line[:52]))
+        else:
+            watched += 1
+    print()
 
     print("=" * 78)
     print("  %d control(s) are watched by at least one test" % watched)
