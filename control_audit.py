@@ -295,7 +295,7 @@ def _cleanup_trees():
     del _TREES[:]
     if left:
         print()
-        print("  " + W + " %d worker tree(s) could not be removed and are still on disk:"
+        print("  " + chr(0x26A0) + " %d worker tree(s) could not be removed and are still on disk:"
               % len(left))
         for w in left[:3]:
             print("      %s" % w)
