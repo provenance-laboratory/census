@@ -119,6 +119,30 @@ def ledger_mutations(block):
     return out
 
 
+def source_fingerprint():
+    """A digest of the module set this measurement was taken against.
+
+    ⛔ TWO RECORDS WERE INTERSECTED AND THEY HAD BEEN MEASURED AGAINST DIFFERENT TREES.
+    CONTROL-AUDIT.json was re-run; REACH-CONTROLS.json was not; the code between them moved. 28 of
+    the 70 unreached records then pointed at a line holding different source -- typically the `if`
+    one line above -- and that line drift MANUFACTURED a disjointness the paper printed as a
+    finding. On the basis that survives an edit the relation is unchanged: the reach set is
+    contained in the audit's, exactly as a round-17 reviewer said.
+
+    ⇒ So a figure derived by intersecting two records must refuse when the records disagree about
+    the tree. Each carries this fingerprint; the builder compares them.
+
+    ⚠ It fingerprints the MODULE SET AND ITS CONTENTS -- not a timestamp, which would go stale
+    for reasons that are not about the code, and not a commit, which a dirty tree makes a lie.
+    """
+    import hashlib as _h
+    parts = []
+    for f in sorted(pathlib.Path(__file__).resolve().parent.glob("*.py")):
+        parts.append(f.name)
+        parts.append(_h.sha256(f.read_bytes()).hexdigest())
+    return _h.sha256(("|".join(parts)).encode("utf-8")).hexdigest()[:16]
+
+
 def never_executed():
     """The unreached branches, read from the audit rather than listed here.
 
@@ -698,6 +722,7 @@ def main():
                     "check is not validating it: this shows an input exists that runs the line "
                     "and that the executor refuses, not that the refusal is correct."),
         "targets": len(targets),
+        "source_fingerprint": source_fingerprint(),
         "targets_pinned": _pinned_targets,
         "_targets_note": (
             "targets_pinned is the population this measurement was FIRST made against. `targets` "

@@ -41,6 +41,30 @@ import time
 
 NL = chr(10)
 HERE = pathlib.Path(__file__).resolve().parent
+def source_fingerprint():
+    """A digest of the module set this measurement was taken against.
+
+    ⛔ TWO RECORDS WERE INTERSECTED AND THEY HAD BEEN MEASURED AGAINST DIFFERENT TREES.
+    CONTROL-AUDIT.json was re-run; REACH-CONTROLS.json was not; the code between them moved. 28 of
+    the 70 unreached records then pointed at a line holding different source -- typically the `if`
+    one line above -- and that line drift MANUFACTURED a disjointness the paper printed as a
+    finding. On the basis that survives an edit the relation is unchanged: the reach set is
+    contained in the audit's, exactly as a round-17 reviewer said.
+
+    ⇒ So a figure derived by intersecting two records must refuse when the records disagree about
+    the tree. Each carries this fingerprint; the builder compares them.
+
+    ⚠ It fingerprints the MODULE SET AND ITS CONTENTS -- not a timestamp, which would go stale
+    for reasons that are not about the code, and not a commit, which a dirty tree makes a lie.
+    """
+    import hashlib as _h
+    parts = []
+    for f in sorted(pathlib.Path(__file__).resolve().parent.glob("*.py")):
+        parts.append(f.name)
+        parts.append(_h.sha256(f.read_bytes()).hexdigest())
+    return _h.sha256(("|".join(parts)).encode("utf-8")).hexdigest()[:16]
+
+
 def _targets():
     """Every module in this directory, PROJECTED -- not four names.
 
@@ -96,6 +120,15 @@ def controls(src, path):
             first = node.value.elts[0] if node.value.elts else None
             if isinstance(first, ast.Constant) and first.value is False:
                 out.append((node.lineno, node.end_lineno, "rejects in an executor"))
+        elif (isinstance(node, ast.Return) and isinstance(node.value, ast.Constant)
+              and isinstance(node.value.value, int) and node.value.value not in (0, False)):
+            # ⛔ THE DETECTOR COULD NOT SEE THE CONTROL THAT CATCHES THE FABRICATED FIGURE.
+            # `build_filter_bound.py` refuses a tampered record with `print(...); return 1` -- a
+            # STATUS-CODE refusal -- and this recognised accumulator appends, `return False, ...`
+            # tuples and `raise SystemExit`, so it scored that module at ZERO control sites. The
+            # paper's strongest new repair was outside its own audit denominator. A registry that
+            # cannot see a refusal reports the wrong denominator, which is this paper's subject.
+            out.append((node.lineno, node.end_lineno, "refuses with a status code"))
         elif isinstance(node, ast.Raise):
             e = node.exc
             if isinstance(e, ast.Call) and isinstance(e.func, ast.Name) \
@@ -373,6 +406,7 @@ def main():
                      "still green, and what kind of survivor each one is."),
            "targets": {n: _h.sha256((HERE / n).read_bytes()).hexdigest() for n in targets},
            "suite": [list(a) for a, _ in SUITE],
+           "source_fingerprint": source_fingerprint(),
            # ⛔ THE PAPER COMPARES THIS ROUND'S WATCHED SHARE WITH LAST ROUND'S, and the first
            # version of that resolver TYPED the previous numbers. Reading them from git worked
            # until the audit was committed, after which HEAD held the CURRENT record and the
