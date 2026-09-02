@@ -595,6 +595,23 @@ def _predecessor(old, total_now, watched_now, rnd=None):
             "modules": len(old.get("targets") or [])}
 
 
+def _suite_without(name):
+    """The suite minus one named item, so "who watches this" can be MEASURED not inferred.
+
+    ⛔ SECTION 8 CLAIMED N SITES ARE "WATCHED ONLY BECAUSE THE REACH RECORD NAMES
+    THEM" and computed it as `reached - survivors` -- which proves those sites are not survivors,
+    never that reach is their ONLY watcher. A round-22 reviewer measured the real number by
+    deleting `reach_controls.py --quick` from the suite and re-running: watched fell 123 to 97,
+    so 26 depend on it exclusively, not 44. A set difference stood in for a counterfactual, which
+    is the proxy defect at the level of the claim rather than the check.
+
+    ⚠ `--without NAME` makes that counterfactual a command anyone can run, so the
+    figure in the manuscript comes from removing the watcher and looking, rather than from
+    subtracting two sets that were never about the same question.
+    """
+    return tuple((args, nm) for args, nm in SUITE if nm != name)
+
+
 def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
     # ⛔ `TARGETS[:1]` MEANT mp_metric.py WHEN TARGETS WAS A HAND-WRITTEN TUPLE STARTING WITH IT.
@@ -603,6 +620,15 @@ def main():
     # docstring above still said mp_metric.py. A POSITION STOOD FOR A NAME, which is the same
     # substitution as a line number standing for a control, introduced BY the fix for a different
     # instance of the same class. Named now, and absent means refuse rather than fall back.
+    global SUITE
+    if "--without" in sys.argv:
+        _drop = sys.argv[sys.argv.index("--without") + 1]
+        if _drop not in {nm for _a, nm in SUITE}:
+            raise SystemExit(D + " --without %r names no suite item; the suite is %s"
+                             % (_drop, sorted(nm for _a, nm in SUITE)))
+        SUITE = _suite_without(_drop)
+        print("  " + W + " MEASURING WITHOUT %r: this run answers 'what does that item watch, "
+              "and nothing else' and its record is NOT the tree's record." % _drop)
     if "--quick" in sys.argv:
         _want = "mp_metric.py"
         targets = tuple(x for x in TARGETS if str(x) == _want)
@@ -860,9 +886,17 @@ def main():
         print("  and every survivor identity and classification agrees.")
         return 0
 
-    (HERE / "CONTROL-AUDIT.json").write_text(json.dumps(rec, indent=2) + NL,
+    # ⛔ A COUNTERFACTUAL RUN MUST NOT BECOME THE TREE'S RECORD. `--without` measures
+    # a suite that is not this project's suite; writing its numbers to CONTROL-AUDIT.json would
+    # put a deliberately weakened measurement under every figure in section 8, and the
+    # fingerprints would all agree because the TREE did not change. That is exactly the
+    # substitution this file exists to detect, arriving through a flag it was given itself.
+    _out_name = ("CONTROL-AUDIT-without-%s.json"
+                 % sys.argv[sys.argv.index("--without") + 1].replace(".py", "")
+                 if "--without" in sys.argv else "CONTROL-AUDIT.json")
+    (HERE / _out_name).write_text(json.dumps(rec, indent=2) + NL,
                                              encoding="utf-8", newline=NL)
-    print("  written to CONTROL-AUDIT.json")
+    print("  written to %s" % _out_name)
     print("=" * 78)
     return 0
 

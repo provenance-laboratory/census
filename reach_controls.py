@@ -408,13 +408,76 @@ def main():
     # they stopped being targets and their records could never be refreshed -- one of them held no
     # message at all and was passing quick mode vacuously, with nothing able to re-measure it. The
     # sweep targets the residue AND everything it has previously claimed.
+    # ⛔ REMEMBERED ENTRIES WERE RE-ADDED BY THEIR OLD NUMERIC LINE, WITHOUT CHECKING THAT THE
+    # LINE STILL HELD THAT STATEMENT. A round-22 reviewer compared all 44 entries against the
+    # controls the detector actually finds: 22 matched, 3 carried no stored source at all, 2
+    # pointed at a DIFFERENT current control, and 17 were not a control line in any sense --
+    # `mp_metric.py:112` recorded as reached with source `return True`, `replay.py:386` now
+    # reading `if b is None:`. Whatever moved onto the line was rediscovered under the old
+    # identity, `--verify` compared the record with itself and reported "the record matches this
+    # run", and the convergence gate passed because it compares only the never/unreached COUNTS
+    # and never validates the reached set at all. 130 equalled 130 while a third of the reached
+    # branches were fictional.
+    #
+    # ⚠ A LINE NUMBER IS A PROXY FOR A CONTROL -- the same sentence this file already carries
+    # twice, once for quick mode and once for the regression set, now a third time one level out
+    # in the memory that feeds them both. Each remembered entry must now resolve BY ITS STORED
+    # SOURCE TEXT to a line the detector currently calls a control. Anything that cannot is
+    # DROPPED and named, never carried forward on a number.
+    _lost_identity = []
     if OUT.exists():
         try:
+            import control_audit as _CA
+            _ctl_cache = {}
+
+            def _is_control(fname, line_no):
+                if fname not in _ctl_cache:
+                    try:
+                        _src = (HERE / fname).read_text(encoding="utf-8")
+                        _ctl_cache[fname] = {lo for lo, _k, _s in _CA.controls(_src, fname)}
+                    except Exception:                                        # noqa: BLE001
+                        _ctl_cache[fname] = set()
+                return line_no in _ctl_cache[fname]
+
             for k, v in (json.loads(OUT.read_text(encoding="utf-8")).get("detail") or {}).items():
-                f, ln = k.rsplit(":", 1)
-                targets.setdefault((f, int(ln)), v.get("source", ""))
+                f, _ln = k.rsplit(":", 1)
+                ln = int(_ln)
+                want = (v.get("source") or "").strip()
+                if not want:
+                    _lost_identity.append((k, "carries no stored source text, so it cannot be "
+                                              "identified in this tree at all"))
+                    continue
+                try:
+                    lines = (HERE / f).read_text(encoding="utf-8").splitlines()
+                except OSError:
+                    _lost_identity.append((k, "its file is gone"))
+                    continue
+                if 1 <= ln <= len(lines) and lines[ln - 1].strip() == want:
+                    here = ln
+                else:
+                    hits = [i + 1 for i, L in enumerate(lines) if L.strip() == want]
+                    if len(hits) != 1:
+                        _lost_identity.append(
+                            (k, "its statement is %s in this tree, so the recorded line names "
+                                "something else" % ("ambiguous (%d matches)" % len(hits)
+                                                    if hits else "gone")))
+                        continue
+                    here = hits[0]
+                if not _is_control(f, here):
+                    _lost_identity.append((k, "resolves to %s:%d, which the detector does not "
+                                              "classify as a control" % (f, here)))
+                    continue
+                targets.setdefault((f, here), want)
         except Exception:                                                    # noqa: BLE001
             pass
+    if _lost_identity:
+        print()
+        print("  " + W + " %d remembered entr(ies) DROPPED -- they cannot be identified as "
+              "controls in this tree:" % len(_lost_identity))
+        for _k, _why in _lost_identity[:8]:
+            print("      %-28s %s" % (_k, _why))
+        print("  They are not counted as reached. A reached count that includes statements the")
+        print("  detector does not call controls is not a measurement of control coverage.")
     led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
     ctx = R.subject_context(led)
 
