@@ -611,18 +611,40 @@ def _round():
 
 
 def _history(old, rnd, total_now, watched_now, never_now, modules_now, when):
-    """Append-only, one entry per round, the last run of that round winning.
+    """Every RUN, append-only, stamped with its round and the tree it measured.
 
-    ⚠ It lives INSIDE CONTROL-AUDIT.json rather than in a file of its own, and that is not
-    tidiness. `inputs_fingerprint` covers every .py and every .json EXCEPT this record, so a
-    separate history file would be an input that this tool rewrites on every run -- the audit
-    would be stale the instant it finished, every time.
+    ⛔ THIS KEPT ONE ENTRY PER ROUND AND THE LAST RUN OF A ROUND OVERWROTE IT. Round 22 was
+    deposited at 278 sites / 123 watched -- the tree two reviewers read, where the watched gain
+    was 18 against a reconstruction of 17, which is why the "entire gain is bookkeeping" claim
+    was withdrawn. Round-23 repairs re-ran the audit while AUDIT-ROUND still said 22, and the
+    round-22 entry became 279 / 122. The deposited state was gone from the record, the two
+    figures then agreed, and section 8 briefly read as though the withdrawn claim had been
+    vindicated by numbers that had simply been overwritten.
+
+    ⇒ THAT IS THE `previous` DEFECT ONE LEVEL OUT. Round 22 fixed "previous means the last RUN"
+    by stamping rounds; the history array still meant "the last run stamped with that round".
+    Fixing a defect by adding a key does not fix it if the key is not unique. Entries are
+    APPEND-ONLY per run now, each carrying the source fingerprint of the tree it measured, so a
+    later run inside the same round cannot erase an earlier one and a deposited state stays
+    recoverable from the record rather than only from git.
+
+    ⚠ Consecutive runs that measured the SAME tree to the SAME counts are collapsed, because
+    that is a repeat rather than a second measurement, and an append-only log that grows on every
+    idle re-run is one nobody reads.
     """
     hist = list((old or {}).get("history") or [])
-    hist = [h for h in hist if h.get("round") != rnd]
-    hist.append({"round": rnd, "controls_total": total_now, "watched": watched_now,
-                 "never_executes": never_now, "modules": modules_now, "when": when})
-    return sorted(hist, key=lambda h: h.get("round", -1))
+    entry = {"round": rnd, "controls_total": total_now, "watched": watched_now,
+             "never_executes": never_now, "modules": modules_now, "when": when,
+             "source_fingerprint": source_fingerprint()}
+    if hist:
+        _last = hist[-1]
+        _same = all(_last.get(k) == entry.get(k) for k in
+                    ("round", "controls_total", "watched", "never_executes",
+                     "source_fingerprint"))
+        if _same:
+            return hist
+    hist.append(entry)
+    return hist
 
 
 def _predecessor(old, total_now, watched_now, rnd=None):
@@ -630,6 +652,8 @@ def _predecessor(old, total_now, watched_now, rnd=None):
     if rnd is not None:
         _prior = [h for h in ((old or {}).get("history") or []) if h.get("round", 10 ** 9) < rnd]
         if _prior:
+            # ⚠ The LAST run of the previous round, which is that round's final state. With
+            # append-only history the earlier runs of that round remain readable beside it.
             return dict(_prior[-1])
         # ⛔ FAILS CLOSED. Returning the last run instead would put the sentence back exactly
         # where it was, and it would look like it was working.

@@ -10,7 +10,7 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "3c4caedeaecb41e679a849ba65789b653dcb8c60c5b3f1319e97215f299a90ff",
+    "control_audit.py": "bf59c44d837feb7e090cd96eb87636c7d03f023446bff866898d74fecad75de4",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -59,8 +59,8 @@
       "--quick"
     ]
   ],
-  "source_fingerprint": "66d3ff4ef1faa5ce",
-  "inputs_fingerprint": "f4c132247710a84d",
+  "source_fingerprint": "5bc21df14407f224",
+  "inputs_fingerprint": "4caf31294344b0bb",
   "inputs_manifest": {
     ".gitattributes": "852c5fc63199b92d7be8f8853c209345cad1f28c47322d5ab4d060cd360b84bc",
     ".gitignore": "9ca23c7994db63d7101e2b5702582793dff232b1101da3b704d68874a213786c",
@@ -69,7 +69,7 @@
     "archive_evidence.py": "652ac092c7165e38380c3a37ba2d71da0e7dc57eaa064ae231d4b5395ab9b231",
     "archive_filter_probe.py": "584c8a423c24589298deb30c494584b650134341640aefe60296611e7b0d49d3",
     "archive_negative_search.py": "27829d661ca183638000675fe183382b2f23f75888d8359e9258e9caf9ead30b",
-    "AUDIT-ROUND": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "AUDIT-ROUND": "076320a2a08267b4c026d06573bba408ea68841e73cdc20e62cce59de165ece3",
     "axes.py": "5dc7b460b63627c33736828064cf2e461136d42789f73d09fa046dddf2563ece",
     "axis14-signature-probe.json": "d2eaf13fb521666a9dbb9f538a14ecddd7b4aaff275cbba37045b918f6128652",
     "axis6-source-probe.json": "26223e35f7250ffb6b301ebe821a0d7be9143af51d15a9199cfd436a6306972a",
@@ -77,8 +77,8 @@
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "cells.json": "cb5ab24099c6816e6f57ad6af40e1db4fd4be888686031a49f62a661f4a3c02d",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "CONTROL-AUDIT-without-reach.json": "f11625e709c915418cad625566aac1bf10fa7078ea77277eabf58977e3464440",
-    "control_audit.py": "3c4caedeaecb41e679a849ba65789b653dcb8c60c5b3f1319e97215f299a90ff",
+    "CONTROL-AUDIT-without-reach.json": "d72dbf234141a51ee767de71d4a5cffe4d4606a098a534f207829e1a06e2cc9f",
+    "control_audit.py": "bf59c44d837feb7e090cd96eb87636c7d03f023446bff866898d74fecad75de4",
     "CTRL.log": "b3f69d68c88be621de3ab5d7564ee9e23d9c4b8b0a6a786b607555524df86c16",
     "facts.json": "ad1b2dc1368150ca0ff9e3a3211d34e4784632cde6c94a1c8cb382f71d1de62e",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
@@ -101,7 +101,7 @@
     "probe_signatures.py": "47f078f3357c32b1ec47186172503cec804764cfacaa534a7f50a198bbb151a7",
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
     "RC.log": "52a2618baa5559e3478ffbb2fb8ab40befecf88ff42d4444a5f3e2a1ea4a6e35",
-    "REACH-CONTROLS.json": "71c1b8d2b0e12cbdaf8fefb37189900817c99acf875d1ff3642bba9c2aba0b11",
+    "REACH-CONTROLS.json": "7605d8c2a4ce5b4c2c3267eeb999a1b652cff583912d032b430c316027e8a3f8",
     "reach_controls.py": "0084d740f567800c36a5c369a2dd38035d0adf3af08d6de3324967ab9ffebdaa",
     "README.md": "6ec93f7b3b26cd04205766fafe38547792ec58c8e583d9988e0fc52721ede74e",
     "recheck-log.json": "3857f763263bea214e71f12379ce1347272ed43bdff178e04e0aea10dfa26c7b",
@@ -124,7 +124,7 @@
     "UNREAD-NOTES.json": "f2322717a326db3223cfdeecc62fad48377e8997c62dd5dc9269c0d6416edc66",
     "unread_notes.py": "ed8cbc923cb8352fcd2ceec54266e75f51223fb593513c710f3bbd85f336ad9e"
   },
-  "round": 22,
+  "round": 23,
   "history": [
     {
       "round": 18,
@@ -144,20 +144,64 @@
     },
     {
       "round": 22,
+      "controls_total": 278,
+      "watched": 123,
+      "never_executes": 130,
+      "modules": 29,
+      "when": "recovered from commit 58acda3 -- the state round 22 DEPOSITED",
+      "source_fingerprint": "f21706bbb0e9caa8"
+    },
+    {
+      "round": 22,
       "controls_total": 279,
       "watched": 122,
       "never_executes": 131,
       "modules": 29,
       "when": "2026-09-02T19:23:55Z"
+    },
+    {
+      "round": 23,
+      "controls_total": 279,
+      "watched": 122,
+      "never_executes": 131,
+      "modules": 29,
+      "when": "2026-09-02T21:06:05Z"
+    },
+    {
+      "round": 23,
+      "controls_total": 279,
+      "watched": 122,
+      "never_executes": 131,
+      "modules": 29,
+      "when": "2026-09-02T21:28:42Z",
+      "source_fingerprint": "5bc21df14407f224"
+    },
+    {
+      "round": 23,
+      "controls_total": 279,
+      "watched": 121,
+      "never_executes": 132,
+      "modules": 29,
+      "when": "2026-09-02T21:46:03Z",
+      "source_fingerprint": "5bc21df14407f224"
+    },
+    {
+      "round": 23,
+      "controls_total": 279,
+      "watched": 122,
+      "never_executes": 131,
+      "modules": 29,
+      "when": "2026-09-02T22:15:42Z",
+      "source_fingerprint": "5bc21df14407f224"
     }
   ],
   "previous": {
-    "round": 21,
-    "controls_total": 250,
-    "watched": 105,
-    "never_executes": 122,
+    "round": 22,
+    "controls_total": 279,
+    "watched": 122,
+    "never_executes": 131,
     "modules": 29,
-    "when": "seeded from commit 0ad1bd2"
+    "when": "2026-09-02T19:23:55Z"
   },
   "controls_total": 279,
   "watched": 122,
@@ -440,49 +484,49 @@
     },
     {
       "file": "control_audit.py",
-      "line": 679,
+      "line": 703,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 688,
+      "line": 712,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 713,
+      "line": 737,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 905,
+      "line": 929,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 920,
+      "line": 944,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 923,
+      "line": 947,
       "kind": "reports a defect",
       "source": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 935,
+      "line": 959,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
