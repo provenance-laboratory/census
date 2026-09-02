@@ -73,6 +73,34 @@ def source_fingerprint():
     return _h.sha256(("|".join(parts)).encode("utf-8")).hexdigest()[:16]
 
 
+def inputs_fingerprint():
+    """Every input that can change a control's CLASSIFICATION -- code and data alike.
+
+    ⛔ `source_fingerprint()` HASHES *.py AND THE STALE INPUT WAS JSON. `reach_controls.py
+    --quick` is item 8 of this suite: once REACH-CONTROLS.json names a branch, deleting that
+    branch's control makes the suite red, so the control is WATCHED. The audit had been measured
+    BEFORE the reach record named them, and 17 sites were simultaneously classified NEVER EXECUTES
+    here and REACHED there. Both records honestly carried the same fingerprint, both matched the
+    tree, and the guard passed -- round 20's defect with DATA in the role code played.
+
+    ⇒ The two records are mutually dependent: the reach tool reads this audit to learn what never
+    executes, and this audit runs that tool as part of the suite it measures with. That is a
+    FIXPOINT, and running each once in order does not reach it.
+
+    ⚠ The fingerprint covers every .py and every .json except the record being written, so a
+    reach record produced after this audit makes this audit's fingerprint stale and the build
+    refuses. The loop is forced by the guard rather than remembered by a person.
+    """
+    import hashlib as _h
+    parts = []
+    for f in sorted(list(HERE.glob("*.py")) + list(HERE.glob("*.json"))):
+        if f.name == "CONTROL-AUDIT.json":
+            continue
+        parts.append(f.name)
+        parts.append(_h.sha256(f.read_bytes()).hexdigest())
+    return _h.sha256(("|".join(parts)).encode("utf-8")).hexdigest()[:16]
+
+
 def _targets():
     """Every module in this directory, PROJECTED -- not four names.
 
@@ -109,6 +137,44 @@ SUITE = (
 )
 
 
+# ⛔ FIVE ACCUMULATOR NAMES, HAND-KEPT. `findings.append` in recheck.py -- carrying "digest
+# moved" and "unretrievable" -- `failed.append` in pin_urls.py, `lost.append` in reach_controls.py
+# and `unread.append` in test_executors.py are all defect reports, and all were outside the list,
+# so the registry could not see them. That is the enumeration defect inside the tool that exists
+# to audit for it, in the branch beside the one already repaired for the same reason.
+#
+# ⚠ Still a list, and saying otherwise would be the overclaim: what is fixed is its coverage,
+# not its kind. A semantic test -- "an accumulator a control appends a complaint to" -- is the
+# right shape and is not what this is.
+_ACCUMULATORS = ("d", "bad", "trunc", "unadj", "drift", "findings", "failed", "lost", "unread",
+                 "problems", "defects", "missing", "errors", "complaints", "short", "dead",
+                 "stale", "wrong", "leftover")
+
+
+def _can_return_nonzero(value):
+    """Could this return expression produce a non-zero exit status?
+
+    ⛔ THE RULE STILL REQUIRED A LITERAL. `return 1` was counted and `return 1 if bad else 0` was
+    invisible -- the exact spelling a round-20 reviewer named, and it is live in six modules
+    including `test_executors.py`, which is one of the eight tools in the audit's own SUITE. That
+    module scored ZERO control sites while being part of the instrument doing the measuring: the
+    round-19 finding reproduced inside the suite itself.
+
+    ⚠ 'A refusal is a role, not a shape' was the right idea and the implementation still tested
+    shape twice -- once for the role, then again for the literal. A conditional whose branches can
+    yield non-zero counts; so does a call, conservatively, because a helper returning a status is
+    still a refusal.
+    """
+    if isinstance(value, ast.Constant):
+        return isinstance(value.value, int) and not isinstance(value.value, bool) \
+            and value.value != 0
+    if isinstance(value, ast.IfExp):
+        return _can_return_nonzero(value.body) or _can_return_nonzero(value.orelse)
+    if isinstance(value, ast.BoolOp):
+        return any(_can_return_nonzero(v) for v in value.values)
+    return False
+
+
 def _exit_status_returns(tree):
     """Returns whose value becomes the PROCESS EXIT STATUS, found semantically.
 
@@ -133,12 +199,30 @@ def _exit_status_returns(tree):
                 and n.exc.args and isinstance(n.exc.args[0], ast.Call) \
                 and isinstance(n.exc.args[0].func, ast.Name):
             entries.add(n.exc.args[0].func.id)
+    def _own_returns(fn):
+        """Returns belonging to THIS function, not to helpers defined inside it.
+
+        ⚠ `ast.walk` descends into nested `def`s, so a `return 1` in a helper was credited to
+        the entry function that happened to contain it -- a false positive with the same shape as
+        the false negative below.
+        """
+        found = []
+        for child in ast.iter_child_nodes(fn):
+            stack = [child]
+            while stack:
+                n = stack.pop()
+                if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda,
+                                  ast.ClassDef)):
+                    continue
+                if isinstance(n, ast.Return):
+                    found.append(n)
+                stack.extend(ast.iter_child_nodes(n))
+        return found
+
     out = set()
     for fn in ast.walk(tree):
-        if isinstance(fn, ast.FunctionDef) and fn.name in entries:
-            for n in ast.walk(fn):
-                if isinstance(n, ast.Return):
-                    out.add(n)
+        if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)) and fn.name in entries:
+            out.update(_own_returns(fn))
     return out
 
 
@@ -155,17 +239,14 @@ def controls(src, path):
         if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
             f = node.value.func
             if (isinstance(f, ast.Attribute) and f.attr == "append"
-                    and isinstance(f.value, ast.Name) and f.value.id in ("d", "bad", "trunc",
-                                                                        "unadj", "drift")):
+                    and isinstance(f.value, ast.Name) and f.value.id in _ACCUMULATORS):
                 out.append((node.lineno, node.end_lineno, "reports a defect"))
         elif isinstance(node, ast.Return) and isinstance(node.value, ast.Tuple):
             first = node.value.elts[0] if node.value.elts else None
             if isinstance(first, ast.Constant) and first.value is False:
                 out.append((node.lineno, node.end_lineno, "rejects in an executor"))
         elif (isinstance(node, ast.Return) and node in _status_returns
-              and isinstance(node.value, ast.Constant)
-              and not isinstance(node.value.value, bool)
-              and isinstance(node.value.value, int) and node.value.value != 0):
+              and _can_return_nonzero(node.value)):
             # ⛔ THE DETECTOR COULD NOT SEE THE CONTROL THAT CATCHES THE FABRICATED FIGURE.
             # `build_filter_bound.py` refuses a tampered record with `print(...); return 1` -- a
             # STATUS-CODE refusal -- and this recognised accumulator appends, `return False, ...`
@@ -421,10 +502,20 @@ def main():
     print("=" * 78)
     print()
 
-    base_ok, base_why = suite_passes(_root_for_baseline())
+    # ⛔ THE PRE-FLIGHT LIVES IN `_worker_tree` AND THIS COPY HAPPENS FIRST, so the copy that
+    # runs on a full disk was the unguarded one -- it dies halfway and leaves a truncated tree,
+    # the exact failure the pre-flight was added to prevent. Every early return below also skipped
+    # the cleanup, so a repeatedly red baseline recreates the disk exhaustion this round claims to
+    # have fixed.
+    try:
+        base_ok, base_why = suite_passes(_root_for_baseline())
+    except BaseException:
+        _cleanup_trees()
+        raise
     if not base_ok:
         print("  " + chr(0x26D4) + " the suite does not pass BEFORE any mutation (%s)." % base_why)
         print("  A mutation audit against a red suite measures nothing. Fix the suite first.")
+        _cleanup_trees()
         return 1
     print("  baseline: the suite passes, so a failure below is attributable to the mutation")
     print()
@@ -571,6 +662,7 @@ def main():
            "targets": {n: _h.sha256((HERE / n).read_bytes()).hexdigest() for n in targets},
            "suite": [list(a) for a, _ in SUITE],
            "source_fingerprint": source_fingerprint(),
+           "inputs_fingerprint": inputs_fingerprint(),
            # ⛔ THE PAPER COMPARES THIS ROUND'S WATCHED SHARE WITH LAST ROUND'S, and the first
            # version of that resolver TYPED the previous numbers. Reading them from git worked
            # until the audit was committed, after which HEAD held the CURRENT record and the
@@ -612,16 +704,24 @@ def main():
             return 1
         prev = json.loads(old_path.read_text(encoding="utf-8"))
         def _ident(r):
-            return {(s["file"], (s.get("source") or "").strip(), s["class"])
-                    for s in r.get("survivors", [])}
+            # ⛔ THIS DROPPED LINE, KIND AND MULTIPLICITY: 145 survivors collapsed to 125
+            # identities, five distinct `bad.append(name)` controls becoming one. A reviewer moved
+            # one survivor's recorded line onto another otherwise-identical survivor; the records
+            # differed and the verifier's identity sets matched -- a per-site substitution
+            # permitted by the control written to forbid exactly that.
+            from collections import Counter
+            return Counter((s["file"], int(s["line"]), s.get("kind"),
+                            (s.get("source") or "").strip(), s["class"])
+                           for s in r.get("survivors", []))
         drift = []
         for k in ("controls_total", "watched", "unwatched", "redundant", "never_executes"):
             if prev.get(k) != rec.get(k):
                 drift.append("%s: recorded %s, recomputed %s" % (k, prev.get(k), rec.get(k)))
         a, b = _ident(prev), _ident(rec)
         if a != b:
-            drift.append("%d survivor(s) recorded that this run does not produce, and %d the "
-                         "other way" % (len(a - b), len(b - a)))
+            drift.append("%d survivor record(s) recorded that this run does not "
+                         "produce, and %d the other way (multiset over file, line, kind, source "
+                         "and class)" % (sum((a - b).values()), sum((b - a).values())))
         if drift:
             print()
             print("  " + D + " THE DEPOSITED RECORD IS NOT WHAT THIS CODE PRODUCES:")
