@@ -33,6 +33,13 @@ import sys
 import axes as A
 
 NL = chr(10)
+# ⛔ `D` WAS READ BY subject_context() AND DEFINED NOWHERE IN THIS MODULE. The line is
+# `raise SystemExit(D + " a subject is named `_led`...")`, which the control audit also
+# lists as never executing -- so it would have raised NameError rather than reporting the
+# reserved-name collision it exists to report, and nothing had ever run it to find out.
+# Seventh instance of the class, and the first one a control caught instead of a crash.
+D = chr(0x26D4)
+W = chr(0x26A0)
 HERE = pathlib.Path(__file__).resolve().parent
 STORE = HERE / "evidence"
 

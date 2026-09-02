@@ -23,6 +23,17 @@ import tempfile
 NL = chr(10)
 D = chr(0x26D4)
 W = chr(0x26A0)   # undefined until round 14; the baseline warning raised NameError instead
+# ⛔ EVERY WORK TREE WAS A FULL COPY INCLUDING `.git`, AND GIT'S LOOSE OBJECTS ARE READ-ONLY
+# (mode 100444), which is why Windows refused to delete them and why 362 of these accumulated.
+# The silent `ignore_errors=True` hid it; making the removal report turned an invisible leak into
+# a visible one; this is the cure. `.git` is 11.4 MB of an 18.8 MB tree -- 61 per cent -- and no
+# mutation harness in this directory reads a single byte of it.
+#
+# ⚠ IT IS ALSO 61 PER CENT OF THE COPY COST, PAID ONCE PER MUTATION. The audit copies this tree
+# for each of its several hundred control sites, so the excluded bytes are the same bytes that
+# made the audit slow enough to be worth skipping -- which is the failure mode the paper is about.
+_SKIP = __import__("shutil").ignore_patterns(".git", "__pycache__", "*.pyc")
+
 HERE = pathlib.Path(__file__).resolve().parent
 # ⛔ THIS WAS THREE TOOLS WHILE THE PAPER SAID "the whole suite", AND THE GAP WAS THE ANSWER.
 # check_claims.py carries two predicates that READ the notes on every axis-16/17 zero, so 22 of
@@ -38,6 +49,19 @@ HERE = pathlib.Path(__file__).resolve().parent
 # them strong is exactly these two predicates, and the paper had not cited it.
 SUITE = ("mp_metric.py", "replay.py", "check_facts.py", "check_claims.py")
 SUITE_ACTIVE = list(SUITE)
+
+
+def _rm_reporting(work):
+    """Remove a work tree and say so if it survives. See test_bound_rules.py for the count."""
+    import time as _t
+    for _ in range(2):
+        try:
+            shutil.rmtree(work)
+        except OSError:
+            _t.sleep(0.2)
+        if not work.exists():
+            return
+    print("  ⚠ could not remove %s -- still on disk" % work)
 
 
 def _tool_path(here, name):
@@ -132,11 +156,11 @@ def main():
 
     work = pathlib.Path(tempfile.mkdtemp(prefix="unread-"))
     root = work / "provenance-laboratory" / "census"
-    shutil.copytree(HERE, root, dirs_exist_ok=True)
+    shutil.copytree(HERE, root, dirs_exist_ok=True, ignore=_SKIP)
     paper_src = work / "journal-submissions" / "mp-metric"
     _real_paper = HERE.parents[1] / "journal-submissions" / "mp-metric"
     if _real_paper.exists():
-        shutil.copytree(_real_paper, paper_src, dirs_exist_ok=True)
+        shutil.copytree(_real_paper, paper_src, dirs_exist_ok=True, ignore=_SKIP)
     # ⛔ THIS HAD NO BASELINE, AND IT COST THIRTY-FIVE MINUTES OF MEASURING NOTHING.
     # check_claims compares the MANUSCRIPT against the ledger, so it is red whenever the paper has
     # been edited and not yet rebuilt -- which is exactly when someone re-runs this tool. Every
@@ -186,7 +210,8 @@ def main():
         print("  CONTROL: blanking only the %d unread note(s) -> %s"
               % (n, "nothing noticed" if not still else (D + " %s NOTICED" % still)))
     finally:
-        shutil.rmtree(work, ignore_errors=True)
+        # ⛔ a removal that cannot fail out loud is a leak with a clean conscience
+        _rm_reporting(work)
 
     rec = {"_what": ("Which zero-cell notes can be blanked with the whole suite still green, "
                      "measured by blanking them and bisecting -- not by reading the predicates, "

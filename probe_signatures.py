@@ -36,6 +36,7 @@ import sys
 
 NL = chr(10)
 D = chr(0x26D4)
+W = chr(0x26A0)   # the FIFTH name used only on an error path; see stress_test.py
 HERE = pathlib.Path(__file__).resolve().parent
 STORE = HERE / "evidence"
 AS_OF = "2026-08-30"
@@ -48,6 +49,27 @@ SUBJECTS = {
     "qwen2.5-7b": "Qwen/Qwen2.5-7B",
     "bloom-176b": "bigscience/bloom",
 }
+
+
+def _rm_reporting(work):
+    """Remove a work tree and say so if it survives. See test_bound_rules.py for the count.
+
+    ⛔ THIS READ `shutil` FROM MODULE SCOPE AND THIS MODULE IMPORTS IT INSIDE
+    commit_object(), so the cleanup written THIS ROUND to fix a silent leak would itself have
+    raised NameError -- the eighth instance of the class, introduced by the repair for the
+    fifth. It was caught by the control added to stress_test.py an hour earlier, which is the
+    first time this defect was found by a check rather than by a crash.
+    """
+    import shutil
+    import time as _t
+    for _ in range(2):
+        try:
+            shutil.rmtree(work)
+        except OSError:
+            _t.sleep(0.2)
+        if not work.exists():
+            return
+    print("  ⚠ could not remove %s -- still on disk" % work)
 
 
 def commit_object(repo, rev):
@@ -75,7 +97,8 @@ def commit_object(repo, rev):
             raise SystemExit(D + " %s@%s produced no commit object" % (repo, rev[:12]))
         return out.stdout
     finally:
-        shutil.rmtree(work, ignore_errors=True)
+        # ⛔ a removal that cannot fail out loud is a leak with a clean conscience
+        _rm_reporting(work)
 
 
 def fingerprint(raw):

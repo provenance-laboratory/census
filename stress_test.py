@@ -25,7 +25,65 @@ import mp_metric as M
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 EV = [{"url": "https://example.org/a", "retrieved": "2026-08-01", "sha256": "a" * 64}]
+# ⚠ `HERE` AND `D` WERE READ BY THIS FILE AND DEFINED BY NONE OF IT. The control
+# written to report exactly that raised NameError before it could report anything --
+# the defect inside its own detector, found by running it rather than by reading it.
+HERE = pathlib.Path(__file__).resolve().parent
+D = chr(0x26D4)
+W = chr(0x26A0)
 passed, failed = 0, 0
+
+
+def undefined_module_reads():
+    """Names a function reads from module scope that module scope never defines.
+
+    ⛔ FIVE OF THESE HAVE NOW SHIPPED ACROSS THE TWO PROJECTS -- `W` in a cleanup reporting a
+    leak, `D` in a disk pre-flight, `D` in an audit's own count-fell warning, `W` in a counter
+    split, and `W` in the tree-removal written THIS ROUND to fix the leak that the other four
+    were found while chasing. Every one of them sits on an error path, so it raises NameError
+    instead of reporting the thing it exists to report, and only when something has already
+    gone wrong. The last one was found by running the tool, not by reading it.
+
+    ⚠ THE CONTROL FOR THIS CLASS ALREADY EXISTED -- in the reproduction project's
+    test_controls.py, written a day earlier, for the same defect. It was never ported here,
+    so this directory had the defect and no control while the sibling had the control. That is
+    the same sibling corollary as the leaked work trees: a fix is not finished until the other
+    call sites have been read, and a project is not covered because its sibling is.
+
+    `symtable` answers the question as a property of the code rather than as a list of the
+    symbols that have bitten so far.
+    """
+    import builtins as _b
+    import symtable as _st
+    out = []
+    for f in sorted(HERE.glob("*.py")):
+        try:
+            tab = _st.symtable(f.read_text(encoding="utf-8"), f.name, "exec")
+        except (SyntaxError, UnicodeDecodeError):
+            continue
+        # ⚠ MODULE DUNDERS ARE BOUND BY THE INTERPRETER, NOT BY A STATEMENT, so
+        # symtable does not report them assigned and the first run of this control named
+        # `__file__` in two modules as undefined. Both were false. They are excluded by what
+        # they ARE -- names the import machinery binds -- rather than by listing the two that
+        # happened to appear, because a list here would be the enumeration defect again.
+        known = ({s.get_name() for s in tab.get_symbols()
+                  if s.is_assigned() or s.is_imported()} | set(dir(_b))
+                 | {"__file__", "__name__", "__doc__", "__package__", "__spec__",
+                    "__loader__", "__builtins__", "__debug__"})
+        stack = list(tab.get_children())
+        while stack:
+            fn = stack.pop()
+            stack.extend(fn.get_children())
+            if fn.get_type() != "function":
+                continue
+            local = {s.get_name() for s in fn.get_symbols()
+                     if s.is_assigned() or s.is_parameter()}
+            for s in fn.get_symbols():
+                n = s.get_name()
+                if s.is_global() and not s.is_assigned() and n not in known and n not in local:
+                    out.append("%s:%s reads %r, which module scope never defines"
+                               % (f.name, fn.get_name(), n))
+    return out
 
 
 def full_census(subject="s1", score=0, cell_over=None, **over):
@@ -517,6 +575,19 @@ if _dead:
 else:
     passed += 1
     print("  ok    no module-level name is defined and left uncalled")
+
+print()
+_undef = undefined_module_reads()
+if _undef:
+    print("  " + D + " %d name(s) read from module scope that do not exist:" % len(_undef))
+    for _u in _undef[:8]:
+        print("      " + _u)
+    print("      Each raises NameError the first time its path runs -- and these paths run when")
+    print("      something has already gone wrong, which is when a report matters most.")
+    failed += 1
+else:
+    passed += 1
+    print("  ok    no function reads a module-scope name that does not exist")
 
 print()
 print("=" * 78)

@@ -31,6 +31,7 @@ overstatement the census keeps correcting elsewhere.
 """
 import ast
 import re
+import datetime
 import io
 import json
 import pathlib
@@ -41,6 +42,17 @@ import sys
 import time
 
 NL = chr(10)
+# ⛔ EVERY WORK TREE WAS A FULL COPY INCLUDING `.git`, AND GIT'S LOOSE OBJECTS ARE READ-ONLY
+# (mode 100444), which is why Windows refused to delete them and why 362 of these accumulated.
+# The silent `ignore_errors=True` hid it; making the removal report turned an invisible leak into
+# a visible one; this is the cure. `.git` is 11.4 MB of an 18.8 MB tree -- 61 per cent -- and no
+# mutation harness in this directory reads a single byte of it.
+#
+# ⚠ IT IS ALSO 61 PER CENT OF THE COPY COST, PAID ONCE PER MUTATION. The audit copies this tree
+# for each of its several hundred control sites, so the excluded bytes are the same bytes that
+# made the audit slow enough to be worth skipping -- which is the failure mode the paper is about.
+_SKIP = __import__("shutil").ignore_patterns(".git", "__pycache__", "*.pyc")
+
 HERE = pathlib.Path(__file__).resolve().parent
 # ⛔ D AND W WERE NEVER DEFINED AT MODULE LEVEL, and three error paths in main()
 # referenced them -- including the audit's own "the control count fell" warning and both
@@ -382,7 +394,7 @@ def _worker_tree():
                 "worker. Refusing to start rather than dying halfway through and leaving a "
                 "truncated tree behind." % (free // (1024 * 1024), _tree_mb()))
         w = pathlib.Path(_tf.mkdtemp(prefix="control-audit-"))
-        _sh.copytree(HERE, w / "census", dirs_exist_ok=True)
+        _sh.copytree(HERE, w / "census", dirs_exist_ok=True, ignore=_SKIP)
         _TREES.append(w)
     root = w / "census"
     _LOCAL.root = root
@@ -438,7 +450,7 @@ def _root_for_baseline():
     import tempfile as _tf
     if _WORK["root"] is None:
         w = pathlib.Path(_tf.mkdtemp(prefix="control-audit-"))
-        _sh.copytree(HERE, w / "census", dirs_exist_ok=True)
+        _sh.copytree(HERE, w / "census", dirs_exist_ok=True, ignore=_SKIP)
         _WORK["root"] = w / "census"
         # ⛔ THE BASELINE TREE WAS NEVER REGISTERED FOR CLEANUP, so the repair for a leak left
         # one tree per run behind -- a reviewer watched the retained count go 1, 2, 3 across
@@ -478,8 +490,56 @@ def suite_passes(_cwd=None):
     return True, None
 
 
-def _predecessor(old, total_now, watched_now):
-    """The last audit whose numbers DIFFER from this one, carried forward if they do not."""
+def _round():
+    """Which review round this tree is in, read from a marker the author bumps.
+
+    ⛔ `previous` MEANT "THE LAST RUN WHOSE NUMBERS MOVED" AND THE PAPER SAYS "THE ROUND
+    BEFORE". Those are the same sentence only when a round contains exactly one number-moving
+    run. Round 22 contained three -- the fixpoint chain, then a --quick repair -- so `previous`
+    walked forward to an intermediate state of the SAME round and section 8's comparison read
+    "rose by 0" against a figure it had itself produced an hour earlier. The predecessor logic
+    already carried forward on UNCHANGED numbers for this exact reason; it could not carry
+    forward across changed ones, and a round is where the change belongs.
+
+    ⚠ The round is a human unit and it is written down as one, in a file, bumped
+    deliberately. Deriving it would mean inventing a rule for when a round begins, and there
+    is no such rule in the code -- there is only a decision a person makes.
+    """
+    _f = HERE / "AUDIT-ROUND"
+    if not _f.exists():
+        raise SystemExit(D + " AUDIT-ROUND is missing, so this run cannot say which round it "
+                         "belongs to and `previous` would silently mean the last RUN again. "
+                         "Write the current round number into it.")
+    try:
+        return int(_f.read_text(encoding="utf-8").strip())
+    except ValueError:
+        raise SystemExit(D + " AUDIT-ROUND does not hold an integer.")
+
+
+def _history(old, rnd, total_now, watched_now, never_now, modules_now, when):
+    """Append-only, one entry per round, the last run of that round winning.
+
+    ⚠ It lives INSIDE CONTROL-AUDIT.json rather than in a file of its own, and that is not
+    tidiness. `inputs_fingerprint` covers every .py and every .json EXCEPT this record, so a
+    separate history file would be an input that this tool rewrites on every run -- the audit
+    would be stale the instant it finished, every time.
+    """
+    hist = list((old or {}).get("history") or [])
+    hist = [h for h in hist if h.get("round") != rnd]
+    hist.append({"round": rnd, "controls_total": total_now, "watched": watched_now,
+                 "never_executes": never_now, "modules": modules_now, "when": when})
+    return sorted(hist, key=lambda h: h.get("round", -1))
+
+
+def _predecessor(old, total_now, watched_now, rnd=None):
+    """The last audit from an EARLIER ROUND, so "the round before" is what it means."""
+    if rnd is not None:
+        _prior = [h for h in ((old or {}).get("history") or []) if h.get("round", 10 ** 9) < rnd]
+        if _prior:
+            return dict(_prior[-1])
+        # ⛔ FAILS CLOSED. Returning the last run instead would put the sentence back exactly
+        # where it was, and it would look like it was working.
+        return None
     if not isinstance(old, dict):
         return None
     if old.get("controls_total") == total_now and old.get("watched") == watched_now:
@@ -495,7 +555,21 @@ def _predecessor(old, total_now, watched_now):
 
 def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-    targets = TARGETS[:1] if "--quick" in sys.argv else TARGETS
+    # ⛔ `TARGETS[:1]` MEANT mp_metric.py WHEN TARGETS WAS A HAND-WRITTEN TUPLE STARTING WITH IT.
+    # Projecting TARGETS over the directory -- the repair that closed the enumeration defect two
+    # rounds ago -- re-sorted it, so --quick silently became "add_evidence.py only" while the
+    # docstring above still said mp_metric.py. A POSITION STOOD FOR A NAME, which is the same
+    # substitution as a line number standing for a control, introduced BY the fix for a different
+    # instance of the same class. Named now, and absent means refuse rather than fall back.
+    if "--quick" in sys.argv:
+        _want = "mp_metric.py"
+        targets = tuple(x for x in TARGETS if str(x) == _want)
+        if not targets:
+            raise SystemExit(D + " --quick audits %s and this tree has no such module. "
+                             "Falling back to some other file would report a number under a "
+                             "name that did not produce it." % _want)
+    else:
+        targets = TARGETS
 
     print("=" * 78)
     print("  CONTROL AUDIT: disable each control, ask whether anything notices")
@@ -657,6 +731,8 @@ def main():
         except Exception:                                                   # noqa: BLE001
             pass
 
+    _RND = _round()
+    _WHEN = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     rec = {"_what": ("Which of this project's own controls can be deleted with the whole suite "
                      "still green, and what kind of survivor each one is."),
            "targets": {n: _h.sha256((HERE / n).read_bytes()).hexdigest() for n in targets},
@@ -673,7 +749,11 @@ def main():
            # SHARE falling would have compared a figure with itself. When the counts are
            # unchanged the predecessor is carried FORWARD, so "previous" means the last time the
            # number actually moved rather than the last time this tool ran.
-           "previous": _predecessor(_old, watched + len(unwatched), watched),
+           "round": _RND,
+           "history": _history(_old, _RND, watched + len(unwatched), watched,
+                               len([u for u in unwatched if u[4] == "NEVER EXECUTES"]),
+                               len(TARGETS), _WHEN),
+           "previous": _predecessor(_old, watched + len(unwatched), watched, _RND),
            "controls_total": watched + len(unwatched),
            "watched": watched,
            "unwatched": len(unwatched),

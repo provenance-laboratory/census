@@ -15,6 +15,18 @@ import tempfile
 
 NL = chr(10)
 D = chr(0x26D4)
+W = chr(0x26A0)   # the FIFTH name used only on an error path; see stress_test.py
+# ⛔ EVERY WORK TREE WAS A FULL COPY INCLUDING `.git`, AND GIT'S LOOSE OBJECTS ARE READ-ONLY
+# (mode 100444), which is why Windows refused to delete them and why 362 of these accumulated.
+# The silent `ignore_errors=True` hid it; making the removal report turned an invisible leak into
+# a visible one; this is the cure. `.git` is 11.4 MB of an 18.8 MB tree -- 61 per cent -- and no
+# mutation harness in this directory reads a single byte of it.
+#
+# ⚠ IT IS ALSO 61 PER CENT OF THE COPY COST, PAID ONCE PER MUTATION. The audit copies this tree
+# for each of its several hundred control sites, so the excluded bytes are the same bytes that
+# made the audit slow enough to be worth skipping -- which is the failure mode the paper is about.
+_SKIP = __import__("shutil").ignore_patterns(".git", "__pycache__", "*.pyc")
+
 HERE = pathlib.Path(__file__).resolve().parent
 
 
@@ -111,10 +123,47 @@ def main():
     print("=" * 78)
     print()
     base = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
-    caught = missed = 0
+    # ⛔ THIS TREE WAS REMOVED ON THE HAPPY PATH ONLY, AND THE REMOVAL COULD NOT FAIL OUT LOUD.
+    # No try/finally, so any raise between here and the rmtree leaked a full copy of the census;
+    # and `ignore_errors=True` reported success for doing nothing when Windows held a file open.
+    # This tool is an item in control_audit.py's SUITE, so it runs once per mutation -- 277 times
+    # in one audit -- and 94 leaked copies were on this disk when it was found. The disk
+    # exhaustion I attributed to the audit's own trees, and "fixed" there twice, was mostly here.
+    #
+    # ⚠ THE FIX FOR THE AUDIT'S LEAK WAS WRITTEN A ROUND AGO AND NEVER GREPPED FOR THE OTHER
+    # CALL SITES. There are five mkdtemp call sites in this directory; one was repaired and the
+    # rest were not looked at. That is the sibling corollary to the enumeration defect: a fix is
+    # not finished until the other call sites have been read.
     work = pathlib.Path(tempfile.mkdtemp(prefix="bound-controls-"))
-    root = work / "census"
-    shutil.copytree(HERE, root, dirs_exist_ok=True)
+    try:
+        root = work / "census"
+        shutil.copytree(HERE, root, dirs_exist_ok=True, ignore=_SKIP)
+        return _run_mutations(root, base)
+    finally:
+        _remove_tree(work)
+
+
+def _remove_tree(work):
+    """Remove it, retry once, and SAY SO if it is still there.
+
+    ⛔ `ignore_errors=True` is a success report for doing nothing. It is what let 94 of these
+    accumulate silently, and it is the same shape as every other defect in this project: a
+    control whose failure path reports nothing is not a control.
+    """
+    import time as _time
+    for _attempt in range(2):
+        try:
+            shutil.rmtree(work)
+        except OSError:
+            _time.sleep(0.2)
+        if not work.exists():
+            return
+    print("  " + W + " could not remove %s -- it is still on disk. Left leaking silently, this "
+          "is what filled the disk mid-audit three times." % work)
+
+
+def _run_mutations(root, base):
+    caught = missed = 0
     for name, mutate, tool, expect in MUTATIONS:
         led = json.loads(json.dumps(base))
         try:
@@ -134,7 +183,6 @@ def main():
             print("  " + D + " MISSED %-44s (%s, rc=%d)" % (name, tool, rc))
             print("      expected to see: %r" % expect)
             missed += 1
-    shutil.rmtree(work, ignore_errors=True)
     print()
     print("  %d caught, %d MISSED" % (caught, missed))
     print("=" * 78)
