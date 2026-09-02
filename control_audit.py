@@ -105,12 +105,54 @@ def inputs_fingerprint():
     """
     import hashlib as _h
     parts = []
-    for f in sorted(list(HERE.glob("*.py")) + list(HERE.glob("*.json"))):
-        if f.name == "CONTROL-AUDIT.json":
-            continue
+    for f in audit_inputs():
         parts.append(f.name)
         parts.append(_h.sha256(f.read_bytes()).hexdigest())
     return _h.sha256(("|".join(parts)).encode("utf-8")).hexdigest()[:16]
+
+
+# ⛔ THE FINGERPRINT PROJECTED OVER TWO FILE EXTENSIONS AND BOTH REVIEWERS BROKE IT, from
+# opposite directions in the same round.
+#
+#   -- It SWEPT IN a file that is not an input. `COMMIT.json` is written by build_deposit.py
+#      AFTER the audit record is copied, so a correctly produced deposit could never satisfy
+#      this gate: the archive failed at its own first documented command, and both reviewers
+#      hit it in a pristine extraction.
+#   -- It MISSED a file that is an input. `AUDIT-ROUND` has no extension, so neither this
+#      fingerprint nor the deposit's completeness check could see it; the deposit shipped
+#      without it and `control_audit.py --verify` refuses in a clean extraction.
+#
+# ⚠ THE RULE IS NOW "EVERY FILE IN THE WINDOW IS AN INPUT UNLESS IT IS A DECLARED OUTPUT",
+# which fails closed: a new file of any name or extension moves the fingerprint and forces a
+# re-run, rather than being silently ignored because nobody added its suffix to a list. That
+# is the projection this directory has now had to learn thirteen times, and it is the FIRST
+# time the default has been "include" rather than "match one of these shapes".
+#
+# The two declared exclusions are named with the reason each is not an input:
+_AUDIT_OWN_RECORD = ("CONTROL-AUDIT.json",)   # what this run writes; hashing it is circular
+_WRITTEN_AFTER_THE_AUDIT = ("COMMIT.json",)   # build_deposit.py stamps this into the copy
+_NEVER_CONTENT = ("__pycache__", ".git", ".pytest_cache")
+
+
+def audit_inputs():
+    """Every file whose bytes can change a control's classification. One declaration.
+
+    ⚠ `build_deposit.py` calls this too, so the set the fingerprint covers and the set the
+    archive must contain cannot drift apart. They drifted this round and the archive did not
+    build.
+    """
+    out = []
+    for f in sorted(HERE.iterdir()):
+        if not f.is_file():
+            continue
+        if f.name in _AUDIT_OWN_RECORD or f.name in _WRITTEN_AFTER_THE_AUDIT:
+            continue
+        if any(part in f.parts for part in _NEVER_CONTENT):
+            continue
+        if f.suffix in (".pyc", ".pyo"):
+            continue
+        out.append(f)
+    return out
 
 
 def _targets():
