@@ -10,7 +10,7 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "e173b94f0076a909d47a1a3c127e257ad8f0ec8bd73a086a3c5ecf566b69512b",
+    "control_audit.py": "341247ae65754de4bc09bb408dbaa4f8652857b91421c727ce8d90bb36cfc68f",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -59,8 +59,8 @@
       "--quick"
     ]
   ],
-  "source_fingerprint": "f21706bbb0e9caa8",
-  "inputs_fingerprint": "ed156735d7a4b654",
+  "source_fingerprint": "a7cb67aa01798bfb",
+  "inputs_fingerprint": "e55c9b68fa36f8ed",
   "round": 22,
   "history": [
     {
@@ -85,7 +85,7 @@
       "watched": 123,
       "never_executes": 130,
       "modules": 29,
-      "when": "2026-09-02T11:51:42Z"
+      "when": "2026-09-02T15:25:31Z"
     }
   ],
   "previous": {
@@ -335,84 +335,84 @@
     },
     {
       "file": "control_audit.py",
-      "line": 392,
+      "line": 434,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 475,
+      "line": 517,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 483,
+      "line": 525,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 489,
+      "line": 531,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 510,
+      "line": 552,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND is missing, so this run cannot say which round it \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 516,
+      "line": 558,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND does not hold an integer.\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 568,
+      "line": 610,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 593,
+      "line": 635,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 784,
+      "line": 826,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 799,
+      "line": 841,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 802,
+      "line": 844,
       "kind": "reports a defect",
       "source": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 814,
+      "line": 856,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
