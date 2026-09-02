@@ -130,8 +130,58 @@ def inputs_fingerprint():
 #
 # The two declared exclusions are named with the reason each is not an input:
 _AUDIT_OWN_RECORD = ("CONTROL-AUDIT.json",)   # what this run writes; hashing it is circular
-_WRITTEN_AFTER_THE_AUDIT = ("COMMIT.json",)   # build_deposit.py stamps this into the copy
+# ⛔ THIS NAMED ONE FILE AND THE DEPOSIT GENERATES THREE. `history.bundle` and
+# `VERIFY-PREREGISTRATION.md` are created by build_deposit.py and exist only inside an
+# extraction, so a clean extraction contained two inputs the audit had never seen and the
+# manifest check refused a correct archive. Listing them here would be the enumeration defect
+# for the fourteenth time -- a hand-kept list of somebody else's outputs, in the file that
+# cannot see them being created.
+#
+# ⇒ THE GENERATOR DECLARES ITS OWN OUTPUTS. build_deposit.py writes the names it generated
+# into DEPOSIT-GENERATED.json beside them, and this reads that when it is present. In the
+# author's tree the file does not exist and the tuple below is the whole answer; inside an
+# extraction it is the generator's own statement of what it made. Nobody maintains a list of
+# another tool's outputs by hand.
+_WRITTEN_AFTER_THE_AUDIT = ("COMMIT.json", "DEPOSIT-GENERATED.json")
+
+
+def _deposit_generated():
+    """Names build_deposit.py declares it created, or () in a tree that has no deposit."""
+    _f = HERE / "DEPOSIT-GENERATED.json"
+    if not _f.exists():
+        return ()
+    try:
+        return tuple(json.loads(_f.read_text(encoding="utf-8")).get("generated") or ())
+    except (OSError, ValueError):
+        # ⚠ Fails CLOSED: an unreadable declaration excludes nothing, so an unexplained file
+        # still refuses rather than being quietly dropped from the measurement.
+        return ()
 _NEVER_CONTENT = ("__pycache__", ".git", ".pytest_cache")
+
+
+def inputs_manifest():
+    """Every audit input, name to digest. Not one hash over all of them.
+
+    ⛔ A SINGLE FINGERPRINT OVER A DIRECTORY SCAN CANNOT SURVIVE DISTRIBUTION, and a reviewer
+    predicted this before it was observed: the deposit is deliberately a SUBSET of the working
+    tree -- no `.log` transcripts, no `.git` -- so the scan produces a different value there
+    even when nothing is stale and every shipped byte is identical. The archive failed at its
+    own first documented command for that reason, and would have kept failing however carefully
+    it was rebuilt.
+
+    ⛔ THE DEEPER FAULT IS THAT ONE OPAQUE NUMBER ANSWERS TWO DIFFERENT QUESTIONS. "Did a file
+    the audit read change?" and "is this the same collection of files?" are not the same
+    question, and a single hash collapses them into one verdict that cannot say which failed.
+    Round 22 widened that hash to fix a stale-record defect; widening it made the distribution
+    case worse, because the wider the scan the more a subset differs.
+
+    ⇒ A manifest answers both separately. A file present in both and DIFFERING is staleness and
+    the build must refuse. A file present here and absent there is a subset, which is what a
+    replication package is. A file present there and absent from the record is something the
+    audit never saw, which must also refuse.
+    """
+    import hashlib as _h
+    return {f.name: _h.sha256(f.read_bytes()).hexdigest() for f in audit_inputs()}
 
 
 def audit_inputs():
@@ -146,6 +196,8 @@ def audit_inputs():
         if not f.is_file():
             continue
         if f.name in _AUDIT_OWN_RECORD or f.name in _WRITTEN_AFTER_THE_AUDIT:
+            continue
+        if f.name in _deposit_generated():
             continue
         if any(part in f.parts for part in _NEVER_CONTENT):
             continue
@@ -807,6 +859,7 @@ def main():
            "suite": [list(a) for a, _ in SUITE],
            "source_fingerprint": source_fingerprint(),
            "inputs_fingerprint": inputs_fingerprint(),
+           "inputs_manifest": inputs_manifest(),
            # ⛔ THE PAPER COMPARES THIS ROUND'S WATCHED SHARE WITH LAST ROUND'S, and the first
            # version of that resolver TYPED the previous numbers. Reading them from git worked
            # until the audit was committed, after which HEAD held the CURRENT record and the

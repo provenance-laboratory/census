@@ -10,7 +10,7 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "cc37874ac2ed3c981a33e9a0d77824dc2ab4889bd5e01953112c2baeb67f1b16",
+    "control_audit.py": "3c4caedeaecb41e679a849ba65789b653dcb8c60c5b3f1319e97215f299a90ff",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -59,8 +59,71 @@
       "--quick"
     ]
   ],
-  "source_fingerprint": "63b6a2ff1f4bbbaa",
-  "inputs_fingerprint": "6f8136fb311759fc",
+  "source_fingerprint": "66d3ff4ef1faa5ce",
+  "inputs_fingerprint": "f4c132247710a84d",
+  "inputs_manifest": {
+    ".gitattributes": "852c5fc63199b92d7be8f8853c209345cad1f28c47322d5ab4d060cd360b84bc",
+    ".gitignore": "9ca23c7994db63d7101e2b5702582793dff232b1101da3b704d68874a213786c",
+    "add_evidence.py": "1a46d8a5b554eb48e1a9b98a3da76aecd3d6850c98629770d7ac12b952b224b2",
+    "apply_negative_search.py": "4fd6fa006faa2fdbac9f75dc3cf4da85035754749a33aae6edf7ed9c9712a7b6",
+    "archive_evidence.py": "652ac092c7165e38380c3a37ba2d71da0e7dc57eaa064ae231d4b5395ab9b231",
+    "archive_filter_probe.py": "584c8a423c24589298deb30c494584b650134341640aefe60296611e7b0d49d3",
+    "archive_negative_search.py": "27829d661ca183638000675fe183382b2f23f75888d8359e9258e9caf9ead30b",
+    "AUDIT-ROUND": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "axes.py": "5dc7b460b63627c33736828064cf2e461136d42789f73d09fa046dddf2563ece",
+    "axis14-signature-probe.json": "d2eaf13fb521666a9dbb9f538a14ecddd7b4aaff275cbba37045b918f6128652",
+    "axis6-source-probe.json": "26223e35f7250ffb6b301ebe821a0d7be9143af51d15a9199cfd436a6306972a",
+    "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
+    "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
+    "cells.json": "cb5ab24099c6816e6f57ad6af40e1db4fd4be888686031a49f62a661f4a3c02d",
+    "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
+    "CONTROL-AUDIT-without-reach.json": "f11625e709c915418cad625566aac1bf10fa7078ea77277eabf58977e3464440",
+    "control_audit.py": "3c4caedeaecb41e679a849ba65789b653dcb8c60c5b3f1319e97215f299a90ff",
+    "CTRL.log": "b3f69d68c88be621de3ab5d7564ee9e23d9c4b8b0a6a786b607555524df86c16",
+    "facts.json": "ad1b2dc1368150ca0ff9e3a3211d34e4784632cde6c94a1c8cb382f71d1de62e",
+    "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
+    "filter-bound.json": "b328c7b9c15aa1d4f4415666341af91cdc766bab6cb7bde41c6543d6b55c8ab8",
+    "filter-cats-archive.json": "e8cf686fe5b8be2ecc20724413d3407004298e8c9d2fca164fe907ea837b90b7",
+    "filter-cats.json": "3b738588e253b102e7efad7b8a2bfb5f1ab78544aaf1750eb800526f6179f483",
+    "filter-diff.json": "768760ca98723370e73019a540fc85a44f301eb2c36ca5729371a500686e0984",
+    "filter-probe-archive.json": "0c522dc9c0645756afa80ebf3769b71122ac9edea8fd76ca78035026d0519782",
+    "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
+    "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
+    "hf_probe.py": "5dd4c7a472d2b0040319e5bd443631f38782e07faa919cc36dd8fd816686a34b",
+    "LICENSE": "17a23ea7af2894bb5b0f54fcaa9306d3d2e5b2c125332560fc94afa7eaa63b3f",
+    "mp_metric.py": "c0fea2a1bce225be1a7ec518922b060492659c94251ab76e9eff461e9f24fed5",
+    "negative-search-archive.json": "ccf1519043cb5b0b59651e8cf61f33c84524ce265e5f1a6ba24000b42269d288",
+    "negative-search.json": "4a85477a4211f0c0134df8e01167e596a9e965214103297cfaae4f1ccfb559cf",
+    "negative_search.py": "3c58738efe74288f684b98213f770978a8f7835cb80a5ca145de2e173005fea1",
+    "NOT-A-RANKING.md": "f2b416a8394a9d70471ff30a2217e7a929603e01e3b511a5b9008108fc43d48a",
+    "ns.log": "d3e91b84f3cdf19acf3640ce5b0ae738c8d7ea1cd6dd2c019bf43abe52460b57",
+    "pin_urls.py": "1626659f01bbe7001bf7ecc4812f6639a12411e5cf09aca300ebc66f3ff63036",
+    "probe_signatures.py": "47f078f3357c32b1ec47186172503cec804764cfacaa534a7f50a198bbb151a7",
+    "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
+    "RC.log": "52a2618baa5559e3478ffbb2fb8ab40befecf88ff42d4444a5f3e2a1ea4a6e35",
+    "REACH-CONTROLS.json": "71c1b8d2b0e12cbdaf8fefb37189900817c99acf875d1ff3642bba9c2aba0b11",
+    "reach_controls.py": "0084d740f567800c36a5c369a2dd38035d0adf3af08d6de3324967ab9ffebdaa",
+    "README.md": "6ec93f7b3b26cd04205766fafe38547792ec58c8e583d9988e0fc52721ede74e",
+    "recheck-log.json": "3857f763263bea214e71f12379ce1347272ed43bdff178e04e0aea10dfa26c7b",
+    "recheck.py": "61125cdc7f85c5d0fafa96ab00e843716a32b8db17ed7bf298dd7740f8fdd75b",
+    "referee.py": "99a7f0c208fbee450a904b12847479832c26af6d30fbb854d2601bffb5abf5f2",
+    "replay.py": "f906967296ab70472c67216e035ac43ea848a2e82538b95eb98b8ec12535c2f2",
+    "SCORING.md": "aa17c964b3568c86534b3c2e278287c9758b87ac5dc9701873839a142108c206",
+    "SELECTION-RULE-AMENDMENT-1.md": "8783010cfabe53497f626774d628a508789e0414cb33c6b2cbc738fd8085210c",
+    "SELECTION-RULE-AMENDMENT-1.md.ots": "c23385be1195ce4028893f80cb31c5c26ef0fdf6e8d8f1a6f894d31e81dd735a",
+    "SELECTION-RULE.md": "553cea7951c9dc8aa43f1809174d55f4b9b423e9bc77708f1373922f8f76aa37",
+    "SELECTION-RULE.md.ots": "ce442c9039c33d6dcbc919d1876b13ede3e4509feae29154af701c51532c507f",
+    "stem-equivalence.json": "456003a5dbac79c84d286be18f5473d031f7705d943d49fff47bbd5bc34698e6",
+    "stem_equivalence.py": "81397532510bc70facc7bbd863bb896653842c49aed5cdaaeac4d2c0c1a8d780",
+    "stress_test.py": "fcb10fd7ba63670214536c74b52b70b8879597407d35daabd46b24bc8f8ca147",
+    "SWEEP.log": "80aadd5a73d8b35ced93ad8644a37d71f602615f7d6ec1eed66d8392c217998e",
+    "sweep.py": "f02192207e2bcef589536892dba3e9dae4763c5bbda8f6665853adbcf4cf1fe6",
+    "sweep_control.json": "0f40552eaf816b198560df2850d1ccf117bb7b00a29be8acd409bd466e4e60ce",
+    "test_bound_rules.py": "2fdd3c24169fec139bdad5350f586d578b683749979555bde544b587ee7e8847",
+    "test_executors.py": "d0ebdbc8639e2fcc538eaa49172ad03ecb3005606c09d00f87220a44807896cc",
+    "UNREAD-NOTES.json": "f2322717a326db3223cfdeecc62fad48377e8997c62dd5dc9269c0d6416edc66",
+    "unread_notes.py": "ed8cbc923cb8352fcd2ceec54266e75f51223fb593513c710f3bbd85f336ad9e"
+  },
   "round": 22,
   "history": [
     {
@@ -85,7 +148,7 @@
       "watched": 122,
       "never_executes": 131,
       "modules": 29,
-      "when": "2026-09-02T17:28:12Z"
+      "when": "2026-09-02T19:23:55Z"
     }
   ],
   "previous": {
@@ -335,91 +398,91 @@
     },
     {
       "file": "control_audit.py",
-      "line": 434,
+      "line": 486,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 517,
+      "line": 569,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 525,
+      "line": 577,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 531,
+      "line": 583,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 552,
+      "line": 604,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND is missing, so this run cannot say which round it \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 558,
+      "line": 610,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND does not hold an integer.\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 627,
+      "line": 679,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 636,
+      "line": 688,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 661,
+      "line": 713,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 852,
+      "line": 905,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 867,
+      "line": 920,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 870,
+      "line": 923,
       "kind": "reports a defect",
       "source": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 882,
+      "line": 935,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
