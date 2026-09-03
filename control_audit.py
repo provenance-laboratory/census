@@ -143,7 +143,21 @@ def inputs_fingerprint():
 # time the default has been "include" rather than "match one of these shapes".
 #
 # The two declared exclusions are named with the reason each is not an input:
-_AUDIT_OWN_RECORD = ("CONTROL-AUDIT.json",)   # what this run writes; hashing it is circular
+# ⛔ THIS NAMED ONE RECORD AND THE AUDIT WRITES A FAMILY OF THEM. `--without reach` writes
+# CONTROL-AUDIT-without-reach.json, which was NOT excluded -- so the counterfactual record was an
+# input to the audit's own manifest AND the thing the counterfactual run overwrites. The two
+# records could therefore never agree on `inputs_fingerprint` (measured: 4779a2e8 against
+# 82c5ce79, 61 entries each, no set difference, one differing digest -- that file), and neither
+# run was self-consistent. A reviewer diffed the manifests to find it.
+#
+# ⇒ Excluding the sibling by NAME would be the enumeration defect again, and the next flag would
+# reintroduce it. The audit excludes the record FAMILY it writes: anything this tool can emit as
+# its own record, matched by the shape of the name it constructs, not by a list of the names it
+# has constructed so far.
+def _is_own_record(name):
+    """Is this a record THIS tool writes? Hashing one of those into its own inputs is circular."""
+    return name == "CONTROL-AUDIT.json" or (name.startswith("CONTROL-AUDIT-")
+                                            and name.endswith(".json"))
 # ⛔ THIS NAMED ONE FILE AND THE DEPOSIT GENERATES THREE. `history.bundle` and
 # `VERIFY-PREREGISTRATION.md` are created by build_deposit.py and exist only inside an
 # extraction, so a clean extraction contained two inputs the audit had never seen and the
@@ -160,16 +174,36 @@ _WRITTEN_AFTER_THE_AUDIT = ("COMMIT.json", "DEPOSIT-GENERATED.json")
 
 
 def _deposit_generated():
-    """Names build_deposit.py declares it created, or () in a tree that has no deposit."""
+    """Names build_deposit.py declares it created, or () in a tree that has no deposit.
+
+    ⛔ "FAILS CLOSED" WAS TRUE OF UNREADABILITY AND FALSE OF CONTENT. The declaration was trusted
+    to name ANY file, and the file excludes itself from the manifest, so the claim carried no
+    digest: a reviewer added `replay.py`, `mp_metric.py` and `reach_controls.py` to the generated
+    array and the manifest fell from 61 entries to 58 with nothing refusing. Three of the audit's
+    own inputs left the measurement on the word of an unhashed file.
+
+    ⇒ A GENERATOR MAY ONLY DECLARE WHAT A GENERATOR COULD HAVE MADE. `build_deposit.py` does not
+    author the census; a module this audit TARGETS is an input by definition and can never be a
+    build product, so a declaration naming one is a refusal rather than an exclusion. That bound
+    is derived from the projection over the tree, not from a second hand-kept list.
+    """
     _f = HERE / "DEPOSIT-GENERATED.json"
     if not _f.exists():
         return ()
     try:
-        return tuple(json.loads(_f.read_text(encoding="utf-8")).get("generated") or ())
+        _names = tuple(json.loads(_f.read_text(encoding="utf-8")).get("generated") or ())
     except (OSError, ValueError):
         # ⚠ Fails CLOSED: an unreadable declaration excludes nothing, so an unexplained file
         # still refuses rather than being quietly dropped from the measurement.
         return ()
+    _forbidden = sorted(set(_names) & set(TARGETS))
+    if _forbidden:
+        raise SystemExit(
+            D + " DEPOSIT-GENERATED.json declares %d audited module(s) as build products: %s. A "
+            "module this audit measures is an input, not something a generator made, and "
+            "accepting the claim would drop it from the inputs manifest on the word of a file "
+            "that is itself excluded from that manifest." % (len(_forbidden), _forbidden))
+    return _names
 _NEVER_CONTENT = ("__pycache__", ".git", ".pytest_cache")
 
 
@@ -195,7 +229,12 @@ def inputs_manifest():
     audit never saw, which must also refuse.
     """
     import hashlib as _h
-    return {f.name: _h.sha256(f.read_bytes()).hexdigest() for f in audit_inputs()}
+    # ⚠ KEYED BY RELATIVE PATH, NOT BASENAME. While the manifest covered the top level only,
+    # `f.name` was unambiguous; recursing into `evidence/` makes it a collision waiting to
+    # happen -- two files called `MANIFEST.json` in different directories would share one entry
+    # and the second would silently overwrite the first's digest. A name is not an identity.
+    return {f.relative_to(HERE).as_posix(): _h.sha256(f.read_bytes()).hexdigest()
+            for f in audit_inputs()}
 
 
 def audit_inputs():
@@ -205,15 +244,26 @@ def audit_inputs():
     archive must contain cannot drift apart. They drifted this round and the archive did not
     build.
     """
+    # ⛔ THIS ITERATED THE TOP LEVEL ONLY, so `evidence/` -- 399 files, 2.9 MB -- had ZERO manifest
+    # coverage. `reach_controls.py` exists to mutate the evidence store, and it therefore produced
+    # a record fingerprinted over a set that excluded the thing it mutates. The manifest's whole
+    # claim is "every file whose bytes can change a control's classification", and the archived
+    # bytes an executor replays are exactly that.
+    #
+    # ⚠ Recursion is over the TREE, with the same exclusions applied by path COMPONENT rather than
+    # by name, so a nested `__pycache__` is skipped and a directory merely containing that string
+    # is not. Names in the manifest are relative POSIX paths, so they mean the same thing in the
+    # working tree and inside an extraction.
     out = []
-    for f in sorted(HERE.iterdir()):
+    for f in sorted(HERE.rglob("*")):
         if not f.is_file():
             continue
-        if f.name in _AUDIT_OWN_RECORD or f.name in _WRITTEN_AFTER_THE_AUDIT:
+        rel = f.relative_to(HERE)
+        if any(part in _NEVER_CONTENT for part in rel.parts):
             continue
-        if f.name in _deposit_generated():
+        if _is_own_record(f.name) or f.name in _WRITTEN_AFTER_THE_AUDIT:
             continue
-        if any(part in f.parts for part in _NEVER_CONTENT):
+        if rel.as_posix() in _deposit_generated() or f.name in _deposit_generated():
             continue
         if f.suffix in (".pyc", ".pyo"):
             continue
@@ -269,6 +319,72 @@ SUITE = (
 _ACCUMULATORS = ("d", "bad", "trunc", "unadj", "drift", "findings", "failed", "lost", "unread",
                  "problems", "defects", "missing", "errors", "complaints", "short", "dead",
                  "stale", "wrong", "leftover")
+
+
+def _derived_accumulators(tree, status_returns):
+    """Names that ARE defect accumulators here, by role rather than by spelling.
+
+    ⛔ `_ACCUMULATORS` IS A HAND-KEPT LIST OF NAMES, inside the file whose header warns that a
+    hand-kept list reproduces the defect it audits. Round 16 replaced a hand-kept list of FILES
+    with a projection and left the list of NAMES alone, so the detector still recognised only
+    `<registered name>.append(...)`. Four modules report defects with `failed += 1` instead, and
+    the audit therefore scored `stress_test.py` at ONE control site while it ran 47 attacks on the
+    validator, `sweep.py` at ZERO across 8,044 transplants, `referee.py` at one and
+    `test_bound_rules.py` at one. That is ~19 further sites, a 6.8% move in the denominator that
+    section 8 divides by.
+
+    ⇒ An accumulator is recognised by what it DOES: it starts empty or at zero, and it is read by
+    the thing that decides this module's exit status. That is a projection over the class; the
+    registry is kept only as a union, and `unregistered()` below reports which names the
+    projection found that the list never had, so the enumeration stays visible instead of
+    silently shrinking the denominator.
+    """
+    def _is_empty(v):
+        if isinstance(v, ast.Constant):
+            return v.value == 0 and not isinstance(v.value, bool)
+        if isinstance(v, (ast.List, ast.Set, ast.Tuple)):
+            return not v.elts
+        if isinstance(v, ast.Call) and isinstance(v.func, ast.Name):
+            return v.func.id in ("list", "set", "dict", "Counter") and not v.args
+        return False
+
+    init = set()
+    for n in ast.walk(tree):
+        if not isinstance(n, (ast.Assign, ast.AnnAssign)):
+            continue
+        _tg = list(getattr(n, "targets", []) or [])
+        if getattr(n, "target", None) is not None:
+            _tg.append(n.target)
+        # ⚠ `caught = missed = 0` AND `passed, failed = 0, 0` are the two idioms this codebase
+        # actually uses, and the first version of this projection recognised NEITHER -- it looked
+        # only at a single Name target with a scalar value, so `test_bound_rules.py` kept its 1
+        # site while `missed += 1` sat two lines above `return 1 if missed else 0`. Found by
+        # printing what the projection derived instead of trusting that it had derived anything.
+        for t in _tg:
+            if isinstance(t, ast.Name) and _is_empty(n.value):
+                init.add(t.id)
+            elif isinstance(t, (ast.Tuple, ast.List)) and isinstance(n.value, (ast.Tuple,
+                                                                              ast.List)):
+                for _t, _v in zip(t.elts, n.value.elts):
+                    if isinstance(_t, ast.Name) and _is_empty(_v):
+                        init.add(_t.id)
+
+    # Names read by whatever decides the exit status: any return that can be non-zero, or
+    # SystemExit. Restricting this to `status_returns` missed `return 1 if missed else 0`.
+    decides = set()
+    _deciders = list(status_returns)
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Raise) and isinstance(n.exc, ast.Call) \
+                and isinstance(n.exc.func, ast.Name) and n.exc.func.id == "SystemExit":
+            _deciders.append(n)
+        elif isinstance(n, ast.Return) and n.value is not None \
+                and _can_return_nonzero(n.value):
+            _deciders.append(n)
+    for n in _deciders:
+        for x in ast.walk(n):
+            if isinstance(x, ast.Name) and isinstance(x.ctx, ast.Load):
+                decides.add(x.id)
+    return init & decides
 
 
 def _can_return_nonzero(value):
@@ -346,7 +462,16 @@ def _exit_status_returns(tree):
     return out
 
 
-def controls(src, path):
+def controls(src, path, legacy=False):
+    """Control sites in one module. `legacy=True` applies the PREVIOUS recognition rule.
+
+    ⚠ ONE IMPLEMENTATION, TWO IDIOM SETS. The manuscript reports how much the denominator moved
+    when the detector learned to see counting, and a second implementation of the old rule -- kept
+    beside this one to produce the "before" number -- is exactly how two values for one quantity
+    get published, which this project did once this round already. So the old rule is this rule
+    with the new idioms switched off, and the before/after pair is measured every run rather than
+    remembered from the round it changed.
+    """
     """Every statement in `src` that REPORTS a defect, with its line number.
 
     Found structurally: a call to `.append(` on a name whose identifier is a defect accumulator,
@@ -354,12 +479,27 @@ def controls(src, path):
     """
     tree = ast.parse(src)
     _status_returns = _exit_status_returns(tree)
+    _acc = (set(_ACCUMULATORS) if legacy
+            else set(_ACCUMULATORS) | _derived_accumulators(tree, _status_returns))
     out = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
             f = node.value.func
             if (isinstance(f, ast.Attribute) and f.attr == "append"
-                    and isinstance(f.value, ast.Name) and f.value.id in _ACCUMULATORS):
+                    and isinstance(f.value, ast.Name) and f.value.id in _acc):
+                out.append((node.lineno, node.end_lineno, "reports a defect"))
+        # ⛔ `failed += 1` IS A DEFECT REPORT AND WAS INVISIBLE. Only `.append(` counted, so the
+        # four modules that count rather than collect scored ~0 sites while doing the most
+        # attacking. A counter incremented by a positive amount says the same thing an append
+        # says: something is wrong here.
+        elif (not legacy and isinstance(node, ast.AugAssign) and isinstance(node.op, ast.Add)
+              and isinstance(node.target, ast.Name) and node.target.id in _acc):
+            _v = node.value
+            _pos = (isinstance(_v, ast.Constant) and isinstance(_v.value, (int, float))
+                    and not isinstance(_v.value, bool) and _v.value > 0)
+            # `failed += not ok` and `caught += ok` are the same idiom written with a predicate.
+            _pred = isinstance(_v, (ast.UnaryOp, ast.Compare, ast.Name, ast.Call))
+            if _pos or _pred:
                 out.append((node.lineno, node.end_lineno, "reports a defect"))
         elif isinstance(node, ast.Return) and isinstance(node.value, ast.Tuple):
             first = node.value.elts[0] if node.value.elts else None
@@ -714,6 +854,23 @@ def _suite_without(name):
 
 def main():
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    # ⇒ THE RECORD THIS RUN IS ABOUT, decided ONCE, at the top, before anything reads or writes.
+    # Three call sites need it -- the predecessor it compares against, the record `--verify`
+    # checks, and the file it writes -- and each of the three was hardcoded to CONTROL-AUDIT.json
+    # at some point. A counterfactual that reads the full audit's record is measuring one suite
+    # against another; a `--quick` run that writes it replaces a 317-site record with a 45-site
+    # one. Naming it here makes those three the same answer by construction.
+    # ⚠ The markers COMPOSE. An if/elif made `--quick --without reach` write the FULL
+    # counterfactual's filename, so a one-module smoke test would replace the record section 8
+    # quotes -- the same clobber `--quick` was just fixed for, reachable by adding a second flag.
+    # Every dimension that narrows the measurement narrows the name.
+    _marks = []
+    if "--quick" in sys.argv:
+        _marks.append("quick")
+    if "--without" in sys.argv:
+        _marks.append("without-%s"
+                      % sys.argv[sys.argv.index("--without") + 1].replace(".py", ""))
+    _out_name = "CONTROL-AUDIT%s.json" % ("".join("-" + m for m in _marks))
     # ⛔ `TARGETS[:1]` MEANT mp_metric.py WHEN TARGETS WAS A HAND-WRITTEN TUPLE STARTING WITH IT.
     # Projecting TARGETS over the directory -- the repair that closed the enumeration defect two
     # rounds ago -- re-sorted it, so --quick silently became "add_evidence.py only" while the
@@ -884,8 +1041,22 @@ def main():
     # ⛔ A CONTROL THAT IS DELETED LEAVES NO TRACE IN THIS CENSUS, so the count silently falls
     # and nothing notices. Compare against the previous record: a DROP is either a deliberate
     # removal, which belongs in a commit message, or a neutered file.
+    # ⛔ THE PREDECESSOR WAS HARDCODED, SO A COUNTERFACTUAL INHERITED THE FULL AUDIT'S LINEAGE.
+    # `--without reach` loaded CONTROL-AUDIT.json as its `_old`, which meant its history carried
+    # the full audit's rows (watched=122) with its own row (watched=97) appended, and its
+    # "the control count FELL" comparison measured a deliberately weakened suite against the
+    # complete one. Worse, it made the counterfactual record a FUNCTION OF THE AUDIT RECORD: the
+    # fixpoint loop ran four iterations in which reach converged, the audit converged, and the
+    # counterfactual produced a different digest every single time -- because its input kept
+    # moving. That is the ordering hazard the orchestrator exists to detect, and the orchestrator
+    # detected it.
+    #
+    # ⇒ Same rule as `--verify`: the record a run READS is chosen by the same expression as the
+    # record it WRITES. This is the sibling call site of the fix made an hour earlier in this same
+    # file -- "a fix is not finished until you grep for the other call sites", missed on the very
+    # rule that states it.
     _old = None
-    _prev = HERE / "CONTROL-AUDIT.json"
+    _prev = HERE / _out_name
     if _prev.exists():
         try:
             _old = json.loads(_prev.read_text(encoding="utf-8"))
@@ -924,6 +1095,20 @@ def main():
                                len(TARGETS), _WHEN),
            "previous": _predecessor(_old, watched + len(unwatched), watched, _RND),
            "controls_total": watched + len(unwatched),
+           # ⛔ HOW MUCH THE DETECTOR ITSELF MOVED THE DENOMINATOR, measured every run instead of
+           # remembered from the round it changed. `controls_total_legacy` is this same detector
+           # with the counting idiom and the derived accumulators switched off -- the rule that
+           # scored `stress_test.py` at one site while it ran 47 attacks. Section 8 quotes the
+           # pair, because a denominator that moves by a tenth when the instrument improves is a
+           # fact about the instrument that a reader is entitled to before the percentage.
+           # ⚠ TARGETS holds file NAMES, not paths -- the projection returns `f.name`. Reading
+           # them as paths raised AttributeError inside the record construction, i.e. an error
+           # path in the audit that fires only when the record is built.
+           "controls_total_legacy": sum(
+               len(controls((HERE / n).read_text(encoding="utf-8"), n, legacy=True))
+               for n in sorted(TARGETS)),
+           "sites_by_file": {n: len(controls((HERE / n).read_text(encoding="utf-8"), n))
+                             for n in sorted(TARGETS)},
            "watched": watched,
            "unwatched": len(unwatched),
            "redundant": len([u for u in unwatched if u[4] == "REDUNDANT"]),
@@ -963,11 +1148,38 @@ def main():
     # ⚠ `--verify` re-runs the whole audit and compares the COMPLETE per-site set: identity and
     # classification, not counts. It is as expensive as the audit because it IS the audit; that is
     # the honest price of the claim, and it is why the audit was made affordable first.
+    # ⛔ `--verify` ALWAYS COMPARED AGAINST CONTROL-AUDIT.json, EVEN UNDER `--without`. So
+    # `control_audit.py --verify --without reach` re-ran the counterfactual and compared it to the
+    # FULL audit -- "controls_total: recorded 280, recomputed 45" -- and then crashed in the
+    # diagnostic that was trying to explain the mismatch. The consequence is not cosmetic:
+    # CONTROL-AUDIT-without-reach.json supplies section 8's "25 controls depend on reach alone",
+    # and it was therefore a deposited record with NO WORKING VERIFICATION PATH. The record a run
+    # writes and the record it verifies must be chosen by the same rule, so they are chosen here,
+    # once, before either is used.
+    # ⛔ AND `--quick` OVERWROTE THE TREE'S RECORD TOO. The argument that a counterfactual must not
+    # become the tree's record -- written directly above -- applies unchanged to a run that
+    # measures ONE MODULE, and nobody applied it: `control_audit.py --quick` wrote 45 sites over
+    # the 280-site record, so a smoke test silently replaced the audit every figure in section 8
+    # rests on. Found by running it. A partial measurement gets a partial measurement's filename.
+    # (`_out_name` is decided once at the top of main(); a second copy here is how the three call
+    # sites drifted apart in the first place.)
+
     if "--verify" in sys.argv:
-        old_path = HERE / "CONTROL-AUDIT.json"
+        # ⚠ `--quick` AUDITS ONE MODULE AND THE RECORD DESCRIBES THE TREE, so `--quick --verify`
+        # can only ever report drift -- 45 sites against 280 -- however healthy the record is. A
+        # check that cannot pass is not a check; it is noise that teaches a reader to ignore this
+        # tool's red. Refuse the combination rather than emit a mismatch nobody should act on.
+        if "--quick" in sys.argv:
+            raise SystemExit(
+                D + " --quick --verify cannot succeed: --quick audits one module and the record "
+                "describes the whole tree, so this can only ever print drift. Run --verify "
+                "without --quick (it costs what the audit costs, which is the price of the "
+                "claim), or run --quick alone to exercise the machinery.")
+        old_path = HERE / _out_name
         if not old_path.exists():
-            print("  " + D + " no record to verify against.")
+            print("  " + D + " no record to verify against at %s." % _out_name)
             return 1
+        print("  verifying against %s" % _out_name)
         prev = json.loads(old_path.read_text(encoding="utf-8"))
         def _ident(r):
             # ⛔ THIS DROPPED LINE, KIND AND MULTIPLICITY: 145 survivors collapsed to 125
@@ -1003,6 +1215,17 @@ def main():
         for k in ("controls_total", "watched", "unwatched", "redundant", "never_executes"):
             if prev.get(k) != rec.get(k):
                 drift.append("%s: recorded %s, recomputed %s" % (k, prev.get(k), rec.get(k)))
+        # ⚠ `suite` is in _EXPECTED_TO_MOVE because a counterfactual legitimately runs a different
+        # suite -- but "may differ" is not "is not checked". A record measured WITHOUT reach and a
+        # record measured with it are different measurements, and comparing one to the other is
+        # the defect above. The suite is compared as a SET against the suite this run actually
+        # used, so the two records must describe the same counterfactual.
+        _ps, _rs = sorted(prev.get("suite") or []), sorted(rec.get("suite") or [])
+        if _ps != _rs:
+            drift.append("suite: the record was measured over %d item(s) and this run used %d "
+                         "(only in record: %s; only in run: %s)"
+                         % (len(_ps), len(_rs), sorted(set(_ps) - set(_rs))[:3],
+                            sorted(set(_rs) - set(_ps))[:3]))
         a, b = _ident(prev), _ident(rec)
         if a != b:
             drift.append("%d survivor record(s) recorded that this run does not "
@@ -1013,10 +1236,17 @@ def main():
             print("  " + D + " THE DEPOSITED RECORD IS NOT WHAT THIS CODE PRODUCES:")
             for _d in drift:
                 print("      " + _d)
+            # ⛔ THE DIAGNOSTIC CRASHED WITH TypeError: 'int' object is not subscriptable. The
+            # identity tuple is (file, LINE, kind, source, class) and this sliced `x[1]` as text
+            # -- so the control fired correctly and then destroyed its own message, which is the
+            # error-path class this project has now found nine times. A reviewer hit it while
+            # trying to read WHY the counterfactual mismatched.
+            def _fmt(x):
+                return "%s:%s %s" % (x[0], x[1], (x[3] or "")[:44])
             for x in sorted(a - b)[:3]:
-                print("      only in the record : %s %s" % (x[0], x[1][:44]))
+                print("      only in the record : %s" % _fmt(x))
             for x in sorted(b - a)[:3]:
-                print("      only in this run   : %s %s" % (x[0], x[1][:44]))
+                print("      only in this run   : %s" % _fmt(x))
             return 1
         print()
         print("  ok  the record is exactly what this code produces: %d site(s), %d watched,"
@@ -1029,9 +1259,8 @@ def main():
     # put a deliberately weakened measurement under every figure in section 8, and the
     # fingerprints would all agree because the TREE did not change. That is exactly the
     # substitution this file exists to detect, arriving through a flag it was given itself.
-    _out_name = ("CONTROL-AUDIT-without-%s.json"
-                 % sys.argv[sys.argv.index("--without") + 1].replace(".py", "")
-                 if "--without" in sys.argv else "CONTROL-AUDIT.json")
+    # (`_out_name` is computed once, above the --verify branch, so the record this writes is by
+    # construction the record that --verify reads.)
     (HERE / _out_name).write_text(json.dumps(rec, indent=2) + NL,
                                              encoding="utf-8", newline=NL)
     print("  written to %s" % _out_name)

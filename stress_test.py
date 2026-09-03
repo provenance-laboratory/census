@@ -34,55 +34,6 @@ W = chr(0x26A0)
 passed, failed = 0, 0
 
 
-def _module_bindings(tree):
-    """Names module scope binds, split by whether the binding is UNCONDITIONAL.
-
-    ⛔ A NAME BOUND ONLY INSIDE `if False:` IS ASSIGNED TO symtable AND ABSENT AT RUNTIME. A
-    round-10 reviewer defeated the first version of this control with exactly that, four lines
-    long, and the suite reported "ok". Reading the module body as a SEQUENCE separates a binding
-    that always happens from one that might not.
-    """
-    always, maybe = set(), set()
-
-    def _targets(node):
-        tgts = list(getattr(node, "targets", []) or [])
-        if getattr(node, "target", None) is not None:
-            tgts.append(node.target)
-        for tgt in tgts:
-            for n in ast.walk(tgt):
-                if isinstance(n, ast.Name):
-                    yield n.id
-
-    # ⛔ TWO CONSTRUCTS MAKE THIS QUESTION UNDECIDABLE AND THE CHECK CALLED THEM DEFECTS. A
-    # round-12 reviewer of the sibling project showed `from math import *; sqrt(4)` and
-    # `globals()["DYNAMIC_NAME"] = ...` both reported as "reads a name nothing in scope defines".
-    # Neither lets bad code pass, so it is not a security failure -- it is a LIVENESS trap, and
-    # this project has written down twice that a checker which cries wolf gets switched off.
-    #
-    # ⇒ A wildcard import means the module's names cannot be enumerated, so findings for that
-    # module are suppressed and the wildcard is reported instead -- the undecidability is named
-    # rather than converted into a false accusation. A literal `globals()["X"] = ...` key IS a
-    # binding and is collected as one; a non-literal key remains the disclosed blind spot.
-    def _walk(body, conditional):
-        sink = maybe if conditional else always
-        for st in body:
-            if isinstance(st, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
-                sink.update(_targets(st))
-            elif isinstance(st, (ast.Import, ast.ImportFrom)):
-                if any(a.name == "*" for a in st.names):
-                    sink.add("*")
-                sink.update((a.asname or a.name).split(".")[0]
-                            for a in st.names if a.name != "*")
-            elif isinstance(st, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                sink.add(st.name)
-            elif isinstance(st, (ast.If, ast.While, ast.For, ast.Try, ast.With)):
-                for attr in ("body", "orelse", "finalbody"):
-                    _walk(getattr(st, attr, []) or [], True)
-                for h in getattr(st, "handlers", []) or []:
-                    _walk(h.body, True)
-    _walk(tree.body, False)
-    return always, maybe - always
-
 
 def _own_nodes(fn):
     """Every node belonging to `fn` itself, not to a function nested inside it.
@@ -120,8 +71,29 @@ def _module_bindings(tree):
     reviewer defeated an earlier version with exactly that, four lines long, and the suite said
     "ok". Reading the module body as a SEQUENCE separates a binding that always happens from one
     that might not -- which is the one thing symtable cannot tell us.
+
+    ⛔ THIS FUNCTION WAS DEFINED TWICE IN THIS FILE, and Python kept the second. The dead copy
+    carried the ten-line argument for the round-12 wildcard/`globals()` repair; the live copy
+    carried the repair itself and none of the reasoning. Anyone deleting "the duplicate" had a
+    coin-flip chance of deleting the mechanism, and a reviewer showed the live copy could be
+    removed with the suite still reporting 47 passed, 0 failed. That is the round-24 duplicated-
+    paragraph finding one level out -- a shingle control was built for PROSE paragraphs and the
+    three-line AST equivalent was not built for SOURCE, inside the very file that hosts the
+    undefined-name control. The two copies are one function now, and `_duplicate_defs()` below
+    fails the suite if any module in the tree defines one name twice.
+
+    ⚠ THE ROUND-12 REASONING, kept here because it belongs beside the code it explains: a round-12
+    reviewer showed `from math import *; sqrt(4)` and `globals()["DYNAMIC_NAME"] = ...` both
+    reported as "reads a name nothing in scope defines". A wildcard import means the module's
+    names cannot be enumerated, so findings for that module are SUPPRESSED and the wildcard is
+    reported instead -- the undecidability is named rather than converted into a false accusation.
+    A literal `globals()["X"] = ...` key IS a binding and is collected.
     """
     always, maybe = set(), set()
+    # name -> [(first line, last line)] of each CONDITIONAL body that binds it. An inline scope
+    # written inside one of these ranges is evaluated while that body runs; one written outside
+    # is deferred. This is what lets the check narrow on containment instead of on scope type.
+    spans = {}
 
     def _targets(node):
         tgts = list(getattr(node, "targets", []) or [])
@@ -132,11 +104,30 @@ def _module_bindings(tree):
                 if isinstance(n, ast.Name):
                     yield n.id
 
-    def _walk(body, conditional):
+    # ⛔ `match` AND `except*` BIND NAMES AND WERE NOT WALKED, so a module binding a name only in a
+    # match case or a TryStar handler was reported as reading an undefined name -- a false
+    # positive on code that runs clean. A reviewer wrote both. They do not occur in this tree
+    # today, which is exactly why they were missed: a branch no data has taken is UNDEFINED, not
+    # settled.
+    _COND = (ast.If, ast.While, ast.For, ast.Try, ast.With)
+    for _extra in ("Match", "TryStar", "AsyncFor", "AsyncWith"):
+        if hasattr(ast, _extra):
+            _COND = _COND + (getattr(ast, _extra),)
+
+    def _note(names, span):
+        if span is None:
+            return
+        for _nm in names:
+            spans.setdefault(_nm, []).append(span)
+
+    def _walk(body, conditional, span=None):
         sink = maybe if conditional else always
         for st in body:
             if isinstance(st, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
-                sink.update(_targets(st))
+                _t = set(_targets(st))
+                sink.update(_t)
+                if conditional:
+                    _note(_t, span)
             elif isinstance(st, (ast.Import, ast.ImportFrom)):
                 if any(a.name == "*" for a in st.names):
                     sink.add("*")
@@ -144,18 +135,61 @@ def _module_bindings(tree):
                             for a in st.names if a.name != "*")
             elif isinstance(st, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 sink.add(st.name)
-            elif isinstance(st, (ast.If, ast.While, ast.For, ast.Try, ast.With)):
+            elif isinstance(st, ast.Delete):
+                # ⚠ `del X` at module scope UNBINDS. Treating the earlier assignment as still
+                # standing made a real NameError invisible. A deleted name is demoted to `maybe`
+                # rather than dropped, because reporting it as undefined would be a second guess
+                # about control flow this pass cannot make.
+                for t in st.targets:
+                    for n in ast.walk(t):
+                        if isinstance(n, ast.Name):
+                            always.discard(n.id)
+                            maybe.add(n.id)
+            elif isinstance(st, _COND):
+                _span = (st.lineno, getattr(st, "end_lineno", st.lineno) or st.lineno)
                 for attr in ("body", "orelse", "finalbody"):
-                    _walk(getattr(st, attr, []) or [], True)
+                    _walk(getattr(st, attr, []) or [], True, _span)
                 for h in getattr(st, "handlers", []) or []:
-                    _walk(h.body, True)
+                    _walk(h.body, True, _span)
+                for c in getattr(st, "cases", []) or []:
+                    # ⚠ AN IRREFUTABLE CASE ALWAYS RUNS IF IT IS REACHED: `case _:` or a bare
+                    # capture, with no guard, cannot fail to match. Its bindings are therefore
+                    # unconditional, and calling them conditional would cry wolf on the ordinary
+                    # exhaustive-match idiom. A case with a PATTERN can fail, so its bindings stay
+                    # conditional -- which is a true statement about the name, and is why the
+                    # message says "binds only inside a conditional" rather than "nothing defines
+                    # it": the earlier version could not see match bindings at all and gave the
+                    # wrong diagnosis for the right sentence.
+                    _pat = getattr(c, "pattern", None)
+                    _irrefutable = (getattr(c, "guard", None) is None
+                                    and isinstance(_pat, ast.MatchAs)
+                                    and getattr(_pat, "pattern", None) is None)
+                    _walk(c.body, not _irrefutable, _span)
+                    # The capture names in the PATTERN bind the same way the case body does, so
+                    # they follow the same irrefutability. Adding them to `maybe` unconditionally
+                    # made `case N:` -- which cannot fail -- look conditional, and the check then
+                    # fired on the ordinary exhaustive idiom.
+                    _psink = always if _irrefutable else maybe
+                    for n in ast.walk(_pat or ast.Pass()):
+                        if isinstance(n, ast.MatchAs) and n.name:
+                            _psink.add(n.name)
+                        elif isinstance(n, ast.MatchStar) and getattr(n, "name", None):
+                            _psink.add(n.name)
+                        elif isinstance(n, ast.MatchMapping) and getattr(n, "rest", None):
+                            _psink.add(n.rest)
+                        if _psink is maybe:
+                            _note([x for x in (getattr(n, "name", None),
+                                               getattr(n, "rest", None)) if x], _span)
     _walk(tree.body, False)
     for n in ast.walk(tree):
         if (isinstance(n, ast.Subscript) and isinstance(n.value, ast.Call)
                 and isinstance(n.value.func, ast.Name) and n.value.func.id == "globals"
                 and isinstance(n.slice, ast.Constant) and isinstance(n.slice.value, str)):
             always.add(n.slice.value)
-    return always, maybe - always
+        # An `except* E as e:` handler binds `e`; so does `except E as e:`.
+        if isinstance(n, ast.ExceptHandler) and n.name:
+            maybe.add(n.name)
+    return always, maybe - always, spans
 
 
 def _shadowed_reads(tree):
@@ -166,27 +200,40 @@ def _shadowed_reads(tree):
     a function that assigns `out` and then reads it is not. Only the ordering separates them, so
     only the ordering is computed here, and everything else is left to symtable.
     """
+    # ⛔ THIS EXAMINED FunctionDef AND AsyncFunctionDef ONLY, so a lambda could shadow a name and
+    # read it before assigning: `D = 1; f = lambda: (D, (D := 2))` raises UnboundLocalError at
+    # runtime and this said nothing. A reviewer wrote it in two lines. A lambda is a function
+    # scope with the same local-shadowing rule; the only reason it was excluded is that the walk
+    # enumerated node TYPES instead of asking what a scope is.
     out = []
+    _SCOPES = (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)
     for fn in ast.walk(tree):
-        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+        if not isinstance(fn, _SCOPES):
             continue
         first, reads, glob = {}, [], set()
         for n in ast.walk(fn):
-            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n is not fn:
+            # ⚠ Do not descend into a NESTED scope: its locals are its own, and reading a name
+            # there says nothing about the ordering in this one.
+            if isinstance(n, _SCOPES) and n is not fn:
                 continue
             if isinstance(n, (ast.Global, ast.Nonlocal)):
                 glob.update(n.names)
             elif isinstance(n, ast.Name):
+                # ⚠ ORDER IS (line, column), NOT LINE. A lambda fits the shadowing read and the
+                # assignment on ONE line -- `lambda: (D, (D := 2))` -- so comparing line numbers
+                # alone made the read look non-earlier and the check stayed silent on code that
+                # raises UnboundLocalError. Within a line, position decides.
+                _pos = (n.lineno, n.col_offset)
                 if isinstance(n.ctx, (ast.Store, ast.Del)):
-                    if n.id not in first or n.lineno < first[n.id]:
-                        first[n.id] = n.lineno
+                    if n.id not in first or _pos < first[n.id]:
+                        first[n.id] = _pos
                 elif isinstance(n.ctx, ast.Load):
-                    reads.append((n.id, n.lineno))
+                    reads.append((n.id, _pos))
         for nm, ln in reads:
             if nm in glob or nm not in first:
                 continue
             if ln < first[nm]:
-                out.append((fn.name, nm))
+                out.append((getattr(fn, "name", None) or "<lambda>", nm))
     return out
 
 
@@ -228,7 +275,7 @@ def undefined_module_reads(where=None):
             top = _st.symtable(src, f.name, "exec")
         except (SyntaxError, UnicodeDecodeError, ValueError):
             continue
-        always, maybe = _module_bindings(tree)
+        always, maybe, _spans = _module_bindings(tree)
         if "*" in always:
             # ⚠ A wildcard import makes the module's names unenumerable. Reporting every
             # unresolved read would be a false accusation; the wildcard is the finding, once.
@@ -264,13 +311,56 @@ def undefined_module_reads(where=None):
                     # deferred: the function can be called at any later time, including a time at
                     # which the branch never ran. That case is kept. The narrowing is to scopes
                     # whose execution is deferred, not to scopes that happen to be convenient.
-                    if sc.get_type() != "function" or sc.get_name() in (
-                            "lambda", "genexpr", "listcomp", "setcomp", "dictcomp"):
+                    #
+                    # ⛔ AND THE CODE DID NOT DO WHAT THE COMMENT ABOVE SAYS. It narrowed on the
+                    # scope's TYPE, so every lambda and every comprehension was exempted -- which
+                    # made lambdas blind to the conditional shape again, through the exact
+                    # construct the previous round had been fixing, and restored the round-10
+                    # reviewer's `if False: X = ...` evasion. `f = lambda: X` at module level is
+                    # deferred in precisely the way a `def` is: it is CALLED later, possibly never
+                    # having had the branch run. A reviewer wrote it in four lines and the
+                    # detector said nothing while Python raised NameError.
+                    #
+                    # ⇒ Narrow on LEXICAL CONTAINMENT, which is what the comment always said: an
+                    # inline scope written INSIDE the conditional body that binds the name is
+                    # evaluated while that body runs, so the binding has happened. One written
+                    # outside it is deferred and is reported. `_spans` carries the line range of
+                    # each conditional body that binds each name.
+                    _inline = (sc.get_type() != "function"
+                               or sc.get_name() in ("lambda", "genexpr", "listcomp",
+                                                    "setcomp", "dictcomp"))
+                    if _inline:
+                        _ln = sc.get_lineno()
+                        if any(_a <= _ln <= _b for _a, _b in _spans.get(n, ())):
+                            continue
+                        what = ("which module scope binds only inside a conditional this "
+                                "deferred scope is not written inside -- it may not exist when "
+                                "this line runs")
+                        out.append("%s:%s reads %r, %s" % (f.name, sc.get_name(), n, what))
                         continue
                     what = ("which module scope binds only inside a conditional -- it may not "
                             "exist when this line runs")
                 else:
-                    what = "which nothing in scope defines"
+                    # ⛔ THE MESSAGE ASSERTED MORE THAN THE ANALYSIS KNEW. "nothing in scope
+                    # defines it" is a claim about the program; what this pass knows is that no
+                    # STATICALLY VISIBLE binding exists. A module that binds through
+                    # `globals()[expr] = ...` with a computed key is not statically decidable --
+                    # the docstring discloses exactly that -- and the finding still read as an
+                    # accusation. A reviewer hit it with a dynamic-key probe: a liveness false
+                    # positive stated as a defect.
+                    #
+                    # ⇒ The tolerated edge is NAMED in the finding, so a reader can tell an
+                    # undecidable case from a real one without reading this source.
+                    _dyn = any(isinstance(_x, ast.Subscript)
+                               and isinstance(_x.value, ast.Call)
+                               and isinstance(_x.value.func, ast.Name)
+                               and _x.value.func.id == "globals"
+                               and isinstance(_x.ctx, ast.Store)
+                               for _x in ast.walk(tree))
+                    what = ("which no statically visible binding defines -- and this module also "
+                            "assigns through globals() with a computed key, which is UNDECIDABLE "
+                            "here, so treat this as a dynamic-globals edge rather than a defect"
+                            if _dyn else "which nothing in scope defines")
                 out.append("%s:%s reads %r, %s" % (f.name, sc.get_name(), n, what))
         for fname, nm in _shadowed_reads(tree):
             if nm in known:
@@ -782,6 +872,42 @@ if _undef:
 else:
     passed += 1
     print("  ok    no function reads a module-scope name that does not exist")
+
+print()
+# ⛔ THE PROSE DUPLICATE CONTROL HAD NO SOURCE EQUIVALENT, AND THIS FILE PAID FOR IT. Round 24
+# built a shingle-overlap control for repeated PARAGRAPHS over 240 characters; nobody built the
+# three-line AST equivalent for repeated DEFINITIONS -- and `_module_bindings` was then defined
+# twice in this very file, the dead copy carrying the argument and the live copy carrying the
+# mechanism, so deleting "the duplicate" was a coin flip on deleting the repair. Python keeps the
+# last definition silently, which is why nothing objected for a round.
+#
+# ⚠ It is a redefinition, not a name collision: a method on a class and a module-level function
+# may share a name legitimately, so only same-scope redefinitions count. A conditional
+# `try/except ImportError` redefinition is legitimate too and is not at module top level here.
+_dupes = []
+for _p in sorted(HERE.glob("*.py")):
+    try:
+        _t = ast.parse(_p.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError):
+        continue
+    _seen = {}
+    for _st in _t.body:
+        if isinstance(_st, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            if _st.name in _seen:
+                _dupes.append("%s:%d %s() shadows the definition at line %d"
+                              % (_p.name, _st.lineno, _st.name, _seen[_st.name]))
+            _seen[_st.name] = _st.lineno
+if _dupes:
+    print("  " + D + " %d module-level definition(s) shadowed by a later one:" % len(_dupes))
+    for _u in _dupes[:8]:
+        print("      " + _u)
+    print("      Python keeps the LAST one. The earlier body is dead code that still reads as")
+    print("      live, and the two copies drift -- which is how a repair and its rationale ended")
+    print("      up in different, mutually shadowing halves of one function.")
+    failed += 1
+else:
+    passed += 1
+    print("  ok    no module defines the same top-level name twice")
 
 print()
 print("=" * 78)

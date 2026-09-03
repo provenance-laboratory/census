@@ -706,15 +706,34 @@ def main():
 
     print()
     import collections as _c
-    _kinds = _c.Counter(v.get("kind", "archive") for v in reached.values())
+    # ⛔ THIS QUANTITY WAS COMPUTED TWICE, ELEVEN LINES APART, WITH TWO DIFFERENT PREDICATES.
+    # The console used `kind in (None, "archive")` and printed 15. The record used
+    # `kind != "ledger"` and deposited 23, because that predicate sweeps the 7 evidence-shape
+    # branches and the 1 validator branch into "archive" on the sole ground that neither is
+    # literally labelled "ledger". The manuscript then printed 23 as "reached by corrupting the
+    # archive alone ... not only by a hand-built ledger" -- a sentence that was false of eight of
+    # the branches it counted, since evidence-shape mutates the CELL'S EVIDENCE LIST in the ledger
+    # and never touches the byte seam, and the validator branch is reached by altering `as_of`,
+    # a ledger field. `--verify` could not catch it: it re-derives the record from the same
+    # function and gets the same 23.
+    #
+    # ⇒ ONE classification, computed once, consumed by both the console and the record. Two
+    # implementations of one number is how they drift apart -- which this file already says about
+    # `targets` and says again here because saying it did not prevent it.
+    #
+    # The axis is named, never inferred from what a kind is NOT. `archive` is the only axis that
+    # corrupts bytes, so it is the only one that may be called archive-reachable.
+    _kinds = _c.Counter(v.get("kind") or "archive" for v in reached.values())
     print("  reached by axis: %s" % dict(_kinds))
-    _arch = sum(1 for v in reached.values() if v.get("kind") in (None, "archive"))
-    _ledg = [v for v in reached.values() if v.get("kind") == "ledger"]
+    _arch = _kinds["archive"]
+    _ledg = [v for v in reached.values() if (v.get("kind") or "archive") != "archive"]
     _behind = sum(1 for v in _ledg if v.get("validator_would_catch_it_first"))
     print("  %d of %d unreached branch(es) are now reached." % (len(reached), len(targets)))
     print("    %d by corrupting the ARCHIVE -- reachable in production" % _arch)
-    print("    %d by altering the LEDGER, of which %d the validator refuses first"
+    print("    %d by altering the RECORD, of which %d the validator refuses first"
           % (len(_ledg), _behind))
+    for _k in sorted(k for k in _kinds if k != "archive"):
+        print("        %2d %s" % (_kinds[_k], _k))
     if _behind:
         print("  " + W + " A branch behind a validator that refuses first is DEFENCE IN DEPTH,")
         print("  not a tested control. It fires, and no real input can make it fire. Counting")
@@ -792,8 +811,18 @@ def main():
             "is what the audit reports today, which this tool changes by being in the suite -- so "
             "the two differ by design and the pinned one is the denominator to quote."),
         "reached": len(reached),
-        "reached_via_archive": sum(1 for v in reached.values() if v.get("kind") != "ledger"),
-        "reached_via_ledger": sum(1 for v in reached.values() if v.get("kind") == "ledger"),
+        # These are the SAME objects the console printed, not a second computation of them.
+        "reached_via_archive": _arch,
+        "reached_via_ledger": len(_ledg),
+        "reached_by_axis": dict(_kinds),
+        "_axis_note": (
+            "reached_via_archive counts ONLY the `archive` axis -- the one that corrupts bytes. "
+            "It was previously computed as `kind != 'ledger'`, which counted the evidence-shape "
+            "and validator branches as archive-reachable and published 23 where the honest "
+            "figure is %d. evidence-shape rewrites the cell's evidence LIST in the ledger and "
+            "never patches the byte seam; the validator branch is reached by altering `as_of`, "
+            "a ledger field. reached_by_axis is the full breakdown so no reader has to trust "
+            "either total." % _arch),
         "behind_the_validator": sum(1 for v in reached.values()
                                     if v.get("validator_would_catch_it_first")),
         "still_unreached": len(still),
@@ -859,6 +888,26 @@ def main():
             return 1
         print("  ok  the record matches this run.")
         return 0
+
+    # ⛔ THE PARTITION MUST BE A PARTITION. The published 23-vs-15 defect was two predicates for
+    # one quantity, and it survived because nothing ever asked whether the parts added up. They
+    # now come from one Counter, so they cannot drift -- but the next edit can reintroduce a
+    # second predicate exactly as the last one did, and this is what would notice.
+    _sum_axes = sum(rec["reached_by_axis"].values())
+    if _sum_axes != rec["reached"]:
+        raise SystemExit(D + " the per-axis counts sum to %d but %d branches were reached. The "
+                         "axis breakdown is not a partition of the reached set."
+                         % (_sum_axes, rec["reached"]))
+    if rec["reached_via_archive"] + rec["reached_via_ledger"] != rec["reached"]:
+        raise SystemExit(D + " archive (%d) + record (%d) != reached (%d). Some branch is being "
+                         "counted twice or not at all -- which is precisely how 15 was published "
+                         "as 23." % (rec["reached_via_archive"], rec["reached_via_ledger"],
+                                     rec["reached"]))
+    if rec["reached_via_archive"] != rec["reached_by_axis"].get("archive", 0):
+        raise SystemExit(D + " reached_via_archive (%d) disagrees with the `archive` axis (%d). "
+                         "Only the archive axis corrupts bytes; nothing else may be counted as "
+                         "archive-reachable."
+                         % (rec["reached_via_archive"], rec["reached_by_axis"].get("archive", 0)))
 
     OUT.write_text(json.dumps(rec, indent=2) + NL, encoding="utf-8", newline="\n")
     print("  wrote %s" % OUT.name)
