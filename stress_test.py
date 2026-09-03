@@ -101,130 +101,182 @@ def _own_nodes(fn):
         # meant a helper defined in a conditional branch -- control_audit.py's `_ident` -- read as
         # undefined in the function that calls it. The node is COLLECTED (so its name binds) and
         # its BODY is not descended into (so its locals stay its own).
-        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)):
+        # ⛔ EXCLUDING COMPREHENSION TARGETS FROM THE ENCLOSING BINDINGS WITHOUT ALSO EXCLUDING
+        # THE COMPREHENSION'S OWN READS reported 197 findings on a clean tree: `[a for a in xs]`
+        # reads `a` legitimately INSIDE the comprehension, and the enclosing scan still saw that
+        # read while no longer seeing the binding. Half-modelling a scope is worse than not
+        # modelling it. A comprehension is a scope and is walked as one, like a lambda.
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)
+                      + (ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp)):
             continue
         stack.extend(ast.iter_child_nodes(n))
     return out
 
 
-def _bound_in(fn):
-    # ⛔ `global x` MAKES AN ASSIGNMENT NOT A LOCAL BINDING, and ignoring that reported
-    # three false UnboundLocalErrors -- replay.py's `_LEDGER_CACHE` and filter_diff.py's `_IDX`,
-    # both declared global and both correct. A control that cannot read a `global` statement is
-    # reading the wrong language.
-    declared_global = set()
-    for n in _own_nodes(fn):
-        if isinstance(n, (ast.Global, ast.Nonlocal)):
-            declared_global.update(n.names)
-    names = {a.arg for a in fn.args.args + fn.args.kwonlyargs}
-    if fn.args.vararg:
-        names.add(fn.args.vararg.arg)
-    if fn.args.kwarg:
-        names.add(fn.args.kwarg.arg)
-    for n in _own_nodes(fn):
-        if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
-            names.add(n.id)
-        elif isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-            names.add(n.name)
-        elif isinstance(n, (ast.Import, ast.ImportFrom)):
-            names.update((a.asname or a.name).split(".")[0] for a in n.names)
-        elif isinstance(n, ast.ExceptHandler) and n.name:
-            names.add(n.name)
-    return names - declared_global
+def _module_bindings(tree):
+    """Names module scope binds, split by whether the binding is UNCONDITIONAL.
+
+    ⛔ A NAME BOUND ONLY INSIDE `if False:` IS ASSIGNED TO symtable AND ABSENT AT RUNTIME. A
+    reviewer defeated an earlier version with exactly that, four lines long, and the suite said
+    "ok". Reading the module body as a SEQUENCE separates a binding that always happens from one
+    that might not -- which is the one thing symtable cannot tell us.
+    """
+    always, maybe = set(), set()
+
+    def _targets(node):
+        tgts = list(getattr(node, "targets", []) or [])
+        if getattr(node, "target", None) is not None:
+            tgts.append(node.target)
+        for tgt in tgts:
+            for n in ast.walk(tgt):
+                if isinstance(n, ast.Name):
+                    yield n.id
+
+    def _walk(body, conditional):
+        sink = maybe if conditional else always
+        for st in body:
+            if isinstance(st, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+                sink.update(_targets(st))
+            elif isinstance(st, (ast.Import, ast.ImportFrom)):
+                if any(a.name == "*" for a in st.names):
+                    sink.add("*")
+                sink.update((a.asname or a.name).split(".")[0]
+                            for a in st.names if a.name != "*")
+            elif isinstance(st, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                sink.add(st.name)
+            elif isinstance(st, (ast.If, ast.While, ast.For, ast.Try, ast.With)):
+                for attr in ("body", "orelse", "finalbody"):
+                    _walk(getattr(st, attr, []) or [], True)
+                for h in getattr(st, "handlers", []) or []:
+                    _walk(h.body, True)
+    _walk(tree.body, False)
+    for n in ast.walk(tree):
+        if (isinstance(n, ast.Subscript) and isinstance(n.value, ast.Call)
+                and isinstance(n.value.func, ast.Name) and n.value.func.id == "globals"
+                and isinstance(n.slice, ast.Constant) and isinstance(n.slice.value, str)):
+            always.add(n.slice.value)
+    return always, maybe - always
+
+
+def _shadowed_reads(tree):
+    """Functions that READ a name above the line they assign it, where an outer scope has it.
+
+    ⚠ This is the one question symtable cannot answer: it knows a name is local to a function,
+    not WHERE. `build_paper.py` read `D` at line 709 and assigned it at 1198 -- a defect -- while
+    a function that assigns `out` and then reads it is not. Only the ordering separates them, so
+    only the ordering is computed here, and everything else is left to symtable.
+    """
+    out = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        first, reads, glob = {}, [], set()
+        for n in ast.walk(fn):
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)) and n is not fn:
+                continue
+            if isinstance(n, (ast.Global, ast.Nonlocal)):
+                glob.update(n.names)
+            elif isinstance(n, ast.Name):
+                if isinstance(n.ctx, (ast.Store, ast.Del)):
+                    if n.id not in first or n.lineno < first[n.id]:
+                        first[n.id] = n.lineno
+                elif isinstance(n.ctx, ast.Load):
+                    reads.append((n.id, n.lineno))
+        for nm, ln in reads:
+            if nm in glob or nm not in first:
+                continue
+            if ln < first[nm]:
+                out.append((fn.name, nm))
+    return out
 
 
 def undefined_module_reads(where=None):
     """Names a function cannot read when its line runs -- in each of the ways that happens.
 
-    ⛔ NINE OF THESE HAVE SHIPPED ACROSS THE TWO PROJECTS, and the ninth shipped INSIDE the
-    controls added to catch the eighth. Every one sits on an error path, so it raises instead of
-    reporting, and only once something has already gone wrong. Three shapes:
+    ⛔ NINE OF THESE SHIPPED ACROSS THE TWO PROJECTS, every one on an error path, so each raised
+    instead of reporting and only once something had already gone wrong. Three shapes: UNDEFINED
+    (nothing in scope binds it), SHADOWED (an outer scope binds it and this function assigns it
+    later, so reads above that line raise UnboundLocalError), and CONDITIONAL (module scope binds
+    it only inside `if`/`try`/`while`).
 
-      UNDEFINED   -- nothing in scope binds the name at all.
-      SHADOWED    -- an outer scope binds it AND this function assigns it later, so every read
-      above that line raises UnboundLocalError. `build_paper.py` bound `D` at 1198 as a dict of
-      deposit digests while eight defect-reporting paths above spelled `D` as the refusal glyph,
-      among them the prose-arithmetic control and the convergence gate.
-      CONDITIONAL -- module scope binds it only inside `if`/`try`/`while`.
+    ⛔ THIS FUNCTION WAS REWRITTEN ONTO RAW AST TO GET STATEMENT ORDER, AND IN DOING SO
+    REIMPLEMENTED PYTHON'S SCOPE RULES BADLY -- eight iterations, and each one traded a fixed
+    false negative for a new class of false positive: 141 findings when nested functions were
+    dropped, 197 when comprehension targets were half-modelled, 258 when the module walk descended
+    into functions, 25 when nested comprehensions were not scopes. A round-25 reviewer then showed
+    the version that survived all that was blind to every lambda body -- 87 in this directory, 75
+    in the paper toolchain, 69 of them `claim(sentence, predicate)` -- and read comprehensions
+    with Python 2 scoping.
 
-    ⚠ KNOWN BLIND SPOT, DISCLOSED RATHER THAN FIXED: `globals()["x"] = ...` is not statically
-    decidable and is not detected. A reviewer identified it and recommended disclosure over a
-    fix, because a check that pretends to decide an undecidable question is worse than one that
-    states its edge.
+    ⇒ symtable IMPLEMENTS PYTHON'S SCOPE RULES AND WAS HERE ALL ALONG. It handles lambdas,
+    comprehensions, closures and class bodies correctly and for free. It was abandoned because it
+    cannot order a read against an assignment -- which is ONE of the three shapes. So symtable
+    answers the two it can and a small AST pass answers the third, instead of a hand-rolled scope
+    walker answering all three approximately.
+
+    ⚠ KNOWN BLIND SPOT, DISCLOSED RATHER THAN FIXED: a binding created through
+    `globals()[expr] = ...` with a non-literal key is not statically decidable and is not
+    detected. A literal key IS collected.
     """
     import builtins as _b
+    import symtable as _st
     out = []
     for f in sorted((where or HERE).glob("*.py")):
         try:
-            tree = ast.parse(f.read_text(encoding="utf-8"))
-        except (SyntaxError, UnicodeDecodeError):
+            src = f.read_text(encoding="utf-8")
+            tree = ast.parse(src)
+            top = _st.symtable(src, f.name, "exec")
+        except (SyntaxError, UnicodeDecodeError, ValueError):
             continue
         always, maybe = _module_bindings(tree)
-        for _n in ast.walk(tree):
-            if (isinstance(_n, ast.Subscript) and isinstance(_n.value, ast.Call)
-                    and isinstance(_n.value.func, ast.Name)
-                    and _n.value.func.id == "globals"
-                    and isinstance(_n.slice, ast.Constant)
-                    and isinstance(_n.slice.value, str)):
-                always.add(_n.slice.value)
         if "*" in always:
-            # ⚠ A wildcard import makes the module's name set unenumerable. Reporting every
-            # unresolved read as undefined would be a false accusation; the wildcard is the
-            # finding, once, and the module's other reads are not judged.
+            # ⚠ A wildcard import makes the module's names unenumerable. Reporting every
+            # unresolved read would be a false accusation; the wildcard is the finding, once.
             out.append("%s: `from ... import *` makes this module's names unenumerable, so "
                        "undefined-name findings are SUPPRESSED here. Remove the wildcard to get "
                        "the check back." % f.name)
             continue
         known = always | set(dir(_b)) | {"__file__", "__name__", "__doc__", "__package__",
-                                         "__spec__", "__loader__", "__builtins__", "__debug__"}
-
-        def _scan(fn, enclosing):
-            local = _bound_in(fn)
-            visible = known | enclosing | local
-            # ⛔ `local` HONOURED `global` AND THIS MAP DID NOT, so the three false
-            # UnboundLocalErrors survived the fix aimed at them: the exclusion was applied in one
-            # of the two places that needed it. A `global x` assignment is a write to module
-            # scope, not a local binding, so it cannot shadow anything.
-            _glob = set()
-            for n in _own_nodes(fn):
-                if isinstance(n, (ast.Global, ast.Nonlocal)):
-                    _glob.update(n.names)
-            first, reads = {}, []
-            for n in _own_nodes(fn):
-                if not isinstance(n, ast.Name):
+                                         "__spec__", "__loader__", "__builtins__", "__debug__",
+                                         "__class__", "__qualname__", "__module__"}
+        stack = [top]
+        while stack:
+            sc = stack.pop()
+            stack.extend(sc.get_children())
+            if sc is top:
+                continue
+            for s in sc.get_symbols():
+                # a name symtable calls GLOBAL here is one no enclosing scope binds
+                if not (s.is_global() and not s.is_assigned()):
                     continue
-                if isinstance(n.ctx, (ast.Store, ast.Del)):
-                    if n.id in _glob:
+                n = s.get_name()
+                if n in known:
+                    continue
+                if n in maybe:
+                    # ⛔ A CONDITIONAL BINDING READ FROM AN INLINE SCOPE IS NOT A DEFECT. A
+                    # comprehension or lambda written inside the same `for`/`if` body that binds
+                    # the name is evaluated while that body runs, so the binding has happened.
+                    # Reporting those gave two false positives on a clean tree -- `sc` in
+                    # mp_metric.py and `_low` in this file -- and a checker that cries wolf gets
+                    # switched off, which this project has now written down three times.
+                    #
+                    # ⚠ The reviewer's evasion was `if False: X = ...` read from a DEF, which is
+                    # deferred: the function can be called at any later time, including a time at
+                    # which the branch never ran. That case is kept. The narrowing is to scopes
+                    # whose execution is deferred, not to scopes that happen to be convenient.
+                    if sc.get_type() != "function" or sc.get_name() in (
+                            "lambda", "genexpr", "listcomp", "setcomp", "dictcomp"):
                         continue
-                    if n.id not in first or n.lineno < first[n.id]:
-                        first[n.id] = n.lineno
-                elif isinstance(n.ctx, ast.Load):
-                    reads.append((n.id, n.lineno))
-            for nm, ln in reads:
-                if nm not in visible:
-                    if nm in maybe:
-                        out.append("%s:%s reads %r, which module scope binds only inside a "
-                                   "conditional -- it may not exist when this line runs"
-                                   % (f.name, fn.name, nm))
-                    else:
-                        out.append("%s:%s reads %r, which nothing in scope defines"
-                                   % (f.name, fn.name, nm))
-                elif (nm in first and ln < first[nm]
-                        and (nm in known or nm in enclosing)):
-                    out.append("%s:%s reads %r above the line it assigns it, while an outer "
-                               "scope also defines it -- that read raises UnboundLocalError"
-                               % (f.name, fn.name, nm))
-            for sub in ast.iter_child_nodes(fn):
-                if isinstance(sub, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                    _scan(sub, enclosing | local)
-
-        for node in tree.body:
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                _scan(node, set())
-            elif isinstance(node, ast.ClassDef):
-                for sub in node.body:
-                    if isinstance(sub, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        _scan(sub, set())
+                    what = ("which module scope binds only inside a conditional -- it may not "
+                            "exist when this line runs")
+                else:
+                    what = "which nothing in scope defines"
+                out.append("%s:%s reads %r, %s" % (f.name, sc.get_name(), n, what))
+        for fname, nm in _shadowed_reads(tree):
+            if nm in known:
+                out.append("%s:%s reads %r above the line it assigns it, while an outer scope "
+                           "also defines it -- that read raises UnboundLocalError"
+                           % (f.name, fname, nm))
     return sorted(set(out))
 
 

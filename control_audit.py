@@ -103,11 +103,25 @@ def inputs_fingerprint():
     reach record produced after this audit makes this audit's fingerprint stale and the build
     refuses. The loop is forced by the guard rather than remembered by a person.
     """
+    # ⛔ THIS DISAGREED WITH THE MANIFEST BESIDE IT, computed on the next line of the same dict
+    # over the same files. `audit_inputs()` returns `sorted(HERE.iterdir())`, which sorts PATH
+    # OBJECTS -- and on Windows path comparison case-folds, so `AUDIT-ROUND` and `axes.py` order
+    # differently than `sorted()` over the plain names the manifest is keyed by. Identical bytes,
+    # two orders, two fingerprints. A round-25 reviewer found the deposited record carrying a
+    # fingerprint that matched nothing on disk while its own manifest matched every file.
+    #
+    # ⚠ IT ALSO MEANT THE FINGERPRINT WAS PLATFORM-DEPENDENT: a reviewer on Linux computes a
+    # different value from the same archive, which is the opposite of what a fingerprint is for.
+    #
+    # ⇒ It is DERIVED FROM THE MANIFEST now, in one canonical order. There is one rule about
+    # which files are inputs, one rule about their order, and the two records cannot disagree
+    # because one is computed from the other.
     import hashlib as _h
+    man = inputs_manifest()
     parts = []
-    for f in audit_inputs():
-        parts.append(f.name)
-        parts.append(_h.sha256(f.read_bytes()).hexdigest())
+    for name in sorted(man):
+        parts.append(name)
+        parts.append(man[name])
     return _h.sha256(("|".join(parts)).encode("utf-8")).hexdigest()[:16]
 
 
@@ -633,14 +647,24 @@ def _history(old, rnd, total_now, watched_now, never_now, modules_now, when):
     idle re-run is one nobody reads.
     """
     hist = list((old or {}).get("history") or [])
+    # ⛔ THE ROW STAMPED source_fingerprint(), WHICH HASHES *.py ONLY -- and the fixpoint loop
+    # is audit -> reach -> audit, where `reach_controls.py` writes a JSON and no .py changes. So
+    # the stamp was invariant across exactly the operation that moves the number, and three
+    # round-23 rows recorded 122, 121 and 122 watched under one identical fingerprint. The paper
+    # called that "either non-determinism or fixpoint iterations the row does not distinguish,
+    # and we do not know which". A round-25 reviewer settled it from the code: it is iteration,
+    # and the row was built so it could not say so. `inputs_fingerprint()` is defined 24 lines
+    # below `source_fingerprint()` in this file, with a comment explaining that hashing only .py
+    # is the defect that let 17 sites be classified two ways at once.
     entry = {"round": rnd, "controls_total": total_now, "watched": watched_now,
              "never_executes": never_now, "modules": modules_now, "when": when,
-             "source_fingerprint": source_fingerprint()}
+             "source_fingerprint": source_fingerprint(),
+             "inputs_fingerprint": inputs_fingerprint()}
     if hist:
         _last = hist[-1]
         _same = all(_last.get(k) == entry.get(k) for k in
                     ("round", "controls_total", "watched", "never_executes",
-                     "source_fingerprint"))
+                     "source_fingerprint", "inputs_fingerprint"))
         if _same:
             return hist
     hist.append(entry)
@@ -820,7 +844,7 @@ def main():
         if still:
             line = _srcs[name].splitlines()[lo - 1].strip()
             ran = any(f.endswith(name) and n0 == lo for f, n0 in _hit)
-            unwatched.append((name, lo, kind, line[:88],
+            unwatched.append((name, lo, kind, line,
                               "REDUNDANT" if ran else "NEVER EXECUTES"))
             print("      " + chr(0x26D4) + " %-14s line %-4d NOTHING NOTICED  %s"
                   % (name, lo, line[:52]))
@@ -904,6 +928,23 @@ def main():
            "unwatched": len(unwatched),
            "redundant": len([u for u in unwatched if u[4] == "REDUNDANT"]),
            "never_executes": len([u for u in unwatched if u[4] == "NEVER EXECUTES"]),
+           # ⛔ A DISPLAY CAP BECAME AN IDENTITY KEY, AND IT COST THE ROUND'S HEADLINE. This
+           # stored `line[:88]` -- the cap that sits beside a print showing `line[:52]` -- and
+           # `reach_controls.py` then required that stored text to EQUAL a complete stripped
+           # source line. For any control whose line exceeds 88 characters the stored text is a
+           # strict prefix, the equality can never hold, and the entry is dropped as a lost
+           # identity on EVERY run, with no edit required and nothing to notice it.
+           #
+           # ⛔ Two reviewers ran the deposited archive from separate pristine extractions and
+           # both got 23 of 154 reached where the deposit publishes 24 of 155. Same tree, same
+           # fingerprint, identical mutation counts, a published figure moved -- and the tool
+           # blamed the world: "a guard added earlier in the same sequence deflects the mutation
+           # that used to reach these. That is a real change in what is reachable, not
+           # bookkeeping." No guard was added. Bookkeeping was exactly what it was.
+           #
+           # ⇒ The full line is stored. Truncation is for PRINTING and happens where printing
+           # happens. Section 8's seven "no longer in the file at all" controls were never gone:
+           # they are the ones longer than the cap.
            "survivors": [{"file": n, "line": lo, "kind": k, "source": s, "class": cls}
                          for n, lo, k, s, cls in unwatched],
            "_dispositions": {
@@ -939,6 +980,26 @@ def main():
                             (s.get("source") or "").strip(), s["class"])
                            for s in r.get("survivors", []))
         drift = []
+        # ⛔ `--verify` COMPARED THE CLASSIFICATION HALF AND NOTHING ELSE, and a round-25 reviewer
+        # turned that into a published figure. The record carries `inputs_manifest`, which the
+        # paper builder trusts as the only thing standing between an edited data file and a
+        # changed number — and this never compared it. So: edit `watched` in
+        # CONTROL-AUDIT-without-reach.json, edit that file's digest in the manifest, and section 8
+        # prints "82 of the 122 watched sites — 67% of them" where it should print 25 and 20%,
+        # with every check green and no .py touched. Two edits, both free, because the field the
+        # consumer relies on was verified by nobody.
+        #
+        # ⚠ The comment above this function said it "binds its OUTPUT". The manifest IS an output,
+        # and it was the one output nothing bound. Every recorded key is compared now except those
+        # that move by construction.
+        _EXPECTED_TO_MOVE = ("previous", "history", "_what", "_dispositions", "_history_note",
+                             "survivors", "suite")
+        for k in sorted(set(prev) | set(rec)):
+            if k in _EXPECTED_TO_MOVE:
+                continue
+            if prev.get(k) != rec.get(k):
+                drift.append("%s: recorded %s, recomputed %s"
+                             % (k, str(prev.get(k))[:44], str(rec.get(k))[:44]))
         for k in ("controls_total", "watched", "unwatched", "redundant", "never_executes"):
             if prev.get(k) != rec.get(k):
                 drift.append("%s: recorded %s, recomputed %s" % (k, prev.get(k), rec.get(k)))
