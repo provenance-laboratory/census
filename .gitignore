@@ -9,4 +9,4 @@ __pycache__/
 # A --quick run measures ONE module and writes its own record so it cannot overwrite the tree's.
 # That partial measurement is a smoke test's byproduct, not a deposited artifact: committing it
 # would put a 45-site record beside the 316-site one under a name that reads just as official.
-CONTROL-AUDIT-quick.json
+CONTROL-AUDIT-quick*.json

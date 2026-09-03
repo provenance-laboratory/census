@@ -861,6 +861,69 @@ else:
     print("  ok    no module-level name is defined and left uncalled")
 
 print()
+# ⛔ THE FIXTURES THAT JUSTIFY THIS CONTROL WERE NOT IN THE TREE. Round 13 reported "8 fixtures /
+# 0 findings" and a reviewer could not check it, because the fixtures lived beside the repository
+# rather than in it -- and they were the first person ever to pass `where=`, a parameter with one
+# caller that never used it. Nine iterations of this function each traded one error class for
+# another, and every trade was invisible for exactly that reason.
+#
+# ⇒ The oracle is PYTHON ITSELF. Each fixture below is executed as well as analysed: if the module
+# raises NameError/UnboundLocalError at runtime the control must fire, and if it runs clean the
+# control must stay silent. A fixture whose runtime behaviour nobody checked is how a detector
+# comes to disagree with the language it is modelling.
+_NL = chr(10)
+_FIX = {
+    # name: (source, does Python actually raise?)
+    "undef_lambda_cond.py": (
+        "if False:" + _NL + "    X = 1" + _NL + "f = lambda: X" + _NL, True),
+    "undef_genexpr_cond.py": (
+        "if False:" + _NL + "    Y = 1" + _NL + "g = lambda: list(Y for _ in range(1))" + _NL, True),
+    "undef_def_cond.py": (
+        "if False:" + _NL + "    Z = 1" + _NL + "def h(): return Z" + _NL, True),
+    "undef_del.py": (
+        "Q = 1" + _NL + "del Q" + _NL + "def use(): return Q" + _NL, True),
+    "undef_shadow_lambda.py": (
+        "D2 = 1" + _NL + "f = lambda: (D2, (D2 := 2))" + _NL, True),
+    "undef_match_refutable.py": (
+        "import sys" + _NL + "match sys.argv:" + _NL + "    case [M, *_r]:" + _NL
+        + "        pass" + _NL + "def use(): return M" + _NL, True),
+    "ok_match_irrefutable.py": (
+        "import sys" + _NL + "match sys.argv:" + _NL + "    case N:" + _NL + "        pass" + _NL
+        + "def use(): return N" + _NL, False),
+    "ok_inline_in_branch.py": (
+        "import os" + _NL + "if os.sep:" + _NL + "    A = 1" + _NL
+        + "    k = [A for _ in range(1)]" + _NL, False),
+    "ok_plain.py": ("B = 1" + _NL + "def use(): return B" + _NL, False),
+}
+import shutil as _sh2      # noqa: E402
+import tempfile as _tf2    # noqa: E402
+_work = pathlib.Path(_tf2.mkdtemp(prefix="undef-fix-"))
+try:
+    for _n, (_src, _) in _FIX.items():
+        (_work / _n).write_text(_src, encoding="utf-8")
+    _found = {}
+    for _line in undefined_module_reads(where=_work):
+        _found.setdefault(_line.split(":")[0], []).append(_line)
+    _fixbad = []
+    for _n, (_src, _raises) in sorted(_FIX.items()):
+        _fires = _n in _found
+        if _fires != _raises:
+            _fixbad.append("%s: python %s, detector %s"
+                           % (_n, "raises" if _raises else "runs clean",
+                              "fires" if _fires else "is silent"))
+    if _fixbad:
+        print("  " + D + " %d undefined-name fixture(s) disagree with Python:" % len(_fixbad))
+        for _b in _fixbad:
+            print("      " + _b)
+        print("      The control models the language; where they differ, the control is wrong.")
+        failed += 1
+    else:
+        passed += 1
+        print("  ok    the undefined-name control agrees with Python on %d fixture(s)" % len(_FIX))
+finally:
+    _sh2.rmtree(_work, ignore_errors=True)
+
+print()
 _undef = undefined_module_reads()
 if _undef:
     print("  " + D + " %d name(s) read from module scope that do not exist:" % len(_undef))
