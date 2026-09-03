@@ -53,13 +53,26 @@ def _module_bindings(tree):
                 if isinstance(n, ast.Name):
                     yield n.id
 
+    # ⛔ TWO CONSTRUCTS MAKE THIS QUESTION UNDECIDABLE AND THE CHECK CALLED THEM DEFECTS. A
+    # round-12 reviewer of the sibling project showed `from math import *; sqrt(4)` and
+    # `globals()["DYNAMIC_NAME"] = ...` both reported as "reads a name nothing in scope defines".
+    # Neither lets bad code pass, so it is not a security failure -- it is a LIVENESS trap, and
+    # this project has written down twice that a checker which cries wolf gets switched off.
+    #
+    # ⇒ A wildcard import means the module's names cannot be enumerated, so findings for that
+    # module are suppressed and the wildcard is reported instead -- the undecidability is named
+    # rather than converted into a false accusation. A literal `globals()["X"] = ...` key IS a
+    # binding and is collected as one; a non-literal key remains the disclosed blind spot.
     def _walk(body, conditional):
         sink = maybe if conditional else always
         for st in body:
             if isinstance(st, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
                 sink.update(_targets(st))
             elif isinstance(st, (ast.Import, ast.ImportFrom)):
-                sink.update((a.asname or a.name).split(".")[0] for a in st.names)
+                if any(a.name == "*" for a in st.names):
+                    sink.add("*")
+                sink.update((a.asname or a.name).split(".")[0]
+                            for a in st.names if a.name != "*")
             elif isinstance(st, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 sink.add(st.name)
             elif isinstance(st, (ast.If, ast.While, ast.For, ast.Try, ast.With)):
@@ -147,6 +160,21 @@ def undefined_module_reads(where=None):
         except (SyntaxError, UnicodeDecodeError):
             continue
         always, maybe = _module_bindings(tree)
+        for _n in ast.walk(tree):
+            if (isinstance(_n, ast.Subscript) and isinstance(_n.value, ast.Call)
+                    and isinstance(_n.value.func, ast.Name)
+                    and _n.value.func.id == "globals"
+                    and isinstance(_n.slice, ast.Constant)
+                    and isinstance(_n.slice.value, str)):
+                always.add(_n.slice.value)
+        if "*" in always:
+            # ⚠ A wildcard import makes the module's name set unenumerable. Reporting every
+            # unresolved read as undefined would be a false accusation; the wildcard is the
+            # finding, once, and the module's other reads are not judged.
+            out.append("%s: `from ... import *` makes this module's names unenumerable, so "
+                       "undefined-name findings are SUPPRESSED here. Remove the wildcard to get "
+                       "the check back." % f.name)
+            continue
         known = always | set(dir(_b)) | {"__file__", "__name__", "__doc__", "__package__",
                                          "__spec__", "__loader__", "__builtins__", "__debug__"}
 
