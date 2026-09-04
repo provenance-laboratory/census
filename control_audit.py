@@ -1161,6 +1161,23 @@ def main():
            "history": _history(_old, _RND, watched + len(unwatched), watched,
                                len([u for u in unwatched if u[4] == "NEVER EXECUTES"]),
                                len(TARGETS), _WHEN),
+           # ⚠ A 45-SITE ROW SITS IN A SERIES OF 279-318, and nothing rejects the shape. It is the
+           # trace of a `--quick` run that wrote into the full record's history before `_out_name`
+           # was unified -- append-only preserved it, which is right, and `build_paper.py` reads
+           # this series at two sites. It is MARKED rather than deleted: rewriting history to
+           # tidy it would be the thing this record exists to make impossible, and a reader who
+           # sees an anomalous row should be told what it was, not have it disappear.
+           "history_anomalies": [
+               {"index": _i, "row": _h,
+                "why": "measured over %d site(s) where its neighbours measure the whole tree; "
+                       "the signature of a narrowed run writing the full record before --quick "
+                       "was given its own filename" % _h.get("controls_total", 0)}
+               for _i, _h in enumerate(_history(_old, _RND, watched + len(unwatched), watched,
+                                                len([u for u in unwatched
+                                                     if u[4] == "NEVER EXECUTES"]),
+                                                len(TARGETS), _WHEN))
+               if isinstance(_h.get("controls_total"), int)
+               and _h["controls_total"] < (watched + len(unwatched)) // 2],
            "previous": _predecessor(_old, watched + len(unwatched), watched, _RND),
            "controls_total": watched + len(unwatched),
            # ⛔ HOW MUCH THE DETECTOR ITSELF MOVED THE DENOMINATOR, measured every run instead of
