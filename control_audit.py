@@ -321,6 +321,49 @@ _ACCUMULATORS = ("d", "bad", "trunc", "unadj", "drift", "findings", "failed", "l
                  "stale", "wrong", "leftover")
 
 
+def _root(node):
+    """The bare name a target hangs off: `tally[band]["survived"]` -> `tally`.
+
+    ⚠ MODULE SCOPE ON PURPOSE. Two functions need it -- the one that derives accumulators and the
+    one that recognises a defect report -- and defining it inside the first left the second
+    reading a name nothing in its scope defined. That is the exact class `stress_test.py`'s
+    undefined-name control exists to catch, written while extending the detector it audits.
+    """
+    while isinstance(node, (ast.Subscript, ast.Attribute)):
+        node = node.value
+    return node.id if isinstance(node, ast.Name) else None
+
+
+def _subscript_accumulator_gap():
+    """Accumulator-shaped writes whose target is not a bare name, and how many are counted.
+
+    ⇒ The detector's own blind spot, measured on every run rather than asserted once. A write is
+    counted here if it is `<something>[...] += n` or `<something>.attr += n` -- the shape
+    `sweep.py` uses for `tally[band]["survived"]` -- and `counted` says how many of those roots
+    actually pass the role test today. `counted` being zero is the finding, not a bug in this
+    function: it means every such accumulator lives in a module that never refuses.
+    """
+    writes, modules, counted = 0, set(), 0
+    for name in sorted(TARGETS):
+        try:
+            tree = ast.parse((HERE / name).read_text(encoding="utf-8"))
+        except (OSError, SyntaxError):
+            continue
+        acc = set(_ACCUMULATORS) | _derived_accumulators(tree, _exit_status_returns(tree))
+        for n in ast.walk(tree):
+            if (isinstance(n, ast.AugAssign) and isinstance(n.op, ast.Add)
+                    and not isinstance(n.target, ast.Name)):
+                writes += 1
+                modules.add(name)
+                if _root(n.target) in acc:
+                    counted += 1
+    return {"writes": writes, "modules": len(modules), "counted": counted,
+            "_note": ("accumulator-shaped writes targeting a subscript or attribute rather than a "
+                      "bare name. `counted` is how many the role test admits; zero means every "
+                      "one lives in a module that reports through a record rather than a refusal, "
+                      "which is a bound on the denominator and not a defect in this count.")}
+
+
 def _derived_accumulators(tree, status_returns):
     """Names that ARE defect accumulators here, by role rather than by spelling.
 
@@ -348,6 +391,17 @@ def _derived_accumulators(tree, status_returns):
             return v.func.id in ("list", "set", "dict", "Counter") and not v.args
         return False
 
+    # ⛔ THE PROJECTION ONLY EVER SAW BARE NAMES. `init` collected `ast.Name` targets, so an
+    # accumulator held in a dict, a list slot or an attribute was invisible whatever its role --
+    # and a round-14 reviewer counted 31 accumulator-shaped writes across 29 modules whose target
+    # is a Subscript, Call or Attribute. The sharpest is `sweep.py`: `tally[band]["survived"] += 1`
+    # IS a control (neutering that one line reverts section 6's headline from 1 to 0), and the
+    # module scored ZERO while running 8,044 transplants. 286 -> 318 closed the counting idiom on
+    # bare names; this is the same class one target-type over.
+    #
+    # ⇒ A subscript or attribute accumulator is recognised by the ROOT name it hangs off, so
+    # `tally[band]["survived"]` counts when `tally` is initialised empty and read by whatever
+    # decides the exit status -- the same rule, applied to where the value actually lives.
     init = set()
     for n in ast.walk(tree):
         if not isinstance(n, (ast.Assign, ast.AnnAssign)):
@@ -380,6 +434,20 @@ def _derived_accumulators(tree, status_returns):
         elif isinstance(n, ast.Return) and n.value is not None \
                 and _can_return_nonzero(n.value):
             _deciders.append(n)
+    # ⚠ "DECIDES THE EXIT STATUS" IS ITSELF A PROXY FOR "REPORTS A DEFECT", AND IT HAS A KNOWN
+    # GAP. `sweep.py` counts survivors into `tally[band]["survived"]` and returns 0
+    # unconditionally, so no name of its own is read by a status-bearing return and the module
+    # scores ZERO while running 8,044 transplants. A survivor IS a defect and that count is a
+    # published figure -- a round-14 reviewer neutered the line and reverted section 6's headline
+    # from 1 to 0. It is watched, but by `build_paper.py` comparing `sweep_control.json`, which
+    # sits in the window this audit cannot see.
+    #
+    # ⇒ NOT widened to "any name serialised into a record". That was tried and measured: it
+    # admitted two sites in `fetch_artifact.py` and `hf_probe.py` that report nothing, and still
+    # did not reach `tally`. Buying a number with false positives is the trade this file exists
+    # to refuse, so the gap is REPORTED instead -- 10 subscript/attribute accumulator writes
+    # across 4 modules, none counted, every one failing the role test rather than the target
+    # test. That is a measured bound on the denominator, not an unexamined one.
     for n in _deciders:
         for x in ast.walk(n):
             if isinstance(x, ast.Name) and isinstance(x.ctx, ast.Load):
@@ -493,7 +561,7 @@ def controls(src, path, legacy=False):
         # attacking. A counter incremented by a positive amount says the same thing an append
         # says: something is wrong here.
         elif (not legacy and isinstance(node, ast.AugAssign) and isinstance(node.op, ast.Add)
-              and isinstance(node.target, ast.Name) and node.target.id in _acc):
+              and _root(node.target) in _acc):
             _v = node.value
             _pos = (isinstance(_v, ast.Constant) and isinstance(_v.value, (int, float))
                     and not isinstance(_v.value, bool) and _v.value > 0)
@@ -1109,6 +1177,11 @@ def main():
                for n in sorted(TARGETS)),
            "sites_by_file": {n: len(controls((HERE / n).read_text(encoding="utf-8"), n))
                              for n in sorted(TARGETS)},
+           # ⇒ THE DETECTOR'S KNOWN BLIND SPOT, COUNTED. An accumulator held in a dict, a list
+           # slot or an attribute is recognised by its root name, but only if that root passes
+           # the ROLE test -- and none currently do. Section 8 quotes this rather than describing
+           # the gap in prose, because a bound nobody measured is an opinion.
+           "subscript_accumulator_writes": _subscript_accumulator_gap(),
            "watched": watched,
            "unwatched": len(unwatched),
            "redundant": len([u for u in unwatched if u[4] == "REDUNDANT"]),
