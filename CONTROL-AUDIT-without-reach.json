@@ -10,7 +10,7 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "34398e5bc37e003fbaec654c99dd11d9345e175b3dafaf35024332584820f9b4",
+    "control_audit.py": "2d99da0bc7bafefbf92df34a2e8a8f7e3b16b8b543120dcbdf7e5f66f30cd543",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -25,11 +25,11 @@
     "referee.py": "99a7f0c208fbee450a904b12847479832c26af6d30fbb854d2601bffb5abf5f2",
     "replay.py": "f906967296ab70472c67216e035ac43ea848a2e82538b95eb98b8ec12535c2f2",
     "stem_equivalence.py": "81397532510bc70facc7bbd863bb896653842c49aed5cdaaeac4d2c0c1a8d780",
-    "stress_test.py": "0f1380925090c27795c231155d53d752d3d88face6034002571da9a1132bac3f",
+    "stress_test.py": "3032b6c167e7af4f0d5d71bb4c81b0284f24e51568f4c0fb7aca3b6e9de559e3",
     "sweep.py": "f02192207e2bcef589536892dba3e9dae4763c5bbda8f6665853adbcf4cf1fe6",
     "test_bound_rules.py": "2fdd3c24169fec139bdad5350f586d578b683749979555bde544b587ee7e8847",
     "test_executors.py": "d0ebdbc8639e2fcc538eaa49172ad03ecb3005606c09d00f87220a44807896cc",
-    "unread_notes.py": "ed8cbc923cb8352fcd2ceec54266e75f51223fb593513c710f3bbd85f336ad9e"
+    "unread_notes.py": "c28049ae8597515686260bb8288988668ad3319548b5340137fb5c37401a7926"
   },
   "suite": [
     [
@@ -55,8 +55,8 @@
       "test_bound_rules.py"
     ]
   ],
-  "source_fingerprint": "883d0e534b3930c0",
-  "inputs_fingerprint": "f5308a90c29db8dd",
+  "source_fingerprint": "a736427f5c086e1c",
+  "inputs_fingerprint": "4ec5efc4008dd866",
   "inputs_manifest": {
     ".gitattributes": "852c5fc63199b92d7be8f8853c209345cad1f28c47322d5ab4d060cd360b84bc",
     ".gitignore": "ac1291a6a68853c2841d9b613a0208a76ce2de87ac08f7e2df8af23a5cbebaff",
@@ -73,7 +73,7 @@
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "cells.json": "cb5ab24099c6816e6f57ad6af40e1db4fd4be888686031a49f62a661f4a3c02d",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "34398e5bc37e003fbaec654c99dd11d9345e175b3dafaf35024332584820f9b4",
+    "control_audit.py": "2d99da0bc7bafefbf92df34a2e8a8f7e3b16b8b543120dcbdf7e5f66f30cd543",
     "CTRL.log": "b3f69d68c88be621de3ab5d7564ee9e23d9c4b8b0a6a786b607555524df86c16",
     "evidence/00d7d865dc8bf5de4a4b61adfb14060a6165aa95f874e8ab33a6b104a310f3e3.gz": "ce98bf5ff84ee65290e130844371d2d05cad0b5c8698021308c3d0e1b70e8b6a",
     "evidence/016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163.gz": "c90466a63aaceabd56e5170bfce44d4ab6ae799d2e358f805429b42a44635aac",
@@ -496,7 +496,7 @@
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
     "probes/hf_probe-2026-08-29.json": "343314224e782bc4ddc85e1872cf490651cc51b61f1459d512b9758d4a5d38ec",
     "RC.log": "52a2618baa5559e3478ffbb2fb8ab40befecf88ff42d4444a5f3e2a1ea4a6e35",
-    "REACH-CONTROLS.json": "1693dd8bf83eaeec94965cc4fe37f4984e072e6b9c7e21eeaffd11891f3f6dda",
+    "REACH-CONTROLS.json": "7b8d0cb8c6bd6849d6276288a832c6ade2aa575f19a7350074673a3d5ad70d6a",
     "reach_controls.py": "445fd1fcb1f0a5f864eed92c800134054cd946918c7325881a9c52dade49c3f0",
     "README.md": "6ec93f7b3b26cd04205766fafe38547792ec58c8e583d9988e0fc52721ede74e",
     "recheck-log.json": "3857f763263bea214e71f12379ce1347272ed43bdff178e04e0aea10dfa26c7b",
@@ -513,7 +513,7 @@
     "SELECTION-RULE.md.ots": "ce442c9039c33d6dcbc919d1876b13ede3e4509feae29154af701c51532c507f",
     "stem-equivalence.json": "456003a5dbac79c84d286be18f5473d031f7705d943d49fff47bbd5bc34698e6",
     "stem_equivalence.py": "81397532510bc70facc7bbd863bb896653842c49aed5cdaaeac4d2c0c1a8d780",
-    "stress_test.py": "0f1380925090c27795c231155d53d752d3d88face6034002571da9a1132bac3f",
+    "stress_test.py": "3032b6c167e7af4f0d5d71bb4c81b0284f24e51568f4c0fb7aca3b6e9de559e3",
     "SWEEP.log": "80aadd5a73d8b35ced93ad8644a37d71f602615f7d6ec1eed66d8392c217998e",
     "sweep.py": "f02192207e2bcef589536892dba3e9dae4763c5bbda8f6665853adbcf4cf1fe6",
     "sweep_control.json": "0f40552eaf816b198560df2850d1ccf117bb7b00a29be8acd409bd466e4e60ce",
@@ -522,7 +522,7 @@
     "test_bound_rules.py": "2fdd3c24169fec139bdad5350f586d578b683749979555bde544b587ee7e8847",
     "test_executors.py": "d0ebdbc8639e2fcc538eaa49172ad03ecb3005606c09d00f87220a44807896cc",
     "UNREAD-NOTES.json": "f2322717a326db3223cfdeecc62fad48377e8997c62dd5dc9269c0d6416edc66",
-    "unread_notes.py": "ed8cbc923cb8352fcd2ceec54266e75f51223fb593513c710f3bbd85f336ad9e"
+    "unread_notes.py": "c28049ae8597515686260bb8288988668ad3319548b5340137fb5c37401a7926"
   },
   "round": 23,
   "history": [
@@ -565,11 +565,32 @@
       "when": "2026-09-03T22:44:59Z",
       "source_fingerprint": "883d0e534b3930c0",
       "inputs_fingerprint": "f5308a90c29db8dd"
+    },
+    {
+      "round": 23,
+      "controls_total": 323,
+      "watched": 97,
+      "never_executes": 198,
+      "modules": 29,
+      "when": "2026-09-04T10:47:09Z",
+      "source_fingerprint": "a736427f5c086e1c",
+      "inputs_fingerprint": "7a8cbc9e52057daf"
+    },
+    {
+      "round": 23,
+      "controls_total": 323,
+      "watched": 97,
+      "never_executes": 198,
+      "modules": 29,
+      "when": "2026-09-04T11:24:11Z",
+      "source_fingerprint": "a736427f5c086e1c",
+      "inputs_fingerprint": "4ec5efc4008dd866"
     }
   ],
+  "history_anomalies": [],
   "previous": null,
-  "controls_total": 318,
-  "controls_total_legacy": 286,
+  "controls_total": 323,
+  "controls_total_legacy": 291,
   "sites_by_file": {
     "add_evidence.py": 6,
     "apply_negative_search.py": 2,
@@ -580,7 +601,7 @@
     "bind_probe_evidence.py": 2,
     "build_filter_bound.py": 2,
     "check_facts.py": 6,
-    "control_audit.py": 17,
+    "control_audit.py": 20,
     "fetch_artifact.py": 2,
     "filter_categories.py": 2,
     "filter_diff.py": 2,
@@ -595,16 +616,22 @@
     "referee.py": 2,
     "replay.py": 143,
     "stem_equivalence.py": 3,
-    "stress_test.py": 10,
+    "stress_test.py": 11,
     "sweep.py": 0,
     "test_bound_rules.py": 3,
     "test_executors.py": 12,
-    "unread_notes.py": 3
+    "unread_notes.py": 4
+  },
+  "subscript_accumulator_writes": {
+    "writes": 10,
+    "modules": 4,
+    "counted": 0,
+    "_note": "accumulator-shaped writes targeting a subscript or attribute rather than a bare name. `counted` is how many the role test admits; zero means every one lives in a module that reports through a record rather than a refusal, which is a bound on the denominator and not a defect in this count."
   },
   "watched": 97,
-  "unwatched": 221,
+  "unwatched": 226,
   "redundant": 28,
-  "never_executes": 193,
+  "never_executes": 198,
   "survivors": [
     {
       "file": "add_evidence.py",
@@ -860,112 +887,133 @@
     },
     {
       "file": "control_audit.py",
-      "line": 640,
+      "line": 708,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 723,
+      "line": 791,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 731,
+      "line": 799,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 737,
+      "line": 805,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 758,
+      "line": 826,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND is missing, so this run cannot say which round it \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 764,
+      "line": 832,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND does not hold an integer.\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 884,
+      "line": 952,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 893,
+      "line": 961,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 918,
+      "line": 986,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1173,
+      "line": 1263,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1181,
+      "line": 1271,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1213,
+      "line": 1321,
+      "kind": "reports a defect",
+      "source": "drift.append(",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 1336,
+      "kind": "reports a defect",
+      "source": "drift.append(\"history has %d recorded row(s) and this run produces %d -- append-only \"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 1341,
+      "kind": "reports a defect",
+      "source": "drift.append(\"history row %d differs from the recorded one; append-only means \"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "control_audit.py",
+      "line": 1350,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1217,
+      "line": 1354,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1225,
+      "line": 1362,
       "kind": "reports a defect",
       "source": "drift.append(\"suite: the record was measured over %d item(s) and this run used %d \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1231,
+      "line": 1368,
       "kind": "reports a defect",
       "source": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1250,
+      "line": 1387,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
@@ -1987,42 +2035,49 @@
     },
     {
       "file": "stress_test.py",
-      "line": 846,
+      "line": 861,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "stress_test.py",
-      "line": 858,
+      "line": 873,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "stress_test.py",
-      "line": 919,
+      "line": 921,
+      "kind": "refuses to proceed",
+      "source": "raise SystemExit(D + \" the undefined-name fixture set holds %d and is specified over at \"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "stress_test.py",
+      "line": 945,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "stress_test.py",
-      "line": 934,
+      "line": 960,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "stress_test.py",
-      "line": 970,
+      "line": 996,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "stress_test.py",
-      "line": 981,
+      "line": 1007,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(1 if failed else 0)",
       "class": "REDUNDANT"
@@ -2134,21 +2189,28 @@
     },
     {
       "file": "unread_notes.py",
-      "line": 187,
+      "line": 125,
+      "kind": "refuses to proceed",
+      "source": "raise SystemExit(",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "unread_notes.py",
+      "line": 216,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "unread_notes.py",
-      "line": 237,
+      "line": 266,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" the record on disk does not match what was just computed.\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "unread_notes.py",
-      "line": 241,
+      "line": 270,
       "kind": "refuses with a status code",
       "source": "return 1 if still else 0",
       "class": "NEVER EXECUTES"
