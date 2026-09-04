@@ -65,12 +65,27 @@ def _rm_reporting(work):
 
 
 def _tool_path(here, name):
-    """check_claims.py lives with the PAPER, not the census, and resolves the census beside it."""
+    """check_claims.py lives with the PAPER, not the census, and resolves the census beside it.
+
+    ⛔ THIS KNEW ONLY THE AUTHOR'S HALF OF THE TWO-LAYOUT RULE, so in every extraction it returned
+    (None, None) for `check_claims.py` -- which lives at `../paper/` there, not at
+    `../../journal-submissions/mp-metric/`. `notices()` then did a bare `continue`, the tool was
+    never invoked, and it stayed in SUITE_ACTIVE: the record said `suite_that_participated`
+    includes check_claims.py and `excluded_red_at_baseline` is empty, while the DEPOSITED record
+    says the opposite. A reviewer re-running the documented workflow got a record contradicting
+    the deposit and asserting the more flattering of the two, and neither run had executed the
+    fourth tool. This is the "control passes while inert" shape, live in the shipped archive, in
+    the tool written to measure unread prose.
+    """
     if (here / name).exists():
         return here, [name]
-    paper = here.parents[1] / "journal-submissions" / "mp-metric"
-    if (paper / name).exists():
-        return paper, [name]
+    # ⚠ BOTH LAYOUTS, the way every paper-side tool already does it: a sibling `paper/` inside an
+    # extraction, and the author's working tree. Listing the author's only is what made this
+    # unrunnable everywhere except one machine.
+    for cand in (here.parent / "paper",
+                 here.parents[1] / "journal-submissions" / "mp-metric"):
+        if (cand / name).exists():
+            return cand, [name]
     return None, None
 
 
@@ -97,7 +112,21 @@ def notices(root, led, paper_src):
     for tool in SUITE_ACTIVE:
         cwd, argv = _tool_path(HERE, tool)
         if cwd is None:
-            continue
+            # ⛔ TWO STATES WHERE THERE ARE THREE. A tool can be GREEN at baseline, RED at
+            # baseline (excluded, and named as excluded), or UNRESOLVABLE -- and the third folded
+            # silently into the first, so a tool that was never invoked was reported as having
+            # participated. That is the same anchored-but-unusable shape as the arithmetic
+            # control's middle state and `watched_direction` on equal ratios, here in the tool
+            # that decides which prose nothing reads.
+            #
+            # ⇒ Unresolvable is a REFUSAL, not a shrug. A measurement over a suite is a claim
+            # about that suite, and a suite this cannot assemble is not a smaller suite -- it is
+            # an unknown one.
+            raise SystemExit(
+                D + " %r is in the suite and cannot be located from %s. A tool that cannot be "
+                "run must not be reported as having participated: the record would name a suite "
+                "member that never executed, and the figure beneath it would be measured over a "
+                "population this tool could not assemble." % (tool, HERE))
         if cwd != HERE:
             cwd = paper_src
         r = subprocess.run([sys.executable, "-X", "utf8"] + argv, cwd=str(cwd),

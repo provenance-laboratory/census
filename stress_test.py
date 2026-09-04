@@ -836,8 +836,23 @@ for _f in _files:
         # generator, and this project has now had four of those in two days.
         _needles = ("c:" + "/users", "c:" + chr(92) + "users",
                     chr(47) + "home" + chr(47), chr(47) + "Users".lower() + chr(47))
+        # ⛔ ABSOLUTE PATHS ONLY, IN THE DETECTOR WRITTEN FOR EXACTLY THIS CLASS. `unread_notes.py`
+        # reached across with `here.parents[1] / "journal-submissions" / "mp-metric"` -- a
+        # RELATIVE path into the author's directory layout, equally unrunnable from a deposit
+        # where the paper sits at `../paper`, and invisible here. A round-14 reviewer found the
+        # tool inert in every extraction because of it. The needle list asked what a path LOOKS
+        # like instead of what makes it unrunnable, which is naming a sibling directory that
+        # exists only in the author's tree.
+        #
+        # ⚠ A tool may still reach across; it must simply know both layouts. So the finding is a
+        # reference to an author-tree directory that is NOT accompanied by the extraction
+        # sibling, which is what the two-layout rule means in practice.
+        _AUTHOR_DIRS = ("journal-submissions", "provenance-laboratory")
         if any(_n in _low for _n in _needles):
             _abs.append("%s:%d" % (_f.name, _ln))
+        elif any(_d in _low for _d in _AUTHOR_DIRS) and '"paper"' not in _src:
+            _abs.append("%s:%d (author-tree layout with no extraction fallback)"
+                        % (_f.name, _ln))
 if _abs:
     print("  " + chr(0x26D4) + " %d absolute path(s) into one machine: %s"
           % (len(_abs), ", ".join(_abs[:4])))
@@ -895,6 +910,17 @@ _FIX = {
         + "    k = [A for _ in range(1)]" + _NL, False),
     "ok_plain.py": ("B = 1" + _NL + "def use(): return B" + _NL, False),
 }
+# ⛔ THE FIXTURE SET COULD BE EMPTIED AND EVERY GATE STAYED GREEN. A round-14 reviewer set
+# `_FIX = {}` and got "the undefined-name control agrees with Python on 0 fixture(s)" inside a
+# 49-passed suite -- the claim "the oracle is Python itself" made vacuous while the whole tree
+# reported success. The one incidental failure they hit was the dead-name detector noticing an
+# unused variable, not any control over the population. A population is a quantity; nothing
+# bound it.
+_MIN_FIX = 9
+if len(_FIX) < _MIN_FIX:
+    raise SystemExit(D + " the undefined-name fixture set holds %d and is specified over at "
+                     "least %d. 'agrees with Python on 0 fixtures' is not agreement."
+                     % (len(_FIX), _MIN_FIX))
 import shutil as _sh2      # noqa: E402
 import tempfile as _tf2    # noqa: E402
 _work = pathlib.Path(_tf2.mkdtemp(prefix="undef-fix-"))

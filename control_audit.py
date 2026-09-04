@@ -1204,6 +1204,53 @@ def main():
         # ⚠ The comment above this function said it "binds its OUTPUT". The manifest IS an output,
         # and it was the one output nothing bound. Every recorded key is compared now except those
         # that move by construction.
+        # ⛔ `previous` MOVES BY DERIVATION, NOT BY CONSTRUCTION, AND THE MANUSCRIPT READS IT.
+        # _EXPECTED_TO_MOVE is meant to hold fields that cannot be compared because a re-run
+        # legitimately produces different bytes. `previous` is not one of those: it is derived
+        # from the record's own history. Excluding it left it bound by NOTHING -- the record is
+        # excluded from its own inputs manifest by construction (rightly; it would be circular),
+        # so `--verify` is the only thing binding it, and `--verify` skipped it.
+        #
+        # A round-14 reviewer edited `previous.watched` from 122 to 200, preserving the direction
+        # so the direction guard stayed satisfied, and rebuilt: build_paper.py exited 0, 205
+        # placeholders resolved, "every figure in the manuscript came from the engine", and the
+        # manuscript printed "38%, against 72% the round before -- it fell, a movement of -78
+        # watched sites". No .py touched, ONE edit rather than round 25's two, because there was
+        # no manifest digest to update. check_claims.py: 92 ok, 0 failing.
+        #
+        # ⇒ `previous` must be a row that already exists in `history`. History is append-only and
+        # each row carries its own source and inputs fingerprints, so a forged predecessor has to
+        # forge a history row too -- and the history rows ARE compared, below. The reviewer's 200
+        # matches no row: the round-22 rows carry 122 and 123.
+        _prev_row = prev.get("previous") or {}
+        _hist = prev.get("history") or []
+        if _prev_row:
+            _KEYS = ("round", "controls_total", "watched", "never_executes")
+            _want = {k: _prev_row.get(k) for k in _KEYS}
+            if not any({k: h.get(k) for k in _KEYS} == _want for h in _hist):
+                drift.append(
+                    "previous (%s) matches no row in this record's own history -- it is derived "
+                    "from history and must appear in it, or it is a figure nothing produced"
+                    % _want)
+        # ⚠ `history` is append-only, so a re-run may add a row. What it may never do is CHANGE
+        # one: the recorded rows must be a prefix of the recomputed ones.
+        #
+        # ⚠ AND THE BOUND, STATED RATHER THAN IMPLIED: a DROPPED trailing row is not detectable
+        # here, because this run builds `rec["history"]` FROM the record it is verifying, so a
+        # deletion is inherited rather than noticed. Comparing a record to itself cannot catch
+        # subtraction. What that costs is bounded: `previous` must still match a surviving row,
+        # so removing history cannot fabricate a published figure -- it can only lose one. The
+        # fabrication path is the one closed above.
+        _rec_hist = rec.get("history") or []
+        if len(_hist) > len(_rec_hist):
+            drift.append("history has %d recorded row(s) and this run produces %d -- append-only "
+                         "means it cannot shrink" % (len(_hist), len(_rec_hist)))
+        else:
+            for _i, _row in enumerate(_hist):
+                if _rec_hist[_i] != _row:
+                    drift.append("history row %d differs from the recorded one; append-only means "
+                                 "earlier rows never change" % _i)
+                    break
         _EXPECTED_TO_MOVE = ("previous", "history", "_what", "_dispositions", "_history_note",
                              "survivors", "suite")
         for k in sorted(set(prev) | set(rec)):
