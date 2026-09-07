@@ -6,7 +6,7 @@
     "archive_evidence.py": "652ac092c7165e38380c3a37ba2d71da0e7dc57eaa064ae231d4b5395ab9b231",
     "archive_filter_probe.py": "584c8a423c24589298deb30c494584b650134341640aefe60296611e7b0d49d3",
     "archive_negative_search.py": "27829d661ca183638000675fe183382b2f23f75888d8359e9258e9caf9ead30b",
-    "axes.py": "5dc7b460b63627c33736828064cf2e461136d42789f73d09fa046dddf2563ece",
+    "axes.py": "ec4c20b29a4a066848fcbb3d7ccd40b17d8f5dd08191d1a002cfbafb9bf2b3a5",
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
@@ -55,8 +55,8 @@
       "test_bound_rules.py"
     ]
   ],
-  "source_fingerprint": "a736427f5c086e1c",
-  "inputs_fingerprint": "4ec5efc4008dd866",
+  "source_fingerprint": "c6a3de5d8a2ecbaf",
+  "inputs_fingerprint": "c6d50277b12a1ff0",
   "inputs_manifest": {
     ".gitattributes": "852c5fc63199b92d7be8f8853c209345cad1f28c47322d5ab4d060cd360b84bc",
     ".gitignore": "ac1291a6a68853c2841d9b613a0208a76ce2de87ac08f7e2df8af23a5cbebaff",
@@ -66,7 +66,7 @@
     "archive_filter_probe.py": "584c8a423c24589298deb30c494584b650134341640aefe60296611e7b0d49d3",
     "archive_negative_search.py": "27829d661ca183638000675fe183382b2f23f75888d8359e9258e9caf9ead30b",
     "AUDIT-ROUND": "076320a2a08267b4c026d06573bba408ea68841e73cdc20e62cce59de165ece3",
-    "axes.py": "5dc7b460b63627c33736828064cf2e461136d42789f73d09fa046dddf2563ece",
+    "axes.py": "ec4c20b29a4a066848fcbb3d7ccd40b17d8f5dd08191d1a002cfbafb9bf2b3a5",
     "axis14-signature-probe.json": "d2eaf13fb521666a9dbb9f538a14ecddd7b4aaff275cbba37045b918f6128652",
     "axis6-source-probe.json": "26223e35f7250ffb6b301ebe821a0d7be9143af51d15a9199cfd436a6306972a",
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
@@ -496,7 +496,7 @@
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
     "probes/hf_probe-2026-08-29.json": "343314224e782bc4ddc85e1872cf490651cc51b61f1459d512b9758d4a5d38ec",
     "RC.log": "52a2618baa5559e3478ffbb2fb8ab40befecf88ff42d4444a5f3e2a1ea4a6e35",
-    "REACH-CONTROLS.json": "7b8d0cb8c6bd6849d6276288a832c6ade2aa575f19a7350074673a3d5ad70d6a",
+    "REACH-CONTROLS.json": "cad4487b99d50846adf3cf385a631c829ae75a3dca225dd2a2274d605caeac5b",
     "reach_controls.py": "445fd1fcb1f0a5f864eed92c800134054cd946918c7325881a9c52dade49c3f0",
     "README.md": "6ec93f7b3b26cd04205766fafe38547792ec58c8e583d9988e0fc52721ede74e",
     "recheck-log.json": "3857f763263bea214e71f12379ce1347272ed43bdff178e04e0aea10dfa26c7b",
@@ -585,6 +585,16 @@
       "when": "2026-09-04T11:24:11Z",
       "source_fingerprint": "a736427f5c086e1c",
       "inputs_fingerprint": "4ec5efc4008dd866"
+    },
+    {
+      "round": 23,
+      "controls_total": 323,
+      "watched": 97,
+      "never_executes": 198,
+      "modules": 29,
+      "when": "2026-09-07T17:19:15Z",
+      "source_fingerprint": "c6a3de5d8a2ecbaf",
+      "inputs_fingerprint": "c6d50277b12a1ff0"
     }
   ],
   "history_anomalies": [],

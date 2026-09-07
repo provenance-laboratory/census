@@ -290,6 +290,53 @@ STRATUM_MAX = {
     "api-only": {12: 0, 13: 1, 14: 1, 15: 1},
 }
 
+# ⛔ STRUCTURAL DETERMINATION IS A DIFFERENT RELATION FROM A SCORING CAP, AND CONFLATING THEM PUT A
+# WRONG NUMBER IN THE ABSTRACT. `STRATUM_MAX` answers "how high can this stratum score". This
+# answers "is ANY positive reachable at all, and on what grounds" -- and no table expressed it, so a
+# first attempt hardcoded {14, 15, 16} and reported nine determined cells.
+#
+# ⚠️ THE NINE CAME FROM A REVIEWER'S SENTENCE, NOT FROM THE LEDGER. The derivation's own comment
+# claimed the number "follows the ledger instead of being retyped beside it". It followed a literal
+# set, and the literal was an assertion nobody had checked against SCORING.md. **The placeholder
+# gate refused the typed number and then passed a derivation over a typed set -- the same number
+# wearing the envelope.**
+#
+# ⇒ SCORING.md settles it: level 1 is ASSERTED, "the property is stated in a document we retrieved,
+# and no artifact exists whose content a third party could check". An api-only publisher CAN state
+# that its weights are signed or its digest timestamped; no artifact exists to check that against,
+# which is exactly a 1. So a 0 on axes 14 and 15 is a FINDING -- three publishers, none of whom
+# makes the claim -- and calling it structural gives away the result the census exists to produce.
+#
+# ⚠️ Nor can this be inferred from `max_for`: it returns 1 for axis 16 under api-only, so projecting
+# over `== 0` finds nothing and over `> 0` sweeps in 14 and 15. The relation must be DECLARED, with
+# the ground stated per entry, or the next round produces a fourth number by a fourth route.
+STRUCTURALLY_DETERMINED = {
+    (16, "api-only"):
+        "axis 16 is a SEARCH axis whose bar requires an INDEPENDENT party to report a bit-identical "
+        "reproduction. Bit-identity is a comparison against a reference, and no independent party "
+        "can obtain the weights of an api-only release. No such report can exist -- in any corpus, "
+        "under any search -- so the zero is not the outcome of the search bound the cell states.",
+}
+
+# ⚠️ THE RULE THAT DECIDES 0 VERSUS N/A, which the doctrine was missing and which reproduces every
+# N/A decision already in the ledger:
+#
+#     N/A when the impossibility is INDEPENDENT of anything the instrument scores.
+#     0   when the impossibility is ENTAILED BY A CHOICE the instrument already scores elsewhere.
+#
+# Base models on axes 20-22: no post-training stage exists, and nothing here scores the decision to
+# release a base model -- independent, so N/A. Api-only on axes 13-16: the impossibility flows from
+# publishing no weights, and THAT decision is already scored at axis 12; marking them N/A would
+# credit one choice twice, once by capping axis 12 at 0 and again by shrinking the denominator.
+# ⇒ Axis 16 is therefore scored 0 and disclosed, not N/A, and the reason generalises rather than
+# resting on "every release was made from something", which is a Group 1 rationale that happened to
+# reach the right verdict here for the wrong reason.
+
+
+def structurally_determined(axis_id, kind):
+    """The stated ground on which no positive is reachable, or None. Declared, never inferred."""
+    return STRUCTURALLY_DETERMINED.get((axis_id, kind))
+
 
 def max_for(axis_id, kind=None):
     """The highest score this axis can attain, for a release of this kind. Defaults to 2."""
