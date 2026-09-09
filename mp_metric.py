@@ -236,10 +236,10 @@ def validate(led):
                              f"({u[:70]}...). Run pin_urls.py; a branch is a moving pointer and "
                              f"'retrieved at a pinned revision' is false of it.")
 
-        # {D} VERIFIED requires a REGISTERED method, not a sentence. Round-1 review passed every
+        # ⛔ VERIFIED requires a REGISTERED method, not a sentence. Round-1 review passed every
         # score-2 cell with check="read a document" and this validator reported no defect.
         #
-        # {D} AND A CHECK ON A NON-VERIFIED CELL WAS VALIDATED BY NOTHING, which is the same hole
+        # ⛔ AND A CHECK ON A NON-VERIFIED CELL WAS VALIDATED BY NOTHING, which is the same hole
         # `bound` had before round 13. It matters now: round 14 demoted five cells from 2 to 1
         # because their checks did not establish their axis's bar, and those checks STAY on the
         # cells as the record of what was actually tested. Unvalidated, they would be prose again
@@ -468,6 +468,82 @@ def validate(led):
                      f"{len(_bounded)} of {len(_zeros)} zeros. A bound was removed. If that was "
                      f"deliberate, say so in the commit and lower zero_bounds_floor in "
                      f"cells.json; otherwise a negative just became unfalsifiable again.")
+
+    # ⛔ `STRUCTURALLY_DETERMINED` SET A FIGURE IN THE ABSTRACT AND NOTHING TESTED IT. A round-30
+    # reviewer injected the two entries the previous round had just removed -- (14, "api-only") and
+    # (15, "api-only"), ground string *"injected by a reviewer, no ground checked"* -- and after one
+    # ordinary rebuild the whole suite was green: validation clean, 90 claims ok, 37 bounded and 23
+    # replayed, 17 bound-rule controls caught. Three guards refused first, and all three were about
+    # FINGERPRINTS: the audit's recorded digest of axes.py, the inputs manifest, and the two audits
+    # disagreeing. Every one of them fires on ANY edit to the file and is satisfied by the author's
+    # own workflow, which the build runs to a fixpoint.
+    #
+    # ⚠️ SO THE ROUND-29 DEFECT WAS NOT FIXED, IT WAS RELOCATED. `_STRUCTURAL = {14, 15, 16}` in
+    # build_paper.py became a dict in axes.py with a docstring, a per-entry rationale and a lookup
+    # function -- more surface, the same absence of a test. Reintroduce the wrong value tomorrow and
+    # the abstract says nine again with every light still green. **A rising check count is not
+    # rising coverage**, which is this project's own third failure mode, met inside the repair for
+    # the second.
+    #
+    # ⇒ THE PREDICATE ASSERTS THE GROUND, NOT THE COUNT, and it runs in BOTH directions:
+    #
+    #   SOUND      every declared pair must really be unreachable -- no subject of that kind holds
+    #              a positive on that axis anywhere in the ledger. A single counter-example is a
+    #              false declaration, and a false declaration shrinks a denominator.
+    #   COMPLETE   every pair the instrument ALREADY says is unreachable -- max_for(axis, kind) == 0
+    #              -- must be declared with its ground. This is the half that makes the table a
+    #              projection rather than a list: a new stratum cap cannot be added without either
+    #              stating why no positive is reachable or having the build refuse.
+    _kinds = {s["id"]: s.get("kind") for s in led.get("subjects", [])}
+    if _kinds and led.get("cells"):
+        # ⚠ PROJECT OVER THE INSTRUMENT'S AXES, NOT OVER THE LEDGER'S. The first version read
+        # `{c["axis"] for c in led["cells"]}` and handed each to `max_for`, which raises on an axis
+        # that does not exist -- so the stress fixture "a cell on an axis that does not exist",
+        # whose entire purpose is to be invalid, killed the validator with a KeyError instead of
+        # being reported as the defect it is. A check that crashes on bad input has not validated
+        # it. The completeness question is about this instrument's own cap table anyway, so it
+        # holds for an axis no cell happens to mention.
+        _axis_ids = sorted(A.BY_ID)
+        _declared = set(A.STRUCTURALLY_DETERMINED)
+        for _a, _k in sorted(_declared):
+            _pos = [c for c in led["cells"]
+                    if c["axis"] == _a and _kinds.get(c["subject"]) == _k
+                    and (c.get("score") or 0) > 0]
+            if _pos:
+                d.append(
+                    "axis %d is declared STRUCTURALLY DETERMINED for %r, and %s scores %d on it. "
+                    "A ground saying no positive is reachable is refuted by a positive: either the "
+                    "score is wrong or the declaration is, and a false declaration removes a cell "
+                    "from a denominator."
+                    % (_a, _k, _pos[0]["subject"], _pos[0]["score"]))
+            # ⛔ THE CONJUNCT THAT CATCHES THE REVIEWER'S OWN INJECTION. Soundness alone -- "no
+            # subject of this kind scores positive here" -- is satisfied by every entry the census
+            # is trying to REPORT: an api-only zero on axes 14 and 15 is the FINDING, and declaring
+            # those cells determined would pass a check that only looks for counter-examples while
+            # giving away the result. The missing half is whether a positive is PRODUCIBLE, and the
+            # instrument already answers that in `STRATUM_MAX`: a publisher can state a property in
+            # a document and reach ASSERTED on 14 and 15, so their cap is 1, so they are findings.
+            if A.max_for(_a, _k) != 0:
+                d.append(
+                    "axis %d is declared STRUCTURALLY DETERMINED for %r while the instrument caps "
+                    "it at %d for that stratum -- so a positive IS reachable and the declaration "
+                    "says it is not. Declaring a cell determined without capping it removes it "
+                    "from the abstract's count of findings and leaves it priced in the ceiling: "
+                    "the two tables must say the same thing."
+                    % (_a, _k, A.max_for(_a, _k)))
+            if not str(A.structurally_determined(_a, _k) or "").strip():
+                d.append("axis %d is declared determined for %r with no stated ground. The table "
+                         "exists so the reason is checkable; an entry without one is the literal "
+                         "set it replaced." % (_a, _k))
+        for _a in _axis_ids:
+            for _k in sorted({v for v in _kinds.values() if v}):
+                if A.max_for(_a, _k) == 0 and (_a, _k) not in _declared:
+                    d.append(
+                        "the instrument caps axis %d at 0 for %r -- it already says no positive is "
+                        "reachable -- and STRUCTURALLY_DETERMINED does not declare it. Either state "
+                        "the ground or lift the cap; a cell that cannot be positive while the "
+                        "paper counts it as a finding is the census reporting a category as a "
+                        "choice." % (_a, _k))
     return d
 
 

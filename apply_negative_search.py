@@ -15,6 +15,7 @@ finding something is a finding for a human to read, not for a script to act on.
 """
 import io
 import json
+import re
 import pathlib
 import sys
 
@@ -24,6 +25,48 @@ LEDGER = HERE / "cells.json"
 SEARCH = HERE / "negative-search.json"
 
 AXIS_WORD = {16: "bit-identical", 17: "approximate"}
+
+
+_AFFECTS = re.compile(r"axis\s*(\d+)")
+
+
+def affected_axes(hit):
+    """Which axes a positive adjudication bears on -- READ OUT of the record, never inferred.
+
+    ⛔ THE POSITIVE PATH WROTE ITS OWN OPPOSITE, AND A REVIEWER DEMONSTRATED IT. `note_for` tested
+    `if (hit and axis == 17)`, so a hit was a positive for axis 17 BY DEFINITION and a negative for
+    axis 16 BY DEFINITION. Handed a synthetic adjudication explicitly reporting a BIT-IDENTICAL
+    reproduction, with a reference digest and artifacts, it emitted:
+
+        axis 16: No independent bit-identical reproduction report was identified.
+        axis 17: An independent approximate reproduction report WAS found.
+
+    -- the one disposition the census exists to detect, converted into its own absence and filed
+    under the wrong axis, in the machinery built to find it. Twelve axis-16 zeros appeared to have
+    a positive-capable search behind them and did not.
+
+    ⚠ THE DISPOSITION WAS IN THE DATA THE WHOLE TIME. Every adjudicated hit carries
+    `affects`, and both real records say "axis 17 only". The code read the axis number it had been
+    handed instead of the field the adjudicator wrote, which is the difference between routing a
+    result and assuming one.
+
+    => FAILS CLOSED. A hit whose `affects` names no axis this note covers is a REFUSAL, because the
+    alternative is what happened: an unrouted positive silently becomes two negatives, and every
+    check downstream passes.
+    """
+    raw = str(hit.get("affects") or "").strip()
+    axes = {int(x) for x in _AFFECTS.findall(raw)} & set(AXIS_WORD)
+    if not axes:
+        # ⚠ THIS LINE READ `D + " ..."` AND `D` IS NOT DEFINED IN THIS MODULE, so the
+        # refusal raised NameError instead of speaking -- a control that crashes rather than
+        # reports, found by the first probe that took the branch. Every other message here
+        # spells the character inline; this one borrowed a name from a neighbouring file.
+        raise SystemExit(
+            chr(0x26D4) + " an adjudicated HIT declares affects=%r, which names none of axes %s. A positive "
+            "that cannot be routed is written as an absence on every axis, which is how the one "
+            "result this search exists to find disappears into the notes it produces."
+            % (raw, sorted(AXIS_WORD)))
+    return axes
 
 
 def note_for(sub, rec, axis, run_at):
@@ -40,8 +83,9 @@ def note_for(sub, rec, axis, run_at):
     adj = rec.get("adjudication") or {}
     hit = adj.get("hit")
 
+    positive = bool(hit) and axis in affected_axes(hit)
     head = ("An independent %s reproduction report WAS found." % AXIS_WORD[axis]
-            if (hit and axis == 17) else
+            if positive else
             "No independent %s reproduction report was identified." % AXIS_WORD[axis])
 
     body = (
@@ -51,7 +95,7 @@ def note_for(sub, rec, axis, run_at):
         "sentence, and all %d were read."
         % (rec["name"], run_at[:10], totals, len(rec["candidates"]), n2, n2))
 
-    if hit and axis == 17:
+    if positive:
         found = (" FOUND: %s, %s -- %r. %s"
                  % (hit["title"], hit["url"], hit["quote"], adj["rationale"]))
     else:

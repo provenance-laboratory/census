@@ -1,22 +1,22 @@
 {
   "_readme": "Which never-executing branches an ARCHIVE mutation can reach. Reaching a check is not validating it: this shows an input exists that runs the line and that the executor refuses, not that the refusal is correct.",
-  "targets": 198,
-  "source_fingerprint": "c6a3de5d8a2ecbaf",
+  "targets": 208,
+  "source_fingerprint": "2f764e9decfada0a",
   "targets_pinned": 85,
   "_targets_note": "targets_pinned is the population this measurement was FIRST made against. `targets` is what the audit reports today, which this tool changes by being in the suite -- so the two differ by design and the pinned one is the denominator to quote.",
-  "reached": 24,
+  "reached": 25,
   "reached_via_archive": 15,
-  "reached_via_ledger": 9,
+  "reached_via_ledger": 10,
   "reached_by_axis": {
     "archive": 15,
-    "ledger": 1,
+    "ledger": 2,
     "evidence-shape": 7,
     "validator": 1
   },
   "_axis_note": "reached_via_archive counts ONLY the `archive` axis -- the one that corrupts bytes. It was previously computed as `kind != 'ledger'`, which counted the evidence-shape and validator branches as archive-reachable and published 23 where the honest figure is 15. evidence-shape rewrites the cell's evidence LIST in the ledger and never patches the byte seam; the validator branch is reached by altering `as_of`, a ledger field. reached_by_axis is the full breakdown so no reader has to trust either total.",
-  "behind_the_validator": 1,
-  "still_unreached": 174,
-  "attempts": 8664,
+  "behind_the_validator": 2,
+  "still_unreached": 183,
+  "attempts": 8660,
   "refusals": 6814,
   "detail": {
     "mp_metric.py:141": {
@@ -25,9 +25,9 @@
       "mutation": "as_of altered",
       "source": "d.append(\"%s/axis%s: as_of is %r, which is not an ISO date\"",
       "kind": "validator",
-      "says": "pythia-12b/axis2: as_of is '2026-08-30X', which is not an ISO date"
+      "says": "pythia-12b/axis2: as_of is '2026-09-09X', which is not an ISO date"
     },
-    "replay.py:383": {
+    "replay.py:385": {
       "cell": "olmo-2-13b/axis4",
       "method": "http_range",
       "mutation": "first artifact dropped",
@@ -36,7 +36,7 @@
       "says": "the ranged artifact is cited alone, so nothing in the ledger says this url belongs to this",
       "refused": true
     },
-    "replay.py:393": {
+    "replay.py:395": {
       "cell": "olmo-2-13b/axis4",
       "method": "http_range",
       "mutation": "empty",
@@ -45,7 +45,7 @@
       "evidence_index": 1,
       "refused": true
     },
-    "replay.py:395": {
+    "replay.py:397": {
       "cell": "olmo-2-13b/axis4",
       "method": "http_range",
       "mutation": "one byte flipped mid-body",
@@ -54,7 +54,7 @@
       "evidence_index": 1,
       "refused": true
     },
-    "replay.py:493": {
+    "replay.py:495": {
       "cell": "pythia-12b/axis2",
       "method": "hf_probe.corpus_item_digests",
       "mutation": "evidence list emptied",
@@ -63,7 +63,7 @@
       "says": "expected exactly one pinned dataset tree response, found 0",
       "refused": true
     },
-    "replay.py:508": {
+    "replay.py:510": {
       "cell": "pythia-12b/axis2",
       "method": "hf_probe.corpus_item_digests",
       "mutation": "empty",
@@ -72,7 +72,16 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:554": {
+    "replay.py:587": {
+      "cell": "pythia-12b/axis2",
+      "method": "hf_probe.corpus_item_digests",
+      "mutation": "expect_non_content missing one entry",
+      "source": "return False, (\"%d of %d enumerated corpus file(s) carry NO publisher digest: %s\"",
+      "kind": "ledger",
+      "says": "1 of 23 enumerated corpus file(s) carry NO publisher digest: ['.gitattributes']",
+      "validator_would_catch_it_first": true
+    },
+    "replay.py:613": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "evidence list emptied",
@@ -81,7 +90,7 @@
       "says": "cited artifacts span 0 different repository/revision pairs: []",
       "refused": true
     },
-    "replay.py:569": {
+    "replay.py:628": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "first artifact duplicated",
@@ -90,7 +99,7 @@
       "says": "expected exactly one ranged artifact, found 2",
       "refused": true
     },
-    "replay.py:612": {
+    "replay.py:671": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "empty",
@@ -99,7 +108,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:614": {
+    "replay.py:673": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "an LFS pointer, same length",
@@ -108,7 +117,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:622": {
+    "replay.py:681": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "zero bytes, same length",
@@ -117,7 +126,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:627": {
+    "replay.py:686": {
       "cell": "pythia-12b/axis12",
       "method": "hf_probe.weight_object",
       "mutation": "one byte flipped mid-body",
@@ -126,7 +135,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:645": {
+    "replay.py:704": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "evidence list emptied",
@@ -135,7 +144,7 @@
       "says": "cited artifacts span 0 different repository/revision pairs: []",
       "refused": true
     },
-    "replay.py:689": {
+    "replay.py:748": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "empty",
@@ -144,7 +153,7 @@
       "evidence_index": 1,
       "refused": true
     },
-    "replay.py:691": {
+    "replay.py:750": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "a git-LFS pointer",
@@ -153,7 +162,7 @@
       "evidence_index": 1,
       "refused": true
     },
-    "replay.py:693": {
+    "replay.py:752": {
       "cell": "pythia-12b/axis13",
       "method": "hf_probe.all_shard_digests",
       "mutation": "empty",
@@ -162,7 +171,7 @@
       "evidence_index": 1,
       "refused": true
     },
-    "replay.py:888": {
+    "replay.py:1023": {
       "cell": "pythia-12b/axis16",
       "method": "reproduction_search",
       "mutation": "empty",
@@ -171,7 +180,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:983": {
+    "replay.py:1118": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
       "mutation": "evidence list emptied",
@@ -180,7 +189,7 @@
       "says": "expected exactly one pinned enumeration, found 0",
       "refused": true
     },
-    "replay.py:1003": {
+    "replay.py:1138": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
       "mutation": "empty",
@@ -189,7 +198,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:1010": {
+    "replay.py:1165": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
       "mutation": "JSON empty list",
@@ -198,7 +207,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:1031": {
+    "replay.py:1186": {
       "cell": "pythia-12b/axis3",
       "method": "hf_probe.release_artifacts",
       "mutation": "expect_patterns missing one entry",
@@ -207,7 +216,7 @@
       "says": "exemplar(s) ['corpus.ots', 'MANIFEST.json.asc'] match no declared pattern; the probe and t",
       "validator_would_catch_it_first": true
     },
-    "replay.py:1081": {
+    "replay.py:1247": {
       "cell": "pythia-12b/axis6",
       "method": "repo_tree_probe",
       "mutation": "evidence list emptied",
@@ -216,7 +225,7 @@
       "says": "expected exactly one pinned repository tree response, found 0",
       "refused": true
     },
-    "replay.py:1097": {
+    "replay.py:1263": {
       "cell": "pythia-12b/axis6",
       "method": "repo_tree_probe",
       "mutation": "empty",
@@ -225,7 +234,7 @@
       "evidence_index": 0,
       "refused": true
     },
-    "replay.py:1099": {
+    "replay.py:1265": {
       "cell": "pythia-12b/axis6",
       "method": "repo_tree_probe",
       "mutation": "JSON tree marked TRUNCATED",
@@ -235,8 +244,8 @@
       "refused": true
     }
   },
-  "reached_this_run": 24,
-  "reached_cumulative": 24,
+  "reached_this_run": 25,
+  "reached_cumulative": 25,
   "unreached": {
     "add_evidence.py:70": "bad += 1",
     "add_evidence.py:75": "bad += 1",
@@ -244,8 +253,8 @@
     "add_evidence.py:81": "return 2",
     "add_evidence.py:87": "return 1",
     "add_evidence.py:96": "return 1",
-    "apply_negative_search.py:71": "return 1",
-    "apply_negative_search.py:98": "return 1",
+    "apply_negative_search.py:115": "return 1",
+    "apply_negative_search.py:142": "return 1",
     "archive_evidence.py:83": "bad.append(\"%s: not in the manifest at all\" % url)",
     "archive_evidence.py:86": "bad.append(\"%s: manifest %s, ledger %s\" % (url, m[\"sha256\"][:12], rec[\"sha256\"][:12]))",
     "archive_evidence.py:92": "bad.append(\"%s: manifest says stored, %s is missing\" % (url, blob.name))",
@@ -279,19 +288,19 @@
     "control_audit.py:805": "return False, _name",
     "control_audit.py:826": "raise SystemExit(D + \" AUDIT-ROUND is missing, so this run cannot say which round it \"",
     "control_audit.py:832": "raise SystemExit(D + \" AUDIT-ROUND does not hold an integer.\")",
-    "control_audit.py:952": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
-    "control_audit.py:961": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
-    "control_audit.py:986": "return 1",
-    "control_audit.py:1263": "raise SystemExit(",
-    "control_audit.py:1271": "return 1",
-    "control_audit.py:1321": "drift.append(",
-    "control_audit.py:1336": "drift.append(\"history has %d recorded row(s) and this run produces %d -- append-only \"",
-    "control_audit.py:1341": "drift.append(\"history row %d differs from the recorded one; append-only means \"",
-    "control_audit.py:1350": "drift.append(\"%s: recorded %s, recomputed %s\"",
-    "control_audit.py:1354": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
-    "control_audit.py:1362": "drift.append(\"suite: the record was measured over %d item(s) and this run used %d \"",
-    "control_audit.py:1368": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
-    "control_audit.py:1387": "return 1",
+    "control_audit.py:962": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
+    "control_audit.py:971": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
+    "control_audit.py:996": "return 1",
+    "control_audit.py:1300": "raise SystemExit(",
+    "control_audit.py:1308": "return 1",
+    "control_audit.py:1358": "drift.append(",
+    "control_audit.py:1373": "drift.append(\"history has %d recorded row(s) and this run produces %d -- append-only \"",
+    "control_audit.py:1378": "drift.append(\"history row %d differs from the recorded one; append-only means \"",
+    "control_audit.py:1387": "drift.append(\"%s: recorded %s, recomputed %s\"",
+    "control_audit.py:1391": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
+    "control_audit.py:1399": "drift.append(\"suite: the record was measured over %d item(s) and this run used %d \"",
+    "control_audit.py:1405": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
+    "control_audit.py:1424": "return 1",
     "fetch_artifact.py:192": "refused += 1",
     "fetch_artifact.py:207": "raise SystemExit(1 if refused else 0)",
     "filter_categories.py:56": "raise SystemExit(chr(0x26D4) + \" an archived category response does not hash to its \"",
@@ -345,42 +354,48 @@
     "referee.py:97": "return 1",
     "referee.py:258": "bad += 1",
     "replay.py:83": "return False, (\"literal(s) too short to discriminate anything: %s (minimum %d characters)\"",
-    "replay.py:232": "raise SystemExit(D + \" a subject is named `_led`, which this context reserves.\")",
-    "replay.py:294": "bad.append(\"%s/axis%d has no declared axis_documents\" % (cell[\"subject\"], cell[\"axis\"]))",
-    "replay.py:411": "return False, (\"the cell records enumeration index %d and the co-cited document \"",
-    "replay.py:422": "return False, (\"the cell records no `enumerated_index`, so the url could name any of the \"",
-    "replay.py:447": "return False, \"unknown byte_property kind %r\" % bp.get(\"kind\")",
-    "replay.py:450": "return False, \"the range holds %d uint32 words; the cell records %d\" % (n, bp.get(\"count\"))",
-    "replay.py:455": "return False, (\"%d of %d words are not valid token ids below %d -- these bytes are not a \"",
-    "replay.py:535": "return False, (\"%d of %d enumerated corpus file(s) carry NO publisher digest: %s\"",
-    "replay.py:572": "return False, \"the ranged artifact is not a pinned Hugging Face file url\"",
-    "replay.py:577": "return False, (\"the range is from %s@%s, the enumeration is from %s@%s\"",
-    "replay.py:602": "return False, \"%r is not among the %d shards this revision enumerates\" % (rfile, len(shards))",
-    "replay.py:604": "return False, \"pinned_commit disagrees with the url's revision\"",
-    "replay.py:619": "return False, \"too short to carry a safetensors header\"",
-    "replay.py:625": "return False, \"the archived bytes do not look like weight data (first bytes %r)\" % b[:16]",
-    "replay.py:674": "bad.append(\"a pointer url is not a pinned Hugging Face file url\")",
-    "replay.py:678": "bad.append(\"%s is from %s@%s\" % (pfile, prepo, prev[:12]))",
-    "replay.py:699": "bad.append(\"duplicate shard pointer(s): %s\" % dup[:3])",
-    "replay.py:724": "return False, \"counted %d occurrence(s), the cell claims %d\" % (got, n)",
-    "replay.py:841": "return False, (",
-    "replay.py:898": "return False, \"no archived response for declared term(s) %s\" % missing[:3]",
-    "replay.py:901": "return False, (\"%d term(s) return a different total than recorded: %s. arXiv grows, so \"",
-    "replay.py:1035": "return False, (\"exemplar %s is in the real listing, so the positive control is measuring \"",
-    "replay.py:1109": "return False, (\"%s present but under 512 bytes -- a stub is not source\" % tiny[:2])",
-    "replay.py:1242": "return False, (\"this cell claims %s is a SHARED platform key, but it signs only %d \"",
-    "replay.py:1309": "return False, (\"axis %d REQUIRES %s; %r is registered and permitted but does not bind \"",
-    "replay.py:1316": "return False, \"method %r cannot settle this axis\" % meth",
-    "replay.py:1319": "return False, \"method %r has no executor\" % meth",
-    "replay.py:1621": "bad += 1",
-    "replay.py:1626": "bad += 1",
-    "replay.py:1633": "bad += 1",
-    "replay.py:1637": "bad += 1",
-    "replay.py:1672": "failed += 1",
-    "replay.py:1681": "failed += 1",
-    "replay.py:1688": "failed += 1",
-    "replay.py:1696": "failed += 1",
-    "replay.py:1699": "unreplayable += 1",
+    "replay.py:234": "raise SystemExit(D + \" a subject is named `_led`, which this context reserves.\")",
+    "replay.py:296": "bad.append(\"%s/axis%d has no declared axis_documents\" % (cell[\"subject\"], cell[\"axis\"]))",
+    "replay.py:413": "return False, (\"the cell records enumeration index %d and the co-cited document \"",
+    "replay.py:424": "return False, (\"the cell records no `enumerated_index`, so the url could name any of the \"",
+    "replay.py:449": "return False, \"unknown byte_property kind %r\" % bp.get(\"kind\")",
+    "replay.py:452": "return False, \"the range holds %d uint32 words; the cell records %d\" % (n, bp.get(\"count\"))",
+    "replay.py:457": "return False, (\"%d of %d words are not valid token ids below %d -- these bytes are not a \"",
+    "replay.py:577": "return False, (\"a bound on this method needs `expect_items_with_digest`, or the \"",
+    "replay.py:581": "return False, (\"%d of %d enumerated file(s) carry a publisher digest; the cell \"",
+    "replay.py:631": "return False, \"the ranged artifact is not a pinned Hugging Face file url\"",
+    "replay.py:636": "return False, (\"the range is from %s@%s, the enumeration is from %s@%s\"",
+    "replay.py:661": "return False, \"%r is not among the %d shards this revision enumerates\" % (rfile, len(shards))",
+    "replay.py:663": "return False, \"pinned_commit disagrees with the url's revision\"",
+    "replay.py:678": "return False, \"too short to carry a safetensors header\"",
+    "replay.py:684": "return False, \"the archived bytes do not look like weight data (first bytes %r)\" % b[:16]",
+    "replay.py:733": "bad.append(\"a pointer url is not a pinned Hugging Face file url\")",
+    "replay.py:737": "bad.append(\"%s is from %s@%s\" % (pfile, prepo, prev[:12]))",
+    "replay.py:758": "bad.append(\"duplicate shard pointer(s): %s\" % dup[:3])",
+    "replay.py:783": "return False, \"counted %d occurrence(s), the cell claims %d\" % (got, n)",
+    "replay.py:839": "return False, \"the armour has no body: nothing was packed here\"",
+    "replay.py:850": "return False, \"the armour carries no CRC-24 line, so its integrity is unstated\"",
+    "replay.py:855": "return False, \"the armour is not decodable base64\"",
+    "replay.py:976": "return False, (",
+    "replay.py:1033": "return False, \"no archived response for declared term(s) %s\" % missing[:3]",
+    "replay.py:1036": "return False, (\"%d term(s) return a different total than recorded: %s. arXiv grows, so \"",
+    "replay.py:1158": "return False, (",
+    "replay.py:1197": "return False, (\"exemplar %s is ALSO published at %s@%s. Either the publisher really ships \"",
+    "replay.py:1275": "return False, (\"%s present but under 512 bytes -- a stub is not source\" % tiny[:2])",
+    "replay.py:1365": "return False, (\"the object carries a signature and %s. A corrupted packet with an intact \"",
+    "replay.py:1414": "return False, (\"this cell claims %s is a SHARED platform key, but it signs only %d \"",
+    "replay.py:1481": "return False, (\"axis %d REQUIRES %s; %r is registered and permitted but does not bind \"",
+    "replay.py:1488": "return False, \"method %r cannot settle this axis\" % meth",
+    "replay.py:1491": "return False, \"method %r has no executor\" % meth",
+    "replay.py:1793": "bad += 1",
+    "replay.py:1798": "bad += 1",
+    "replay.py:1805": "bad += 1",
+    "replay.py:1809": "bad += 1",
+    "replay.py:1844": "failed += 1",
+    "replay.py:1853": "failed += 1",
+    "replay.py:1860": "failed += 1",
+    "replay.py:1868": "failed += 1",
+    "replay.py:1871": "unreplayable += 1",
     "stem_equivalence.py:188": "return 1",
     "stem_equivalence.py:193": "return 1",
     "stem_equivalence.py:216": "return 1",
@@ -395,22 +410,25 @@
     "stress_test.py:960": "failed += 1",
     "stress_test.py:996": "failed += 1",
     "test_bound_rules.py:43": "raise SystemExit(\"no such cell\")",
-    "test_bound_rules.py:173": "missed += 1",
-    "test_bound_rules.py:185": "missed += 1",
-    "test_executors.py:86": "base_bad.append(\"%s/axis%d: %s\" % (c[\"subject\"], c[\"axis\"], why))",
-    "test_executors.py:115": "missed += 1",
-    "test_executors.py:116": "unread.append((where, k, \"deleting it\", res))",
-    "test_executors.py:129": "missed += 1",
-    "test_executors.py:130": "unread.append((where, k, \"corrupting it\", res2))",
-    "test_executors.py:140": "missed += 1",
-    "test_executors.py:141": "unread.append((where, \"evidence[0].sha256\", \"repointing it\", res3))",
-    "test_executors.py:160": "missed += 1",
-    "test_executors.py:161": "unread.append((where, \"%s's evidence\" % other[\"subject\"],",
-    "test_executors.py:173": "missed += 1",
-    "test_executors.py:174": "unread.append((where, \"the co-cited artifacts\", \"dropping them\", res4))",
-    "unread_notes.py:125": "raise SystemExit(",
-    "unread_notes.py:216": "return 1",
-    "unread_notes.py:266": "raise SystemExit(D + \" the record on disk does not match what was just computed.\")",
-    "unread_notes.py:270": "return 1 if still else 0"
+    "test_bound_rules.py:240": "missed += 1",
+    "test_bound_rules.py:252": "missed += 1",
+    "test_executors.py:241": "base_bad.append(\"%s/axis%d: %s\" % (c[\"subject\"], c[\"axis\"], why))",
+    "test_executors.py:270": "missed += 1",
+    "test_executors.py:271": "unread.append((where, k, \"deleting it\", res))",
+    "test_executors.py:284": "missed += 1",
+    "test_executors.py:285": "unread.append((where, k, \"corrupting it\", res2))",
+    "test_executors.py:295": "missed += 1",
+    "test_executors.py:296": "unread.append((where, \"evidence[0].sha256\", \"repointing it\", res3))",
+    "test_executors.py:315": "missed += 1",
+    "test_executors.py:316": "unread.append((where, \"%s's evidence\" % other[\"subject\"],",
+    "test_executors.py:328": "missed += 1",
+    "test_executors.py:329": "unread.append((where, \"the co-cited artifacts\", \"dropping them\", res4))",
+    "test_executors.py:336": "missed += 1",
+    "test_executors.py:344": "missed += 1",
+    "test_executors.py:352": "missed += 1",
+    "unread_notes.py:149": "raise SystemExit(",
+    "unread_notes.py:250": "return 1",
+    "unread_notes.py:300": "raise SystemExit(D + \" the record on disk does not match what was just computed.\")",
+    "unread_notes.py:304": "return 1 if still else 0"
   }
 }

@@ -120,6 +120,8 @@ def m_grep(c, ev):
 
 
 HF_API = re.compile(r"^https://huggingface\.co/api/models/([^/]+/[^/]+)/revision/([0-9a-f]{40})$")
+# A Git-LFS sha256 oid, which is what "the publisher committed a digest" means here.
+OID_RE = re.compile(r"^[0-9a-f]{64}$")
 HF_DS_TREE = re.compile(
     r"^https://huggingface\.co/api/datasets/([^/]+/[^/]+)/tree/([0-9a-f]{40})(?:/(.+))?$")
 HF_FILE = re.compile(r"^https://huggingface\.co/([^/]+/[^/]+)/(?:raw|resolve)/([0-9a-f]{40})/(.+)$")
@@ -512,8 +514,58 @@ def m_corpus_item_digests(c, ev, ctx=None):
                        % (len(files), want_n))
     # ⛔ EVERY file in the enumerated subtree, not a sample. A sample would answer
     # "does the host ever publish a digest", which is a question about the host.
+    #
+    # ⛔⛔ AND "CARRIES A DIGEST" WAS `if e["lfs"].get("oid")` -- A TRUTHINESS TEST. A reviewer
+    # replaced one identifier with the string `not-a-sha256-digest`, rehashed the synthetic
+    # response and updated every ledger reference consistently, and the whole positive path
+    # certified it: the executor returned True, the validator reported 0 defects, and strict replay
+    # passed 23 of 23. **The manuscript treats these 2s as its strongest evidence**, and the
+    # strongest evidence was established by a non-empty string.
+    #
+    # ⇒ A digest is 64 lowercase hex characters, because that is what a Git-LFS sha256 oid IS.
+    # This is still a check on the SHAPE of a published identifier and it is now the shape of the
+    # thing rather than the shape of "something was written here".
+    #
+    # ⚠ WHAT IS STILL NOT ESTABLISHED, STATED RATHER THAN IMPLIED: nothing here recomputes the
+    # digest over the corpus bytes, because this census does not download corpora. So the property
+    # is "the publisher committed a well-formed content digest for every enumerated item", not "the
+    # digest is correct". Axis 2 asks whether digests are PUBLISHED, which is the former; a reader
+    # who wants the latter needs the bytes, and the cell's `observed` says so.
+    # ⛔ AND "EVERY FILE" INCLUDED `.gitattributes`, WHICH IS THE FILE THAT CAUSES THE OTHERS TO
+    # BE CONTENT-ADDRESSED. A repository whose every data shard carries an LFS oid still fails a
+    # rule that requires ALL enumerated files to carry one, because LFS's own configuration cannot.
+    # Excluding it is right and **excluding it silently would be the enumeration defect again**: a
+    # filter in this file would exclude that name for every subject forever, unexamined.
+    #
+    # ⇒ SO THE CELL DECLARES IT, and the declaration is policed in both directions: every name
+    # declared non-content must actually BE in the enumeration (a stale declaration is caught), and
+    # none of them may carry a digest (if it does, it is content and the declaration is wrong).
+    # Anything not carrying a digest and not declared is still a failure.
+    _non_content = list(_asserted(c).get("expect_non_content") or [])
+    _paths = {e.get("path") for e in files}
+    _absent = [n for n in _non_content if n not in _paths]
+    if _absent:
+        return False, ("%d file(s) are declared non-content and are not in the enumeration (%s). "
+                       "A declaration that excludes nothing is a rule nobody is applying."
+                       % (len(_absent), ", ".join(_absent[:3])))
+    _mislabelled = [e.get("path") for e in files
+                    if e.get("path") in _non_content
+                    and isinstance(e.get("lfs"), dict) and e["lfs"].get("oid")]
+    if _mislabelled:
+        return False, ("%s is declared non-content and DOES carry a publisher digest. It is "
+                       "content; the declaration is wrong and it is shrinking the denominator."
+                       % ", ".join(_mislabelled[:3]))
     missing = [e.get("path") for e in files
-               if not (isinstance(e.get("lfs"), dict) and e["lfs"].get("oid"))]
+               if e.get("path") not in _non_content
+               and not (isinstance(e.get("lfs"), dict)
+                        and OID_RE.match(str(e["lfs"].get("oid") or "")))]
+    _malformed = [e.get("path") for e in files
+                  if isinstance(e.get("lfs"), dict) and e["lfs"].get("oid")
+                  and not OID_RE.match(str(e["lfs"]["oid"]))]
+    if _malformed:
+        return False, ("%d enumerated file(s) carry an `lfs.oid` that is not a sha256 digest "
+                       "(%s). A field being present is not a digest being published."
+                       % (len(_malformed), ", ".join(str(x) for x in _malformed[:3])))
 
     # ⛔ THE NEGATIVE CASE. A cell carrying a `bound` is asserting that the digests are NOT
     # there, and until now this executor could only confirm that they were -- so an axis-2 zero
@@ -534,8 +586,15 @@ def m_corpus_item_digests(c, ev, ctx=None):
     if missing:
         return False, ("%d of %d enumerated corpus file(s) carry NO publisher digest: %s"
                        % (len(missing), len(files), missing[:2]))
-    return True, ("%d of %d enumerated corpus files under %s carry a Git-LFS sha256 oid at "
-                  "%s@%s" % (len(files), want_n, path, repo, rev[:12]))
+    # ⚠ THIS SAID "23 of 23 ... carry a Git-LFS sha256 oid" WHEN 22 DID. It reported `len(files)`
+    # against `want_n`, which are the same number by construction -- the enumeration size twice --
+    # so it could never say anything but "n of n", and once a file was legitimately excluded as
+    # non-content the sentence became false. A pass message that cannot fail is the same shape as a
+    # check that cannot fail.
+    return True, ("%d of %d enumerated file(s) under %s carry a Git-LFS sha256 oid at %s@%s%s"
+                  % (len(files) - len(_non_content), len(files), path, repo, rev[:12],
+                     ("; %s excluded as declared non-content"
+                      % ", ".join(_non_content)) if _non_content else ""))
 
 
 def m_weight_object(c, ev, ctx=None):
@@ -723,6 +782,82 @@ def m_count(c, ev):
     if got != n:
         return False, "counted %d occurrence(s), the cell claims %d" % (got, n)
     return True, "counted %d, as claimed" % got
+
+
+def _armour_lines(raw):
+    """The commit's OpenPGP armour, de-indented from git's continuation lines."""
+    if b"gpgsig" not in raw:
+        return None
+    body = raw.split(b"gpgsig ", 1)[1]
+    out = []
+    for line in body.split(bytes([10])):
+        out.append(line[1:] if line.startswith(b" ") else line)
+        if line.strip() == b"-----END PGP SIGNATURE-----":
+            break
+    return out
+
+
+def _crc24(data):
+    """RFC 4880's CRC-24 -- the checksum GPG rejects a corrupted armour on."""
+    crc = 0xB704CE
+    for byte in data:
+        crc ^= byte << 16
+        for _ in range(8):
+            crc <<= 1
+            if crc & 0x1000000:
+                crc ^= 0x1864CFB
+    return crc & 0xFFFFFF
+
+
+def signature_intact(raw):
+    """Is the armoured signature INTACT -- (verdict, why)? Never 'is it valid'.
+
+    ⛔ THE EXECUTOR CALLED A CORRUPTED SIGNATURE SIGNED. A reviewer corrupted the payload of a
+    synthetic copy of the OLMo commit signature, rederived the git object id and the archived-byte
+    digest so nothing else would notice, and left the issuer fingerprint in place. `m_signed_commit`
+    returned True and described the commit as signed. GPG parses the original armour and rejects
+    the corrupted one outright, on the armour checksum. The executor's whole test was
+    `b"gpgsig" in raw` plus a fingerprint SUBPACKET LOOKUP -- **the presence of a field, standing
+    for a cryptographic property**, which is this project's proxy-for-the-thing failure mode
+    arriving in the machinery the manuscript calls its strongest evidence.
+
+    ⚠ AND THIS IS STILL NOT VERIFICATION, WHICH IS THE POINT OF SAYING SO HERE. The CRC-24 below
+    establishes that the armour decodes to the bytes its author packed -- it catches corruption and
+    truncation, and any forger who recomputes it defeats it. Verifying the SIGNATURE would need the
+    signing key, and the finding this axis rests on is precisely that the key is retrievable
+    nowhere. So the property established is "an intact, well-formed signature packet by an
+    identifiable issuer", and the axis-14 zeros stand on the key's unavailability exactly as
+    before. Nothing here should be reported as a valid signature, and the pass message says so.
+    """
+    import base64
+    lines = _armour_lines(raw)
+    if lines is None:
+        return None, "no signature"
+    try:
+        after = bytes([10]).join(lines).split(bytes([10, 10]), 1)[1]
+    except IndexError:
+        return False, "the armour has no body: nothing was packed here"
+    payload, declared = [], None
+    for line in after.split(bytes([10])):
+        s = line.strip()
+        if s.startswith(b"-----END"):
+            break
+        if s.startswith(b"=") and len(s) == 5:
+            declared = s[1:]
+        elif s:
+            payload.append(s)
+    if declared is None:
+        return False, "the armour carries no CRC-24 line, so its integrity is unstated"
+    try:
+        data = base64.b64decode(b"".join(payload))
+        want = int.from_bytes(base64.b64decode(declared), "big")
+    except Exception:                                                       # noqa: BLE001
+        return False, "the armour is not decodable base64"
+    got = _crc24(data)
+    if got != want:
+        return False, ("the signature armour fails its own CRC-24 (%06x, declared %06x): these "
+                       "bytes are not the packet its author produced" % (got, want))
+    return True, "the signature packet is intact (armour CRC-24 agrees)"
 
 
 def _commit_fingerprint(raw):
@@ -1006,6 +1141,26 @@ def m_release_artifacts(c, ev, ctx=None):
     else:
         # a dataset tree is a LIST of entries, each with a path
         files = [x.get("path", "") for x in d if x.get("type") == "file"]
+        # ⛔ AND IT TOOK ONE DIRECTORY LEVEL FOR THE WHOLE REPOSITORY. A dataset tree response
+        # lists the entries at ONE path: files AND directories. This kept the files and dropped the
+        # directories, then reported "N file(s) published at repo@rev, NONE matching any declared
+        # pattern" -- a claim about the repository derived from its root. A reviewer built a root
+        # holding `README.md` and an `attestations/` directory and got a clean negative without
+        # anything ever descending into it.
+        #
+        # ⚠ THE BOUND WAS NARROWER THAN THE SENTENCE, which is this executor's own subject: it
+        # exists because axis 15's zero was made by the registry rather than by the world, and a
+        # non-recursive listing makes the replacement zero the same way one level down. A model
+        # revision is unaffected -- `siblings` IS the recursive file list -- so the rule is written
+        # against the shape that has directories in it, not against both.
+        _dirs = [x.get("path", "") for x in d if x.get("type") == "directory"]
+        if _dirs:
+            return False, (
+                "the archived enumeration lists %d unexpanded director(ies) -- %s -- so it "
+                "enumerates one level, not the repository. An absence established over a "
+                "directory listing is an absence in that directory: either archive a recursive "
+                "listing or say in the bound that this is what was searched."
+                % (len(_dirs), ", ".join(_dirs[:3])))
     if not files:
         return False, "the archived response enumerates no files, so it settles nothing"
 
@@ -1030,10 +1185,21 @@ def m_release_artifacts(c, ev, ctx=None):
     if unmatched:
         return False, ("exemplar(s) %s match no declared pattern; the probe and the search "
                        "disagree about what is being looked for" % unmatched[:2])
+    # ⚠ AND THIS REFUSAL USED TO READ AS THOUGH THE CONTROL WERE AT FAULT. A reviewer pointed out
+    # that a publisher genuinely shipping `corpus.ots` -- the very filename used as an exemplar --
+    # is refused here with a message about the positive control, when what has actually happened is
+    # that the search HIT. The refusal is still right: a name cannot be a synthetic control and an
+    # observation at the same time, and nothing downstream could tell which it was. What was wrong
+    # is that it named only one of the two causes, and named the harmless one. Same shape as the
+    # axis-14 fingerprint case, which already says "this is a finding, not a broken check".
     leaked = [x for x in probe if x in files]
     if leaked:
-        return False, ("exemplar %s is in the real listing, so the positive control is measuring "
-                       "the subject rather than the search" % leaked[:1])
+        return False, ("exemplar %s is ALSO published at %s@%s. Either the publisher really ships "
+                       "that artifact -- in which case this cell's absence no longer holds and it "
+                       "must be RESCORED, which is a finding -- or the exemplar is too close to a "
+                       "real filename and a synthetic one should be chosen. Nothing downstream can "
+                       "tell a control from an observation once the two share a name."
+                       % (leaked[:1], repo, rev[:12]))
 
     hits = sorted({f for f in files for q in pats if re.search(q, f, re.I)})
     if len(hits) != want_n:
@@ -1193,6 +1359,12 @@ def m_signed_commit(c, ev, ctx=None):
     if not signed:
         return True, ("revision %s self-authenticates, was committed by %s, and carries NO "
                       "signature at all" % (want_rev[:12], committer))
+
+    _intact, _why = signature_intact(raw)
+    if _intact is False:
+        return False, ("the object carries a signature and %s. A corrupted packet with an intact "
+                       "issuer subpacket is what a reviewer used to make this executor report a "
+                       "signed commit, so integrity is checked before the issuer is read." % _why)
 
     fpr = _commit_fingerprint(raw)
     if fpr != chk.get("expect_signer_fingerprint"):

@@ -113,6 +113,26 @@ MUTATIONS = [
     ("point the bound at a different revision",
      lambda L: find(L, "olmo-2-13b", 14)["bound"].__setitem__("expect_revision", "a" * 40),
      "replay.py", "the cell declares"),
+    # ⛔ `STRUCTURALLY_DETERMINED` SETS A NUMBER IN THE ABSTRACT AND HAD NO CONTROL OF ANY KIND.
+    # A reviewer injected two entries the previous round had removed, rebuilt, and every tool in
+    # the suite went green -- 90 claims, 37 bounded, 23 replayed, all 17 controls here catching.
+    # The three refusals they hit first were fingerprint guards that fire on ANY edit to axes.py
+    # and are cleared by the author's ordinary workflow. **The declared surface grew and the check
+    # count did not.**
+    #
+    # ⚠ This is the SOUNDNESS half and it is the half a ledger mutation can express: a declared
+    # ground says no positive is reachable for that stratum, so one positive refutes it. The
+    # COMPLETENESS half needs the table itself mutated and is exercised in `main()` below.
+    # ⚠ THIS NAMED AXIS 16 AND AXIS 16'S DECLARATION WAS WITHDRAWN the round after it was
+    # written -- a reviewer showed the ground was a claim about the world (no third party could
+    # ever report a bit-identical reproduction of an api-only release) that this census cannot
+    # establish. The control then attacked a cell no longer declared and reported MISSED, which is
+    # the right behaviour: a control tied to a specific declaration must break when the
+    # declaration moves, rather than quietly passing against nothing. Retargeted to axis 12, whose
+    # impossibility is a fact about this instrument's own permitted methods.
+    ("score a positive on a cell declared structurally determined",
+     lambda L: find(L, "gpt-4o", 12).__setitem__("score", 1),
+     "mp_metric.py", "declared STRUCTURALLY DETERMINED"),
 ]
 
 
@@ -138,9 +158,56 @@ def main():
     try:
         root = work / "census"
         shutil.copytree(HERE, root, dirs_exist_ok=True, ignore=_SKIP)
-        return _run_mutations(root, base)
+        rc = _run_mutations(root, base)
+        return _determination_controls(base) or rc
     finally:
         _remove_tree(work)
+
+
+def _determination_controls(base):
+    """The half of the declared-table rule that a LEDGER mutation cannot reach.
+
+    ⛔ COMPLETENESS IS WHAT MAKES THE TABLE A PROJECTION. Soundness alone -- "every declared pair
+    is really unreachable" -- leaves the table free to be SHORT, and short is exactly how it
+    shipped: the one pair the instrument already capped at 0, axis 12 under api-only, was the one
+    pair it did not declare. A rule that only polices what you wrote down cannot notice what you
+    left out, and the omission is the failure mode this table was created by.
+
+    ⇒ These mutate the DECLARATION rather than the census, in-process, and each must produce a
+    defect. The negative control matters as much: the real table must produce none, or the rule
+    would be refusing everything and proving nothing.
+    """
+    import axes as A
+    import mp_metric as M
+    print()
+    print("  the declared-determination table -- mutations of the TABLE, not the ledger")
+    saved = dict(A.STRUCTURALLY_DETERMINED)
+    cases = [
+        ("NEGATIVE: the real table validates clean", dict(saved), False),
+        ("REMOVE the axis-12 entry the cap already implies",
+         {k: v for k, v in saved.items() if k != (12, "api-only")}, True),
+        ("REMOVE every entry (the table emptied)", {}, True),
+        ("RE-INJECT round 29's wrong entries, with a ground string",
+         {**saved, (14, "api-only"): "injected by a reviewer, no ground checked",
+                   (15, "api-only"): "injected by a reviewer, no ground checked"}, True),
+        ("DECLARE a pair with an empty ground",
+         {**saved, (3, "api-only"): "   "}, True),
+    ]
+    bad = 0
+    try:
+        for label, table, want in cases:
+            A.STRUCTURALLY_DETERMINED = table
+            got = bool([x for x in M.validate(M.load())
+                        if "DETERMINED" in x or "determined" in x])
+            ok = got == want
+            bad += 0 if ok else 1
+            print("    %s %-58s %s" % ("ok     " if ok else chr(0x26D4) + " MISSED", label,
+                                       "" if ok else "got %r want %r" % (got, want)))
+    finally:
+        A.STRUCTURALLY_DETERMINED = saved
+    if bad:
+        print("  " + chr(0x26D4) + " %d determination control(s) MISSED." % bad)
+    return 1 if bad else 0
 
 
 def _remove_tree(work):

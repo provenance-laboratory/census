@@ -1,7 +1,7 @@
 {
   "_what": "Which zero-cell notes can be blanked with the whole suite still green, measured by blanking them and bisecting -- not by reading the predicates, which is the inspection this file exists to avoid.",
-  "zeros": 182,
-  "bounded_zeros": 37,
+  "zeros": 181,
+  "bounded_zeros": 36,
   "notes_examined": 145,
   "read_axes": [],
   "read_notes": 0,

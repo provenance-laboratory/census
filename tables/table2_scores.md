@@ -1,9 +1,9 @@
 <!-- EMITTED by mp_metric.py, as of 2026-08-29. Do not edit. -->
-<!-- ledger-fingerprint: 410bceed291e5ee7d28482dc90b0b708e0d027b5accdb1458fb1653ab92470e3 -->
+<!-- ledger-fingerprint: cd56c4cfb4183809761be7662c4bdcb13734f0cbca86171420e0c0b14dcc2a95 -->
 | release | 2 | 1 | 0 | N/A | as-coded | N/A→0 | N/A→2 | ceiling |
 |---|---|---|---|---|---|---|---|---|
 | olmo-2-13b | 7 | 6 | 6 | 3 | 0.526 | 0.455 | 0.591 | 0.868 |
-| pythia-12b | 5 | 6 | 8 | 3 | 0.421 | 0.364 | 0.500 | 0.868 |
+| pythia-12b | 6 | 6 | 7 | 3 | 0.474 | 0.409 | 0.545 | 0.868 |
 | bloom-176b | 3 | 8 | 8 | 3 | 0.368 | 0.318 | 0.455 | 0.868 |
 | bert-base-uncased | 3 | 3 | 13 | 3 | 0.237 | 0.205 | 0.341 | 0.868 |
 | mistral-7b-v0.3 | 2 | 0 | 17 | 3 | 0.105 | 0.091 | 0.227 | 0.868 |

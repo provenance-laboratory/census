@@ -2,20 +2,20 @@
   "_what": "Which of this project's own controls can be deleted with the whole suite still green, and what kind of survivor each one is.",
   "targets": {
     "add_evidence.py": "1a46d8a5b554eb48e1a9b98a3da76aecd3d6850c98629770d7ac12b952b224b2",
-    "apply_negative_search.py": "4fd6fa006faa2fdbac9f75dc3cf4da85035754749a33aae6edf7ed9c9712a7b6",
+    "apply_negative_search.py": "3e91291b57134e7bf503393e4998525aa91ca69fcdeeb2db870e33cbbcc7bafe",
     "archive_evidence.py": "652ac092c7165e38380c3a37ba2d71da0e7dc57eaa064ae231d4b5395ab9b231",
     "archive_filter_probe.py": "584c8a423c24589298deb30c494584b650134341640aefe60296611e7b0d49d3",
     "archive_negative_search.py": "27829d661ca183638000675fe183382b2f23f75888d8359e9258e9caf9ead30b",
-    "axes.py": "ec4c20b29a4a066848fcbb3d7ccd40b17d8f5dd08191d1a002cfbafb9bf2b3a5",
+    "axes.py": "45ccb6a840a6bee04926ed485723967b90d9d377cb6b92e0fde8c0d918e4262b",
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "2d99da0bc7bafefbf92df34a2e8a8f7e3b16b8b543120dcbdf7e5f66f30cd543",
+    "control_audit.py": "c07da2c2d202adac337a8850e8337c18716b175d11637aed20a8834e5afb16ea",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
     "hf_probe.py": "5dd4c7a472d2b0040319e5bd443631f38782e07faa919cc36dd8fd816686a34b",
-    "mp_metric.py": "c0fea2a1bce225be1a7ec518922b060492659c94251ab76e9eff461e9f24fed5",
+    "mp_metric.py": "b8ab0f25f427e9123b26f2231a87f6cf3ba14c451162c04e860712a99141b7e8",
     "negative_search.py": "3c58738efe74288f684b98213f770978a8f7835cb80a5ca145de2e173005fea1",
     "pin_urls.py": "1626659f01bbe7001bf7ecc4812f6639a12411e5cf09aca300ebc66f3ff63036",
     "probe_signatures.py": "47f078f3357c32b1ec47186172503cec804764cfacaa534a7f50a198bbb151a7",
@@ -23,13 +23,13 @@
     "reach_controls.py": "445fd1fcb1f0a5f864eed92c800134054cd946918c7325881a9c52dade49c3f0",
     "recheck.py": "61125cdc7f85c5d0fafa96ab00e843716a32b8db17ed7bf298dd7740f8fdd75b",
     "referee.py": "99a7f0c208fbee450a904b12847479832c26af6d30fbb854d2601bffb5abf5f2",
-    "replay.py": "f906967296ab70472c67216e035ac43ea848a2e82538b95eb98b8ec12535c2f2",
+    "replay.py": "39ce8a53e2ed9e2fa7f2f8383aa0453d44bd97aa6b5c44c0facd16f45a3339bb",
     "stem_equivalence.py": "81397532510bc70facc7bbd863bb896653842c49aed5cdaaeac4d2c0c1a8d780",
     "stress_test.py": "3032b6c167e7af4f0d5d71bb4c81b0284f24e51568f4c0fb7aca3b6e9de559e3",
     "sweep.py": "f02192207e2bcef589536892dba3e9dae4763c5bbda8f6665853adbcf4cf1fe6",
-    "test_bound_rules.py": "2fdd3c24169fec139bdad5350f586d578b683749979555bde544b587ee7e8847",
-    "test_executors.py": "d0ebdbc8639e2fcc538eaa49172ad03ecb3005606c09d00f87220a44807896cc",
-    "unread_notes.py": "c28049ae8597515686260bb8288988668ad3319548b5340137fb5c37401a7926"
+    "test_bound_rules.py": "6ce1eb6ed8e9e0e80bcd07beab938b5ade715fde1e205df2adb22b42934dafab",
+    "test_executors.py": "47fc5697a1c0b9c3a97c099d99f29acbedbd8297c2993a6ed3d31035b7c02aaf",
+    "unread_notes.py": "036d3cab9991905e5487217f68b5f3e0a08dc27efe4d67207bdf3449ba18b181"
   },
   "suite": [
     [
@@ -55,25 +55,25 @@
       "test_bound_rules.py"
     ]
   ],
-  "source_fingerprint": "c6a3de5d8a2ecbaf",
-  "inputs_fingerprint": "c6d50277b12a1ff0",
+  "source_fingerprint": "2f764e9decfada0a",
+  "inputs_fingerprint": "cc040a07a0013972",
   "inputs_manifest": {
     ".gitattributes": "852c5fc63199b92d7be8f8853c209345cad1f28c47322d5ab4d060cd360b84bc",
     ".gitignore": "ac1291a6a68853c2841d9b613a0208a76ce2de87ac08f7e2df8af23a5cbebaff",
     "add_evidence.py": "1a46d8a5b554eb48e1a9b98a3da76aecd3d6850c98629770d7ac12b952b224b2",
-    "apply_negative_search.py": "4fd6fa006faa2fdbac9f75dc3cf4da85035754749a33aae6edf7ed9c9712a7b6",
+    "apply_negative_search.py": "3e91291b57134e7bf503393e4998525aa91ca69fcdeeb2db870e33cbbcc7bafe",
     "archive_evidence.py": "652ac092c7165e38380c3a37ba2d71da0e7dc57eaa064ae231d4b5395ab9b231",
     "archive_filter_probe.py": "584c8a423c24589298deb30c494584b650134341640aefe60296611e7b0d49d3",
     "archive_negative_search.py": "27829d661ca183638000675fe183382b2f23f75888d8359e9258e9caf9ead30b",
     "AUDIT-ROUND": "076320a2a08267b4c026d06573bba408ea68841e73cdc20e62cce59de165ece3",
-    "axes.py": "ec4c20b29a4a066848fcbb3d7ccd40b17d8f5dd08191d1a002cfbafb9bf2b3a5",
+    "axes.py": "45ccb6a840a6bee04926ed485723967b90d9d377cb6b92e0fde8c0d918e4262b",
     "axis14-signature-probe.json": "d2eaf13fb521666a9dbb9f538a14ecddd7b4aaff275cbba37045b918f6128652",
     "axis6-source-probe.json": "26223e35f7250ffb6b301ebe821a0d7be9143af51d15a9199cfd436a6306972a",
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
-    "cells.json": "cb5ab24099c6816e6f57ad6af40e1db4fd4be888686031a49f62a661f4a3c02d",
+    "cells.json": "86a0e6234d80a439de0ac27144c6f2a1f5e2694f4cd50aac55717a8277ec3403",
     "check_facts.py": "b419561281cdad43e93ee481ed9bfab9044b71faca469e70f6e358512f44acd4",
-    "control_audit.py": "2d99da0bc7bafefbf92df34a2e8a8f7e3b16b8b543120dcbdf7e5f66f30cd543",
+    "control_audit.py": "c07da2c2d202adac337a8850e8337c18716b175d11637aed20a8834e5afb16ea",
     "CTRL.log": "b3f69d68c88be621de3ab5d7564ee9e23d9c4b8b0a6a786b607555524df86c16",
     "evidence/00d7d865dc8bf5de4a4b61adfb14060a6165aa95f874e8ab33a6b104a310f3e3.gz": "ce98bf5ff84ee65290e130844371d2d05cad0b5c8698021308c3d0e1b70e8b6a",
     "evidence/016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163.gz": "c90466a63aaceabd56e5170bfce44d4ab6ae799d2e358f805429b42a44635aac",
@@ -390,6 +390,7 @@
     "evidence/c23aef066fcc12d7fb9b6b645a183d94124d3c2e9fe6eb738c86e0fa8dae3913.gz": "c72bbe41366dd16750ef67d1c0e5b7684a60bca3078c990338065a94c27adfe5",
     "evidence/c27b579032ab352ad8828a7db7d154bebc0313e0518706344db3849185166152.gz": "1874a6da1262d5283cd9cf5f05cdd7e0610312e4c6e131ef7d3f79418e065e2e",
     "evidence/c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938.gz": "67f8193093889edff5d3d6f565b3bd78a4ab52922e07c4b81fb7db2b90b1a485",
+    "evidence/c3c9cefeae4f6d1d9024c3a28d0eb48c7bd3429bcc34edf8a23260ea54d71032.gz": "fcd42d6b92897e27fbb16946ff38494e7ceafb954070e92ee931c2ad2ffc32e9",
     "evidence/c5152a0e0b6e41a38b65c66601bd69cc6b1ed37368ed40ce3616f7e8ff1a8599.gz": "79c5bd6e342b571b05d67cca303e4c34f519faa8be48551ed1477aef015450ff",
     "evidence/c59169f19191612b33524b2f5cfafb2929e042cf87229a42bf0fe2a63bc154aa.gz": "4b583c969e986069fb0aea8769858df1c49b5f2e7ec1eb89ebed75174e93f645",
     "evidence/c72cda2f2880bc504879153ad3a9e07c72743624c00beeb28e595c9d852bbb85.gz": "b653b0b95298c5ab14a4e12aaa979ba2f81985fb210d00bc56bd11ea66167f2a",
@@ -473,7 +474,7 @@
     "evidence/feab2f5eeb67a9f07abf5f0149e0fb3d119d34813ddf9200eff455de000ec140.gz": "a2ad60608bca35b8efe714e1734f4f9b06dc4291df6227215f4ed3c5ab659105",
     "evidence/ffa5d3591fa543ce7b833bea05f1455d40a6be8680417720f09da8807ada6abe.gz": "481affe0e1553b8f82976836ee0262d8a3b7a1dc679744be139f3a0fbffeb67c",
     "evidence/fface2f6fad052ef9f9b9ccbab900e28d2e9b0ab847940e49074bed33ff3afda.gz": "aed6b9b9a1b4753e7a0600a1658c72127ccee08a984b3148e8d6df0cf32e39bb",
-    "evidence/MANIFEST.json": "251ae128bc3b11ef33c6bb20a6d98a9d780744f527f28755c2872cc198ed2eb3",
+    "evidence/MANIFEST.json": "c302a0e2f2cb017c5233b8da96b432b9be907bd969c280c704112ea2c38433bc",
     "facts.json": "ad1b2dc1368150ca0ff9e3a3211d34e4784632cde6c94a1c8cb382f71d1de62e",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter-bound.json": "b328c7b9c15aa1d4f4415666341af91cdc766bab6cb7bde41c6543d6b55c8ab8",
@@ -485,7 +486,7 @@
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
     "hf_probe.py": "5dd4c7a472d2b0040319e5bd443631f38782e07faa919cc36dd8fd816686a34b",
     "LICENSE": "17a23ea7af2894bb5b0f54fcaa9306d3d2e5b2c125332560fc94afa7eaa63b3f",
-    "mp_metric.py": "c0fea2a1bce225be1a7ec518922b060492659c94251ab76e9eff461e9f24fed5",
+    "mp_metric.py": "b8ab0f25f427e9123b26f2231a87f6cf3ba14c451162c04e860712a99141b7e8",
     "negative-search-archive.json": "ccf1519043cb5b0b59651e8cf61f33c84524ce265e5f1a6ba24000b42269d288",
     "negative-search.json": "4a85477a4211f0c0134df8e01167e596a9e965214103297cfaae4f1ccfb559cf",
     "negative_search.py": "3c58738efe74288f684b98213f770978a8f7835cb80a5ca145de2e173005fea1",
@@ -496,13 +497,13 @@
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
     "probes/hf_probe-2026-08-29.json": "343314224e782bc4ddc85e1872cf490651cc51b61f1459d512b9758d4a5d38ec",
     "RC.log": "52a2618baa5559e3478ffbb2fb8ab40befecf88ff42d4444a5f3e2a1ea4a6e35",
-    "REACH-CONTROLS.json": "cad4487b99d50846adf3cf385a631c829ae75a3dca225dd2a2274d605caeac5b",
+    "REACH-CONTROLS.json": "036da476d691d1e61f419f4c84d50b187d42a01412709195714575f0a511e2b9",
     "reach_controls.py": "445fd1fcb1f0a5f864eed92c800134054cd946918c7325881a9c52dade49c3f0",
     "README.md": "6ec93f7b3b26cd04205766fafe38547792ec58c8e583d9988e0fc52721ede74e",
-    "recheck-log.json": "3857f763263bea214e71f12379ce1347272ed43bdff178e04e0aea10dfa26c7b",
+    "recheck-log.json": "3443d4e61b95b189a4c434c2de137c4b7379cb86e74d459381d5eab5edb28485",
     "recheck.py": "61125cdc7f85c5d0fafa96ab00e843716a32b8db17ed7bf298dd7740f8fdd75b",
     "referee.py": "99a7f0c208fbee450a904b12847479832c26af6d30fbb854d2601bffb5abf5f2",
-    "replay.py": "f906967296ab70472c67216e035ac43ea848a2e82538b95eb98b8ec12535c2f2",
+    "replay.py": "39ce8a53e2ed9e2fa7f2f8383aa0453d44bd97aa6b5c44c0facd16f45a3339bb",
     "SCORING.md": "aa17c964b3568c86534b3c2e278287c9758b87ac5dc9701873839a142108c206",
     "selection/check_selection.py": "dd43d100c5d47e5f81f1b103c7bd618de8a9ad7896b3e33c04d9e18bea4bb185",
     "selection/hf-downloads-frame.json": "4fe478527877b83c5e2f0139bc92d28f920e8bb60ece5b1f4e17e33af3953c53",
@@ -517,14 +518,172 @@
     "SWEEP.log": "80aadd5a73d8b35ced93ad8644a37d71f602615f7d6ec1eed66d8392c217998e",
     "sweep.py": "f02192207e2bcef589536892dba3e9dae4763c5bbda8f6665853adbcf4cf1fe6",
     "sweep_control.json": "0f40552eaf816b198560df2850d1ccf117bb7b00a29be8acd409bd466e4e60ce",
-    "tables/table1_axes.md": "547d2ad3086a774b23dc9d6438f8510f8b2cdf5c9b09dacd8a533103a8895e46",
-    "tables/table2_scores.md": "31a5c15d2c5d907d3d0f4dad01ad28389f5b87a42819da78f9107c03d4ef401f",
-    "test_bound_rules.py": "2fdd3c24169fec139bdad5350f586d578b683749979555bde544b587ee7e8847",
-    "test_executors.py": "d0ebdbc8639e2fcc538eaa49172ad03ecb3005606c09d00f87220a44807896cc",
-    "UNREAD-NOTES.json": "f2322717a326db3223cfdeecc62fad48377e8997c62dd5dc9269c0d6416edc66",
-    "unread_notes.py": "c28049ae8597515686260bb8288988668ad3319548b5340137fb5c37401a7926"
+    "tables/table1_axes.md": "c457818b34ff79be7e9531deff7015604dcde42471537821888fba8a57ae531f",
+    "tables/table2_scores.md": "e4ac43a75372cfd9e22b311b6d8118c967c040d9f618d4a129e7168a0d963e94",
+    "test_bound_rules.py": "6ce1eb6ed8e9e0e80bcd07beab938b5ade715fde1e205df2adb22b42934dafab",
+    "test_executors.py": "47fc5697a1c0b9c3a97c099d99f29acbedbd8297c2993a6ed3d31035b7c02aaf",
+    "UNREAD-NOTES.json": "1d31ced38af85c1b5533f21c9f1144690ee60090062698a7a43c5874768812e5",
+    "unread_notes.py": "036d3cab9991905e5487217f68b5f3e0a08dc27efe4d67207bdf3449ba18b181"
   },
   "round": 23,
+  "by_module": {
+    "add_evidence.py": {
+      "sites": 6,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 6
+    },
+    "apply_negative_search.py": {
+      "sites": 3,
+      "watched": 1,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "archive_evidence.py": {
+      "sites": 6,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 6
+    },
+    "archive_filter_probe.py": {
+      "sites": 6,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 6
+    },
+    "archive_negative_search.py": {
+      "sites": 5,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 5
+    },
+    "bind_probe_evidence.py": {
+      "sites": 2,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "build_filter_bound.py": {
+      "sites": 2,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "check_facts.py": {
+      "sites": 6,
+      "watched": 0,
+      "redundant": 1,
+      "never_executes": 5
+    },
+    "control_audit.py": {
+      "sites": 20,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 20
+    },
+    "fetch_artifact.py": {
+      "sites": 2,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "filter_categories.py": {
+      "sites": 2,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "filter_diff.py": {
+      "sites": 2,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "mp_metric.py": {
+      "sites": 49,
+      "watched": 39,
+      "redundant": 4,
+      "never_executes": 6
+    },
+    "negative_search.py": {
+      "sites": 7,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 7
+    },
+    "pin_urls.py": {
+      "sites": 5,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 5
+    },
+    "probe_signatures.py": {
+      "sites": 3,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 3
+    },
+    "probe_source_trees.py": {
+      "sites": 2,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "reach_controls.py": {
+      "sites": 14,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 14
+    },
+    "recheck.py": {
+      "sites": 8,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 8
+    },
+    "referee.py": {
+      "sites": 2,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 2
+    },
+    "replay.py": {
+      "sites": 152,
+      "watched": 61,
+      "redundant": 25,
+      "never_executes": 66
+    },
+    "stem_equivalence.py": {
+      "sites": 3,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 3
+    },
+    "stress_test.py": {
+      "sites": 11,
+      "watched": 0,
+      "redundant": 1,
+      "never_executes": 10
+    },
+    "test_bound_rules.py": {
+      "sites": 3,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 3
+    },
+    "test_executors.py": {
+      "sites": 15,
+      "watched": 0,
+      "redundant": 1,
+      "never_executes": 14
+    },
+    "unread_notes.py": {
+      "sites": 4,
+      "watched": 0,
+      "redundant": 0,
+      "never_executes": 4
+    }
+  },
   "history": [
     {
       "round": 23,
@@ -595,15 +754,59 @@
       "when": "2026-09-07T17:19:15Z",
       "source_fingerprint": "c6a3de5d8a2ecbaf",
       "inputs_fingerprint": "c6d50277b12a1ff0"
+    },
+    {
+      "run": 8,
+      "round": 23,
+      "controls_total": 338,
+      "watched": 102,
+      "never_executes": 206,
+      "modules": 29,
+      "when": "2026-09-09T13:39:32Z",
+      "source_fingerprint": "01845e7f69ae6335",
+      "inputs_fingerprint": "f76df800b0ab248e"
+    },
+    {
+      "run": 9,
+      "round": 23,
+      "controls_total": 340,
+      "watched": 101,
+      "never_executes": 207,
+      "modules": 29,
+      "when": "2026-09-09T14:55:32Z",
+      "source_fingerprint": "2f764e9decfada0a",
+      "inputs_fingerprint": "799d0ff47603ded8"
+    },
+    {
+      "run": 10,
+      "round": 23,
+      "controls_total": 340,
+      "watched": 101,
+      "never_executes": 207,
+      "modules": 29,
+      "when": "2026-09-09T15:34:33Z",
+      "source_fingerprint": "2f764e9decfada0a",
+      "inputs_fingerprint": "cfdbfcce6909a2ac"
+    },
+    {
+      "run": 11,
+      "round": 23,
+      "controls_total": 340,
+      "watched": 101,
+      "never_executes": 207,
+      "modules": 29,
+      "when": "2026-09-09T17:25:48Z",
+      "source_fingerprint": "2f764e9decfada0a",
+      "inputs_fingerprint": "cc040a07a0013972"
     }
   ],
   "history_anomalies": [],
   "previous": null,
-  "controls_total": 323,
-  "controls_total_legacy": 291,
+  "controls_total": 340,
+  "controls_total_legacy": 305,
   "sites_by_file": {
     "add_evidence.py": 6,
-    "apply_negative_search.py": 2,
+    "apply_negative_search.py": 3,
     "archive_evidence.py": 6,
     "archive_filter_probe.py": 6,
     "archive_negative_search.py": 5,
@@ -616,7 +819,7 @@
     "filter_categories.py": 2,
     "filter_diff.py": 2,
     "hf_probe.py": 0,
-    "mp_metric.py": 45,
+    "mp_metric.py": 49,
     "negative_search.py": 7,
     "pin_urls.py": 5,
     "probe_signatures.py": 3,
@@ -624,24 +827,24 @@
     "reach_controls.py": 14,
     "recheck.py": 8,
     "referee.py": 2,
-    "replay.py": 143,
+    "replay.py": 152,
     "stem_equivalence.py": 3,
     "stress_test.py": 11,
     "sweep.py": 0,
     "test_bound_rules.py": 3,
-    "test_executors.py": 12,
+    "test_executors.py": 15,
     "unread_notes.py": 4
   },
   "subscript_accumulator_writes": {
-    "writes": 10,
-    "modules": 4,
+    "writes": 13,
+    "modules": 5,
     "counted": 0,
     "_note": "accumulator-shaped writes targeting a subscript or attribute rather than a bare name. `counted` is how many the role test admits; zero means every one lives in a module that reports through a record rather than a refusal, which is a bound on the denominator and not a defect in this count."
   },
-  "watched": 97,
-  "unwatched": 226,
-  "redundant": 28,
-  "never_executes": 198,
+  "watched": 101,
+  "unwatched": 239,
+  "redundant": 32,
+  "never_executes": 207,
   "survivors": [
     {
       "file": "add_evidence.py",
@@ -687,14 +890,14 @@
     },
     {
       "file": "apply_negative_search.py",
-      "line": 71,
+      "line": 115,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "apply_negative_search.py",
-      "line": 98,
+      "line": 142,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
@@ -939,91 +1142,91 @@
     },
     {
       "file": "control_audit.py",
-      "line": 952,
+      "line": 962,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 961,
+      "line": 971,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 986,
+      "line": 996,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1263,
+      "line": 1300,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1271,
+      "line": 1308,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1321,
+      "line": 1358,
       "kind": "reports a defect",
       "source": "drift.append(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1336,
+      "line": 1373,
       "kind": "reports a defect",
       "source": "drift.append(\"history has %d recorded row(s) and this run produces %d -- append-only \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1341,
+      "line": 1378,
       "kind": "reports a defect",
       "source": "drift.append(\"history row %d differs from the recorded one; append-only means \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1350,
+      "line": 1387,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1354,
+      "line": 1391,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1362,
+      "line": 1399,
       "kind": "reports a defect",
       "source": "drift.append(\"suite: the record was measured over %d item(s) and this run used %d \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1368,
+      "line": 1405,
       "kind": "reports a defect",
       "source": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "control_audit.py",
-      "line": 1387,
+      "line": 1424,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
@@ -1131,6 +1334,13 @@
       "line": 436,
       "kind": "reports a defect",
       "source": "d.append(f\"{c['subject']}/axis{c['axis']}: cites {k}, which this subject does not \"",
+      "class": "REDUNDANT"
+    },
+    {
+      "file": "mp_metric.py",
+      "line": 535,
+      "kind": "reports a defect",
+      "source": "d.append(\"axis %d is declared determined for %r with no stated ground. The table \"",
       "class": "REDUNDANT"
     },
     {
@@ -1429,567 +1639,630 @@
     },
     {
       "file": "replay.py",
-      "line": 232,
+      "line": 234,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" a subject is named `_led`, which this context reserves.\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 280,
+      "line": 282,
       "kind": "reports a defect",
       "source": "bad.append(\"%s is from %s, which %s does not declare%s\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 285,
+      "line": 287,
       "kind": "reports a defect",
       "source": "bad.append(\"%s is from %s, which this subject declares for axis %s, not for axis %d\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 294,
+      "line": 296,
       "kind": "reports a defect",
       "source": "bad.append(\"%s/axis%d has no declared axis_documents\" % (cell[\"subject\"], cell[\"axis\"]))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 300,
+      "line": 302,
       "kind": "reports a defect",
       "source": "bad.append(\"the cited documents are not those this subject declares for axis %d\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 329,
+      "line": 331,
       "kind": "reports a defect",
       "source": "bad.append(\"axis %d carries method %r; this subject declares %r for it\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 337,
+      "line": 339,
       "kind": "reports a defect",
       "source": "bad.append(\"axis %d declares evidence %s; the cell expects %s\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 344,
+      "line": 346,
       "kind": "reports a defect",
       "source": "bad.append(\"axis %d declares file %r; the cell expects %r\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 383,
+      "line": 385,
       "kind": "rejects in an executor",
       "source": "return False, (\"the ranged artifact is cited alone, so nothing in the ledger says this \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 393,
+      "line": 395,
       "kind": "rejects in an executor",
       "source": "return False, \"archived range is %d bytes, the record claims %d\" % (len(b), want)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 395,
+      "line": 397,
       "kind": "rejects in an executor",
       "source": "return False, \"archived bytes do not hash to the recorded digest\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 411,
+      "line": 413,
       "kind": "rejects in an executor",
       "source": "return False, (\"the cell records enumeration index %d and the co-cited document \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 422,
+      "line": 424,
       "kind": "rejects in an executor",
       "source": "return False, (\"the cell records no `enumerated_index`, so the url could name any of the \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 447,
+      "line": 449,
       "kind": "rejects in an executor",
       "source": "return False, \"unknown byte_property kind %r\" % bp.get(\"kind\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 450,
+      "line": 452,
       "kind": "rejects in an executor",
       "source": "return False, \"the range holds %d uint32 words; the cell records %d\" % (n, bp.get(\"count\"))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 455,
+      "line": 457,
       "kind": "rejects in an executor",
       "source": "return False, (\"%d of %d words are not valid token ids below %d -- these bytes are not a \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 485,
+      "line": 487,
       "kind": "rejects in an executor",
       "source": "return False, \"no `expect_repo`: nothing ties this enumeration to a declared corpus\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 493,
+      "line": 495,
       "kind": "rejects in an executor",
       "source": "return False, \"expected exactly one pinned dataset tree response, found %d\" % len(trees)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 508,
+      "line": 510,
       "kind": "rejects in an executor",
       "source": "return False, \"the archived tree response is not JSON\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 535,
+      "line": 548,
       "kind": "rejects in an executor",
-      "source": "return False, (\"%d of %d enumerated corpus file(s) carry NO publisher digest: %s\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 554,
-      "kind": "rejects in an executor",
-      "source": "return False, why",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 563,
-      "kind": "rejects in an executor",
-      "source": "return False, (\"this is %s's evidence; the cell is scored for %s, which the ledger \"",
+      "source": "return False, (\"%d file(s) are declared non-content and are not in the enumeration (%s). \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 569,
+      "line": 555,
       "kind": "rejects in an executor",
-      "source": "return False, \"expected exactly one ranged artifact, found %d\" % len(r)",
-      "class": "NEVER EXECUTES"
+      "source": "return False, (\"%s is declared non-content and DOES carry a publisher digest. It is \"",
+      "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 572,
+      "line": 566,
       "kind": "rejects in an executor",
-      "source": "return False, \"the ranged artifact is not a pinned Hugging Face file url\"",
-      "class": "NEVER EXECUTES"
+      "source": "return False, (\"%d enumerated file(s) carry an `lfs.oid` that is not a sha256 digest \"",
+      "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
       "line": 577,
       "kind": "rejects in an executor",
-      "source": "return False, (\"the range is from %s@%s, the enumeration is from %s@%s\"",
+      "source": "return False, (\"a bound on this method needs `expect_items_with_digest`, or the \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 597,
+      "line": 581,
       "kind": "rejects in an executor",
-      "source": "return False, (\"no `expect_file`: this check block carries nothing that distinguishes one \"",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 602,
-      "kind": "rejects in an executor",
-      "source": "return False, \"%r is not among the %d shards this revision enumerates\" % (rfile, len(shards))",
+      "source": "return False, (\"%d of %d enumerated file(s) carry a publisher digest; the cell \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 604,
+      "line": 613,
       "kind": "rejects in an executor",
-      "source": "return False, \"pinned_commit disagrees with the url's revision\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 606,
-      "kind": "rejects in an executor",
-      "source": "return False, \"range is %r, the cell claims %d bytes\" % (r[0].get(\"range\"), want)",
-      "class": "REDUNDANT"
-    },
-    {
-      "file": "replay.py",
-      "line": 612,
-      "kind": "rejects in an executor",
-      "source": "return False, \"archived range is %d bytes, the cell claims %d\" % (len(b), want)",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 614,
-      "kind": "rejects in an executor",
-      "source": "return False, \"the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect\"",
-      "class": "NEVER EXECUTES"
-    },
-    {
-      "file": "replay.py",
-      "line": 619,
-      "kind": "rejects in an executor",
-      "source": "return False, \"too short to carry a safetensors header\"",
+      "source": "return False, why",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
       "line": 622,
       "kind": "rejects in an executor",
+      "source": "return False, (\"this is %s's evidence; the cell is scored for %s, which the ledger \"",
+      "class": "REDUNDANT"
+    },
+    {
+      "file": "replay.py",
+      "line": 628,
+      "kind": "rejects in an executor",
+      "source": "return False, \"expected exactly one ranged artifact, found %d\" % len(r)",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 631,
+      "kind": "rejects in an executor",
+      "source": "return False, \"the ranged artifact is not a pinned Hugging Face file url\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 636,
+      "kind": "rejects in an executor",
+      "source": "return False, (\"the range is from %s@%s, the enumeration is from %s@%s\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 656,
+      "kind": "rejects in an executor",
+      "source": "return False, (\"no `expect_file`: this check block carries nothing that distinguishes one \"",
+      "class": "REDUNDANT"
+    },
+    {
+      "file": "replay.py",
+      "line": 661,
+      "kind": "rejects in an executor",
+      "source": "return False, \"%r is not among the %d shards this revision enumerates\" % (rfile, len(shards))",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 663,
+      "kind": "rejects in an executor",
+      "source": "return False, \"pinned_commit disagrees with the url's revision\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 665,
+      "kind": "rejects in an executor",
+      "source": "return False, \"range is %r, the cell claims %d bytes\" % (r[0].get(\"range\"), want)",
+      "class": "REDUNDANT"
+    },
+    {
+      "file": "replay.py",
+      "line": 671,
+      "kind": "rejects in an executor",
+      "source": "return False, \"archived range is %d bytes, the cell claims %d\" % (len(b), want)",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 673,
+      "kind": "rejects in an executor",
+      "source": "return False, \"the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 678,
+      "kind": "rejects in an executor",
+      "source": "return False, \"too short to carry a safetensors header\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 681,
+      "kind": "rejects in an executor",
       "source": "return False, (\"the archived bytes do not begin with a safetensors header \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 625,
+      "line": 684,
       "kind": "rejects in an executor",
       "source": "return False, \"the archived bytes do not look like weight data (first bytes %r)\" % b[:16]",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 627,
+      "line": 686,
       "kind": "rejects in an executor",
       "source": "return False, \"archived bytes do not hash to the recorded digest\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 645,
+      "line": 704,
       "kind": "rejects in an executor",
       "source": "return False, why",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 654,
+      "line": 713,
       "kind": "rejects in an executor",
       "source": "return False, (\"this is %s's evidence; the cell is scored for %s, which the ledger \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 674,
+      "line": 733,
       "kind": "reports a defect",
       "source": "bad.append(\"a pointer url is not a pinned Hugging Face file url\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 678,
+      "line": 737,
       "kind": "reports a defect",
       "source": "bad.append(\"%s is from %s@%s\" % (pfile, prepo, prev[:12]))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 689,
+      "line": 748,
       "kind": "reports a defect",
       "source": "bad.append(\"%s carries no sha256 oid\" % pfile)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 691,
+      "line": 750,
       "kind": "reports a defect",
       "source": "bad.append(\"%s oid does not match the ledger\" % pfile)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 693,
+      "line": 752,
       "kind": "reports a defect",
       "source": "bad.append(\"%s archived bytes do not hash to the recorded digest\" % pfile)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 699,
+      "line": 758,
       "kind": "reports a defect",
       "source": "bad.append(\"duplicate shard pointer(s): %s\" % dup[:3])",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 724,
+      "line": 783,
       "kind": "rejects in an executor",
       "source": "return False, \"counted %d occurrence(s), the cell claims %d\" % (got, n)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 841,
+      "line": 839,
+      "kind": "rejects in an executor",
+      "source": "return False, \"the armour has no body: nothing was packed here\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 850,
+      "kind": "rejects in an executor",
+      "source": "return False, \"the armour carries no CRC-24 line, so its integrity is unstated\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 855,
+      "kind": "rejects in an executor",
+      "source": "return False, \"the armour is not decodable base64\"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 976,
       "kind": "rejects in an executor",
       "source": "return False, (",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 884,
+      "line": 1019,
       "kind": "reports a defect",
       "source": "bad.append(\"a query does not search for %r\" % name)",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 888,
+      "line": 1023,
       "kind": "reports a defect",
       "source": "bad.append(\"a response carries no totalResults\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 894,
+      "line": 1029,
       "kind": "rejects in an executor",
       "source": "return False, \"; \".join(bad[:2])",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 898,
+      "line": 1033,
       "kind": "rejects in an executor",
       "source": "return False, \"no archived response for declared term(s) %s\" % missing[:3]",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 901,
+      "line": 1036,
       "kind": "rejects in an executor",
       "source": "return False, (\"%d term(s) return a different total than recorded: %s. arXiv grows, so \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 983,
+      "line": 1118,
       "kind": "rejects in an executor",
       "source": "return False, \"expected exactly one pinned enumeration, found %d\" % len(recs)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1003,
+      "line": 1138,
       "kind": "rejects in an executor",
       "source": "return False, \"the archived revision response is not JSON\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1010,
+      "line": 1158,
+      "kind": "rejects in an executor",
+      "source": "return False, (",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 1165,
       "kind": "rejects in an executor",
       "source": "return False, \"the archived response enumerates no files, so it settles nothing\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1027,
+      "line": 1182,
       "kind": "rejects in an executor",
       "source": "return False, (\"%d declared pattern(s) match NONE of the exemplars, so they cannot detect \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1031,
+      "line": 1186,
       "kind": "rejects in an executor",
       "source": "return False, (\"exemplar(s) %s match no declared pattern; the probe and the search \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1035,
+      "line": 1197,
       "kind": "rejects in an executor",
-      "source": "return False, (\"exemplar %s is in the real listing, so the positive control is measuring \"",
+      "source": "return False, (\"exemplar %s is ALSO published at %s@%s. Either the publisher really ships \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1081,
+      "line": 1247,
       "kind": "rejects in an executor",
       "source": "return False, \"expected exactly one pinned repository tree response, found %d\" % len(recs)",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1097,
+      "line": 1263,
       "kind": "rejects in an executor",
       "source": "return False, \"the archived tree response is not JSON\"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1099,
+      "line": 1265,
       "kind": "rejects in an executor",
       "source": "return False, (\"the archived tree is TRUNCATED, so an absent path proves nothing about \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1109,
+      "line": 1275,
       "kind": "rejects in an executor",
       "source": "return False, (\"%s present but under 512 bytes -- a stub is not source\" % tiny[:2])",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1113,
+      "line": 1279,
       "kind": "rejects in an executor",
       "source": "return False, (\"no `expect_manifest`: source without a declared dependency manifest is \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1158,
+      "line": 1324,
       "kind": "rejects in an executor",
       "source": "return False, \"no `expect_evidence_sha256`: the evidence is unconstrained\"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1182,
+      "line": 1348,
       "kind": "rejects in an executor",
       "source": "return False, (\"no `expect_committer`: the committer identity is the whole finding here \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1226,
+      "line": 1365,
+      "kind": "rejects in an executor",
+      "source": "return False, (\"the object carries a signature and %s. A corrupted packet with an intact \"",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "replay.py",
+      "line": 1398,
       "kind": "rejects in an executor",
       "source": "return False, (\"no `expect_commit_subject`: what the signed commit actually DID is the \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1242,
+      "line": 1414,
       "kind": "rejects in an executor",
       "source": "return False, (\"this cell claims %s is a SHARED platform key, but it signs only %d \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1299,
+      "line": 1471,
       "kind": "rejects in an executor",
       "source": "return False, (\"digest %s is cited under %d different urls; the same bytes cannot \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1309,
+      "line": 1481,
       "kind": "rejects in an executor",
       "source": "return False, (\"axis %d REQUIRES %s; %r is registered and permitted but does not bind \"",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1313,
+      "line": 1485,
       "kind": "rejects in an executor",
       "source": "return False, (\"method %r requires `%s`; without it nothing can be replayed and the \"",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1316,
+      "line": 1488,
       "kind": "rejects in an executor",
       "source": "return False, \"method %r cannot settle this axis\" % meth",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1319,
+      "line": 1491,
       "kind": "rejects in an executor",
       "source": "return False, \"method %r has no executor\" % meth",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1621,
+      "line": 1793,
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1626,
+      "line": 1798,
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1633,
+      "line": 1805,
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1637,
+      "line": 1809,
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1672,
+      "line": 1844,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1681,
+      "line": 1853,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1688,
+      "line": 1860,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1696,
+      "line": 1868,
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1699,
+      "line": 1871,
       "kind": "reports a defect",
       "source": "unreplayable += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "replay.py",
-      "line": 1737,
+      "line": 1909,
       "kind": "reports a defect",
       "source": "failed += nb_fail",
       "class": "REDUNDANT"
     },
     {
       "file": "replay.py",
-      "line": 1748,
+      "line": 1920,
       "kind": "refuses with a status code",
       "source": "return 1 if (failed or (strict and unreplayable)) else 0",
       "class": "REDUNDANT"
@@ -2101,126 +2374,147 @@
     },
     {
       "file": "test_bound_rules.py",
-      "line": 173,
+      "line": 240,
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_bound_rules.py",
-      "line": 185,
+      "line": 252,
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 86,
+      "line": 241,
       "kind": "reports a defect",
       "source": "base_bad.append(\"%s/axis%d: %s\" % (c[\"subject\"], c[\"axis\"], why))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 115,
+      "line": 270,
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 116,
+      "line": 271,
       "kind": "reports a defect",
       "source": "unread.append((where, k, \"deleting it\", res))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 129,
+      "line": 284,
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 130,
+      "line": 285,
       "kind": "reports a defect",
       "source": "unread.append((where, k, \"corrupting it\", res2))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 140,
+      "line": 295,
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 141,
+      "line": 296,
       "kind": "reports a defect",
       "source": "unread.append((where, \"evidence[0].sha256\", \"repointing it\", res3))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 160,
+      "line": 315,
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 161,
+      "line": 316,
       "kind": "reports a defect",
       "source": "unread.append((where, \"%s's evidence\" % other[\"subject\"],",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 173,
+      "line": 328,
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 174,
+      "line": 329,
       "kind": "reports a defect",
       "source": "unread.append((where, \"the co-cited artifacts\", \"dropping them\", res4))",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "test_executors.py",
-      "line": 185,
+      "line": 336,
+      "kind": "reports a defect",
+      "source": "missed += 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "test_executors.py",
+      "line": 344,
+      "kind": "reports a defect",
+      "source": "missed += 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "test_executors.py",
+      "line": 352,
+      "kind": "reports a defect",
+      "source": "missed += 1",
+      "class": "NEVER EXECUTES"
+    },
+    {
+      "file": "test_executors.py",
+      "line": 365,
       "kind": "refuses with a status code",
       "source": "return 1 if (missed or base_bad) else 0",
       "class": "REDUNDANT"
     },
     {
       "file": "unread_notes.py",
-      "line": 125,
+      "line": 149,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "unread_notes.py",
-      "line": 216,
+      "line": 250,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "unread_notes.py",
-      "line": 266,
+      "line": 300,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" the record on disk does not match what was just computed.\")",
       "class": "NEVER EXECUTES"
     },
     {
       "file": "unread_notes.py",
-      "line": 270,
+      "line": 304,
       "kind": "refuses with a status code",
       "source": "return 1 if still else 0",
       "class": "NEVER EXECUTES"

@@ -14,6 +14,7 @@ these" can stay true.
 """
 import io
 import json
+import os
 import pathlib
 import shutil
 import subprocess
@@ -89,6 +90,29 @@ def _tool_path(here, name):
     return None, None
 
 
+def _mirror(cwd, root):
+    """Where a tool's real directory lands inside the work tree.
+
+    ⛔⛔ `_tool_path` RESOLVED BOTH LAYOUTS AND THE NEXT TWO LINES THREW THE ANSWER AWAY. They
+    read `if cwd != HERE: cwd = paper_src`, and `paper_src` was built from ONE hardcoded path --
+    the author's `journal-submissions/mp-metric`. In an extraction that directory does not exist,
+    was never copied, and the run died with FileNotFoundError before measuring anything. So the
+    tool that produces the paper's largest disclosed weakness -- the count of notes nothing reads
+    -- could not run in the replication package at all, and the deposited record was wrong in
+    consequence: it names `check_claims.py` as excluded-red-at-baseline when a working run finds it
+    green and participating. Reported four rounds running.
+
+    ⚠ THE REDIRECTION ITSELF IS RIGHT AND MUST STAY. A paper-side tool resolves the census
+    beside itself, so running it from its real location would read the UNMUTATED ledger and every
+    bisection step would answer about the wrong file.
+
+    => So mirror the tool's directory into the work tree AT THE SAME POSITION RELATIVE TO THE
+    CENSUS. That is a fact about the two layouts rather than a copy of either, and a third layout
+    costs nothing.
+    """
+    return (root / os.path.relpath(cwd, HERE)).resolve()
+
+
 def blank(led, axes, only_unbounded=True):
     """A copy of the ledger with the notes on `axes`' unbounded zeros blanked."""
     import copy
@@ -105,7 +129,7 @@ def blank(led, axes, only_unbounded=True):
     return out, n
 
 
-def notices(root, led, paper_src):
+def notices(root, led):
     """Does any tool in SUITE notice this ledger? Returns the list that did."""
     (root / "cells.json").write_text(json.dumps(led, indent=2) + NL, encoding="utf-8", newline=NL)
     hit = []
@@ -128,7 +152,7 @@ def notices(root, led, paper_src):
                 "member that never executed, and the figure beneath it would be measured over a "
                 "population this tool could not assemble." % (tool, HERE))
         if cwd != HERE:
-            cwd = paper_src
+            cwd = _mirror(cwd, root)
         r = subprocess.run([sys.executable, "-X", "utf8"] + argv, cwd=str(cwd),
                            capture_output=True, text=True, encoding="utf-8", errors="replace")
         out = (r.stdout or "") + (r.stderr or "")
@@ -138,7 +162,7 @@ def notices(root, led, paper_src):
     return hit
 
 
-def read_axes(root, led, axes, paper_src):
+def read_axes(root, led, axes):
     """The minimal set of axes whose notes something reads. Bisection, not inspection.
 
     ⛔ THE FIRST VERSION OF THIS FILE ASKED ONLY *WHETHER* ANYTHING NOTICED, and answered with a
@@ -154,13 +178,13 @@ def read_axes(root, led, axes, paper_src):
     if not axes:
         return []
     mutated, n = blank(led, set(axes))
-    if n == 0 or not notices(root, mutated, paper_src):
+    if n == 0 or not notices(root, mutated):
         return []
     if len(axes) == 1:
         return list(axes)
     mid = len(axes) // 2
-    return (read_axes(root, led, axes[:mid], paper_src)
-            + read_axes(root, led, axes[mid:], paper_src))
+    return (read_axes(root, led, axes[:mid])
+            + read_axes(root, led, axes[mid:]))
 
 
 def main():
@@ -184,12 +208,22 @@ def main():
     print()
 
     work = pathlib.Path(tempfile.mkdtemp(prefix="unread-"))
-    root = work / "provenance-laboratory" / "census"
+    # ⚠ THE WORK TREE KEEPS THIS CENSUS'S OWN DIRECTORY NAMES. They were written out as
+    # "provenance-laboratory/census", which is the author's tree; a paper-side tool that resolves
+    # the census by a relative path would have missed it under any other name.
+    root = work / HERE.parent.name / HERE.name
     shutil.copytree(HERE, root, dirs_exist_ok=True, ignore=_SKIP)
-    paper_src = work / "journal-submissions" / "mp-metric"
-    _real_paper = HERE.parents[1] / "journal-submissions" / "mp-metric"
-    if _real_paper.exists():
-        shutil.copytree(_real_paper, paper_src, dirs_exist_ok=True, ignore=_SKIP)
+    # ⛔ AND THE COPY IS A PROJECTION OVER THE SUITE, NOT ONE NAMED DIRECTORY. Every tool that
+    # lives outside the census is mirrored where `_mirror` will look for it, so adding a fifth
+    # tool in a fifth place needs no edit here -- and a tool the suite names that CANNOT be
+    # located is already a refusal in `notices()`, not a silent omission.
+    for _tool in SUITE_ACTIVE:
+        _cwd, _ = _tool_path(HERE, _tool)
+        if _cwd is None or _cwd == HERE:
+            continue
+        _dst = _mirror(_cwd, root)
+        if not _dst.exists():
+            shutil.copytree(_cwd, _dst, dirs_exist_ok=True, ignore=_SKIP)
     # ⛔ THIS HAD NO BASELINE, AND IT COST THIRTY-FIVE MINUTES OF MEASURING NOTHING.
     # check_claims compares the MANUSCRIPT against the ledger, so it is red whenever the paper has
     # been edited and not yet rebuilt -- which is exactly when someone re-runs this tool. Every
@@ -203,7 +237,7 @@ def main():
     # ⇒ A red tool is EXCLUDED and NAMED, rather than silently treated as a signal. The figure
     # then carries the bound: measured against the tools that could participate.
     print("  baseline: running the suite BEFORE any mutation ...")
-    red = notices(root, led, paper_src)
+    red = notices(root, led)
     if red:
         print("  " + W + " %s %s red on the UNMUTATED tree and cannot participate."
               % (", ".join(red), "is" if len(red) == 1 else "are"))
@@ -221,7 +255,7 @@ def main():
     try:
         axes = sorted({c["axis"] for c in target})
         print("  bisecting over %d axes that carry unbounded-zero notes ..." % len(axes))
-        read = sorted(read_axes(root, led, axes, paper_src))
+        read = sorted(read_axes(root, led, axes))
         read_cells = [c for c in target if c["axis"] in read]
         unread_cells = [c for c in target if c["axis"] not in read]
         print()
@@ -234,7 +268,7 @@ def main():
         print("  UNREAD %d note(s) across the remaining axes." % len(unread_cells))
         # confirm the complement really is green, rather than inferring it
         mutated, n = blank(led, {c["axis"] for c in unread_cells} - set(read))
-        still = notices(root, mutated, paper_src)
+        still = notices(root, mutated)
         print()
         print("  CONTROL: blanking only the %d unread note(s) -> %s"
               % (n, "nothing noticed" if not still else (D + " %s NOTICED" % still)))

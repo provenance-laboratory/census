@@ -45,7 +45,8 @@
     "gh:EleutherAI/lm-evaluation-harness",
     "gh:EleutherAI/pythia",
     "hf:EleutherAI/pythia-12b",
-    "hfds:EleutherAI/pile"
+    "hfds:EleutherAI/pile",
+    "hfds:EleutherAI/pile-standard-pythia-preshuffled"
    ],
    "axis_sources": {
     "1": [
@@ -82,6 +83,11 @@
     ],
     "19": [
      "hfds:EleutherAI/pile"
+    ],
+    "2": [
+     "hfds:EleutherAI/pile-standard-pythia-preshuffled",
+     "gh:EleutherAI/pythia",
+     "hf:EleutherAI/pythia-12b"
     ]
    },
    "axis_documents": {
@@ -126,6 +132,9 @@
     ],
     "19": [
      "https://huggingface.co/datasets/EleutherAI/pile/raw/148e1d5e8349977c76f673190424a2faf6980a1d/README.md"
+    ],
+    "2": [
+     "https://huggingface.co/api/datasets/EleutherAI/pile-standard-pythia-preshuffled/tree/bac79b6820adb34e451f9a02cc1dc7cd920febf0"
     ]
    },
    "axis_literals": {
@@ -147,7 +156,8 @@
     "12": [],
     "13": [],
     "18": [],
-    "19": []
+    "19": [],
+    "2": []
    },
    "axis_method": {
     "1": "grep_retrieved",
@@ -160,7 +170,8 @@
     "18": null,
     "19": null,
     "12": "hf_probe.weight_object",
-    "13": "hf_probe.all_shard_digests"
+    "13": "hf_probe.all_shard_digests",
+    "2": "hf_probe.corpus_item_digests"
    },
    "axis_file": {
     "12": "model-00001-of-00003.safetensors"
@@ -1006,33 +1017,27 @@
   {
    "subject": "pythia-12b",
    "axis": 2,
-   "score": 0,
-   "note": "No corpus digest, because the declared corpus repository publishes no corpus files: EleutherAI/pile at 148e1d5e8349 holds only .gitattributes, README.md and a loader script. Searched the pinned root tree, the siblings list, the dataset card and the paper, 2026-08-30.",
-   "bound": {
-    "method": "hf_probe.corpus_item_digests",
-    "asserts": "the declared corpus repository publishes no per-item or aggregate digest for its contents at a pinned revision",
-    "observed": "The declared corpus source `hfds:EleutherAI/pile` resolves to a repository holding THREE files at revision 148e1d5e8349: .gitattributes, README.md and pile.py. It is a LOADER SCRIPT, not a corpus -- the data it names was served from a third-party host, not from this repository -- so there are no corpus files here to carry Git-LFS digests, and 0 of 3 do. This is why the score is 0: not that a digest was looked for in prose and not mentioned, but that the corpus is not published as files at the address the release declares. Contrast olmo-2-13b, where the same method finds digests on every enumerated file.",
-    "as_of": "2026-08-30",
-    "expect_files": 3,
-    "expect_repo": "EleutherAI/pile",
-    "expect_evidence_sha256": "02772cfa32f3139c083fc4348eee8cba27dc42f191f2f56ec4fc1c9584f80fc4",
-    "expect_items_with_digest": 0,
-    "searched_archived": [
-     "https://huggingface.co/api/datasets/EleutherAI/pile/tree/148e1d5e8349977c76f673190424a2faf6980a1d"
-    ],
-    "searched_live": [
-     "https://huggingface.co/api/datasets/EleutherAI/pile (siblings list)",
-     "the dataset card at the same pinned revision",
-     "the release's paper and project README"
-    ]
-   },
+   "score": 2,
+   "note": "Every corpus data file carries a publisher-committed Git-LFS sha256 oid: 21 shards document-00000-of-00020.bin through document-00020-of-00020.bin, plus document.idx, at EleutherAI/pile-standard-pythia-preshuffled@bac79b6. ⛔ THIS CELL WAS 0 UNTIL ROUND 5 OF THE INTERNAL REVIEW, and the zero was ours rather than the publisher's. The census enumerated EleutherAI/pile -- the repository the subject's source list declared -- found three files (.gitattributes, README.md, pile.py), and recorded that the corpus is not published as files at the address the release declares. That is true of the LOADER and says nothing about whether the publisher content-addresses its training data. A reviewer named the actual repository; the publisher's own Reproducing Training instructions name it too, for exactly this model. ⚠ The same defect was found on olmo-2-13b at round 12 and fixed there; this is the second instance, on the census's own positive control, and it is the reason source selection is now recorded per axis rather than per subject.",
    "evidence": [
     {
-     "url": "https://huggingface.co/api/datasets/EleutherAI/pile/tree/148e1d5e8349977c76f673190424a2faf6980a1d",
-     "retrieved": "2026-08-30",
-     "sha256": "02772cfa32f3139c083fc4348eee8cba27dc42f191f2f56ec4fc1c9584f80fc4"
+     "url": "https://huggingface.co/api/datasets/EleutherAI/pile-standard-pythia-preshuffled/tree/bac79b6820adb34e451f9a02cc1dc7cd920febf0",
+     "retrieved": "2026-09-09",
+     "sha256": "c3c9cefeae4f6d1d9024c3a28d0eb48c7bd3429bcc34edf8a23260ea54d71032"
     }
-   ]
+   ],
+   "check": {
+    "method": "hf_probe.corpus_item_digests",
+    "asserts": "the corpus's own files carry publisher-committed per-item digests at a pinned revision, recomputable by a third party over the bytes they obtain",
+    "observed": "All 22 content files in the enumerated root tree carry a Git-LFS sha256 oid at EleutherAI/pile-standard-pythia-preshuffled@bac79b6. ⛔ THE EXCLUSION, DECLARED RATHER THAN FILTERED: .gitattributes carries no oid and cannot -- it is the Git-LFS configuration that CAUSES the other 22 to be content-addressed. It is listed in expect_non_content, and replay.py refuses if a declared non-content file is absent from the enumeration or turns out to carry a digest after all. ⚠ THE BINDING, FROM THE PUBLISHER AND NOT FROM THE REPOSITORY'S NAME: the pythia-12b model card states 'The Pile was not deduplicated before being used to train Pythia-12B', and the Pythia repository's Reproducing Training section instructs users to download repo_id=\"EleutherAI/pile-standard-pythia-preshuffled\" for the duped case. The same section tells the reader to verify with sha256sum. ⚠ THE BOUND: this replays the pinned ROOT tree, which for this repository is the whole of it -- 23 entries, no subdirectories. The revision is dated 2023-10-31, roughly two years before this census's evaluation date, so the digests were published long before we looked in the wrong place.",
+    "as_of": "2026-09-09",
+    "expect_files": 23,
+    "expect_repo": "EleutherAI/pile-standard-pythia-preshuffled",
+    "expect_non_content": [
+     ".gitattributes"
+    ],
+    "expect_evidence_sha256": "c3c9cefeae4f6d1d9024c3a28d0eb48c7bd3429bcc34edf8a23260ea54d71032"
+   }
   },
   {
    "subject": "pythia-12b",
@@ -5923,7 +5928,7 @@
      "sha256": "88ae851f53c3034d436816164ce49a876b333fa9b550fb7ef29838182b59ba7d"
     }
    ],
-   "note": "No list of training sources was found."
+   "note": "No list of training sources was found. ⚠ ITS EVIDENCE DRIFTED AND THE PROPERTY WAS RE-READ, 2026-09-09. recheck.py reported the cited announcement page as changed -- 'not JSON: the whole body differs' -- which makes this cell UNVERIFIED until someone reads the new bytes. They were read: the current page mentions no training data, dataset, corpus, data sources, crawl or 'trained on' at all; its single occurrence of 'train' is 'trained to reduce misuse', which is safety training and not a corpus. The zero stands, for the same reason it always did. ⛔ The recorded digest is NOT refreshed: refreshing it would erase the observation that the page moved, and that observation is itself a fact about how checkable this release is."
   },
   {
    "subject": "claude-3.5-sonnet",
@@ -7318,8 +7323,9 @@
  "_axis_evidence_readme": "⛔ THE LAST FOUR SURVIVORS WERE COLLISIONS, not prose. mistral and qwen publish the same number of shards; bert and gpt-2 name the same primary weight file. So a filename or a count discriminates six subjects out of seven and stops. The digest of the artifact each check is ABOUT does not collide, and the executor already holds it -- a transplanted check block then declares a digest the destination's own evidence does not carry.",
  "zero_bounds_floor": {
   "_readme": "How many of this census's zeros carry a replayable bound. It may rise. If it falls, mp_metric reports a defect: a bound was deleted and a negative became unfalsifiable again. Lower it only deliberately, in a commit that says why.",
-  "bounded_zeros": 37,
+  "bounded_zeros": 36,
   "total_zeros": 182,
-  "recorded": "2026-08-31"
+  "recorded": "2026-08-31",
+  "why_lowered_2026_09_09": "pythia-12b/axis2 moved 0 -> 2 after a reviewer showed the zero was a source-selection defect (the census enumerated the loader repository, not the training data the publisher's own reproduction instructions name). Its bound left with the zero it bounded. Floor 37 -> 36; no other bound was removed."
  }
 }

@@ -108,13 +108,32 @@ AXES = [
      "A publisher-committed digest for EVERY weight shard at a pinned revision. A digest for "
      "one shard of seventy-two is not a digest of the weights. Not computed by a mirror.",
      True),
+    # ⛔ THE CAP SAID ONE THING AND THE BAR SAID ANOTHER, AND A REVIEWER READ THE BAR. These read
+    # "a signature verifiable against a key the publisher has previously bound to itself" and "a
+    # timestamp a third party can verify without trusting the publisher's clock" -- neither of
+    # which mentions the weights. An api-only publisher can sign and externally timestamp a digest
+    # and publish the key, satisfying both sentences in full, so `STRATUM_MAX` capping the stratum
+    # at 1 was not justified by the stated bar. **A cap the bar does not entail is a number the
+    # instrument cannot defend**, and it is the same defect as a bar the method cannot observe,
+    # which this file already records on axes 2, 3, 6, 14 and 15.
+    #
+    # ⚠ The bars now say what was always meant: a signature over a digest of bytes NOBODY CAN
+    # OBTAIN is unfalsifiable. A third party can check that the signature verifies; it cannot check
+    # that the signed digest is the digest of the weights, which is the property the axis asks
+    # about. That is exactly a 1 -- ASSERTED -- and the cap follows from the bar rather than
+    # sitting beside it.
     (14, 3, "weights signed",
      "Are the weights signed by an identifiable key?",
-     "A signature verifiable against a key the publisher has previously bound to itself.",
+     "A signature verifiable against a key the publisher has previously bound to itself, over a "
+     "digest a third party can RECOMPUTE from weight bytes it has obtained. A valid signature over "
+     "a digest of unobtainable bytes is an assertion, not a check: it establishes who said it, "
+     "never that what was said is true of the weights.",
      True),
     (15, 3, "weights timestamped",
      "Is the weights digest timestamped?",
-     "A timestamp a third party can verify without trusting the publisher's clock.",
+     "A timestamp a third party can verify without trusting the publisher's clock, over a digest "
+     "that same party can RECOMPUTE from weight bytes it has obtained. Timestamping a digest of "
+     "unobtainable bytes fixes WHEN a string existed and nothing about the weights.",
      True),
 
     (16, 4, "bit-identical reproduction reported",
@@ -286,7 +305,29 @@ MAX_SCORE = {5: 1, 7: 1, 19: 1, 16: 1, 17: 1}
 # hash them (13), and cannot have them signed or timestamped in any way a third party could check
 # (14, 15). Those are facts about the stratum, not about the publisher's diligence, and a ceiling
 # that ignores them flatters the stratum it is supposed to bound.
+#
+# ⛔ AND AXIS 16 WAS MISSING FROM IT WHILE BEING DECLARED UNREACHABLE ONE TABLE BELOW. `MAX_SCORE`
+# caps axis 16 at 1 for everyone; `STRUCTURALLY_DETERMINED` says an api-only release cannot reach
+# even that, because bit-identity is a comparison against weights no independent party can obtain.
+# So the ceiling column priced a point the stratum provably cannot score. The two tables disagreed
+# in BOTH directions at once -- axis 12 capped at 0 and undeclared, axis 16 declared and uncapped --
+# which is the round-27 contradiction relocated rather than closed.
+#
+# ⇒ ONE RELATION, TWO SPELLINGS, KEPT IN AGREEMENT BY A CHECK: a pair is declared structurally
+# determined IF AND ONLY IF its cap here is 0. `mp_metric.validate` refuses either way round, so
+# neither table can drift from the other again, and "no positive is reachable" now means the same
+# thing to the ceiling column and to the abstract.
+#
+# ⚠ THIS MOVES ONLY THE CEILING, NOT THE SCORES. `score()` divides by the uncorrected denominator
+# and §5.2 says so; `attainable()` is read at exactly one site, the ceiling column. The correction
+# raises the api-only ceiling's accuracy and cuts AGAINST this paper's caution: §5.3's
+# non-monotonicity reversal is computed against the uncorrected denominator, so correcting it
+# widens the reversal rather than closing it.
 STRATUM_MAX = {
+    # ⚠ `16: 0` STOOD HERE FOR ONE ROUND, PUT THERE TO MAKE THE CAP AGREE WITH A DECLARATION THAT
+    # HAS SINCE BEEN WITHDRAWN. Axis 16 is capped at 1 for everyone by `MAX_SCORE` and is NOT
+    # further capped by this stratum: a bit-identical reproduction report about an api-only release
+    # is improbable, and this instrument has no ground to call it impossible.
     "api-only": {12: 0, 13: 1, 14: 1, 15: 1},
 }
 
@@ -311,11 +352,50 @@ STRATUM_MAX = {
 # over `== 0` finds nothing and over `> 0` sweeps in 14 and 15. The relation must be DECLARED, with
 # the ground stated per entry, or the next round produces a fourth number by a fourth route.
 STRUCTURALLY_DETERMINED = {
-    (16, "api-only"):
-        "axis 16 is a SEARCH axis whose bar requires an INDEPENDENT party to report a bit-identical "
-        "reproduction. Bit-identity is a comparison against a reference, and no independent party "
-        "can obtain the weights of an api-only release. No such report can exist -- in any corpus, "
-        "under any search -- so the zero is not the outcome of the search bound the cell states.",
+    # ⛔ WITHDRAWN, AND THE ENTRY BELOW REPLACES IT. This table's FIRST entry was (16, "api-only"),
+    # on the ground that "no independent party can obtain the weights of an api-only release, so no
+    # bit-identical reproduction report can exist -- in any corpus, under any search". A reviewer
+    # supplied three defeaters in one paragraph: an independent party may hold reference weights
+    # under a separate agreement, may have obtained a checkpoint before public release, or may
+    # compare against a publisher-committed reference digest. None of those shows a reproduction
+    # HAPPENED; each destroys the claim that one is IMPOSSIBLE, which is what the entry asserted.
+    #
+    # ⚠ A SECOND REVIEWER LEANED THE OTHER WAY AND THEIR OWN WORDING SETTLED IT: axis 12 is
+    # unreachable "in the strongest sense available here -- STRONGER than axis 16, whose cap is 1".
+    # The two disagreed about axis 16 and agreed about its relative weakness.
+    #
+    # => THE DISTINCTION THAT DECIDES IT IS WHOSE RULE MAKES THE CELL IMPOSSIBLE. Axis 12's
+    # impossibility is a fact about THIS INSTRUMENT -- the only permitted method is an artifact
+    # probe and the stratum has no artifact -- and the census is entitled to state facts about its
+    # own rules. Axis 16's impossibility was a claim about THE WORLD, about what no third party
+    # anywhere could ever have done, and a census that cannot search the world cannot establish it.
+    # A search bound is exactly the right thing to report there, and the cells already carry one.
+    # ⛔ THE ONE PAIR THE INSTRUMENT ALREADY CALLED UNREACHABLE WAS THE ONE PAIR THE TABLE OMITTED.
+    # `STRATUM_MAX["api-only"][12] = 0` is the only cell in the whole census whose cap is 0 -- axis
+    # 16's is 1 -- and a reviewer swept for it: the pairs where `max_for(axis, kind) == 0` are
+    # exactly {(12, "api-only")}, and the new table contained exactly {(16, "api-only")}. The two
+    # sets did not intersect, so `STRATUM_MAX` and `STRUCTURALLY_DETERMINED` contradicted each
+    # other one file apart, which is the round-27 contradiction moved rather than closed.
+    #
+    # ⚠️ AND THE ABSTRACT'S NEW SENTENCE RESTS ON THIS AXIS. It licenses six cells as findings
+    # because "the impossibility is entailed by publishing no weights, a choice already scored at
+    # axis 12". A cap of 0 says that cell records a CATEGORY; the sentence says it records a
+    # CHOICE. Both cannot hold, and this table is the purpose-built place to say which.
+    #
+    # ⇒ IT IS CONSTITUTIVE, AND THE GROUND IS THE METHODS BAR RATHER THAN AN ABSENCE OF EVIDENCE.
+    # `grep_retrieved` is deliberately barred from axes 12 and 13, and `REQUIRED_METHOD[12]` is
+    # `hf_probe.weight_object` -- a probe of an artifact. So this axis is settled by artifacts only,
+    # BY DESIGN, and no statement a publisher makes can reach even a 1. A release with no published
+    # weights cannot reach 1 because the only method that could produce one is not permitted, and
+    # cannot reach 2 because there is no artifact to range-read.
+    (12, "api-only"):
+        "axis 12 is settled by ARTIFACT PROBE ONLY: `REQUIRED_METHOD[12]` is "
+        "`hf_probe.weight_object` and `grep_retrieved` is deliberately barred from it, so no "
+        "statement in a retrieved document can raise this cell even to ASSERTED. An api-only "
+        "release publishes no weight object, so there is nothing to range-read for a 2 and no "
+        "permitted method to reach a 1. The 0 is correct and it records the CATEGORY, not a "
+        "publisher's omission -- which is why it may not also be cited as the choice that makes "
+        "axes 13-16 findings without that double-count being stated.",
 }
 
 # ⚠️ THE RULE THAT DECIDES 0 VERSUS N/A, which the doctrine was missing and which reproduces every
@@ -323,6 +403,17 @@ STRUCTURALLY_DETERMINED = {
 #
 #     N/A when the impossibility is INDEPENDENT of anything the instrument scores.
 #     0   when the impossibility is ENTAILED BY A CHOICE the instrument already scores elsewhere.
+#     0 AND DETERMINED when the axis IS the choice -- the cell records the decision itself.
+#
+# ⛔ THE THIRD CLAUSE WAS MISSING AND A REVIEWER FOUND THE HOLE IT LEFT. The two-clause rule asks
+# whether the impossibility is entailed by a choice scored ELSEWHERE; for axis 12 under api-only
+# the choice is scored AT axis 12, so the rule returns nothing at all and the cell fell through
+# both branches. **A rule with a branch no data has taken is undefined, not settled** -- and this
+# one had a case its own headline example landed in.
+#
+# ⇒ The third clause keeps the 0 (N/A would erase the fact the census exists to record) while
+# marking the cell DETERMINED, so the denominator is right and the abstract cannot cite axis 12
+# as a scored choice licensing six other cells without that being visible in one table.
 #
 # Base models on axes 20-22: no post-training stage exists, and nothing here scores the decision to
 # release a base model -- independent, so N/A. Api-only on axes 13-16: the impossibility flows from

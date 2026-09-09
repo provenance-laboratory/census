@@ -864,7 +864,17 @@ def _history(old, rnd, total_now, watched_now, never_now, modules_now, when):
     # and the row was built so it could not say so. `inputs_fingerprint()` is defined 24 lines
     # below `source_fingerprint()` in this file, with a comment explaining that hashing only .py
     # is the defect that let 17 sites be classified two ways at once.
-    entry = {"round": rnd, "controls_total": total_now, "watched": watched_now,
+    # ⚠ AND `round` IS A LABEL, NOT AN IDENTITY. Two rows carry round 23 -- the narrowed run at
+    # index 12 and a full run later -- so nothing that orders this series by `round` can order
+    # those two, which a reviewer noticed while reading `history_anomalies`. Append-only was the
+    # right repair for "the last run of a round overwrote the round"; it did not make the round a
+    # key, and adding a field is not fixing a defect if the field is not unique -- the sentence
+    # this function's own docstring already contains, about a different field.
+    #
+    # => `run` is the position in the append-only series, which is the only thing here that
+    # identifies a run. `round` stays, because it says which review the run belongs to.
+    entry = {"run": len(hist) + 1,
+             "round": rnd, "controls_total": total_now, "watched": watched_now,
              "never_executes": never_now, "modules": modules_now, "when": when,
              "source_fingerprint": source_fingerprint(),
              "inputs_fingerprint": inputs_fingerprint()}
@@ -1065,6 +1075,27 @@ def main():
 
     # ⚠ SORTED, so the record does not depend on which worker finished first. A parallel audit
     # whose output order varies would make every diff unreadable and every digest unstable.
+    # ⛔ THE AUDIT MEASURED PER MODULE AND REPORTED ONE PERCENTAGE, AND THE PERCENTAGE IS THE
+    # LESS INFORMATIVE HALF. Two reviewers independently reconstructed the split by hand and both
+    # said it belongs in the paper: 27 of 29 modules have not one watched control site, and the
+    # modules with none include `control_audit.py`, `reach_controls.py`, `unread_notes.py` and
+    # `stress_test.py` -- **the four tools that produce the paper's own measurements**. A verifier
+    # that re-derives its own record is not independent evidence that the record means what it says,
+    # and the aggregate hides exactly that.
+    #
+    # ⚠ "NEVER EXECUTES" MEANS NOT REACHED BY THIS SUITE, not intrinsically unreachable, and the
+    # per-module row is where a reader can see which. The tests execute and pass; their coverage is
+    # concentrated in two files.
+    by_module = {}
+    for name, lo, kind, still in sorted(_results, key=lambda r: (r[0], r[1])):
+        _m = by_module.setdefault(name, {"sites": 0, "watched": 0,
+                                         "redundant": 0, "never_executes": 0})
+        _m["sites"] += 1
+        if not still:
+            _m["watched"] += 1
+        else:
+            _m["redundant" if any(f.endswith(name) and n0 == lo for f, n0 in _hit)
+                else "never_executes"] += 1
     for name, lo, kind, still in sorted(_results, key=lambda r: (r[0], r[1])):
         if still:
             line = _srcs[name].splitlines()[lo - 1].strip()
@@ -1158,6 +1189,12 @@ def main():
            # unchanged the predecessor is carried FORWARD, so "previous" means the last time the
            # number actually moved rather than the last time this tool ran.
            "round": _RND,
+           # ⛔ THE SPLIT THE AGGREGATE HIDES. Section 8's thesis is that this instrument fails
+           # the way the artifacts do; the aggregate percentage states it and the rows EVIDENCE
+           # it, because the modules with zero watched sites include the four that produce the
+           # paper's own measurements. Emitted here so `build_paper.py` derives the table rather
+           # than anybody retyping four numbers a reviewer reconstructed by hand.
+           "by_module": by_module,
            "history": _history(_old, _RND, watched + len(unwatched), watched,
                                len([u for u in unwatched if u[4] == "NEVER EXECUTES"]),
                                len(TARGETS), _WHEN),
