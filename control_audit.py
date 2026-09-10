@@ -298,6 +298,11 @@ SUITE = (
     (["check_facts.py"], "facts"),
     (["test_executors.py"], "executors"),
     (["test_bound_rules.py"], "bounds"),
+    # ⚠ A CONTROL SUITE THE AUDIT DOES NOT RUN IS A SUITE WHOSE CONTROLS COUNT AS NEVER
+    # EXECUTING. The determination controls moved out of `test_bound_rules.py` into their own file
+    # when the ground was retyped; without this line the audit would have measured that move as a
+    # loss of coverage, which is the opposite of what happened.
+    (["test_determination.py"], "determination"),
     # ⛔ THE SUITE ATTACKED THE LEDGER AND NEVER THE ARCHIVE. 54 controls reported as
     # never-executing were almost all INSIDE executors, defending against corrupted evidence
     # bytes -- and every mutation this project made was to the ledger, which the validator

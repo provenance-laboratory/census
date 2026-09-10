@@ -469,81 +469,124 @@ def validate(led):
                      f"deliberate, say so in the commit and lower zero_bounds_floor in "
                      f"cells.json; otherwise a negative just became unfalsifiable again.")
 
-    # ⛔ `STRUCTURALLY_DETERMINED` SET A FIGURE IN THE ABSTRACT AND NOTHING TESTED IT. A round-30
-    # reviewer injected the two entries the previous round had just removed -- (14, "api-only") and
-    # (15, "api-only"), ground string *"injected by a reviewer, no ground checked"* -- and after one
-    # ordinary rebuild the whole suite was green: validation clean, 90 claims ok, 37 bounded and 23
-    # replayed, 17 bound-rule controls caught. Three guards refused first, and all three were about
-    # FINGERPRINTS: the audit's recorded digest of axes.py, the inputs manifest, and the two audits
-    # disagreeing. Every one of them fires on ANY edit to the file and is satisfied by the author's
-    # own workflow, which the build runs to a fixpoint.
+    # ⛔ `STRUCTURALLY_DETERMINED` SET A FIGURE IN THE ABSTRACT AND HAD NO TEST. A round-4
+    # reviewer injected two entries a previous round had removed, rebuilt, and every tool went
+    # green; the guards that refused first were fingerprint guards that fire on any edit and are
+    # cleared by the author's own workflow.
     #
-    # ⚠️ SO THE ROUND-29 DEFECT WAS NOT FIXED, IT WAS RELOCATED. `_STRUCTURAL = {14, 15, 16}` in
-    # build_paper.py became a dict in axes.py with a docstring, a per-entry rationale and a lookup
-    # function -- more surface, the same absence of a test. Reintroduce the wrong value tomorrow and
-    # the abstract says nine again with every light still green. **A rising check count is not
-    # rising coverage**, which is this project's own third failure mode, met inside the repair for
-    # the second.
+    # ⛔⛔ THE FIRST REPAIR WAS THREE CLAUSES THAT REDUCED TO ONE IDENTITY, AND A ROUND-5
+    # REVIEWER SHOWED IT. They read together as
     #
-    # ⇒ THE PREDICATE ASSERTS THE GROUND, NOT THE COUNT, and it runs in BOTH directions:
+    #     CORROBORATED   declared          =>  max_for(a,k) == 0
+    #     COMPLETE       max_for(a,k) == 0 =>  declared
     #
-    #   SOUND      every declared pair must really be unreachable -- no subject of that kind holds
-    #              a positive on that axis anywhere in the ledger. A single counter-example is a
-    #              false declaration, and a false declaration shrinks a denominator.
-    #   COMPLETE   every pair the instrument ALREADY says is unreachable -- max_for(axis, kind) == 0
-    #              -- must be declared with its ground. This is the half that makes the table a
-    #              projection rather than a list: a new stratum cap cannot be added without either
-    #              stating why no positive is reachable or having the build refuse.
+    # -- the two halves of `keys(STRUCTURALLY_DETERMINED) == {(a,k) : max_for(a,k) == 0}` -- while
+    # SOUND was already entailed by the cap enforcement above, which refuses any cell exceeding
+    # `max_for`. **So the table was constrained to equal a table we already had**, and the only
+    # content not derivable from `STRATUM_MAX` was the ground string, whose only test was that it
+    # was non-empty. That is why a ground false of the code it cited passed every check.
+    #
+    # ★ This project's own section 8 wrote the sentence for it, about two other records:
+    # *"AGREEMENT BETWEEN THESE TWO RECORDS IS ARITHMETIC, NOT CORROBORATION."*
+    #
+    # ⇒ SO THE GROUND IS A TYPED CLAIM AND THE PROJECTION RUNS OVER GROUNDS. A `method-bar`
+    # ground is EXECUTED -- every method the registry permits for that axis needs an artifact, and
+    # the stratum has none -- so the two tables can now DISAGREE, which is the only condition under
+    # which their agreement means anything. A `semantic` ground is a claim about what the axis
+    # MEANS; no predicate executes it, and it must say so in the entry rather than dressing itself
+    # as mechanical.
+    #
+    # ★ PROJECTING OVER GROUNDS IMMEDIATELY FOUND WHAT PROJECTING OVER CAPS COULD NOT: axis 13
+    # permitted only artifact-settled methods, so its ASSERTED level was unreachable by
+    # construction while section 5.2 described it as open. A cap-projection could never have seen
+    # it, because axis 13 is capped at 1.
     _kinds = {s["id"]: s.get("kind") for s in led.get("subjects", [])}
     if _kinds and led.get("cells"):
-        # ⚠ PROJECT OVER THE INSTRUMENT'S AXES, NOT OVER THE LEDGER'S. The first version read
-        # `{c["axis"] for c in led["cells"]}` and handed each to `max_for`, which raises on an axis
-        # that does not exist -- so the stress fixture "a cell on an axis that does not exist",
-        # whose entire purpose is to be invalid, killed the validator with a KeyError instead of
-        # being reported as the defect it is. A check that crashes on bad input has not validated
-        # it. The completeness question is about this instrument's own cap table anyway, so it
-        # holds for an axis no cell happens to mention.
-        _axis_ids = sorted(A.BY_ID)
+        _strata = sorted({v for v in _kinds.values() if v})
         _declared = set(A.STRUCTURALLY_DETERMINED)
+
         for _a, _k in sorted(_declared):
+            _e = A.determination_entry(_a, _k)
+            # ⛔ THIS CRASHED ON THE OLD PROSE-ONLY FORM -- a bare string entry raised
+            # AttributeError instead of being reported. A control that dies on the shape it was
+            # written to replace has not validated it, and this is the second time in this session
+            # that a new rule's ERROR PATH was the thing that had never run.
+            if not isinstance(_e, dict):
+                d.append("axis %d/%r declares a determination that is not a typed entry (%s). The "
+                         "prose-only form is what let a ground false of the code survive; an entry "
+                         "must state its kind, what it blocks, and its ground."
+                         % (_a, _k, type(_e).__name__))
+                continue
+            _kind = _e.get("kind")
+            if _kind not in ("method-bar", "semantic"):
+                d.append("axis %d/%r declares determination of kind %r; the kinds are 'method-bar' "
+                         "(executed here) and 'semantic' (argued, and must say it is not machine "
+                         "checked)." % (_a, _k, _kind))
+                continue
+            if not str(_e.get("ground") or "").strip():
+                d.append("axis %d/%r is declared determined with no stated ground." % (_a, _k))
+            if _kind == "method-bar":
+                _holds, _why = A.method_bar_holds(_a)
+                if not _holds:
+                    d.append("axis %d/%r claims a METHOD BAR and there is none: %s. A ground that "
+                             "names rules which do not do what it says is worse than no ground."
+                             % (_a, _k, _why))
+                if _k not in A.STRATA_WITHOUT_ARTIFACT:
+                    d.append("axis %d/%r claims a method bar, but %r is not declared to lack the "
+                             "artifact those methods need." % (_a, _k, _k))
+            if _kind == "semantic" and not str(_e.get("not_machine_checked") or "").strip():
+                d.append("axis %d/%r declares a SEMANTIC ground and does not say that nothing "
+                         "executes it. An argued ground that reads as a mechanical one is how a "
+                         "false ground survived a round." % (_a, _k))
+
+            # SOUND -- a positive anywhere refutes the ground. ⚠️ Largely entailed by the cap
+            # enforcement above when the cap is 0; kept because it is the clause that would survive
+            # if the cap were ever lifted, and because it fails LOUDLY about the ground.
             _pos = [c for c in led["cells"]
                     if c["axis"] == _a and _kinds.get(c["subject"]) == _k
                     and (c.get("score") or 0) > 0]
             if _pos:
-                d.append(
-                    "axis %d is declared STRUCTURALLY DETERMINED for %r, and %s scores %d on it. "
-                    "A ground saying no positive is reachable is refuted by a positive: either the "
-                    "score is wrong or the declaration is, and a false declaration removes a cell "
-                    "from a denominator."
-                    % (_a, _k, _pos[0]["subject"], _pos[0]["score"]))
-            # ⛔ THE CONJUNCT THAT CATCHES THE REVIEWER'S OWN INJECTION. Soundness alone -- "no
-            # subject of this kind scores positive here" -- is satisfied by every entry the census
-            # is trying to REPORT: an api-only zero on axes 14 and 15 is the FINDING, and declaring
-            # those cells determined would pass a check that only looks for counter-examples while
-            # giving away the result. The missing half is whether a positive is PRODUCIBLE, and the
-            # instrument already answers that in `STRATUM_MAX`: a publisher can state a property in
-            # a document and reach ASSERTED on 14 and 15, so their cap is 1, so they are findings.
+                d.append("axis %d is declared determined for %r and %s scores %d on it."
+                         % (_a, _k, _pos[0]["subject"], _pos[0]["score"]))
+
+            # CONSEQUENCE, not corroboration. ⚠️ A determination must be reflected in the
+            # denominator, or the ceiling prices a point the stratum cannot score. This is a
+            # requirement the declaration IMPOSES on the cap -- it is not evidence for it.
             if A.max_for(_a, _k) != 0:
-                d.append(
-                    "axis %d is declared STRUCTURALLY DETERMINED for %r while the instrument caps "
-                    "it at %d for that stratum -- so a positive IS reachable and the declaration "
-                    "says it is not. Declaring a cell determined without capping it removes it "
-                    "from the abstract's count of findings and leaves it priced in the ceiling: "
-                    "the two tables must say the same thing."
-                    % (_a, _k, A.max_for(_a, _k)))
-            if not str(A.structurally_determined(_a, _k) or "").strip():
-                d.append("axis %d is declared determined for %r with no stated ground. The table "
-                         "exists so the reason is checkable; an entry without one is the literal "
-                         "set it replaced." % (_a, _k))
-        for _a in _axis_ids:
-            for _k in sorted({v for v in _kinds.values() if v}):
+                d.append("axis %d is declared determined for %r while the instrument caps it at "
+                         "%d. The cap must follow the declaration; a determination that leaves the "
+                         "point priced is a denominator that disagrees with the abstract."
+                         % (_a, _k, A.max_for(_a, _k)))
+
+        # ⛔ AND NO CAP OF ZERO WITHOUT A STATED REASON. This is NOT the old completeness clause
+        # returning: that one claimed the declaration was corroborated by the cap, which was
+        # circular. This constrains the CAP TABLE -- a stratum cap of 0 says the instrument
+        # guarantees a zero, and a guaranteed zero with no written ground is the defect this whole
+        # paper is about. It is a requirement on `STRATUM_MAX`, not evidence for a determination.
+        #
+        # ⚠️ A SEMANTIC GROUND CANNOT BE DISCOVERED MECHANICALLY -- that is what makes it
+        # semantic -- so without this clause, deleting the axis-12 entry would leave its cap of 0
+        # standing and unexplained, and nothing would notice.
+        for _a in sorted(A.BY_ID):
+            for _k in _strata:
                 if A.max_for(_a, _k) == 0 and (_a, _k) not in _declared:
-                    d.append(
-                        "the instrument caps axis %d at 0 for %r -- it already says no positive is "
-                        "reachable -- and STRUCTURALLY_DETERMINED does not declare it. Either state "
-                        "the ground or lift the cap; a cell that cannot be positive while the "
-                        "paper counts it as a finding is the census reporting a category as a "
-                        "choice." % (_a, _k))
+                    d.append("the instrument caps axis %d at 0 for %r -- a guaranteed zero -- and "
+                             "no ground is declared for it. State why no positive is reachable, or "
+                             "lift the cap." % (_a, _k))
+
+        # COMPLETE, over GROUNDS. ⇒ For every axis and stratum, if a mechanical ground HOLDS,
+        # the pair must be declared -- whatever its cap. This is the clause that can discover a
+        # determination the cap table does not know about.
+        for _a in sorted(A.BY_ID):
+            _holds, _ = A.method_bar_holds(_a)
+            if not _holds:
+                continue
+            for _k in _strata:
+                if _k in A.STRATA_WITHOUT_ARTIFACT and (_a, _k) not in _declared:
+                    d.append("every method permitted for axis %d needs an artifact and %r has "
+                             "none, so no positive is reachable there -- and it is not declared. "
+                             "Declare it with its ground, or register a method that can settle the "
+                             "axis from a document." % (_a, _k))
     return d
 
 

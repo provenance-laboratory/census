@@ -351,52 +351,122 @@ STRATUM_MAX = {
 # ⚠️ Nor can this be inferred from `max_for`: it returns 1 for axis 16 under api-only, so projecting
 # over `== 0` finds nothing and over `> 0` sweeps in 14 and 15. The relation must be DECLARED, with
 # the ground stated per entry, or the next round produces a fourth number by a fourth route.
-STRUCTURALLY_DETERMINED = {
-    # ⛔ WITHDRAWN, AND THE ENTRY BELOW REPLACES IT. This table's FIRST entry was (16, "api-only"),
-    # on the ground that "no independent party can obtain the weights of an api-only release, so no
-    # bit-identical reproduction report can exist -- in any corpus, under any search". A reviewer
-    # supplied three defeaters in one paragraph: an independent party may hold reference weights
-    # under a separate agreement, may have obtained a checkpoint before public release, or may
-    # compare against a publisher-committed reference digest. None of those shows a reproduction
-    # HAPPENED; each destroys the claim that one is IMPOSSIBLE, which is what the entry asserted.
-    #
-    # ⚠ A SECOND REVIEWER LEANED THE OTHER WAY AND THEIR OWN WORDING SETTLED IT: axis 12 is
-    # unreachable "in the strongest sense available here -- STRONGER than axis 16, whose cap is 1".
-    # The two disagreed about axis 16 and agreed about its relative weakness.
-    #
-    # => THE DISTINCTION THAT DECIDES IT IS WHOSE RULE MAKES THE CELL IMPOSSIBLE. Axis 12's
-    # impossibility is a fact about THIS INSTRUMENT -- the only permitted method is an artifact
-    # probe and the stratum has no artifact -- and the census is entitled to state facts about its
-    # own rules. Axis 16's impossibility was a claim about THE WORLD, about what no third party
-    # anywhere could ever have done, and a census that cannot search the world cannot establish it.
-    # A search bound is exactly the right thing to report there, and the cells already carry one.
-    # ⛔ THE ONE PAIR THE INSTRUMENT ALREADY CALLED UNREACHABLE WAS THE ONE PAIR THE TABLE OMITTED.
-    # `STRATUM_MAX["api-only"][12] = 0` is the only cell in the whole census whose cap is 0 -- axis
-    # 16's is 1 -- and a reviewer swept for it: the pairs where `max_for(axis, kind) == 0` are
-    # exactly {(12, "api-only")}, and the new table contained exactly {(16, "api-only")}. The two
-    # sets did not intersect, so `STRATUM_MAX` and `STRUCTURALLY_DETERMINED` contradicted each
-    # other one file apart, which is the round-27 contradiction moved rather than closed.
-    #
-    # ⚠️ AND THE ABSTRACT'S NEW SENTENCE RESTS ON THIS AXIS. It licenses six cells as findings
-    # because "the impossibility is entailed by publishing no weights, a choice already scored at
-    # axis 12". A cap of 0 says that cell records a CATEGORY; the sentence says it records a
-    # CHOICE. Both cannot hold, and this table is the purpose-built place to say which.
-    #
-    # ⇒ IT IS CONSTITUTIVE, AND THE GROUND IS THE METHODS BAR RATHER THAN AN ABSENCE OF EVIDENCE.
-    # `grep_retrieved` is deliberately barred from axes 12 and 13, and `REQUIRED_METHOD[12]` is
-    # `hf_probe.weight_object` -- a probe of an artifact. So this axis is settled by artifacts only,
-    # BY DESIGN, and no statement a publisher makes can reach even a 1. A release with no published
-    # weights cannot reach 1 because the only method that could produce one is not permitted, and
-    # cannot reach 2 because there is no artifact to range-read.
-    (12, "api-only"):
-        "axis 12 is settled by ARTIFACT PROBE ONLY: `REQUIRED_METHOD[12]` is "
-        "`hf_probe.weight_object` and `grep_retrieved` is deliberately barred from it, so no "
-        "statement in a retrieved document can raise this cell even to ASSERTED. An api-only "
-        "release publishes no weight object, so there is nothing to range-read for a 2 and no "
-        "permitted method to reach a 1. The 0 is correct and it records the CATEGORY, not a "
-        "publisher's omission -- which is why it may not also be cited as the choice that makes "
-        "axes 13-16 findings without that double-count being stated.",
+# ⛔ A METHOD CAN SETTLE AN AXIS FROM A DOCUMENT, OR ONLY FROM AN ARTIFACT. Declared, because
+# the distinction is what a "no permitted method" ground has to be checked against, and inferring
+# it from a method's NAME would be the proxy this project keeps paying for.
+#
+# ⚠️ `reproduction_search` is DOCUMENT-SETTLED. It searches a corpus for a third party's report,
+# and a report is a document. That is why axis 16's withdrawn determination could never have been
+# a method-bar ground: a positive was always reachable by the registry's own rules.
+# ⇒ THE TEST, STATED SO THE CLASSIFICATION IS NOT A GUESS FROM THE NAME: can this method
+# settle the axis WITHOUT THE ARTIFACT EXISTING? If yes it is DOCUMENT -- it reads somebody's
+# statement, whether that statement is prose, a third party's report, or a platform's metadata
+# record. If no it must touch the artifact's bytes.
+SETTLED_FROM_DOCUMENT = {
+    "grep_retrieved": "reads literals out of a retrieved document",
+    "count_in_retrieved": "counts occurrences in a retrieved document",
+    "reproduction_search": "adjudicates third-party reports, which are documents",
+    # ⚠️ A PLATFORM RECORD IS STILL A CLAIM. `api_field` reads structured metadata ABOUT a release;
+    # metadata can say a file exists that cannot be fetched, so it settles nothing about the bytes.
+    "api_field": "reads a hosting platform's metadata, which is an assertion about the artifact",
+    "http_status": "a status code is a statement that something answers at a URL, not the bytes",
 }
+SETTLED_FROM_ARTIFACT = {
+    "http_range": "reads bytes of a published object",
+    "hf_probe.weight_object": "range-reads a weight file and refuses an LFS pointer",
+    "hf_probe.all_shard_digests": "enumerates published shards",
+    "hf_probe.corpus_item_digests": "enumerates published corpus files",
+    "hf_probe.signed_commit": "reads a commit object",
+    "hf_probe.release_artifacts": "enumerates published files at a revision",
+    "repo_tree_probe": "reads a source tree at a pinned commit",
+    "hash_compare": "recomputes a digest over bytes that were obtained",
+}
+
+
+def method_settlement(method):
+    """DOCUMENT, ARTIFACT, or None when the method is not classified.
+
+    ⛔ UNCLASSIFIED IS A REFUSAL, NOT A DEFAULT. A method nobody has classified is a method a
+    ground could silently assume anything about.
+    """
+    if method in SETTLED_FROM_DOCUMENT:
+        return "DOCUMENT"
+    if method in SETTLED_FROM_ARTIFACT:
+        return "ARTIFACT"
+    return None
+
+
+# ⚠️ WHICH STRATA LACK THE ARTIFACT AT ALL. Declared, because a mechanical ground is
+# "no permitted method can settle this without an artifact" AND "this stratum has none", and the
+# second half is a fact about the stratum rather than about the registry.
+STRATA_WITHOUT_ARTIFACT = {
+    "api-only": "the release publishes no weight object, so no artifact-settled method can run",
+}
+
+
+def method_bar_holds(axis_id):
+    """(holds, why) -- can NO registered method settle this axis from a document?
+
+    ⇒ THIS IS THE ONLY MECHANICALLY CHECKABLE GROUND KIND, and it is checkable by executing it
+    rather than by reading a sentence. If every method permitted for an axis needs an artifact,
+    then a stratum with no artifact cannot reach even ASSERTED through the registry.
+    """
+    perm = methods_for(axis_id)
+    if not perm:
+        return False, "no method is registered for axis %d at all" % axis_id
+    unknown = sorted(m for m in perm if method_settlement(m) is None)
+    if unknown:
+        return False, "unclassified method(s) %s -- classify them before relying on a bar" % unknown
+    doc = sorted(m for m in perm if method_settlement(m) == "DOCUMENT")
+    if doc:
+        return False, "%s can settle axis %d from a document" % (", ".join(doc), axis_id)
+    return True, "every permitted method (%s) needs an artifact" % ", ".join(sorted(perm))
+
+
+# ⛔⛔ THE GROUND UNDER THE ONE SURVIVING DETERMINATION WAS FALSE OF THE CODE IT CITED, AND A
+# REVIEWER TESTED IT RATHER THAN READING IT. It said `REQUIRED_METHOD[12]` is
+# `hf_probe.weight_object` and `grep_retrieved` is barred, "so no statement in a retrieved document
+# can raise this cell even to ASSERTED". Both cited rules are CHECK-BLOCK rules:
+#
+#     mp_metric.py    if val == 2 and _req and meth not in _req      <- VERIFIED cells only
+#     the axis-method rule runs inside `if isinstance(chk, dict)`     <- and 29 of 32 score-1
+#                                                                        cells carry no check block
+#
+# They built the counterexample -- gpt-4o axis 12 at score 1 with a note and a source -- lifted the
+# cap alone, and **zero method rules fired**. The only thing making the cell unreachable was the
+# cap, which is the same cap the corroboration clause required the declaration to agree with.
+# **The declaration was justified by the cap and the cap by the declaration.**
+#
+# ⇒ THE DEFENSIBLE GROUND IS A SEMANTIC FACT ABOUT THE AXIS, AND IT IS NOT A CLAIM ABOUT THIS
+# CODE. It is written below as one, and marked as one.
+STRUCTURALLY_DETERMINED = {
+    (12, "api-only"): {
+        "kind": "semantic",
+        "blocks": 1,
+        "ground":
+            "axis 12 asks whether the weights are RELEASED. Unlike a digest or a signature, that "
+            "property cannot be truthfully asserted in the absence of the artifact: an assertion "
+            "of it is checkable by trying, and false if there is nothing to obtain. So there is no "
+            "ASSERTED level to occupy -- a claim to have released weights that cannot be fetched "
+            "is not a weaker form of releasing them, it is a false statement. This is exactly why "
+            "axis 13 is capped at 1 and axis 12 at 0: a publisher may state a digest that nobody "
+            "can recompute, and the statement is still a statement.",
+        "not_machine_checked":
+            "This is a claim about what the axis MEANS, not about which methods are registered. "
+            "No predicate here executes it. An earlier version claimed a mechanical bar and was "
+            "false of the code; stating the kind is what stops that recurring.",
+    },
+}
+
+
+def structurally_determined(axis_id, kind):
+    """The stated ground on which no positive is reachable, or None. Declared, never inferred."""
+    e = STRUCTURALLY_DETERMINED.get((axis_id, kind))
+    return e["ground"] if e else None
+
+
+def determination_entry(axis_id, kind):
+    return STRUCTURALLY_DETERMINED.get((axis_id, kind))
 
 # ⚠️ THE RULE THAT DECIDES 0 VERSUS N/A, which the doctrine was missing and which reproduces every
 # N/A decision already in the ledger:
@@ -424,11 +494,6 @@ STRUCTURALLY_DETERMINED = {
 # reach the right verdict here for the wrong reason.
 
 
-def structurally_determined(axis_id, kind):
-    """The stated ground on which no positive is reachable, or None. Declared, never inferred."""
-    return STRUCTURALLY_DETERMINED.get((axis_id, kind))
-
-
 def max_for(axis_id, kind=None):
     """The highest score this axis can attain, for a release of this kind. Defaults to 2."""
     if axis_id not in BY_ID:
@@ -452,9 +517,27 @@ def attainable(axis_ids, kind=None):
 # A weights probe cannot establish that a corpus is enumerated; a grep over a model card cannot
 # establish that a shard's bytes are retrievable. Compatibility is declared here, and replay.py
 # refuses a pairing that is not.
+# ⛔⛔ AND THE EXCLUSION OF AXIS 13 MADE ITS *ASSERTED* LEVEL UNREACHABLE BY CONSTRUCTION. The
+# reason recorded above -- "a grep over a model card cannot establish that a shard's bytes are
+# retrievable" -- is right for axes 4 and 12, whose property IS retrievability. Axis 13 asks
+# something else: does the publisher PUBLISH a digest of the weights. A model card stating
+# `sha256 = ...` is a published digest, and a grep establishes exactly that it was published --
+# which is the definition of ASSERTED, "stated in a document we retrieved, and no artifact exists
+# whose content a third party could check".
+#
+# ★ SO THE EXCLUSION CONFLATED TWO CLAIMS: a grep cannot establish that a digest is CORRECT
+# (true, and why `REQUIRED_METHOD[13]` still demands the shard probe for a 2) with a grep cannot
+# establish that a digest was PUBLISHED (false). The consequence was that no axis-13 cell could
+# ever score 1 -- twelve cells, five 2s and seven 0s -- while section 5.2's cap table said an
+# api-only release stops at 1 there **because "a publisher may state a digest; nobody can
+# recompute it"**. The paper described a level the instrument did not implement.
+#
+# ⇒ It changes no score. No publisher in this census states a weights digest in prose, and the
+# five 2s rest on the shard probe as before. **What changes is what the seven zeros mean**: they
+# were zeros that could not have been ones, and they are now zeros that could have been.
 METHOD_AXES = {
-    "grep_retrieved": set(range(1, 23)) - {4, 12, 13},
-    "count_in_retrieved": set(range(1, 23)) - {4, 12, 13},
+    "grep_retrieved": set(range(1, 23)) - {4, 12},
+    "count_in_retrieved": set(range(1, 23)) - {4, 12},
     "http_range": {4, 12},
     "hf_probe.weight_object": {12, 13},
     "hf_probe.all_shard_digests": {12, 13},
