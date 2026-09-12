@@ -174,19 +174,50 @@ def never_executed():
 
 
 class Tracer:
-    """Record every (file, line) executed. The only honest way to know a branch ran."""
+    """Record every (file, line) executed. The only honest way to know a branch ran.
+
+    ⛔⛔ THIS DESTROYED THE AUDIT'S TRACER, AND THAT CHANGED A PUBLISHED NUMBER. `__enter__`
+    called `sys.settrace(self._t)` without reading `sys.gettrace()`, and `__exit__` called
+    `sys.settrace(None)`. `sys.settrace` admits exactly ONE tracer and has no notion of
+    composition, so when `control_audit.py` ran this tool as item 9 of the declared suite:
+
+        the audit installed its tracer once; the FIRST mutation displaced it; the first `__exit__`
+        set it to None; and across the remaining 70-odd calls it was never reinstated.
+
+    Measured: an outer tracer saw **0 of the 26 recorded branches** execute during `--quick`,
+    while every one of them demonstrably ran. The audit therefore classified 21 of them as
+    NEVER EXECUTES -- and the build, unable to reconcile that with the reach record, had its
+    convergence criterion weakened from equality to a subset relation to accommodate the gap.
+    **The gap was this function.** The alarm was true and the criterion was the thing changed.
+
+    ⚠️ IT IS THE SAME DEFECT AS THE `sys.stdout` REBINDING, in this same file's neighbourhood
+    and in the same round: a module reconfiguring a process-global on behalf of whoever called it.
+    That one broke a print. This one moved a number in a manuscript.
+
+    ⇒ Keep what we displaced, forward every event to it, and put it back. A tracer that must
+    survive being nested inside another either chains, as here, or uses `sys.monitoring`, which
+    admits several under distinct tool ids and is the right instrument if this ever needs more
+    than one level.
+    """
 
     def __init__(self):
         self.seen = set()
+        self._outer = None
 
     def __enter__(self):
+        self._outer = sys.gettrace()
         sys.settrace(self._t)
         return self
 
     def __exit__(self, *a):
-        sys.settrace(None)
+        sys.settrace(self._outer)
+        self._outer = None
 
     def _t(self, frame, event, arg):
+        # ⚠️ THE DISPLACED TRACER RUNS FIRST AND UNCONDITIONALLY. Its answer about which
+        # frames interest it is its own; filtering on our behalf is how it went blind.
+        if self._outer is not None:
+            self._outer(frame, event, arg)
         name = pathlib.Path(frame.f_code.co_filename).name
         if name in ("replay.py", "mp_metric.py"):
             self.seen.add((name, frame.f_lineno))
@@ -308,7 +339,7 @@ def quick(led, ctx, cells_by_key):
         return 1
     by_label = {m[0]: m[1] for m in mutations()}
     real_bytes = R._bytes_for
-    lost, unidentifiable, unverifiable, moved = [], [], [], []
+    lost, unidentifiable, unverifiable, moved, uncomparable = [], [], [], [], []
     for where, info in sorted(detail.items()):
         f, ln = where.rsplit(":", 1)
         key = (f, int(ln))
@@ -331,7 +362,12 @@ def quick(led, ctx, cells_by_key):
         if _ident is None:
             unidentifiable.append((where, "no statement at that line and no stored identity"))
             continue
-        _line, _status = _CI.resolve(HERE / f, _ident)
+        _line, _status = _CI.resolve(HERE / f, _ident, recorded_line=key[1])
+        if _status == _CI.UNCOMPARABLE:
+            uncomparable.append(
+                (where, "recorded under %s; this interpreter renders %s"
+                        % (_ident.get("canon") or "an unrecorded rendering", _CI._canon_tag())))
+            continue
         if _status in (_CI.AMBIGUOUS, _CI.GONE):
             unidentifiable.append(
                 (where, "%s: %s in %s" % (_status,
@@ -443,15 +479,49 @@ def quick(led, ctx, cells_by_key):
     # quietly is how a suite's coverage falls without its summary line moving.
     for _w, _why in unidentifiable + unverifiable:
         print("      %s %-28s %s" % (W, _w, _why))
+    for where, why in uncomparable:
+        print("      %s %-28s %s" % (W, where, why))
     for where, why in lost:
         print("  " + D + " %-18s %s" % (where, why))
-    if lost:
+
+    # ⛔⛔ DISPOSITION, NOT DETECTION, WAS THE DEFECT. `lost` returned 1; `unidentifiable` and
+    # `unverifiable` printed and fell through to `ok  every recorded branch still executes.` A
+    # round-7 reviewer ran this project's own test on it -- neuter a recorded control and ask
+    # whether the watcher notices -- and got exit 0 four times out of four:
+    #
+    #     control deleted: return False, "the archived revision response is not JSON"
+    #       replay.py:1271   gone: no statement of this shape remains in m_release_artifacts
+    #       quick replay of 26 recorded branch(es): 25 replayed, 1 unidentifiable, 0 unverifiable
+    #       ok  every recorded branch still executes.                              exit code: 0
+    #
+    # DELETING A CONTROL ALWAYS CHANGES ITS SHAPE, so deletion always resolves to `gone`, and
+    # `gone` was routed to the bucket that prints and passes. The identity scheme was built to
+    # stop false `lost` reports after code motion; it did, by converting the true positives into
+    # the same disposition. The docstring still promised this mode FAILS if any recorded branch
+    # stops being reached -- which is the whole of what makes it a watcher.
+    #
+    # ⚠️ AND THE VERDICT LINE WAS FALSE ON ITS OWN TERMS: it cannot have established that the
+    # branches it skipped still execute. Naming them is not counting them.
+    #
+    # ⇒ Every disposition that is not a replay now returns 1, with the instruction the `lost`
+    # path already carried. A legitimate rewrite costs one full sweep, which is the correct price;
+    # an instruction that does not block is an instruction nobody reads.
+    _blocking = [("no longer reached", lost), ("unidentifiable", unidentifiable),
+                 ("unverifiable", unverifiable), ("not comparable", uncomparable)]
+    _n = sum(len(v) for _k, v in _blocking)
+    if _n:
         print()
-        print("  " + D + " %d recorded branch(es) are no longer reached. Either a control was "
-              % len(lost))
-        print("  removed, or an executor changed shape. Re-run the full sweep to re-measure.")
+        for _kind, _rows in _blocking:
+            if _rows:
+                print("  " + D + " %d %s" % (len(_rows), _kind))
+        print("  " + D + " %d of %d recorded branch(es) were not replayed against their own "
+              "output." % (_n, len(detail)))
+        print("  A control was removed, an executor changed shape, an identity could not be "
+              "resolved,")
+        print("  or the record was rendered by another interpreter. Re-run the full sweep to "
+              "re-measure.")
         return 1
-    print("  ok  every recorded branch still executes.")
+    print("  ok  all %d recorded branch(es) were replayed and still execute." % len(detail))
     return 0
 
 

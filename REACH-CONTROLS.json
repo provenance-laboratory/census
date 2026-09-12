@@ -1,7 +1,7 @@
 {
   "_readme": "Which never-executing branches an ARCHIVE mutation can reach. Reaching a check is not validating it: this shows an input exists that runs the line and that the executor refuses, not that the refusal is correct.",
   "targets": 225,
-  "source_fingerprint": "322e869a3c74b26c",
+  "source_fingerprint": "60693b05f3399b48",
   "targets_pinned": 85,
   "_targets_note": "targets_pinned is the population this measurement was FIRST made against. `targets` is what the audit reports today, which this tool changes by being in the suite -- so the two differ by design and the pinned one is the denominator to quote.",
   "reached": 26,
@@ -28,9 +28,11 @@
         "module": "mp_metric.py",
         "qualname": "validate",
         "kind": "Expr",
-        "node_hash": "30f3cfce4baa4b7a927d2a6740c0cc0818c9a625cc2e290b44d9d38f906b2141",
+        "node_hash": "790e91c0831ebf588fd244eb47ddec806d7a4def8a1bfc739139544c51bd0ffa",
+        "parent_hash": "b0308c8c6d338e65794d1af71992353af1244dd91abb89a94e0dd23aa1250ee5",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "validator",
       "says": "pythia-12b/axis2: as_of is '2026-09-09X', which is not an ISO date"
@@ -44,9 +46,11 @@
         "module": "replay.py",
         "qualname": "m_range",
         "kind": "Return",
-        "node_hash": "738c78f6316643fa5609b56242356d033abd7f4194fdc4d0cff3ba8503903c10",
+        "node_hash": "babbe43799fc7c34410ab905a343dc62bc298f92ec9a73ff0777b8f8c949b989",
+        "parent_hash": "30b86ca4e42948730d5d04865030889a80ca23514f12aff8233bf7707dd06ca0",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "evidence-shape",
       "says": "the ranged artifact is cited alone, so nothing in the ledger says this url belongs to this",
@@ -61,9 +65,11 @@
         "module": "replay.py",
         "qualname": "m_range",
         "kind": "Return",
-        "node_hash": "57e87aab0f8359d5853e4d658b63ce8f0d79aefc05ab31f4f211ec07e433aa37",
+        "node_hash": "67a8796f91ac6e5963dbb7f18c94e5494ea5da8f8920ba0040dcfff47aef290e",
+        "parent_hash": "0cb6aaeb0b4a6b180ce27986168446a73d11d3dac160c2d12483415ca9a8db52",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "archived range is 0 bytes, the record claims 2048",
       "evidence_index": 1,
@@ -78,9 +84,11 @@
         "module": "replay.py",
         "qualname": "m_range",
         "kind": "Return",
-        "node_hash": "21ee45464ad923a4d02b03df898efbb0a7a79b5b12a7b88045e7ee608fc20326",
+        "node_hash": "148e5db7d46210747a808cf74d479a25f3fc764e2904dc643996f829329c45fe",
+        "parent_hash": "f4927dfacc50d89c68452ffa750f5c78da6ae3bd4642330ad1119a4c96945c90",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "archived bytes do not hash to the recorded digest",
       "evidence_index": 1,
@@ -95,9 +103,11 @@
         "module": "replay.py",
         "qualname": "m_corpus_item_digests",
         "kind": "Return",
-        "node_hash": "ff7cafca878a44f5ea930f094a8fb4b6ae1457b85f981afcd29cd0a665c8245c",
+        "node_hash": "b359a232eee2aa6de5b9e15cc9834812d3bb5c65d55511df7123789a8751352a",
+        "parent_hash": "40b6ea00a161391941fdf7ca6949e21e552a55372d576f84ca4ae1b619b22e37",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "evidence-shape",
       "says": "expected exactly one pinned dataset tree response, found 0",
@@ -112,9 +122,11 @@
         "module": "replay.py",
         "qualname": "m_corpus_item_digests",
         "kind": "Return",
-        "node_hash": "5154909888231074258299d838c918d9fa1af647f73e41e0a67e980e2558febf",
+        "node_hash": "6275e0086218ce2cd9f96a543555139d1a223e291f84ee1fcce1093aa4bfb9d4",
+        "parent_hash": "ef6a5470b28fdf88125eafe2f1df36710e7d06f28bff6468ff727cdb7526b83f",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "the archived tree response is not JSON",
       "evidence_index": 0,
@@ -129,9 +141,11 @@
         "module": "replay.py",
         "qualname": "m_corpus_item_digests",
         "kind": "Return",
-        "node_hash": "8fbfb63d0d822391e4d1aadefa7c7d392b1c8a0eb65b76c8d76c940f6c8cc9d1",
+        "node_hash": "8953fd66406865fd3d97dc68ba2f032aa279e60ebd296e7fb0b66d31c8fb00c6",
+        "parent_hash": "cc21f9ad8e7e2048fd6307e011bae60ffaff4d9630e5e481fa4ff027ab6fd6c9",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "ledger",
       "says": "22 enumerated file(s) are neither declared non-content nor matched by the content pattern ",
@@ -146,9 +160,11 @@
         "module": "replay.py",
         "qualname": "m_corpus_item_digests",
         "kind": "Return",
-        "node_hash": "dd9b720742ef48243fe2a4664a282b9d138686f0fa9c5f0a8fb5e5df61d58b7b",
+        "node_hash": "37637ecd3683ab09f1fd610f0efa51520adf74ee6d72b1503b9ac66852cc04a6",
+        "parent_hash": "cf2d7fe219f645efe6d1f1e24b28804b56565e2240e645938e65e8be317eb35c",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "ledger",
       "says": "1 of 23 enumerated corpus file(s) carry NO publisher digest: ['.gitattributes']",
@@ -163,9 +179,11 @@
         "module": "replay.py",
         "qualname": "m_weight_object",
         "kind": "Return",
-        "node_hash": "fa59118f782990300cb1b6bb6aaebdcbf0599c3097dfd964687dd282b3c24ac7",
+        "node_hash": "b84156cc802e0f2ff412cd4dc7ddb3a0f3d53a213926bbcddd0558955322f9cd",
+        "parent_hash": "c83c1e567df064238d801ad24f1779b37adef101c6b9fc8641c459299d74836c",
         "ordinal": 0,
-        "siblings": 2
+        "siblings": 2,
+        "canon": "v1/py3.14"
       },
       "kind": "evidence-shape",
       "says": "cited artifacts span 0 different repository/revision pairs: []",
@@ -180,9 +198,11 @@
         "module": "replay.py",
         "qualname": "m_weight_object",
         "kind": "Return",
-        "node_hash": "ff69cf6e105ab507af284c1811d08ffafc86c91eed6682aaa27e27bd9a2be119",
+        "node_hash": "abf742086feb7f7b38484a4d97acfd2a6caa4d50827c043ac51eec2ad67512d0",
+        "parent_hash": "183867361d7f4b9ce3b544d7b8366dc3eee0777171bc3e7dcc096adc4e9de6c5",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "evidence-shape",
       "says": "expected exactly one ranged artifact, found 2",
@@ -197,9 +217,11 @@
         "module": "replay.py",
         "qualname": "m_weight_object",
         "kind": "Return",
-        "node_hash": "244bde0b3b23a7482b55c79b7467d8ce970be482a2762d6545c46bcc68986019",
+        "node_hash": "52ccd8c2ced2520b261cbda90845e0af99b4da07e31452f2ec8f40d9a5eb1efd",
+        "parent_hash": "db53e8582514da0a23d126300cae00d6ea1ccba435a42ed40da8e2cb1a1a5040",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "archived range is 0 bytes, the cell claims 2048",
       "evidence_index": 0,
@@ -214,9 +236,11 @@
         "module": "replay.py",
         "qualname": "m_weight_object",
         "kind": "Return",
-        "node_hash": "ac8127add908b1efe881035f7e07a6c76744ee2cfd0f01833137969c7b1fb686",
+        "node_hash": "cbbd2a8399a23f59a66cd09aacd5d0e6829c8ff0efbfc341d953301217b2f7cd",
+        "parent_hash": "96db1436c40ac87d5c1d3420b8001f9408ef42a4d45082f12a832710875219d2",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect",
       "evidence_index": 0,
@@ -231,9 +255,11 @@
         "module": "replay.py",
         "qualname": "m_weight_object",
         "kind": "Return",
-        "node_hash": "e678e458677423c80f99fc142cee5dbd5d8950dee3ed700f2f690e737cc4b915",
+        "node_hash": "abc688784acd4574551da7c99b5a459080f2feb4bcbe42615f499c667a44a38d",
+        "parent_hash": "5cbf79f4066385aa8b0b678bceb81c44148d5665384a0661b4aa858214753999",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "the archived bytes do not begin with a safetensors header (first bytes b'\\x00\\x00\\x00\\x00\\",
       "evidence_index": 0,
@@ -248,9 +274,11 @@
         "module": "replay.py",
         "qualname": "m_weight_object",
         "kind": "Return",
-        "node_hash": "21ee45464ad923a4d02b03df898efbb0a7a79b5b12a7b88045e7ee608fc20326",
+        "node_hash": "148e5db7d46210747a808cf74d479a25f3fc764e2904dc643996f829329c45fe",
+        "parent_hash": "f4927dfacc50d89c68452ffa750f5c78da6ae3bd4642330ad1119a4c96945c90",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "archived bytes do not hash to the recorded digest",
       "evidence_index": 0,
@@ -265,9 +293,11 @@
         "module": "replay.py",
         "qualname": "m_all_shard_digests",
         "kind": "Return",
-        "node_hash": "fa59118f782990300cb1b6bb6aaebdcbf0599c3097dfd964687dd282b3c24ac7",
+        "node_hash": "b84156cc802e0f2ff412cd4dc7ddb3a0f3d53a213926bbcddd0558955322f9cd",
+        "parent_hash": "c83c1e567df064238d801ad24f1779b37adef101c6b9fc8641c459299d74836c",
         "ordinal": 0,
-        "siblings": 2
+        "siblings": 2,
+        "canon": "v1/py3.14"
       },
       "kind": "evidence-shape",
       "says": "cited artifacts span 0 different repository/revision pairs: []",
@@ -282,9 +312,11 @@
         "module": "replay.py",
         "qualname": "m_all_shard_digests",
         "kind": "Expr",
-        "node_hash": "68728857fca3716bf977aacea3bec01fd1746a961a7d4f665a74734c7a157494",
+        "node_hash": "2fb29e34b2df9f4998830dd1ef68d62c9c2d410998ade1308354e9df9d3bcf1b",
+        "parent_hash": "f523dc2e1a97a5661043a0fb28ad9dda9203ca33462793466b63179ae48b1b6d",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "model-00001-of-00003.safetensors carries no sha256 oid; model-00001-of-00003.safetensors a",
       "evidence_index": 1,
@@ -299,9 +331,11 @@
         "module": "replay.py",
         "qualname": "m_all_shard_digests",
         "kind": "Expr",
-        "node_hash": "df3def15e9fb29ce492dba4f47a609f68eecfe78210507c256f0dfa3196e1177",
+        "node_hash": "d5c9dcb3e1488f5a5d1ce23859a29f312660605890a768a948992f650794a687",
+        "parent_hash": "745edb84aba9130b314d6eed63bd27851fa628e186f9248dbbf1f37b1edab34b",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "model-00001-of-00003.safetensors oid does not match the ledger; model-00001-of-00003.safet",
       "evidence_index": 1,
@@ -316,9 +350,11 @@
         "module": "replay.py",
         "qualname": "m_all_shard_digests",
         "kind": "Expr",
-        "node_hash": "2f8f2bff0ddad3a6b3ee43d96cc87d09b544c07f910e93ca4b5643d55a62396a",
+        "node_hash": "f58358c51f07788a22f104171146055c2314156bda7091de7f7c0de29d854a37",
+        "parent_hash": "d5fbb76bfbab769e6201633f47b3ce07cbe57abe5fb77e6b75b10d95250766f8",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "model-00001-of-00003.safetensors carries no sha256 oid; model-00001-of-00003.safetensors a",
       "evidence_index": 1,
@@ -333,9 +369,11 @@
         "module": "replay.py",
         "qualname": "m_reproduction_search",
         "kind": "Expr",
-        "node_hash": "d04efe10a93518f421e81be2049b170a448a37adaf2f7e8168b924b91a23c34f",
+        "node_hash": "89627d7ac10627c8125e84731244664b23172a6cea02d23a91dd366e27789f99",
+        "parent_hash": "eaa2ff6352abb352e80b3b30c8c08fe388c43b81a8339974a33f7229bbea3a9c",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "a response carries no totalResults",
       "evidence_index": 0,
@@ -350,9 +388,11 @@
         "module": "replay.py",
         "qualname": "m_release_artifacts",
         "kind": "Return",
-        "node_hash": "6c585f4686fefe23da2d7704917d31988c8148ea87dc796c79c8c7a45d685539",
+        "node_hash": "ce1dde5b9aee6901b02e007bda2e0db3cee8548bedb3ea57bb634a8d23f8c6f0",
+        "parent_hash": "ab20ae8d95b5b0b1d64f59b9de10e4a842027e973414d17236613b6a4d4dd91b",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "evidence-shape",
       "says": "expected exactly one pinned enumeration, found 0",
@@ -367,9 +407,11 @@
         "module": "replay.py",
         "qualname": "m_release_artifacts",
         "kind": "Return",
-        "node_hash": "3539d12424013126c264dd021663912c7322406d9a8522df3508967f96ca2a1f",
+        "node_hash": "6f69fada042cbe7476625fdd4533aac69f0afd9f3fcce4a94eab1dda0b435955",
+        "parent_hash": "ac63e1cff1997e5bd18b41c6fef1c7c011e825a768b9ed1020b9a21c83355cff",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "the archived revision response is not JSON",
       "evidence_index": 0,
@@ -384,9 +426,11 @@
         "module": "replay.py",
         "qualname": "m_release_artifacts",
         "kind": "Return",
-        "node_hash": "45c439535002ca07943bf5dd0633c2ad4878bdccfe1558c85e78dcac7dc13318",
+        "node_hash": "5fd4f90510ea50585006d105fa287ad761886320f8dbc6e7a77882eff3c817c0",
+        "parent_hash": "cd0cb7fd456f3e1103a4e66535e3760f9368b75dc7c8f458b0a7653c180f8b14",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "the archived response enumerates no files, so it settles nothing",
       "evidence_index": 0,
@@ -401,9 +445,11 @@
         "module": "replay.py",
         "qualname": "m_release_artifacts",
         "kind": "Return",
-        "node_hash": "9a129465b4050b6feff6a541bcf61be4aea64dd7cd80ac4afab0f453b624e8b5",
+        "node_hash": "4c3d986a1004453472b56f5682c54d484855e79f3de5288e919cc7d9a84b500b",
+        "parent_hash": "d101409a4890fcab76b59a6b7e83eee81b0fa28fb0ceda307b3748106a6ced08",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "ledger",
       "says": "exemplar(s) ['corpus.ots', 'MANIFEST.json.asc'] match no declared pattern; the probe and t",
@@ -418,9 +464,11 @@
         "module": "replay.py",
         "qualname": "m_repo_tree",
         "kind": "Return",
-        "node_hash": "eef545b9ee923f487bc13308043fa628b028f1861bd90aba9fe51644e4166f18",
+        "node_hash": "dac4ef6b0e784d94a5aac43bf3ba3eb7469a2e3600aade3c14bae4dd59d4fcf4",
+        "parent_hash": "a6ad48bb22a5bb441a943893d3e4a366e486d7527833f23bfef4827babfae8a2",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "kind": "evidence-shape",
       "says": "expected exactly one pinned repository tree response, found 0",
@@ -435,9 +483,11 @@
         "module": "replay.py",
         "qualname": "m_repo_tree",
         "kind": "Return",
-        "node_hash": "5154909888231074258299d838c918d9fa1af647f73e41e0a67e980e2558febf",
+        "node_hash": "6275e0086218ce2cd9f96a543555139d1a223e291f84ee1fcce1093aa4bfb9d4",
+        "parent_hash": "24cc8c1d4ad98ee657c008f73de04abd1808de5908630e9d010ced9c764bf139",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "the archived tree response is not JSON",
       "evidence_index": 0,
@@ -452,9 +502,11 @@
         "module": "replay.py",
         "qualname": "m_repo_tree",
         "kind": "Return",
-        "node_hash": "095d5881f29a053a8a401d3eeb8cf6278088c1970787572140b725e417a22198",
+        "node_hash": "95076002ace0efccc8e6ce688fe97a3b2da5c71dc3b10b9038e03b1afb5791a5",
+        "parent_hash": "5ad2b4ff9d439043b85599ab5321a502158a1515348197d5604a4acb8dcc5705",
         "ordinal": 0,
-        "siblings": 1
+        "siblings": 1,
+        "canon": "v1/py3.14"
       },
       "says": "the archived tree is TRUNCATED, so an absent path proves nothing about the repository",
       "evidence_index": 0,
@@ -524,7 +576,7 @@
     "control_audit.py:1404": "drift.append(\"suite: the record was measured over %d item(s) and this run used %d \"",
     "control_audit.py:1410": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
     "control_audit.py:1429": "return 1",
-    "control_identity.py:180": "raise SystemExit(\"no REACH-CONTROLS.json here\")",
+    "control_identity.py:301": "raise SystemExit(\"no REACH-CONTROLS.json here\")",
     "fetch_artifact.py:192": "refused += 1",
     "fetch_artifact.py:207": "raise SystemExit(1 if refused else 0)",
     "filter_categories.py:56": "raise SystemExit(chr(0x26D4) + \" an archived category response does not hash to its \"",
@@ -558,20 +610,20 @@
     "probe_signatures.py:158": "raise SystemExit(D + \" %s: object is revision %s, census pins %s\"",
     "probe_source_trees.py:57": "raise SystemExit(D + \" %s's tree is TRUNCATED; an absent path would prove nothing \"",
     "probe_source_trees.py:62": "raise SystemExit(D + \" %s@%s does not contain %s\" % (repo, sha[:12], missing))",
-    "reach_controls.py:356": "lost.append((where, \"the cell %s is gone\" % info[\"cell\"]))",
-    "reach_controls.py:361": "lost.append((where, \"no executor for this cell any more\"))",
-    "reach_controls.py:387": "lost.append((where, \"validator mutation %r no longer reaches it\"",
-    "reach_controls.py:403": "lost.append((where, \"ledger mutation %r no longer reaches it\"",
-    "reach_controls.py:432": "lost.append((where, \"no longer reached by %r\" % info.get(\"mutation\")))",
-    "reach_controls.py:550": "return 1",
-    "reach_controls.py:902": "return 1",
-    "reach_controls.py:919": "drift.append(\"targets_pinned (%s -> %s)\"",
-    "reach_controls.py:943": "drift.append(\"%d recorded control(s) not reached this run: %s\"",
-    "reach_controls.py:946": "drift.append(\"%d recorded entr(ies) carry no source text and cannot be identified \"",
-    "reach_controls.py:950": "return 1",
-    "reach_controls.py:960": "raise SystemExit(D + \" the per-axis counts sum to %d but %d branches were reached. The \"",
-    "reach_controls.py:964": "raise SystemExit(D + \" archive (%d) + record (%d) != reached (%d). Some branch is being \"",
-    "reach_controls.py:969": "raise SystemExit(D + \" reached_via_archive (%d) disagrees with the `archive` axis (%d). \"",
+    "reach_controls.py:392": "lost.append((where, \"the cell %s is gone\" % info[\"cell\"]))",
+    "reach_controls.py:397": "lost.append((where, \"no executor for this cell any more\"))",
+    "reach_controls.py:423": "lost.append((where, \"validator mutation %r no longer reaches it\"",
+    "reach_controls.py:439": "lost.append((where, \"ledger mutation %r no longer reaches it\"",
+    "reach_controls.py:468": "lost.append((where, \"no longer reached by %r\" % info.get(\"mutation\")))",
+    "reach_controls.py:620": "return 1",
+    "reach_controls.py:972": "return 1",
+    "reach_controls.py:989": "drift.append(\"targets_pinned (%s -> %s)\"",
+    "reach_controls.py:1013": "drift.append(\"%d recorded control(s) not reached this run: %s\"",
+    "reach_controls.py:1016": "drift.append(\"%d recorded entr(ies) carry no source text and cannot be identified \"",
+    "reach_controls.py:1020": "return 1",
+    "reach_controls.py:1030": "raise SystemExit(D + \" the per-axis counts sum to %d but %d branches were reached. The \"",
+    "reach_controls.py:1034": "raise SystemExit(D + \" archive (%d) + record (%d) != reached (%d). Some branch is being \"",
+    "reach_controls.py:1039": "raise SystemExit(D + \" reached_via_archive (%d) disagrees with the `archive` axis (%d). \"",
     "recheck.py:108": "raise SystemExit(",
     "recheck.py:224": "findings.append((url, \"unretrievable: %s\" % why, cells))",
     "recheck.py:258": "findings.append((url, \"serialisation only: parsed content identical\", cells))",
