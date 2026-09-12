@@ -44,6 +44,38 @@
       "method": {
         "name": "byte_length"
       }
+    },
+    "pythia_corpus_files": {
+      "value": 23,
+      "unit": "files published at the corpus revision",
+      "check": "counted entries of type 'file' in the retrieved Hugging Face tree response for EleutherAI/pile-standard-pythia-preshuffled at the pinned revision; 21 are Megatron token shards, one is the index, one is the Git-LFS configuration",
+      "evidence": {
+        "url": "https://huggingface.co/api/datasets/EleutherAI/pile-standard-pythia-preshuffled/tree/bac79b6820adb34e451f9a02cc1dc7cd920febf0",
+        "retrieved": "2026-09-10",
+        "sha256": "c3c9cefeae4f6d1d9024c3a28d0eb48c7bd3429bcc34edf8a23260ea54d71032",
+        "pinned_commit": "bac79b6820adb34e451f9a02cc1dc7cd920febf0"
+      },
+      "method": {
+        "name": "count_json_entries",
+        "field": "type",
+        "value": "file"
+      }
+    },
+    "pythia_range_tokens": {
+      "value": 1024,
+      "unit": "token ids returned by a byte-range request against the first corpus shard",
+      "check": "2,048 bytes retrieved by Range: bytes=0-2047 decode as 1,024 little-endian uint16 token ids, every one below the model config's declared vocab_size of 50,688. The HTTP 206 that carried them is recorded in the cell and replayed there; it is not recomputable from bytes and is deliberately not a fact here.",
+      "method": {
+        "name": "token_ids_below",
+        "width": "uint16",
+        "below": 50688
+      },
+      "evidence": {
+        "url": "https://huggingface.co/datasets/EleutherAI/pile-standard-pythia-preshuffled/resolve/bac79b6820adb34e451f9a02cc1dc7cd920febf0/document-00000-of-00020.bin",
+        "retrieved": "2026-09-10",
+        "sha256": "2ac3ab7621a81429e653010bc41991ca1b0e2f476cdd75841dd2e55114a4a18b",
+        "range": "bytes=0-2047"
+      }
     }
   }
 }

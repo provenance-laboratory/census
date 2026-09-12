@@ -122,6 +122,70 @@ def validate(led):
     """
     d = []
 
+    # A DISOWNED ADDRESS MUST NOT GO ON BEING USED, and until this existed nothing said so. The
+    # round-30 correction established that pythia-12b's corpus is the preshuffled repository and
+    # not `EleutherAI/pile`, which is the loader; it was applied to axis 2 and to nothing else.
+    # Axis 3 went on printing a headline zero bounded at three files of the loader, and axis 4
+    # went on asserting a 1 from the loader's dataset card while the paper built its cleanest
+    # contrast on that 1. Both were visible in the ledger the whole time.
+    #
+    # A subject declares what it has disowned, for which class of question, and which axes the old
+    # address remains correct for. This projects that declaration over every cell of the affected
+    # class -- so the NEXT correction reaches its other call sites by construction, rather than by
+    # somebody remembering. Its scope is the axis GROUP the declaration names, not a list of axis
+    # numbers, because a list is the thing that goes stale.
+    # A PER-AXIS SOURCE IS A FIX AND A PLACE TO HIDE ONE. It made the pythia finding STATABLE --
+    # the address a cell was settled at is visible beside it -- and it is also a new degree of
+    # freedom: a cell can be settled at an address the subject never declared, chosen per axis by
+    # whoever wrote the policy. What made the pythia case safe was not that the address was
+    # visible; it was that the address came from the publisher's own reproduction instructions.
+    # That property is the one to require, and nothing required it.
+    for s in led.get("subjects", []):
+        _declared = set(s.get("sources") or ())
+        for ax, addrs in (s.get("axis_sources") or {}).items():
+            for a in (addrs or []):
+                if a in _declared:
+                    continue
+                warrant = (s.get("source_warrant") or {}).get(a)
+                if not warrant:
+                    d.append(
+                        "%s/axis%s is settled at %s, which is not among the sources this subject "
+                        "declares. A per-axis address that departs from the subject list must name "
+                        "the retrieved document that points at it, in `source_warrant`; otherwise "
+                        "the address is simply chosen." % (s["id"], ax, a))
+
+    for s in led.get("subjects", []):
+        for addr, rule in (s.get("superseded_sources") or {}).items():
+            ok_axes = set(rule.get("still_valid_for") or ())
+            scope = rule.get("group", 1)
+            # A DECLARATION THAT MATCHES NOTHING IS A CONTROL THAT CANNOT FIRE. The first version
+            # of this was written with the bare repository name while the ledger writes a prefixed
+            # identifier -- `hfds:EleutherAI/pile` -- so the string never matched, the loop found
+            # nothing, and "validation: no defects" meant only that the comparison was impossible.
+            # That is this project's oldest recurring shape, reproduced inside the fix for the
+            # newest one. Silence has to be earned.
+            _all = set(s.get("sources") or ())
+            for _v in (s.get("axis_sources") or {}).values():
+                _all.update(_v or ())
+            if addr not in _all:
+                d.append(
+                    "%s declares %r superseded, and no source on the subject is that address. "
+                    "A declaration naming nothing cannot flag anything; check the identifier's "
+                    "prefix against the ones the ledger writes: %s"
+                    % (s["id"], addr, ", ".join(sorted(_all)[:3])))
+                continue
+            for ax in sorted(A.BY_ID):
+                if A.BY_ID[ax][1] != scope or ax in ok_axes:
+                    continue
+                used = (s.get("axis_sources") or {}).get(str(ax)) or s.get("sources") or []
+                if addr in used:
+                    d.append(
+                        "%s/axis%d may draw on %s, which this subject declares superseded for %s "
+                        "and replaced by %s. Either point the axis at the replacement, or add it "
+                        "to still_valid_for with the reason the old address is right for it."
+                        % (s["id"], ax, addr, rule.get("for", "this class of question"),
+                           rule.get("superseded_by", "(nothing named)")))
+
     # ⛔ `DATE_RE` WAS COMPILED AT MODULE LEVEL AND NEVER APPLIED -- a date validator, inside the
     # validator, checking no dates. Found by the dead-mechanism control written after a round-17
     # reviewer found the same shape in replay.py's `_ENTRY`.
@@ -680,7 +744,18 @@ def policy_keys():
     further apart. Everything that needs to know what the policy is reads this.
     """
     return ("id", "repo", "kind", "sources", "axis_sources", "axis_documents",
-            "axis_method", "axis_literals", "axis_file", "axis_evidence_sha256", "note")
+            "axis_method", "axis_literals", "axis_file", "axis_evidence_sha256", "note",
+            # An address this subject has DISOWNED for a class of questions, with what replaces it
+            # and which axes it remains correct for. This is policy in the strongest sense -- it
+            # says where a cell may be settled -- and it exists because the pythia corpus
+            # correction reached axis 2 and left axes 3 and 4 at the loader, one of them under a
+            # headline zero and one under the paper's cleanest contrast.
+            "superseded_sources",
+            # The retrieved document that points at a per-axis address the subject
+            # does not otherwise declare. Policy, and load-bearing: it is the
+            # difference between an address the publisher names and one an author
+            # picked.
+            "source_warrant")
 
 
 def ledger_fingerprint(led):

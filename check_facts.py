@@ -19,6 +19,7 @@ import io
 import json
 import pathlib
 import re
+import struct
 import sys
 
 NL = chr(10)
@@ -41,7 +42,42 @@ def m_byte_length(body, _spec):
     return len(body)
 
 
-METHODS = {"count_lines_matching": m_count_lines_matching, "byte_length": m_byte_length}
+def m_count_json_entries(body, spec):
+    """Entries of a JSON array matching a field/value pair, recomputed from the archived bytes.
+
+    Added for the pythia corpus enumeration, which is a Hugging Face tree response rather than a
+    config listing paths on lines. The first attempt at these facts declared no method at all and
+    this file refused them, which is the behaviour: a number the paper may print has to follow
+    from bytes somebody can re-read, and prose describing how it was counted is not that.
+    """
+    rows = json.loads(body.decode("utf-8", "replace"))
+    if not isinstance(rows, list):
+        raise ValueError("the archived artifact is not a JSON array")
+    field, value = spec["field"], spec["value"]
+    return sum(1 for r in rows if isinstance(r, dict) and r.get(field) == value)
+
+
+def m_token_ids_below(body, spec):
+    """The count of fixed-width little-endian words in the range, all below a declared bound.
+
+    THE HTTP STATUS WAS THE FIRST VERSION OF THIS FACT AND IT IS NOT RECOMPUTABLE. A 206 is a
+    property of the channel at fetch time; it is nowhere in the bytes, so no reader could ever
+    check it here. What the archived range does support is what it IS -- token ids of a declared
+    width, every one under the model's vocabulary bound -- and that is the claim the paper needs
+    anyway, since the point is that real corpus content came back rather than an error page.
+    """
+    width = {"uint16": ("<%dH", 2), "uint32": ("<%dI", 4)}[spec["width"]]
+    n = len(body) // width[1]
+    vals = struct.unpack(width[0] % n, body[:n * width[1]])
+    over = [v for v in vals if v >= spec["below"]]
+    if over:
+        raise ValueError("%d of %d words are not below %d, so these bytes are not the token "
+                         "stream this fact claims" % (len(over), n, spec["below"]))
+    return n
+
+
+METHODS = {"count_lines_matching": m_count_lines_matching, "byte_length": m_byte_length,
+           "count_json_entries": m_count_json_entries, "token_ids_below": m_token_ids_below}
 
 
 def main():

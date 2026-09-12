@@ -106,10 +106,17 @@ MUTATIONS = [
     ("claim an unsigned commit is signed",
      lambda L: find(L, "bloom-176b", 14)["bound"].__setitem__("expect_signed", True),
      "replay.py", "carries no a signature"),
+    # ⚠️ THE EXPECTED EVIDENCE MOVED, AND UPWARDS. This used to be caught by the signed-commit
+    # executor counting zero matching commits ("found 0"). The ownership gate now runs BEFORE the
+    # executor for bounded negatives -- it did not run on them at all until this round -- so the
+    # transplant is refused earlier and by name: the artifact is another subject's, and it is not
+    # among the documents this axis declares. Both halves of that are more specific than a count,
+    # and a control that starts catching something sooner must have its expectation moved rather
+    # than the earlier check removed to keep the old message reachable.
     ("transplant another subject's commit object",
      lambda L: find(L, "qwen2.5-7b", 14).__setitem__(
          "evidence", list(find(L, "pythia-12b", 14)["evidence"])),
-     "replay.py", "found 0"),
+     "replay.py", "does not declare"),
     ("point the bound at a different revision",
      lambda L: find(L, "olmo-2-13b", 14)["bound"].__setitem__("expect_revision", "a" * 40),
      "replay.py", "the cell declares"),

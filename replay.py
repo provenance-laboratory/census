@@ -250,6 +250,21 @@ def subject_context(led):
             for s in led.get("subjects", [])}}
 
 
+def declared_method(cell):
+    """The method a cell is settled by, wherever it declares it, whatever shape it is.
+
+    ⛔ A ROUND-1 ATTACK PUTS A PLAIN STRING IN `check` -- a free-text 'check' is one of the things
+    validate() exists to refuse -- and the first version of this read `.get("method")` off it and
+    raised AttributeError inside the validator. The stress suite caught it on the next run. A gate
+    that crashes on a malformed cell has not refused it; it has failed to answer, and the caller
+    sees a traceback rather than a finding.
+    """
+    for block in (cell.get("check"), cell.get("bound")):
+        if isinstance(block, dict) and block.get("method"):
+            return block["method"]
+    return ""
+
+
 def foreign_evidence(cell, ctx, _unused=None):
     """Evidence from a source this subject does not declare. POSITIVE, not merely not-another's.
 
@@ -275,8 +290,14 @@ def foreign_evidence(cell, ctx, _unused=None):
         return ["%s/axis%d has no declared axis_sources; a scored cell with no policy is a defect"
                 % (cell["subject"], cell["axis"])]
     bad = []
+    # The method this cell is settled by, WHEREVER IT IS DECLARED. A positive carries it in
+    # `check`, a bounded negative in `bound`, and reading only the first reported every negative
+    # as "method '' cannot settle this axis" the moment this gate was pointed at them.
+    _third_party = A.searches_third_parties(declared_method(cell))
     for e in (cell.get("evidence") or []):
         k = source_key(e["url"])
+        if _third_party:
+            continue
         if k not in allowed:
             owner = sorted(s for s, v in (ctx or {}).items() if k in (v.get("sources") or set()))
             bad.append("%s is from %s, which %s does not declare%s"
@@ -291,9 +312,18 @@ def foreign_evidence(cell, ctx, _unused=None):
     # pythia's code and hyperparameter cells both rest on gh:EleutherAI/pythia -- so a source-level
     # rule let a swap between them pass. 95 of 396 intra-subject transplants survived on exactly
     # that.
+    # ⛔ AND IT APPLIED TO POSITIVES ONLY. `cell.get("score")` is falsy for a zero, so every
+    # BOUNDED NEGATIVE -- 36 cells resting on archived evidence exactly as the positives do -- was
+    # exempt from the binding that says which documents a cell may rest on. A reviewer found one
+    # of them settled at a repository this census had disowned, by reading; nothing here would
+    # have caught it, and nothing stood between the other 35 and the same error. The negatives are
+    # 145 of this census's claims and they were the unbound half.
     per_doc = (dec.get("axis_documents") or {}).get(cell["axis"])
-    if cell.get("score") and per_doc is None:
-        bad.append("%s/axis%d has no declared axis_documents" % (cell["subject"], cell["axis"]))
+    _rests_on_bytes = bool(cell.get("score")) or (isinstance(cell.get("bound"), dict)
+                                                  and bool(cell.get("evidence")))
+    if _rests_on_bytes and per_doc is None:
+        bad.append("%s/axis%d rests on archived evidence and has no declared axis_documents"
+                   % (cell["subject"], cell["axis"]))
     elif per_doc is not None:
         cited = {e["url"] for e in (cell.get("evidence") or [])}
         if cited != per_doc:
@@ -362,6 +392,42 @@ def foreign_evidence(cell, ctx, _unused=None):
     return bad
 
 
+# HOW A CO-CITED DOCUMENT ENUMERATES ITS OBJECTS. The first version of `m_range` knew ONE
+# format -- lines beginning "    - " in olmo's YAML config -- so the executor that settles "can a
+# third party acquire the corpus bytes?" could settle it for exactly one subject. Pythia's corpus
+# is enumerated by a Hugging Face tree API response, which has no such lines, and the consequence
+# was not an error: axis 4 was scored 1 from PROSE instead, and the paper built a headline contrast
+# on it. An executor that fits one subject silently sends every other subject back to assertion.
+#
+# Declared per cell, and an undeclared or unknown format FAILS rather than falling back. A default
+# here would be the same defect with a nicer name.
+def _enumerated_paths(spec, hay):
+    kind = (spec or {}).get("kind")
+    if kind == "yaml_dash_list":
+        return [l.strip()[2:] for l in hay.decode("utf-8", "replace").split(chr(10))
+                if l.startswith("    - ")], None
+    if kind == "hf_tree_json":
+        base = spec.get("base")
+        if not base:
+            return None, "an hf_tree_json enumeration must declare the `base` its paths resolve against"
+        try:
+            entries = json.loads(hay.decode("utf-8", "replace"))
+        except ValueError as exc:
+            return None, "the co-cited artifact is not the JSON this enumeration expects: %s" % exc
+        return [base + e["path"] for e in entries
+                if isinstance(e, dict) and e.get("type") == "file" and "path" in e], None
+    return None, ("unknown enumeration kind %r -- declare how this document lists its objects"
+                  % kind)
+
+
+# The token widths a corpus shard may be stored in. Unknown widths fail; a width is not guessed,
+# because guessing it is what makes "these are token ids" true of almost any bytes.
+_TOKEN_STREAMS = {
+    "uint32_token_stream": ("<%dI", 4),
+    "uint16_token_stream": ("<%dH", 2),
+}
+
+
 def m_range(c, ev, ctx=None):
     """A ranged artifact, ANCHORED: the url must appear in a co-cited artifact's archived bytes.
 
@@ -402,13 +468,23 @@ def m_range(c, ev, ctx=None):
     # in the enumeration the bytes came from, and the url must be the path at that position.
     idx = _asserted(c).get("enumerated_index")
     anchored = []
+    spec = _asserted(c).get("enumeration")
     for e in others:
         hay = _bytes_for(e)
-        if hay is None or r[0]["url"].encode() not in hay:
+        if hay is None:
+            continue
+        # MEMBERSHIP IN THE ENUMERATION, NOT A SUBSTRING OF THE DOCUMENT. The original test asked
+        # whether the ranged url occurred anywhere in the co-cited bytes, which works only because
+        # olmo's config happens to spell full urls. A Hugging Face tree response lists PATHS, so
+        # the same true claim -- this document enumerates this object -- was unstatable, and the
+        # executor rejected a correctly anchored cell. Membership is also the stronger test: a url
+        # mentioned in a document's prose is not a url the document enumerates.
+        paths, why = _enumerated_paths(spec, hay)
+        if paths is None:
+            return False, why
+        if r[0]["url"] not in paths:
             continue
         if idx is not None:
-            paths = [l.strip()[2:] for l in hay.decode("utf-8", "replace").split(chr(10))
-                     if l.startswith("    - ")]
             if idx >= len(paths):
                 return False, ("the cell records enumeration index %d and the co-cited document "
                                "lists %d paths" % (idx, len(paths)))
@@ -445,17 +521,41 @@ def m_range(c, ev, ctx=None):
     if not isinstance(bp, dict):
         return False, ("no `byte_property`: nothing ties these bytes to this corpus, so any 2 KB "
                        "with the right length and digest would anchor")
-    if bp.get("kind") != "uint32_token_stream":
-        return False, "unknown byte_property kind %r" % bp.get("kind")
-    n = len(b) // 4
+    if bp.get("kind") not in _TOKEN_STREAMS:
+        return False, ("unknown byte_property kind %r -- the widths this executor can read are %s"
+                       % (bp.get("kind"), ", ".join(sorted(_TOKEN_STREAMS))))
+    _fmt, _w = _TOKEN_STREAMS[bp["kind"]]
+    n = len(b) // _w
     if n != bp.get("count"):
-        return False, "the range holds %d uint32 words; the cell records %d" % (n, bp.get("count"))
-    vals = struct.unpack("<%dI" % n, b[:n * 4])
+        return False, ("the range holds %d %s words; the cell records %d"
+                       % (n, bp["kind"].split("_")[0], bp.get("count")))
+    vals = struct.unpack(_fmt % n, b[:n * _w])
     bound = bp.get("vocab_bound")
     over = sum(1 for x in vals if x >= bound)
     if over:
         return False, ("%d of %d words are not valid token ids below %d -- these bytes are not a "
                        "token stream from this corpus" % (over, n, bound))
+    # ⚠ AND THE WIDTH HAS TO DISCRIMINATE. Reading the same bytes at the other declared width must
+    # NOT also produce a valid token stream, or "every word is a token id" is a property of the
+    # vocabulary bound rather than of these bytes. For both corpora in this census it does not:
+    # olmo's uint32 range read as uint16 exceeds the bound, and pythia's uint16 range read as
+    # uint32 puts every one of its words above it.
+    for _k, (_f, _ww) in _TOKEN_STREAMS.items():
+        if _k == bp["kind"] or len(b) < _ww:
+            continue
+        # A WIDTH THAT CANNOT FAIL IS NOT A COMPETING READING. The first version of this check
+        # asked whether the OTHER width also produces words below the bound, and fired on
+        # olmo-2-13b -- whose vocabulary bound is 100,352, above every value a uint16 can hold.
+        # Read at that width the test is satisfied by ANY bytes whatsoever, so "it also passes"
+        # said nothing about these bytes and everything about the arithmetic. That is the census's
+        # own recurring finding: a negative guaranteed by the bound that produced it.
+        if bound >= 256 ** _ww:
+            continue
+        _m = len(b) // _ww
+        if all(x < bound for x in struct.unpack(_f % _m, b[:_m * _ww])):
+            return False, ("these bytes are a valid token stream read as %s AND as %s -- a width "
+                           "that could have failed and did not -- so the width the cell declares "
+                           "is not doing any work" % (bp["kind"], _k))
     if max(vals) != bp.get("max_id"):
         return False, ("the largest token id in the archived range is %d; the cell records %d"
                        % (max(vals), bp.get("max_id")))
@@ -555,6 +655,39 @@ def m_corpus_item_digests(c, ev, ctx=None):
         return False, ("%s is declared non-content and DOES carry a publisher digest. It is "
                        "content; the declaration is wrong and it is shrinking the denominator."
                        % ", ".join(_mislabelled[:3]))
+    # ⛔ THE TWO CHECKS ABOVE CATCH A WRONG DECLARATION AND NOT A SELF-SERVING ONE. A round-31
+    # reviewer put the gap precisely: a cell could declare one of its own SHARDS non-content and
+    # shrink its denominator, and neither direction would object, because the file genuinely
+    # carries no digest. Both rules ask whether the declaration is accurate; neither asks whether
+    # the thing excluded is the thing being measured.
+    #
+    # ⇒ SO THE CELL MUST SAY WHAT CONTENT LOOKS LIKE, and nothing matching that may be excluded.
+    # Declaring an exclusion without declaring the pattern is refused outright: an exclusion
+    # mechanism with no stated scope is a hole with one user today and no bound tomorrow. And the
+    # pattern is then held to its own claim -- everything matching it must carry a digest -- so a
+    # pattern narrowed to dodge an awkward file fails on the file it was narrowed around.
+    if _non_content:
+        _pat = _asserted(c).get("content_pattern")
+        if not _pat:
+            return False, ("this cell excludes %d file(s) as non-content and declares no "
+                           "`content_pattern`, so nothing says what it is measuring and any name "
+                           "could be excluded" % len(_non_content))
+        try:
+            _crx = re.compile(_pat)
+        except re.error as _e:
+            return False, "`content_pattern` is not a regular expression: %s" % _e
+        _greedy = [n for n in _non_content if _crx.search(n)]
+        if _greedy:
+            return False, ("%s is declared non-content and matches this cell's own content "
+                           "pattern %r. A file that looks like the corpus cannot be excluded from "
+                           "the count of the corpus." % (", ".join(_greedy[:3]), _pat))
+        _uncovered = [e.get("path") for e in files
+                      if e.get("path") not in _non_content and not _crx.search(e.get("path") or "")]
+        if _uncovered:
+            return False, ("%d enumerated file(s) are neither declared non-content nor matched by "
+                           "the content pattern (%s). The pattern has to describe what is being "
+                           "counted, or it is decoration beside the exclusion it licenses."
+                           % (len(_uncovered), ", ".join(str(x) for x in _uncovered[:3])))
     missing = [e.get("path") for e in files
                if e.get("path") not in _non_content
                and not (isinstance(e.get("lfs"), dict)
@@ -1450,7 +1583,11 @@ def gate(cell, ctx=None, owners=None, led=None):
         led = json.loads((HERE / "cells.json").read_text(encoding="utf-8"))
     if ctx is None:
         ctx = subject_context(led)
-    meth = (cell.get("check") or {}).get("method", "")
+    # WHEREVER THE CELL DECLARES IT. A bounded negative names its method in `bound`, and
+    # reading only `check` made every negative fail this gate with an empty method name the
+    # first time the gate was pointed at them -- a control reporting its own blind spot as a
+    # finding about the ledger.
+    meth = declared_method(cell)
 
     # ⛔ THIS RAN FOR score == 2 ONLY. Thirty of the fifty-four non-zero cells are ASSERTED and
     # received no identity check anywhere in the project -- and they carry points: all 1,381
@@ -1480,8 +1617,20 @@ def gate(cell, ctx=None, owners=None, led=None):
     if req and meth not in req:
         return False, ("axis %d REQUIRES %s; %r is registered and permitted but does not bind "
                        "this axis's identity" % (cell["axis"], sorted(req), meth))
+    # ⚠️ `_asserted`, NOT `cell["check"]`. This file already learned once that every executor must
+    # read the block the cell is actually asserting -- the docstring on `_asserted` records it as
+    # this project's most persistent defect, committed inside the repair for another instance of
+    # itself. The gate was written before negatives were executable and kept its own copy of the
+    # wrong lookup, so pointing it at a bounded negative reported every one of them as missing the
+    # very fields its `bound` declares.
+    # ⛔ PRESENCE, NOT TRUTHINESS. `if not block.get(f)` cannot tell a field that is ABSENT from a
+    # field whose value is ZERO -- and for a bounded negative, zero is the answer: `expect_matches`
+    # is 0 because no signature artifact was found, and `expect_adjudicated_positive` is 0 because
+    # no reproduction report was. The first run of this gate over the negatives reported eight
+    # cells as missing the very fields they declare. Same shape as a count standing in for a
+    # position, one type down: a falsy value is not an absent one.
     for f in A.required_fields(meth):
-        if not (cell.get("check") or {}).get(f):
+        if f not in _asserted(cell):
             return False, ("method %r requires `%s`; without it nothing can be replayed and the "
                            "evidence is unconstrained" % (meth, f))
     if meth not in A.methods_for(cell["axis"]):
@@ -1887,6 +2036,18 @@ def main():
             fn = DISPATCH.get(meth)
             if fn is None:
                 print("  " + chr(0x26D4) + " %-26s bound method %r has no executor" % (where, meth))
+                nb_fail += 1
+                continue
+            # ⛔ THE OWNERSHIP GATE NEVER RAN ON A NEGATIVE. This loop calls the executor
+            # directly, so foreign-evidence detection, the axis_documents binding and the
+            # one-url-per-digest rule -- every check that asks WHOSE BYTES THESE ARE -- applied
+            # to positives only. A round-31 reviewer found a bounded zero settled at a repository
+            # this census had disowned, by reading it; the instrument had no path that could have
+            # objected, for any of the 36. And these are the cells section 9.1 calls the census's
+            # strongest zeros, on the ground that they can fail.
+            gres, gwhy = gate(c, ctx, owners, led)
+            if gres is False:
+                print("  " + chr(0x26D4) + " FAIL %-24s %s" % (where, gwhy))
                 nb_fail += 1
                 continue
             res, why = fn(c, c.get("evidence") or [], ctx)

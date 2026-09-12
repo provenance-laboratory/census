@@ -404,6 +404,19 @@ STRATA_WITHOUT_ARTIFACT = {
 }
 
 
+# METHODS WHOSE EVIDENCE IS DELIBERATELY NOT THE SUBJECT'S OWN. A reproduction search asks
+# whether a THIRD PARTY published a report, so its archived artifacts are search responses from a
+# host the subject neither owns nor declares -- and that is precisely what makes them evidence.
+# The subject-source rule, which exists to stop a cell resting on somebody else's artifact, is the
+# wrong rule here and must not be applied to these; the per-axis DOCUMENT declaration still is,
+# and it is the stricter of the two.
+SEARCHES_THIRD_PARTIES = {"reproduction_search"}
+
+
+def searches_third_parties(method):
+    return method in SEARCHES_THIRD_PARTIES
+
+
 def method_bar_holds(axis_id):
     """(holds, why) -- can NO registered method settle this axis from a document?
 

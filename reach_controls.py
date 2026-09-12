@@ -31,6 +31,7 @@ import hashlib
 import inspect
 import io
 import json
+import control_identity as _CI
 import pathlib
 import sys
 
@@ -239,9 +240,20 @@ def _record(reached, targets, key, cell, method, mutation, kind=None, why=None, 
     """
     if key in reached:
         return
+    # ⛔ `source` IS A PROXY FOR AN IDENTITY AND ROUND 6 BROKE IT WITHOUT TRYING. Two recorded
+    # entries resolved to `return False, (` -- a bare continuation line occurring twice in the
+    # same file -- so the record could not say which control it meant, in a healthy tree. Two
+    # more resolved to statements that had been rewritten, and nothing could distinguish a
+    # control REMOVED from a control MOVED.
+    #
+    # ⇒ The identity is an AST fact: module, enclosing qualname, node kind, a hash of the node's
+    # shape with positions stripped, and which of the identically-shaped siblings it is. Edits
+    # above a branch stop mattering. `source` is kept beside it as a human-readable label and is
+    # no longer what resolution depends on.
     rec = {"cell": "%s/axis%d" % (cell["subject"], cell["axis"]) if cell else "-",
            "method": method, "mutation": mutation,
-           "source": targets.get(key, "")}
+           "source": targets.get(key, ""),
+           "identity": _CI.identify(HERE / key[0], key[1])}
     if kind:
         rec["kind"] = kind
     if why is not None:
@@ -296,10 +308,49 @@ def quick(led, ctx, cells_by_key):
         return 1
     by_label = {m[0]: m[1] for m in mutations()}
     real_bytes = R._bytes_for
-    lost = []
+    lost, unidentifiable, unverifiable, moved = [], [], [], []
     for where, info in sorted(detail.items()):
         f, ln = where.rsplit(":", 1)
         key = (f, int(ln))
+
+        # ⛔ THIS REPLAYED A LINE NUMBER AND NEVER ASKED WHETHER IT STILL NAMES THAT STATEMENT.
+        # The full sweep re-resolves every recorded branch by its stored SOURCE TEXT before
+        # measuring -- it has to, because any edit above a branch moves it -- and quick mode,
+        # which is the half that runs inside `control_audit.py`, did not. So after a code change
+        # the recorded line named a different statement, the replay could not reach it, and the
+        # watcher reported a control lost that was never touched. That failure is FATAL to the
+        # audit and therefore to the build, so a false one blocks everything downstream of it.
+        #
+        # ⇒ Same resolution the sweep uses, and the two categories are kept apart: a branch this
+        # cannot IDENTIFY is not a branch that stopped being reached, and saying otherwise sends
+        # somebody looking for a control that is sitting where it always was.
+        # RESOLUTION IS BY IDENTITY. An older record with no identity gets one computed from its
+        # own recorded line, which is exactly as good as the old scheme and no worse -- but every
+        # record written from here carries one.
+        _ident = info.get("identity") or _CI.identify(HERE / f, key[1])
+        if _ident is None:
+            unidentifiable.append((where, "no statement at that line and no stored identity"))
+            continue
+        _line, _status = _CI.resolve(HERE / f, _ident)
+        if _status in (_CI.AMBIGUOUS, _CI.GONE):
+            unidentifiable.append(
+                (where, "%s: %s in %s" % (_status,
+                                          "several identically-shaped statements and the sibling "
+                                          "count changed" if _status == _CI.AMBIGUOUS
+                                          else "no statement of this shape remains",
+                                          _ident.get("qualname") or "(module)")))
+            continue
+        if _status == _CI.MOVED:
+            moved.append((where, "%s:%d" % (f, _line)))
+        key = (f, _line)
+
+        # ⚠️ AND A BRANCH RECORDED WITH NO OUTPUT CANNOT BE REPLAYED BY MATCHING OUTPUT. Some
+        # branches execute and say nothing; the sweep records `says: ""` for them, and
+        # `_still_says` then has nothing to compare, so the replay fails every single time no
+        # matter what the tree does. A check that can only fail is not a watcher.
+        if not (info.get("says") or "").strip():
+            unverifiable.append((where, "recorded with no distinguishing output"))
+            continue
         cell = cells_by_key.get(info["cell"])
         if cell is None:
             lost.append((where, "the cell %s is gone" % info["cell"]))
@@ -380,7 +431,18 @@ def quick(led, ctx, cells_by_key):
         if not hit:
             lost.append((where, "no longer reached by %r" % info.get("mutation")))
 
-    print("  quick replay of %d recorded branch(es)" % len(detail))
+    print("  quick replay of %d recorded branch(es): %d replayed, %d unidentifiable, "
+          "%d unverifiable" % (len(detail), len(detail) - len(unidentifiable) - len(unverifiable),
+                               len(unidentifiable), len(unverifiable)))
+    # ⚠️ A MOVE IS NOT A LOSS AND IS NOT SILENCE EITHER. Reporting it is how "the identity moved
+    # and was uniquely recoverable" stays distinguishable from "nothing changed".
+    for _w, _to in moved:
+        print("      %s %-26s rebound to %s" % (W, _w, _to))
+    # ⚠ NOT SILENT. Every branch this could not replay is named, because the count of branches a
+    # watcher actually watches is the only honest measure of what it covers -- and skipping them
+    # quietly is how a suite's coverage falls without its summary line moving.
+    for _w, _why in unidentifiable + unverifiable:
+        print("      %s %-28s %s" % (W, _w, _why))
     for where, why in lost:
         print("  " + D + " %-18s %s" % (where, why))
     if lost:

@@ -1201,7 +1201,9 @@
     "https://huggingface.co/api/datasets/EleutherAI/pile-standard-pythia-preshuffled/tree/bac79b6820adb34e451f9a02cc1dc7cd920febf0": {
       "bytes": 7031,
       "cells": [
-        "pythia-12b/axis2"
+        "pythia-12b/axis2",
+        "pythia-12b/axis3",
+        "pythia-12b/axis4"
       ],
       "sha256": "c3c9cefeae4f6d1d9024c3a28d0eb48c7bd3429bcc34edf8a23260ea54d71032",
       "stored": true
@@ -2348,10 +2350,20 @@
       "sha256": "4e1831f2b60559ab64295e8c90d505c39ed58d2e71cba2c951c722910b439d3b",
       "stored": true
     },
+    "https://huggingface.co/datasets/EleutherAI/pile-standard-pythia-preshuffled/resolve/bac79b6820adb34e451f9a02cc1dc7cd920febf0/document-00000-of-00020.bin": {
+      "bytes": 2048,
+      "cells": [
+        "pythia-12b/axis4"
+      ],
+      "note": "the archived bytes are the CITED RANGE, not the whole object, which is far too large to hold. The cell's digest is of this range.",
+      "range": "bytes=0-2047",
+      "sha256": "2ac3ab7621a81429e653010bc41991ca1b0e2f476cdd75841dd2e55114a4a18b",
+      "stored": true,
+      "whole_object_bytes": 30000000000
+    },
     "https://huggingface.co/datasets/EleutherAI/pile/raw/148e1d5e8349977c76f673190424a2faf6980a1d/README.md": {
       "cells": [
         "pythia-12b/axis1",
-        "pythia-12b/axis4",
         "pythia-12b/axis19"
       ],
       "sha256": "c2bcc1690aa3462a54f78a352bc408ced9c282de428db8db2e8dccdb8c4df938",
