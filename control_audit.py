@@ -611,30 +611,74 @@ def controls(src, path, legacy=False):
     return sorted(set(out))
 
 
+# \u26d4\u26d4 `sys.settrace` DOES NOT CROSS `subprocess.run`, AND ONE SUITE ITEM IS ENTIRELY
+# CHILD PROCESSES. `test_bound_rules.py` runs all 18 of its attacks as children, so every control
+# they exercise was invisible to this tracer -- while the tool traced exactly ONE level of
+# subprocess and therefore looked like it had thought about process boundaries.
+#
+# A round-9 reviewer re-derived the classification without the mutation loop and got:
+#
+#     this instrument, one level of subprocess     209 never-executing
+#     a tracer that children also inherit          198
+#     what CONTROL-AUDIT.json records              199
+#
+# **The record matched neither.** Eleven control sites are reached by the suite only inside those
+# children. Ten of them are in the record as EXECUTING -- lines this tracer could not have seen --
+# and the eleventh, `mp_metric.py:446`, is in the record as NEVER EXECUTES while
+# `test_bound_rules.py` builds exactly the input that reaches it. So the equality restored in
+# round 8 was between a number and a differently-wrong number.
+#
+# \u26a0\ufe0f AND THE RESIDUAL WAS CONSTANT, which is this project's own tell: 10 against the
+# instrument, 1 against the truth, pinned. It points at one thing, and the one thing is the
+# process boundary.
+#
+# \u21d2 CHILDREN INHERIT THE TRACER. `sitecustomize` is imported by every Python interpreter at
+# startup, so putting one on PYTHONPATH traces the whole process tree rather than its root. Each
+# process writes its own file keyed by pid; nothing is merged in memory across a boundary that
+# does not exist.
+SITECUSTOMIZE = r"""
+import atexit, json, os, sys, threading
+
+_DIR = os.environ.get("CENSUS_TRACE_DIR")
+if _DIR:
+    _seen = set()
+
+    def _tr(frame, event, arg):
+        if event == "line":
+            _seen.add((frame.f_code.co_filename, frame.f_lineno))
+        return _tr
+
+    def _dump():
+        # Never let tracing bookkeeping fail a traced tool: the tool's own verdict is the subject.
+        try:
+            sys.settrace(None)
+            if _seen:
+                with open(os.path.join(_DIR, "t.%d.trace" % os.getpid()), "w") as fh:
+                    json.dump(sorted(_seen), fh)
+        except Exception:
+            pass
+
+    atexit.register(_dump)
+    threading.settrace(_tr)
+    sys.settrace(_tr)
+"""
+
+# The runner no longer traces: `sitecustomize` has already installed the tracer before this file
+# is read. It only fixes sys.path and argv, which is what it was always really for.
 TRACER = r"""
-import json, os, runpy, sys
-seen = set()
-def tr(frame, event, arg):
-    if event == "line":
-        seen.add((frame.f_code.co_filename, frame.f_lineno))
-    return tr
+import os, runpy, sys
 target = sys.argv[1]
-out = sys.argv[-1]
 # the runner lives elsewhere, so sys.path[0] is NOT the census: without this the traced tool
 # dies on `import axes` and the trace records only the import machinery -- which then reads as
 # "this control never executes", a false disposition produced by the classifier itself.
 sys.path.insert(0, os.path.dirname(target))
 sys.argv = [target] + sys.argv[2:-1]
-sys.settrace(tr)
 try:
     runpy.run_path(target, run_name="__main__")
 except SystemExit:
     pass
 except Exception:
     pass
-finally:
-    sys.settrace(None)
-open(out + ".trace", "w").write(json.dumps(sorted(seen)))
 """
 
 
@@ -656,19 +700,29 @@ def executed_lines(scripts):
     mid-sentence.
     """
     import json as _j
+    import os as _os
     import tempfile
     seen = set()
     td = pathlib.Path(tempfile.mkdtemp(prefix="trace-"))
+    (td / "sitecustomize.py").write_text(SITECUSTOMIZE, encoding="utf-8", newline="\n")
     runner = td / "runner.py"
     runner.write_text(TRACER, encoding="utf-8", newline="\n")
     for argv in scripts:
-        out = td / ("t%d" % len(seen))
-        r = subprocess.run([sys.executable, "-X", "utf8", str(runner),
-                            str(HERE / argv[0])] + list(argv[1:]) + [str(out)],
-                           cwd=str(HERE), capture_output=True, text=True)
-        f = pathlib.Path(str(out) + ".trace")
-        if f.exists():
+        # \u21d2 EVERY PROCESS IN THE TREE, not just the one we start. PYTHONPATH carries the
+        # sitecustomize into each child `subprocess.run` spawns; CENSUS_TRACE_DIR is what arms it,
+        # so no interpreter outside this run is affected.
+        env = dict(_os.environ)
+        env["PYTHONPATH"] = str(td) + _os.pathsep + env.get("PYTHONPATH", "")
+        env["CENSUS_TRACE_DIR"] = str(td)
+        subprocess.run([sys.executable, "-X", "utf8", str(runner),
+                        str(HERE / argv[0])] + list(argv[1:]) + ["unused"],
+                       cwd=str(HERE), capture_output=True, text=True, env=env)
+    # one file per pid, written by that pid at exit
+    for f in sorted(td.glob("t.*.trace")):
+        try:
             seen |= {tuple(x) for x in _j.loads(f.read_text())}
+        except (OSError, ValueError):                                    # pragma: no cover
+            continue
     shutil.rmtree(td, ignore_errors=True)
     return seen
 
@@ -1091,22 +1145,39 @@ def main():
     # ⚠ "NEVER EXECUTES" MEANS NOT REACHED BY THIS SUITE, not intrinsically unreachable, and the
     # per-module row is where a reader can see which. The tests execute and pass; their coverage is
     # concentrated in two files.
+    # ⛔⛔ "NEVER EXECUTES" WAS ANSWERING TWO DIFFERENT QUESTIONS WITH ONE WORD. A round-9
+    # reviewer separated them: for a large share of these the verdict is not *we mutated this line
+    # and it did not run* -- it is **we never entered that file at all**. Many are standalone
+    # scripts an evidence mutation genuinely cannot reach, and for those the old verdict was right
+    # BY ACCIDENT; but the record spelled both the same, so a reader could not tell a control the
+    # suite exercised and found inert from a control the suite never had a chance at.
+    #
+    # ⇒ THE TRACER ALREADY KNOWS. If it saw ANY line of a file execute, the file was entered and
+    # a line in it that did not run is a fact about the line. If it saw none, the file was never
+    # collected and the only honest verdict is about this suite's REACH, not about the control.
+    # `NOT COLLECTED` is now its own disposition, counted separately and printed separately, so the
+    # alarming number stops being inflated by the uninteresting one.
+    _entered = {f.rsplit(chr(92), 1)[-1].rsplit("/", 1)[-1] for f, _n in _hit}
+
+    def _disposition(name, lo):
+        if any(f.endswith(name) and n0 == lo for f, n0 in _hit):
+            return "REDUNDANT"
+        return "NEVER EXECUTES" if name in _entered else "NOT COLLECTED"
+
     by_module = {}
     for name, lo, kind, still in sorted(_results, key=lambda r: (r[0], r[1])):
-        _m = by_module.setdefault(name, {"sites": 0, "watched": 0,
-                                         "redundant": 0, "never_executes": 0})
+        _m = by_module.setdefault(name, {"sites": 0, "watched": 0, "redundant": 0,
+                                         "never_executes": 0, "not_collected": 0})
         _m["sites"] += 1
         if not still:
             _m["watched"] += 1
         else:
-            _m["redundant" if any(f.endswith(name) and n0 == lo for f, n0 in _hit)
-                else "never_executes"] += 1
+            _m[{"REDUNDANT": "redundant", "NEVER EXECUTES": "never_executes",
+                "NOT COLLECTED": "not_collected"}[_disposition(name, lo)]] += 1
     for name, lo, kind, still in sorted(_results, key=lambda r: (r[0], r[1])):
         if still:
             line = _srcs[name].splitlines()[lo - 1].strip()
-            ran = any(f.endswith(name) and n0 == lo for f, n0 in _hit)
-            unwatched.append((name, lo, kind, line,
-                              "REDUNDANT" if ran else "NEVER EXECUTES"))
+            unwatched.append((name, lo, kind, line, _disposition(name, lo)))
             print("      " + chr(0x26D4) + " %-14s line %-4d NOTHING NOTICED  %s"
                   % (name, lo, line[:52]))
         else:
@@ -1222,6 +1293,31 @@ def main():
                and _h["controls_total"] < (watched + len(unwatched)) // 2],
            "previous": _predecessor(_old, watched + len(unwatched), watched, _RND),
            "controls_total": watched + len(unwatched),
+           # ⛔ AND THE UNIVERSE ITSELF IS STILL ONE READER'S ASSERTION -- round 9's remaining
+           # HOLD, recorded here so the record carries it rather than a letter. `reach_controls.py`
+           # is a second reader of the CLASSIFICATION: it takes this file's survivors and tries to
+           # build an input for each. It is NOT a second reader of the POPULATION -- it never asks
+           # *which lines are controls at all*, because it reads that list from here. So
+           # `reach.unreached` is a fixpoint of one loop, not two instruments agreeing, and a
+           # branch this detector never recognised as a control is invisible to both.
+           #
+           # ⚠️ `controls_total_legacy` IS NOT THAT SECOND READER EITHER, and it would be
+           # convenient to pretend otherwise. It is this same detector with two rules switched off
+           # -- a SENSITIVITY variant, which measures how much the denominator moves when the
+           # instrument changes, not whether the denominator is right. Two readings by one
+           # instrument are one reading.
+           #
+           # ⇒ WHAT IS TRUE: two-way checking of the SELECTED BRANCH SET is repaired.
+           # Independent verification of the control universe is OUTSTANDING. The paper says that
+           # and no more, and this field is what it says it from.
+           "universe_readers": 1,
+           "universe_bound": (
+               "The set of lines treated as controls is enumerated by one detector in "
+               "control_audit.py. reach_controls.py re-reads that set and independently tests "
+               "whether each member can be reached; it does not independently decide membership. "
+               "controls_total_legacy is the same detector with rules disabled -- a sensitivity "
+               "measure, not a second opinion. A branch no detector here recognises as a control "
+               "is counted by nothing and would not appear as a gap."),
            # ⛔ HOW MUCH THE DETECTOR ITSELF MOVED THE DENOMINATOR, measured every run instead of
            # remembered from the round it changed. `controls_total_legacy` is this same detector
            # with the counting idiom and the derived accumulators switched off -- the rule that
@@ -1245,6 +1341,9 @@ def main():
            "unwatched": len(unwatched),
            "redundant": len([u for u in unwatched if u[4] == "REDUNDANT"]),
            "never_executes": len([u for u in unwatched if u[4] == "NEVER EXECUTES"]),
+           # ⚠ counted apart, because "the suite never entered this file" is a statement
+           # about this suite's reach and not about the control it is standing in front of.
+           "not_collected": len([u for u in unwatched if u[4] == "NOT COLLECTED"]),
            # ⛔ A DISPLAY CAP BECAME AN IDENTITY KEY, AND IT COST THE ROUND'S HEADLINE. This
            # stored `line[:88]` -- the cap that sits beside a print showing `line[:52]` -- and
            # `reach_controls.py` then required that stored text to EQUAL a complete stripped

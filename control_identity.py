@@ -66,9 +66,36 @@ EXACT, MOVED, AMBIGUOUS, GONE = "exact", "moved", "ambiguous", "gone"
 # into thirteen rewritten controls.
 UNCOMPARABLE = "uncomparable"
 
-# The rendering's own version. Bump it when `_render` changes shape, so old records say so instead
-# of comparing as if nothing happened.
-CANON_VERSION = 1
+# ⛔⛔ BOTH HALVES OF THE OLD TAG WERE WRONG, IN OPPOSITE AND EXPENSIVE DIRECTIONS.
+#
+#   the interpreter half fired when it should not.  A round-9 reviewer recomputed `identify()` on
+#   CPython 3.12 for all 26 recorded controls: **26 of 26 identical** -- node_hash, parent_hash,
+#   ordinal, siblings, kind, qualname, byte for byte. The rendering had not changed between 3.12
+#   and 3.14; only the STRING had. Every record reported `uncomparable`, `--quick` exited 1, and
+#   because `--quick` is item 9 of the audit's own suite, `control_audit.py` refused to start. The
+#   one figure a reviewer is meant to re-derive was again the one that could not be -- by a new
+#   mechanism, in the code written to fix the last one.
+#
+#   the version half failed to fire when it should.  `CANON_VERSION` was a hand-maintained
+#   literal. The reviewer changed `_render`'s join separator from "," to ", " -- pure formatting --
+#   and left the integer alone: **five unchanged controls reported `gone`.** Round 7's thirteen,
+#   reproduced on one interpreter, with a human remembering an integer as the only guard.
+#
+# ⇒ DERIVE THE VERSION FROM THE THING IT IS A PROXY FOR. `_render`'s own source is sitting right
+# there; its digest is the version. A formatting change bumps it automatically and a reviewer on
+# another interpreter is not blocked by a string.
+#
+# ⇒ AND CARRY THE RENDERING, NOT A LABEL FOR IT. When the tag does differ, the recorded canonical
+# text lets `resolve()` decide on EVIDENCE -- re-render the candidate and compare -- instead of
+# refusing on a label. `uncomparable` then means *we genuinely cannot compare*, which is rare,
+# rather than *the tag is not equal*, which was every record.
+def _render_source():
+    """The renderer's own source, which is what the version is a version OF."""
+    import inspect
+    try:
+        return inspect.getsource(_render)
+    except (OSError, TypeError):                                         # pragma: no cover
+        return ""
 
 
 def _render(n):
@@ -94,8 +121,15 @@ def _norm(node):
 
 
 def _canon_tag():
-    """Which rendering produced a hash. A record without one predates this and cannot be compared."""
-    return "v%d/py%d.%d" % (CANON_VERSION, sys.version_info[0], sys.version_info[1])
+    """Which RENDERER produced a hash -- the digest of its own source, not a hand-kept integer.
+
+    ⚠️ THE INTERPRETER IS DELIBERATELY NOT IN THIS TAG. It is not what determines the rendering;
+    `_render` is. `_fields` can move when the grammar moves, but that shows up as a node whose
+    rendering differs -- which the recorded rendering detects per node -- not as a fact about a
+    minor version string. Putting the interpreter here made a per-node property into a whole-record
+    gate, and the gate fired on records that were byte-identical.
+    """
+    return "r" + hashlib.sha256(_render_source().encode("utf-8")).hexdigest()[:12]
 
 
 def _scopes(tree):
@@ -150,6 +184,27 @@ def _statements(scope):
 
     walk(scope, True)
     return out
+
+
+def _parent_render(scope, node):
+    """The canonical text of the nearest enclosing statement; "" when directly in the scope body."""
+    best = _parent_node(scope, node)
+    return "" if best is None else _render(best)
+
+
+def _parent_node(scope, node):
+    """The nearest enclosing STATEMENT node, or None."""
+    best = None
+    for cand in _statements(scope):
+        if cand is node:
+            continue
+        s, e = getattr(cand, "lineno", None), getattr(cand, "end_lineno", None)
+        ns, ne = getattr(node, "lineno", None), getattr(node, "end_lineno", None)
+        if None in (s, e, ns, ne) or not (s <= ns and ne <= e):
+            continue
+        if best is None or getattr(cand, "lineno", 0) >= getattr(best, "lineno", 0):
+            best = cand
+    return best
 
 
 def _parent_hash(scope, node):
@@ -220,32 +275,63 @@ def identify(path, lineno):
         "ordinal": ordinal,
         "siblings": len(siblings),
         "canon": _canon_tag(),
+        # ⇒ THE CANONICAL TEXT ITSELF, so a tag mismatch is diffable rather than terminal. It is
+        # what `node_hash` is a hash OF, and carrying it is what lets a reviewer on another
+        # interpreter establish that two renderers agree instead of being told they might not.
+        "render": _render(node),
+        "parent_render": _parent_render(scope, node),
     }
 
 
 def resolve(path, ident, recorded_line=None):
     """(lineno, status). One of exact / moved / ambiguous / gone / uncomparable."""
-    # ⛔ BEFORE ANYTHING: WAS THIS RECORD RENDERED THE WAY WE RENDER? If not, every hash below
-    # is incommensurable and no comparison is possible. This precedes the parse because it is not
-    # a fact about the tree.
-    if ident.get("canon") != _canon_tag():
+    # ⚠️ A DIFFERENT RENDERER IS NOT AUTOMATICALLY AN IMPOSSIBLE COMPARISON. When the tag
+    # differs we compare the RECORDED CANONICAL TEXT against what this renderer produces. If they
+    # agree on a candidate, the two renderers agree about that node and the record is comparable
+    # on evidence. `uncomparable` is reserved for a record that carries no rendering to compare --
+    # which, after round 9, means a record written before this change.
+    _same_renderer = ident.get("canon") == _canon_tag()
+    _recorded_render = ident.get("render")
+    if not _same_renderer and not _recorded_render:
         return None, UNCOMPARABLE
     p = pathlib.Path(path)
     try:
         tree = ast.parse(p.read_text(encoding="utf-8", errors="replace"))
     except (OSError, SyntaxError):
         return None, GONE
+
+    # ⛔ DUPLICATE QUALNAMES WERE A SILENT REBIND. This took the FIRST `_scopes` match and broke,
+    # while `identify()`'s `_enclosing` takes the INNERMOST scope containing the line. They
+    # disagree whenever two scopes share a name -- an `if os.name` branch, a `try: import` /
+    # `except ImportError` fallback. A round-9 reviewer recorded a control in the second of two
+    # same-named functions, deleted that entire function, and got `(5, 'moved')`: deleted outright,
+    # reported moved, rebound to a different function's statement -- and `moved` does not block.
+    # Item 4's exact shape, one scope level up.
+    #
+    # ⇒ Every scope with that name is a candidate scope, and the candidates are pooled. If the
+    # record matches in more than one, nothing distinguishes them and the answer is AMBIGUOUS.
     wanted = ident.get("qualname", "")
-    scope = tree
-    if wanted:
-        for name, node in _scopes(tree):
-            if name == wanted:
-                scope = node
-                break
-        else:
-            return None, GONE
-    cands = [s for s in _statements(scope)
-             if type(s).__name__ == ident.get("kind") and _norm(s) == ident.get("node_hash")]
+    scopes = [node for name, node in _scopes(tree) if name == wanted] if wanted else [tree]
+    if not scopes:
+        return None, GONE
+
+    def _matches(scope):
+        out = []
+        for s in _statements(scope):
+            if type(s).__name__ != ident.get("kind"):
+                continue
+            if _same_renderer:
+                if _norm(s) == ident.get("node_hash"):
+                    out.append(s)
+            elif _render(s) == _recorded_render:
+                out.append(s)
+        return out
+
+    _per_scope = [(sc, _matches(sc)) for sc in scopes]
+    _hit = [(sc, m) for sc, m in _per_scope if m]
+    if len(_hit) > 1:
+        return None, AMBIGUOUS                    # the same shape in two identically-named scopes
+    scope, cands = (_hit[0] if _hit else (scopes[0], []))
     cands.sort(key=lambda s: s.lineno)
     if not cands:
         return None, GONE
@@ -265,7 +351,12 @@ def resolve(path, ident, recorded_line=None):
         # identically-shaped branches changes which guard each sits under and nothing else.
         want_parent = ident.get("parent_hash")
         if want_parent is not None:
-            same = [c for c in cands if _parent_hash(scope, c) == want_parent]
+            if _same_renderer:
+                same = [c for c in cands if _parent_hash(scope, c) == want_parent]
+            else:
+                _wp = ident.get("parent_render")
+                same = ([c for c in cands if _parent_render(scope, c) == _wp]
+                        if _wp is not None else list(cands))
             if len(same) == 1:
                 cands = same
             elif len(same) > 1:
@@ -320,11 +411,26 @@ def main():
     print()
     print("  " + ", ".join("%s %d" % (k, v) for k, v in counts.items() if v))
     print("  rendering: %s" % _canon_tag())
+    # ⛔ THIS RETURNED 0 WHILE REPORTING 26 OF 26 UNCOMPARABLE AND ESTABLISHING NOTHING. It is in
+    # the declared suite, so a green exit here was a green exit for the suite -- and it disagreed
+    # with `reach_controls.py --quick`, which blocked on the identical finding from the identical
+    # records. Item 3's defect, disposition-not-detection, alive in a third instrument while the
+    # round's own text claimed it fixed.
+    #
+    # ⇒ A run that resolved nothing reports nothing. Only `exact` and `moved` are resolutions;
+    # every other disposition means this tool did not establish what it exists to establish.
+    _unsettled = counts[GONE] + counts[AMBIGUOUS] + counts[UNCOMPARABLE] + counts["no-identity"]
     if counts[UNCOMPARABLE]:
-        print("  " + chr(0x26A0) + " %d record(s) were rendered by a different interpreter or a "
-              "different canonical form. Nothing is established about them either way -- re-run "
+        print("  " + chr(0x26A0) + " %d record(s) carry no rendering this renderer can compare "
+              "against. Nothing is established about them either way -- re-run "
               "`reach_controls.py` here to re-record, and do NOT read this as a rewrite."
               % counts[UNCOMPARABLE])
+    if _unsettled:
+        print("  " + chr(0x26D4) + " %d of %d recorded branch(es) did not resolve to a statement "
+              "in this tree. This tool establishes an identity or it does not; reporting the "
+              "count and exiting 0 is the disposition defect it was written to remove."
+              % (_unsettled, sum(counts.values())))
+        return 1
     return 0
 
 

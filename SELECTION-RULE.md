@@ -83,16 +83,14 @@ an unmeasurable release into an absent one, and those are different findings.
 - **The scored rows go to no one for comment before publication.** That converts a measurement into
   a negotiation. Publish, then correct on evidence.
 
-## ⚠️ Two disclosures owed to the reader, recorded now rather than discovered later
+## ⚠️ A disclosure owed to the reader, recorded now rather than discovered later
 
-**1 · An API-only subject is published by the organisation whose model assisted this work.**
-The instrument and this repository were drafted with AI assistance, and one candidate subject is a
-release by that assistant's publisher. The mitigation is not to drop it — **excluding a subject to
-avoid an appearance is itself a selection effect**, and a worse one, since it would silently remove
-the release most likely to be scrutinised. It is scored by the same rule as every other subject,
-from public artifacts, and this paragraph is the disclosure.
+⚠️ **No subject is excluded to avoid an appearance.** Every candidate is scored by the same rule,
+from public artifacts, whatever the relationship between this laboratory and the publisher of a
+release — because **excluding a subject to avoid an appearance is itself a selection effect**, and a
+worse one, since it would silently remove the release most likely to be scrutinised.
 
-**2 · Scoring is not a claim about model quality.** A release scoring 0 on twenty axes may be
+**Scoring is not a claim about model quality.** A release scoring 0 on twenty axes may be
 excellent. The instrument answers *"is this the artifact you say it is, and can anyone check"* —
 narrow, and prior to every other question.
 

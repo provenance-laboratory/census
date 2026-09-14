@@ -154,7 +154,19 @@ def never_executed():
     again one level out in the record it reads. The line is resolved through the SOURCE TEXT the
     audit stored, so an edit above a control no longer invalidates it.
     """
+    # ⚠️ AND THE SET THIS CHASES GOT SMALLER, SO THE SET IT DROPS IS PRINTED. A round-9
+    # reviewer separated *the suite entered this file and the line did not run* from *the suite
+    # never entered the file*, and only the first is a control this tool can build an input for.
+    # Narrowing silently would have moved a number in the paper for a reason no reader could see,
+    # so the second population is reported here rather than simply not appearing.
     a = json.loads(AUDIT.read_text(encoding="utf-8"))
+    _uncollected = [s for s in a.get("survivors", []) if s.get("class") == "NOT COLLECTED"]
+    if _uncollected:
+        _files = sorted({s["file"] for s in _uncollected})
+        print("  %s %d control(s) in %d file(s) are NOT COLLECTED -- this suite never enters "
+              "them, so they are not chased here and not counted as unreached either: %s"
+              % (chr(0x26A0), len(_uncollected), len(_files),
+                 ", ".join(_files[:4]) + ("..." if len(_files) > 4 else "")))
     src_cache = {}
     out = {}
     for s in a.get("survivors", []):
@@ -213,16 +225,53 @@ class Tracer:
         sys.settrace(self._outer)
         self._outer = None
 
+    # ⛔⛔ ROUND 8 FORWARDED THE EVENT AND THREW AWAY THE ANSWER, AND THAT IS STILL BLINDING.
+    # The comment three lines down said it -- *its answer about which frames interest it is its
+    # own; filtering on our behalf is how it went blind* -- and the code committed exactly that
+    # one line later, with `return None`.
+    #
+    # `sys.settrace`'s GLOBAL function is called on `call`, and ITS RETURN VALUE BECOMES THAT
+    # FRAME'S LOCAL TRACER. Returning None means no line events are delivered for the frame -- to
+    # ANYONE, including the tracer we just handed the call event to. So round 8's chain passed the
+    # outer tracer every `call` and then silenced every `line` inside it.
+    #
+    # Measured by a round-9 reviewer over a full 26-record replay:
+    #
+    #     audit tracer sees, shipped chain : 7969
+    #     audit tracer sees, unfiltered    : 8347
+    #     HIDDEN by the filtered return    :  378   (0 in the reverse direction)
+    #
+    # ⚠️ AND THE MEASUREMENT THAT CERTIFIED THE ROUND-8 FIX COULD NOT HAVE CAUGHT IT. "0 of 26
+    # before, 26 of 26 after" was taken entirely inside this filter's own whitelist, so it got the
+    # answer the filter guarantees. A control that can only look where it is already looking is
+    # not a second reader.
+    #
+    # ⇒ HONOUR THE OUTER TRACER'S ANSWER. It returns the local tracer it wants for this frame;
+    # we return one that serves both. We never decide on its behalf which frames matter.
     def _t(self, frame, event, arg):
-        # ⚠️ THE DISPLACED TRACER RUNS FIRST AND UNCONDITIONALLY. Its answer about which
-        # frames interest it is its own; filtering on our behalf is how it went blind.
-        if self._outer is not None:
-            self._outer(frame, event, arg)
+        outer_local = self._outer(frame, event, arg) if self._outer is not None else None
         name = pathlib.Path(frame.f_code.co_filename).name
-        if name in ("replay.py", "mp_metric.py"):
+        mine = name in ("replay.py", "mp_metric.py")
+        if mine:
             self.seen.add((name, frame.f_lineno))
-            return self._t
-        return None
+        if outer_local is None and not mine:
+            return None                       # neither of us wants this frame; nothing is hidden
+        return self._local(outer_local)
+
+    def _local(self, outer_local):
+        """A frame-local tracer that records our lines AND keeps feeding the displaced one."""
+        def local(frame, event, arg):
+            nonlocal outer_local
+            if outer_local is not None:
+                nxt = outer_local(frame, event, arg)
+                # A local tracer may return a different local tracer, or None to stop. Respect it,
+                # but keep OUR recording alive either way -- our scope is not its scope.
+                outer_local = nxt if nxt is not None else None
+            name = pathlib.Path(frame.f_code.co_filename).name
+            if name in ("replay.py", "mp_metric.py"):
+                self.seen.add((name, frame.f_lineno))
+            return local
+        return local
 
 
 def call_executor(fn, cell, ev, ctx):

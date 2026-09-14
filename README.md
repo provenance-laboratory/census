@@ -19,7 +19,7 @@ source-anchored**, and neither ranks.
 The mechanism does not transfer — you cannot content-address a training run the way you can
 content-address a constant. **The goal does:** *you need not take my word.*
 
-`obl-metric` — replication archive: [`10.5281/zenodo.21964447`](https://doi.org/10.5281/zenodo.21964447)
+`obl-metric` — replication archive: [`10.5281/zenodo.21964446`](https://doi.org/10.5281/zenodo.21964446) (concept DOI; resolves to the current version)
 
 ## Two structural decisions, taken before the first subject
 
