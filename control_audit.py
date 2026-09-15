@@ -1157,12 +1157,57 @@ def main():
     # collected and the only honest verdict is about this suite's REACH, not about the control.
     # `NOT COLLECTED` is now its own disposition, counted separately and printed separately, so the
     # alarming number stops being inflated by the uninteresting one.
-    _entered = {f.rsplit(chr(92), 1)[-1].rsplit("/", 1)[-1] for f, _n in _hit}
+    # ⛔⛔ "DID THE TRACER ENTER THIS FILE" IS NOT "DID THE SUITE EXERCISE THIS CONTROL'S
+    # SCOPE". Round 10 put the two ways it goes wrong side by side. A module entered only because
+    # Python IMPORTED it runs its top-level lines and never calls the function holding the
+    # controls -- and those controls were then reported NEVER EXECUTES, the strong verdict,
+    # without any test targeting them. In the other direction a module with a harmless import-time
+    # side effect moves its controls out of NOT COLLECTED for the same non-reason. **The split was
+    # still file-entry based, not control-exercise based.**
+    #
+    # ⇒ THE SCOPE IS THE UNIT. A control's containing `def`/`class` is found in the source, and
+    # the question asked is whether the tracer reached ANY line of THAT scope. A module-level
+    # import no longer establishes reachability of function-local controls. A control at module
+    # level keeps the file as its scope, which is correct: for that one, entering the file IS
+    # entering the scope.
+    _hit_by_file = {}
+    for _f, _n in _hit:
+        _hit_by_file.setdefault(_f.rsplit(chr(92), 1)[-1].rsplit("/", 1)[-1], set()).add(_n)
+
+    def _scope_of(name, lo):
+        """(lo, hi) of the innermost def/class containing line `lo`, or the whole file."""
+        _src = _srcs.get(name)
+        if not _src:
+            return None
+        try:
+            _tree = ast.parse(_src)
+        except SyntaxError:                                              # pragma: no cover
+            return None
+        _best = None
+        for _nd in ast.walk(_tree):
+            if isinstance(_nd, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                _a, _b = _nd.lineno, (_nd.end_lineno or _nd.lineno)
+                if _a <= lo <= _b and (_best is None or (_b - _a) < (_best[1] - _best[0])):
+                    _best = (_a, _b)
+        return _best
+
+    _scope_cache = {}
 
     def _disposition(name, lo):
         if any(f.endswith(name) and n0 == lo for f, n0 in _hit):
             return "REDUNDANT"
-        return "NEVER EXECUTES" if name in _entered else "NOT COLLECTED"
+        _lines = _hit_by_file.get(name)
+        if not _lines:
+            return "NOT COLLECTED"
+        _key = (name, lo)
+        if _key not in _scope_cache:
+            _scope_cache[_key] = _scope_of(name, lo)
+        _sc = _scope_cache[_key]
+        if _sc is None:
+            # module level: the file IS the scope
+            return "NEVER EXECUTES"
+        _a, _b = _sc
+        return "NEVER EXECUTES" if any(_a <= n <= _b for n in _lines) else "NOT COLLECTED"
 
     by_module = {}
     for name, lo, kind, still in sorted(_results, key=lambda r: (r[0], r[1])):

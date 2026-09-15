@@ -89,13 +89,105 @@ UNCOMPARABLE = "uncomparable"
 # text lets `resolve()` decide on EVIDENCE -- re-render the candidate and compare -- instead of
 # refusing on a label. `uncomparable` then means *we genuinely cannot compare*, which is rare,
 # rather than *the tag is not equal*, which was every record.
+# ⛔⛔ THE TAG WAS A HASH OF SOURCE AND THE RENDERING WAS NOT OWNED BY THAT SOURCE. `_render`
+# ended in `return repr(n)`, and `repr` is a runtime-resolved builtin -- so a round-10 reviewer
+# patched `builtins.repr`, watched the rendering and every node hash change, and watched the tag
+# NOT change:
+#
+#     render changed: YES   node_hash changed: YES   _canon_tag changed: NO
+#
+# The tag's whole premise is that it identifies the thing that produced the hash, and it could
+# claim "same renderer" while the renderer's output differed. The same reviewer noted the mirror
+# defect: hashing source is also OVER-sensitive, so a comment or docstring edit inside `_render`
+# moved the tag while the output stood still. It was a representation-of-SOURCE hash wearing the
+# name of a representation-of-BEHAVIOUR one.
+#
+# ⇒ A CLOSED SCALAR ENCODER, AND THE TAG VERSIONS THE SPECIFICATION. Every scalar this grammar
+# can carry is encoded explicitly here; nothing is delegated to an ambient builtin. `SPEC` is the
+# statement of that encoding and the tag is over `SPEC`, so the tag moves when the ENCODING moves
+# and stands still when a comment does.
+SPEC = (
+    "canonical-scalar-encoding/1 "
+    "None=None True=True False=False "
+    "int=decimal float=repr-of-float-with-explicit-nan-inf str=u:<utf8-escaped> "
+    "bytes=b:<lowercase-hex> ellipsis=... complex=c:<real>:<imag> "
+    "AST=Name(field=value,...) list=[a,b,c]"
+)
+
+
+def _scalar(n):
+    """The canonical text for a leaf. CLOSED: an unsupported type is an error, never a repr()."""
+    if n is None:
+        return "None"
+    if n is True:
+        return "True"
+    if n is False:
+        return "False"
+    if isinstance(n, int):
+        return "%d" % n
+    if isinstance(n, float):
+        if n != n:
+            return "nan"
+        if n == float("inf"):
+            return "inf"
+        if n == float("-inf"):
+            return "-inf"
+        # ⚠ float.__repr__, NOT repr(): the builtin is exactly the ambient hook this closes.
+        return float.__repr__(float(n))
+    if isinstance(n, complex):
+        return "c:%s:%s" % (_scalar(n.real), _scalar(n.imag))
+    if isinstance(n, str):
+        return "u:" + n.encode("unicode_escape").decode("ascii")
+    if isinstance(n, bytes):
+        return "b:" + n.hex()
+    if n is Ellipsis:
+        return "..."
+    raise TypeError("no canonical encoding is declared for %r; add one to SPEC rather than "
+                    "letting an ambient repr() decide" % type(n).__name__)
+
+
+# the functions whose behaviour an identity depends on -- ALL of them, see _render_source
+_IDENTITY_FUNCS = ("_scalar", "_render", "_norm", "_parent_render", "_parent_node",
+                   "_parent_hash", "identify")
+
+
 def _render_source():
-    """The renderer's own source, which is what the version is a version OF."""
+    """What the version is a version OF: the ENCODING, plus every function that applies it.
+
+    ⛔⛔ THE TAG VERSIONED `_render` AND THE IDENTITY IS PRODUCED BY SIX FUNCTIONS. Round 10
+    switched `_norm` from sha256 to sha512 -- three lines below `_render`, whose source was
+    untouched -- and got **26 branches reported `gone` for code that had not changed by one
+    byte**, under the tag introduced to stop exactly that. Round 7's thirteen, restored.
+
+    ⇒ THE TAG COVERS THE WHOLE PIPELINE: the stated encoding, and the source of every function
+    that turns a node into an identity. `SPEC` closes the ambient-hook hole a source hash cannot
+    see (a patched builtin changes behaviour without changing text); the source hashes close the
+    hole `SPEC` cannot see (a real code change the spec was not updated for). Neither alone is
+    enough and the two fail in opposite directions, which is why both are here.
+
+    ⚠️ IT IS DELIBERATELY OVER-SENSITIVE. A comment or docstring edit inside any of these moves
+    the tag while the output stands still. That is conservative rather than unsound -- it can say
+    "these renderers differ" when they agree, which costs a re-record, and it cannot say "these
+    agree" when they differ, which would cost a false verdict.
+    """
     import inspect
-    try:
-        return inspect.getsource(_render)
-    except (OSError, TypeError):                                         # pragma: no cover
-        return ""
+    parts = [SPEC]
+    for _n in _IDENTITY_FUNCS:
+        _f = globals().get(_n)
+        try:
+            parts.append(inspect.getsource(_f))
+        except (OSError, TypeError):
+            # ⛔ AND THIS USED TO RETURN "" HERE, so the tag collapsed to sha256(b"") and TWO
+            # RENDERERS WITH DIFFERENT OUTPUT TAGGED IDENTICALLY -- `_same_renderer` True, every
+            # record resolved down the hash path. It fires on any load with no source on disk:
+            # zipapp, frozen interpreter, .pyc-only, exec-from-string. The old handler even
+            # carried `# pragma: no cover`: the branch that disarmed the guard was excluded from
+            # the thing that would have noticed.
+            #
+            # ⇒ A TAG THAT CANNOT BE COMPUTED IS NOT A TAG. It is named, so every comparison
+            # against it fails and every record is UNCOMPARABLE rather than silently equal.
+            parts.append("<source-unavailable:%s>" % _n)
+    return chr(10).join(parts)
 
 
 def _render(n):
@@ -111,7 +203,7 @@ def _render(n):
                                     for f in n._fields))
     if isinstance(n, list):
         return "[%s]" % ",".join(_render(x) for x in n)
-    return repr(n)
+    return _scalar(n)
 
 
 def _norm(node):
@@ -315,15 +407,26 @@ def resolve(path, ident, recorded_line=None):
     if not scopes:
         return None, GONE
 
+    # ⛔⛔ THE FALLBACK WAS AVAILABLE EXACTLY WHERE THE TAG WAS RIGHT AND UNAVAILABLE EXACTLY
+    # WHERE IT WAS WRONG. The recorded RENDER -- the text itself, which is what a human would
+    # compare -- was consulted only when `_same_renderer` was False. So when the tag wrongly said
+    # the renderers agreed (round 10 switched `_norm` to sha512 and the tag did not move), this
+    # compared hashes, found none, and answered `gone` for 26 branches whose source had not
+    # changed by one byte. **The evidence that would have prevented the wrong verdict was sitting
+    # in the record, and the tag's claim of sameness is what stopped it being read.**
+    #
+    # ⇒ THE RENDER IS ALWAYS CONSULTED. A hash match is accepted when the tag agrees; a render
+    # match is accepted either way. The two are tried in that order, so the cheap comparison still
+    # decides the common case, and the record's own text is never withheld because a tag said it
+    # would not be needed.
     def _matches(scope):
         out = []
         for s in _statements(scope):
             if type(s).__name__ != ident.get("kind"):
                 continue
-            if _same_renderer:
-                if _norm(s) == ident.get("node_hash"):
-                    out.append(s)
-            elif _render(s) == _recorded_render:
+            if _same_renderer and _norm(s) == ident.get("node_hash"):
+                out.append(s)
+            elif _recorded_render and _render(s) == _recorded_render:
                 out.append(s)
         return out
 
@@ -334,6 +437,19 @@ def resolve(path, ident, recorded_line=None):
     scope, cands = (_hit[0] if _hit else (scopes[0], []))
     cands.sort(key=lambda s: s.lineno)
     if not cands:
+        # ⛔ A RENDERER CHANGE REPORTED `gone`, WHICH IS A CLAIM ABOUT THE TREE, when the true
+        # state was *we cannot compare*. Round 10: change `_render`'s separator, every one of 26
+        # records fails to match, and each is answered "no statement of this shape remains".
+        # UNCOMPARABLE had become reachable only by a record carrying no render at all -- i.e. a
+        # pre-round-9 record -- so the status that exists to prevent this verdict could never fire
+        # for the records it was added for.
+        #
+        # ⇒ THE RESIDUAL IS THE FINGERPRINT, and this project's own rule says so: all of them
+        # failing is a renderer change, one of them failing is a rewrite. When the tag disagrees
+        # AND the recorded text matches nothing, this cannot tell a vanished control from a
+        # re-rendered one, and says the second rather than asserting the first.
+        if not _same_renderer:
+            return None, UNCOMPARABLE
         return None, GONE
 
     # ⛔ THE SIBLING GUARD RUNS FIRST. It used to sit BELOW a `len(cands) == 1 -> EXACT`
