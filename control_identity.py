@@ -106,12 +106,54 @@ UNCOMPARABLE = "uncomparable"
 # can carry is encoded explicitly here; nothing is delegated to an ambient builtin. `SPEC` is the
 # statement of that encoding and the tag is over `SPEC`, so the tag moves when the ENCODING moves
 # and stands still when a comment does.
+# ⛔⛔ AND THE ENCODER AT THE BOTTOM OF THE CHAIN WAS NOT INJECTIVE. `u:<escaped>` escaped
+# backslashes and non-ASCII and left alone the six characters `_render` uses as STRUCTURE --
+# `, ( ) [ ] =` -- so a string could spell the rest of the rendering:
+#
+#     source A: ["a", "b"]
+#     source B: ["a,kind=None),Constant(value=u:b"]
+#         renders identical : True        node_hash identical: True
+#
+# A two-element list and a one-element list, same bytes, same hash. And it was reachable against
+# a watched control: a reviewer deleted `d.append('negative', 'refused')`, put a DIFFERENT
+# one-argument call with an injected string in its place, and `resolve` returned **exact** -- the
+# branch that was recorded -- while quick mode replayed it and passed. `gone`, `ambiguous` and
+# `uncomparable` all block; this reached none of them.
+#
+# ⚠️ THE EXPOSURE IS TOTAL RATHER THAN THEORETICAL: 26 of 26 recorded renders already carry
+# string payloads containing those characters. Every record on disk stands on this.
+#
+# ⇒ LENGTH-PREFIXED, WHICH IS THE ONE FORM NO PAYLOAD CAN IMITATE. `u:<n>:<text>` says how many
+# characters follow before any of them is read, so a string cannot end itself early however it is
+# spelled -- the discipline `b:<hex>` already had, applied to the type that needed it. The version
+# is bumped: a record written under `/1` is not comparable with one written under `/2`, and the
+# tag carries `SPEC`, so every existing record is correctly reported as rendered by a different
+# renderer rather than silently re-interpreted.
+#
+# ⚠️ AND THE NAME IS CORRECTED. `/1` said `utf8-escaped` and the code called
+# `unicode_escape`, which is a different codec. A specification that names the wrong codec is a
+# specification a reader cannot check the implementation against.
+#
+# ⛔⛔ AND `/2` STATED A COUNT THE CODE DOES NOT WRITE, IN THE ONE PART OF THE TAG WHOSE JOB IS
+# TO LET A READER CHECK THE IMPLEMENTATION. `bytes=b:<byte-count>` against `len(n.hex())`:
+#
+#     b'abc'    -> b:6:616263     3 bytes, prefix says 6
+#     b'\xff'   -> b:2:ff         1 byte,  prefix says 2
+#
+# Every non-empty bytes payload disagreed with its own specification. The CODE is the consistent
+# one: the string encoder counts the ESCAPED characters for a stated reason -- *a reader counts
+# what is in front of them rather than reconstructing the codec first* -- and hex characters are
+# what is in front of them here too. So the count stays and the words are corrected, and both
+# counts now say WHICH characters they count instead of leaving a reader to assume.
 SPEC = (
-    "canonical-scalar-encoding/1 "
+    "canonical-scalar-encoding/3 "
     "None=None True=True False=False "
-    "int=decimal float=repr-of-float-with-explicit-nan-inf str=u:<utf8-escaped> "
-    "bytes=b:<lowercase-hex> ellipsis=... complex=c:<real>:<imag> "
-    "AST=Name(field=value,...) list=[a,b,c]"
+    "int=decimal float=repr-of-float-with-explicit-nan-inf "
+    "str=u:<escaped-char-count>:<python-unicode_escape-of-the-text> "
+    "bytes=b:<hex-char-count>:<lowercase-hex> ellipsis=... complex=c:<real>:<imag> "
+    "AST=Name(field=value,...) list=[a,b,c] "
+    "-- every variable-length payload is length-prefixed by the characters it WRITES, so no "
+    "payload can imitate a delimiter and a reader can skip one without decoding it"
 )
 
 
@@ -137,22 +179,130 @@ def _scalar(n):
     if isinstance(n, complex):
         return "c:%s:%s" % (_scalar(n.real), _scalar(n.imag))
     if isinstance(n, str):
-        return "u:" + n.encode("unicode_escape").decode("ascii")
+        # the count is of the ESCAPED characters -- the ones actually written -- so a reader
+        # counts what is in front of them rather than reconstructing the codec first
+        _e = n.encode("unicode_escape").decode("ascii")
+        return "u:%d:%s" % (len(_e), _e)
     if isinstance(n, bytes):
-        return "b:" + n.hex()
+        _h = n.hex()
+        return "b:%d:%s" % (len(_h), _h)
     if n is Ellipsis:
         return "..."
     raise TypeError("no canonical encoding is declared for %r; add one to SPEC rather than "
                     "letting an ambient repr() decide" % type(n).__name__)
 
 
-# the functions whose behaviour an identity depends on -- ALL of them, see _render_source
-_IDENTITY_FUNCS = ("_scalar", "_render", "_norm", "_parent_render", "_parent_node",
-                   "_parent_hash", "identify")
+# ⛔⛔ AND THIS WAS SEVEN OF TEN, HAND-KEPT, IN A FILE WHOSE HEADER WARNS THAT A HAND-KEPT
+# LIST REPRODUCES THE DEFECT IT AUDITS. `inspect.getsource(identify)` returns `identify`'s own
+# text and not its callees -- and `identify` calls `_scopes`, `_enclosing` and `_statements`,
+# which produce `qualname`, `ordinal` and `siblings`: three fields of the identity dict, all three
+# used by `resolve` for scope lookup, the sibling guard and ordinal disambiguation. A round-11
+# reviewer changed `_statements` to stop recursing into nested blocks:
+#
+#     shipped                                          tag=r64792c27eeab  {'exact': 26}
+#     _statements: stop recursing into nested blocks    tag=r64792c27eeab  {'gone': 26}
+#
+# **Twenty-six branches gone for code that has not changed by one byte, tag standing still** --
+# round 10's `_norm` result, reproduced against the repair that was made for it. The boundary
+# moved; the mechanism did not.
+#
+# ⇒ THE CLOSURE IS COMPUTED, NOT LISTED. `_identity_closure()` parses this module and takes
+# every module-level function reachable by name from the roots below. Adding a helper to the
+# pipeline adds it to the tag with no edit here, which is the property a hand-kept list cannot
+# have. The roots are the entry points an identity actually comes out of.
+_IDENTITY_ROOTS = ("identify", "_norm", "_render", "_scalar", "_canon_tag")
+
+
+def _identity_closure():
+    """Every module-level function reachable by name from `_IDENTITY_ROOTS`, sorted.
+
+    ⚠️ BY NAME, which over-approximates: a local variable shadowing a function name pulls that
+    function in, and a call through a dict or an attribute is not followed. Over-approximation is
+    the safe direction here -- an extra function in the tag costs a re-record, a missing one costs
+    a false `exact` -- and the one direction that would be unsafe, missing a callee, requires the
+    pipeline to dispatch dynamically, which it does not and which this would then be wrong about
+    loudly rather than quietly. If that ever changes, the failure is a wrong verdict, so it is
+    written down here rather than discovered.
+    """
+    try:
+        _tree = ast.parse(pathlib.Path(__file__).read_text(encoding="utf-8"))
+    except (OSError, SyntaxError, ValueError):                            # pragma: no cover
+        return None
+    _defs = {n.name: n for n in _tree.body
+             if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))}
+    _seen, _todo = set(), [r for r in _IDENTITY_ROOTS if r in _defs]
+    while _todo:
+        _n = _todo.pop()
+        if _n in _seen:
+            continue
+        _seen.add(_n)
+        for _sub in ast.walk(_defs[_n]):
+            _f = getattr(_sub, "func", None) if isinstance(_sub, ast.Call) else None
+            _nm = getattr(_f, "id", None) if isinstance(_f, ast.Name) else None
+            if _nm in _defs and _nm not in _seen:
+                _todo.append(_nm)
+    return sorted(_seen)
+
+
+# ⛔⛔ AND NONE OF THAT SEES THE RUNTIME. A round-11 reviewer changed no file at all:
+#
+#     ast.Constant.__name__ = "TamperedConstant"
+#     render changed: True    hash changed: True    tag changed: False
+#
+# `_render` reads `type(n).__name__` and `n._fields` from the interpreter's AST classes, and a
+# source hash cannot see either. `SPEC` closed the ambient-BUILTIN hole and left the ambient
+# GRAMMAR hole beside it.
+#
+# ⇒ THE TAG FINGERPRINTS THE BEHAVIOUR AS WELL AS THE TEXT. the grammar the renderer reads
+# is fingerprinted whole and the encoder is exercised on fixed inputs, so an altered AST class
+# name, an altered `_fields`, an altered codec or any other runtime change that moves the
+# OUTPUT moves the tag --
+# while the interpreter VERSION stays deliberately out of it, because a version string is not a
+# rendering. Each probe exercises one thing the encoder reads.
+#
+# ⛔⛔ AND THE CANARIES WERE A HAND-KEPT LIST OF SIX, IN THE REPAIR THAT REPLACED A HAND-KEPT
+# LIST OF SEVEN. They covered the node kinds somebody thought of. `ast.Attribute` was not one:
+#
+#     ast.Attribute._fields loses 'attr'     node_hash moved: True     tag moved: False
+#
+# → six branches reported `gone` for code that had not changed by one byte, with the tag standing
+# still, under the canaries introduced to stop exactly that. The list could not fall behind the
+# CODE, because a code change moves a source hash; it could and did fall behind THE GRAMMAR,
+# which is the only thing it was there to watch.
+#
+# ⇒ PROJECT OVER THE GRAMMAR INSTEAD OF SAMPLING IT. `_render` reads exactly two things out of
+# the interpreter's AST classes -- `type(n).__name__` and `n._fields` -- so the fingerprint is
+# those two things for EVERY class the module has. It is a comprehension over `ast`; there is no
+# list to keep, and a node kind added, renamed or re-fielded by a Python release moves the tag
+# whether or not anyone here has heard of it. The binding name is recorded beside `__name__`, so
+# renaming the class (`ast.Constant.__name__ = "TamperedConstant"`) moves it too.
+def _grammar_fingerprint():
+    """{binding: __name__(fields)} for every AST class -- the whole grammar, not a sample of it."""
+    _out = []
+    for _k in sorted(dir(ast)):
+        _c = getattr(ast, _k, None)
+        if isinstance(_c, type) and issubclass(_c, ast.AST) and hasattr(_c, "_fields"):
+            _out.append("%s=%s(%s)" % (_k, _c.__name__, ",".join(map(str, _c._fields))))
+    return ";".join(_out)
+
+
+# ⚠️ THESE ARE NOT GRAMMAR CANARIES AND THEY ARE NOT HAND-KEPT IN THE SAME SENSE. They probe
+# the OTHER runtime surface `_render` stands on -- the builtins `_scalar` calls, which a patched
+# codec can move without touching a byte of source. Hand-keeping fails SAFE here and failed
+# UNSAFE there, and the difference is worth stating rather than treating the two as one problem:
+# every type `_scalar` handles is decided by `_scalar`'s own text, so adding one moves the source
+# hash and the tag with it. A probe that falls behind `_scalar` costs sensitivity to a patched
+# builtin; a canary list that fell behind `ast` cost a wrong verdict.
+_ENCODER_PROBES = (
+    "s = 'a,b(c)[d]=e'",           # the delimiter set, through the string encoder
+    "t = b'' + b'\\xff'",             # the bytes encoder
+    "n = [1.5, float('nan'), None, True, ...]",   # float, nan, None, bool, Ellipsis
+    "z = 1 + 2j",                                 # complex
+)
 
 
 def _render_source():
-    """What the version is a version OF: the ENCODING, plus every function that applies it.
+    """What the version is a version OF: the ENCODING, what it DOES, and the code that does it.
 
     ⛔⛔ THE TAG VERSIONED `_render` AND THE IDENTITY IS PRODUCED BY SIX FUNCTIONS. Round 10
     switched `_norm` from sha256 to sha512 -- three lines below `_render`, whose source was
@@ -171,8 +321,19 @@ def _render_source():
     agree" when they differ, which would cost a false verdict.
     """
     import inspect
-    parts = [SPEC]
-    for _n in _IDENTITY_FUNCS:
+    parts = [SPEC, _grammar_fingerprint()]
+    # what the renderer DOES, on fixed inputs, under this interpreter -- see `_ENCODER_PROBES`
+    for _c in _ENCODER_PROBES:
+        try:
+            parts.append(_render(ast.parse(_c)))
+        except Exception as _e:                                          # noqa: BLE001
+            # a renderer that cannot render its own probe is not this renderer
+            parts.append("<probe-failed:%s:%s>" % (type(_e).__name__, _e))
+    _names = _identity_closure()
+    if _names is None:                                                    # pragma: no cover
+        parts.append("<closure-unavailable>")
+        _names = list(_IDENTITY_ROOTS)
+    for _n in _names:
         _f = globals().get(_n)
         try:
             parts.append(inspect.getsource(_f))
@@ -375,8 +536,124 @@ def identify(path, lineno):
     }
 
 
-def resolve(path, ident, recorded_line=None):
-    """(lineno, status). One of exact / moved / ambiguous / gone / uncomparable."""
+def _render_kinds(text):
+    """Every AST class name a recorded rendering contains, read EXACTLY rather than matched.
+
+    This is what the length prefixes are FOR. `u:<n>:` and `b:<n>:` say how many characters
+    follow, so a reader skips a payload by counting instead of by looking for a delimiter -- and
+    a string literal containing `Attribute(` cannot be mistaken for an Attribute node. A regular
+    expression over the same text would have no way to tell the two apart, which is the kind of
+    difference that decides a verdict about whether a control still exists.
+    """
+    kinds, i, n = set(), 0, len(text)
+    while i < n:
+        if text.startswith(("u:", "b:"), i):
+            j = text.index(":", i + 2)
+            i = j + 1 + int(text[i + 2:j])
+            continue
+        j = i
+        while j < n and (text[j].isalnum() or text[j] in "_."):
+            j += 1
+        if j > i:
+            if j < n and text[j] == "(" and text[i:i + 1].isupper():
+                kinds.add(text[i:j])
+            i = j
+        else:
+            i += 1
+    return kinds
+
+
+def renderer_proven(items):
+    """The AST node kinds this renderer is SHOWN to reproduce, as a set. Empty means none.
+
+    ⛔⛔ A ROUTINE DOCSTRING EDIT RELABELLED A DELETION AS AN INTERPRETER DIFFERENCE. Delete a
+    watched control with the tag unchanged and the tool is exact:
+
+        quick replay of 26: 25 replayed, 1 unidentifiable
+          mp_metric.py:205   its statement is gone in this tree            exit 1
+
+    Edit one docstring line inside `_render` -- output unchanged, the over-sensitivity this design
+    accepts -- with the same control still deleted:
+
+        quick replay of 26: 26 replayed, 0 unidentifiable
+          ⚠ mp_metric.py:205  recorded under r647...; this interpreter renders ra56...
+          ⚠ Nothing is established about them either way -- re-run reach_controls.py to re-record
+
+    **The operator is told the wrong cause and pointed at a remedy that drops the finding.** The
+    deletion survives the re-record, because re-recording writes down the tree as it now is.
+
+    ⇒ THE DISCRIMINATOR WAS ALREADY ON THE SCREEN, ONE LINE APART: `exact 25, uncomparable 1`. A
+    renderer change fails EVERY record; a deletion fails ONE. This project's own constant-residual
+    rule says the shared factor is the explanation only when it explains all of them -- so if any
+    record resolves against its recorded text, this renderer is demonstrably able to compare, and
+    a record that does not match is GONE rather than uncomparable.
+
+    ⚠️ IT IS EVIDENCE, NOT AN ASSUMPTION. With one record, or with every record failing, the
+    set is empty and `uncomparable` stands -- which is the case it was introduced for.
+
+    ⛔⛔ AND IT RETURNED ONE BOOLEAN FOR THE WHOLE SWEEP, WHICH IS ROUND 9'S FINDING INVERTED.
+    A renderer change confined to ONE NODE KIND is what a grammar revision actually looks like,
+    and against it the sweep answer is wrong in the direction that condemns untouched controls:
+
+        exact 20, gone 6      rendering: rb50c4e392bc7
+        gone         : mp_metric.py:205, replay.py:687, 881, 883, 885, 1156
+        has Attribute: mp_metric.py:205, replay.py:687, 881, 883, 885, 1156   identical: True
+
+    Twenty records happened not to use the changed node kind, so the renderer was "proven" by
+    them, and the six that did use it were reported GONE. Round 9 gated a per-node property
+    whole-record; this applied a whole-sweep proof to a per-node difference.
+
+    ⇒ THE DISCRIMINATOR IS ON THE SCREEN AGAIN, AND IT IS THE SAME ONE. A residual of six that
+    is exactly the set carrying a node kind the twenty do not carry is a fingerprint, not a
+    coincidence -- this project's own constant-residual rule says the shared factor explains the
+    residual only when it explains ALL of it. So the evidence is kept at the granularity it was
+    collected at: a record that matched proves this renderer for the node kinds ITS OWN rendering
+    contains, and nothing beyond them. A record that matches nothing is GONE only if every kind
+    in its recorded text was proven by some record that did match; otherwise the honest answer is
+    that this renderer has not been shown to render that kind, and the record is uncomparable.
+
+    ⚠ It is computed from the RECORDED renders, which the tool already holds, so it costs no
+    new notion of identity and no second route to one -- the same rule at the right granularity.
+    """
+    _proven, _trees = set(), {}
+    for _path, _ident in items:
+        _rr = _ident.get("render")
+        if not _rr:
+            continue
+        if _path not in _trees:
+            try:
+                _trees[_path] = ast.parse(
+                    pathlib.Path(_path).read_text(encoding="utf-8", errors="replace"))
+            except (OSError, SyntaxError):
+                _trees[_path] = None
+        _tree = _trees[_path]
+        if _tree is None:
+            continue
+        _want = _ident.get("qualname", "")
+        _scopes_ = [n for nm, n in _scopes(_tree) if nm == _want] if _want else [_tree]
+        # ⚠ EVERY record is now examined. The old loop returned on the first match, which was
+        # sound for a yes/no answer and is not sound for an answer about which kinds were seen.
+        for _sc in _scopes_:
+            for _s in _statements(_sc):
+                if _render(_s) == _rr:
+                    _proven |= _render_kinds(_rr)
+                    break
+    return _proven
+
+
+def unproven_kinds(ident, proven):
+    """The node kinds in this record's recorded rendering that `proven` does not cover."""
+    return sorted(_render_kinds(ident.get("render") or "") - set(proven or ()))
+
+
+def resolve(path, ident, recorded_line=None, comparable=()):
+    """(lineno, status). One of exact / moved / ambiguous / gone / uncomparable.
+
+    `comparable` is the set of node kinds `renderer_proven()` found this renderer reproducing
+    somewhere in this tree. A record that matches nothing is a statement about the TREE rather
+    than about the renderer only for the kinds that set covers -- see `renderer_proven`, and
+    `unproven_kinds` for the ones it does not.
+    """
     # ⚠️ A DIFFERENT RENDERER IS NOT AUTOMATICALLY AN IMPOSSIBLE COMPARISON. When the tag
     # differs we compare the RECORDED CANONICAL TEXT against what this renderer produces. If they
     # agree on a candidate, the two renderers agree about that node and the record is comparable
@@ -448,7 +725,14 @@ def resolve(path, ident, recorded_line=None):
         # failing is a renderer change, one of them failing is a rewrite. When the tag disagrees
         # AND the recorded text matches nothing, this cannot tell a vanished control from a
         # re-rendered one, and says the second rather than asserting the first.
-        if not _same_renderer:
+        #
+        # ⇒ AND THE EVIDENCE IS READ AT THE GRANULARITY IT WAS COLLECTED AT. A sweep-wide
+        # "the renderer works" let twenty records that never used the changed node kind prove a
+        # renderer for six that did, and the six were condemned. The question is not whether ANY
+        # record matched; it is whether every kind THIS record's rendering contains was
+        # reproduced by a record that did match. A kind nothing proved is a kind about which this
+        # renderer has shown nothing, and a record standing on one is uncomparable.
+        if not _same_renderer and unproven_kinds(ident, comparable):
             return None, UNCOMPARABLE
         return None, GONE
 
@@ -512,6 +796,19 @@ def main():
     print("=" * 78)
     print("  EVERY RECORDED BRANCH, RESOLVED BY AST IDENTITY")
     print("=" * 78)
+    # ⇒ ONE PASS TO ASK WHETHER THIS RENDERER CAN COMPARE AT ALL, then the verdicts. See
+    # `renderer_proven`: the answer is a property of the SWEEP, not of any single record, and
+    # reading it per record is what let one deletion wear a renderer change's clothes.
+    _items = []
+    for _w, _i in sorted(detail.items()):
+        _f, _l = _w.rsplit(":", 1)
+        _id = _i.get("identity") or identify(HERE / _f, int(_l))
+        if _id is not None:
+            _items.append((HERE / _f, _id))
+    _comparable = renderer_proven(_items)
+    if not _comparable and _items and _items[0][1].get("canon") != _canon_tag():
+        print("  %s no record matches its own recorded text under this renderer, so a record that "
+              "does not match says nothing about the tree" % chr(0x26A0))
     for where, info in sorted(detail.items()):
         f, ln = where.rsplit(":", 1)
         ident = info.get("identity") or identify(HERE / f, int(ln))
@@ -519,7 +816,7 @@ def main():
             counts["no-identity"] += 1
             print("  %-22s no statement at that line" % where)
             continue
-        line, status = resolve(HERE / f, ident, recorded_line=int(ln))
+        line, status = resolve(HERE / f, ident, recorded_line=int(ln), comparable=_comparable)
         counts[status] += 1
         print("  %-22s %-10s %s%s" % (where, status,
                                       ident["qualname"] or "(module)",

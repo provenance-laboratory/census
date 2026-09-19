@@ -389,6 +389,16 @@ def quick(led, ctx, cells_by_key):
     by_label = {m[0]: m[1] for m in mutations()}
     real_bytes = R._bytes_for
     lost, unidentifiable, unverifiable, moved, uncomparable = [], [], [], [], []
+    # one pass to establish whether this renderer can compare at all -- see
+    # control_identity.renderer_proven. It is a property of the whole replay, and reading it per
+    # record is what let a single deletion be reported as an interpreter difference.
+    _probe = []
+    for _w, _i in sorted(detail.items()):
+        _f, _l = _w.rsplit(":", 1)
+        _id = _i.get("identity") or _CI.identify(HERE / _f, int(_l))
+        if _id is not None:
+            _probe.append((HERE / _f, _id))
+    _comparable = _CI.renderer_proven(_probe)
     for where, info in sorted(detail.items()):
         f, ln = where.rsplit(":", 1)
         key = (f, int(ln))
@@ -411,11 +421,25 @@ def quick(led, ctx, cells_by_key):
         if _ident is None:
             unidentifiable.append((where, "no statement at that line and no stored identity"))
             continue
-        _line, _status = _CI.resolve(HERE / f, _ident, recorded_line=key[1])
+        # ⇒ THE SWEEP'S EVIDENCE, APPLIED PER RECORD. `_comparable` is computed once, above,
+        # from every record in the replay -- but it is the set of NODE KINDS this renderer was
+        # seen reproducing, not a yes/no. A record that matches nothing is a deletion when every
+        # kind in its own recorded text is in that set, and uncomparable when it is not: a
+        # grammar revision touches one node kind, so the records that use it are exactly the ones
+        # a sweep-wide verdict would condemn on the strength of the records that do not.
+        # Quick mode is the half `control_audit.py` runs, so the discriminator has to be here too
+        # -- a deletion wearing a renderer change's clothes is worth least where it is loudest and
+        # most where the build reads it.
+        _line, _status = _CI.resolve(HERE / f, _ident, recorded_line=key[1],
+                                     comparable=_comparable)
         if _status == _CI.UNCOMPARABLE:
+            _un = _CI.unproven_kinds(_ident, _comparable)
             uncomparable.append(
-                (where, "recorded under %s; this interpreter renders %s"
-                        % (_ident.get("canon") or "an unrecorded rendering", _CI._canon_tag())))
+                (where, "recorded under %s; this interpreter renders %s%s"
+                        % (_ident.get("canon") or "an unrecorded rendering", _CI._canon_tag(),
+                           ("; nothing in this replay reproduced %s, so this renderer is unproven "
+                            "for the node kind(s) this record is made of" % ", ".join(_un))
+                           if _un else "")))
             continue
         if _status in (_CI.AMBIGUOUS, _CI.GONE):
             unidentifiable.append(

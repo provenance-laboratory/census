@@ -636,11 +636,43 @@ def controls(src, path, legacy=False):
 # startup, so putting one on PYTHONPATH traces the whole process tree rather than its root. Each
 # process writes its own file keyed by pid; nothing is merged in memory across a boundary that
 # does not exist.
+#
+# ⛔⛔ AND `sitecustomize` IS A PROCESS-GLOBAL NAME SOMEBODY ELSE MAY ALREADY OWN. A round-11
+# reviewer's environment had one installed globally; Python imports exactly one module of that
+# name, so on their machine the archive's tracer was never installed, `executed_lines()` returned
+# an EMPTY SET, and nothing said so. An empty trace does not mean nothing executed -- it means
+# nothing was measured -- and every line in the corpus would then classify as not having run.
+#
+# ⇒ TWO REPAIRS, AND THE SECOND IS THE ONE THAT MATTERS. This file CHAINS: it loads any
+# pre-existing `sitecustomize` first (with its own directory off the path, so it does not find
+# itself) and then arms the tracer, so it neither shadows the host's hook nor is shadowed by it.
+# And it drops an `armed.<pid>` marker the moment it arms -- so the runner can tell *the tracer
+# ran and saw nothing* from *the tracer never ran*, which is the distinction the empty set
+# destroyed. **An empty result is a measurement only if something measured.**
 SITECUSTOMIZE = r"""
 import atexit, json, os, sys, threading
 
 _DIR = os.environ.get("CENSUS_TRACE_DIR")
 if _DIR:
+    # chain to whatever sitecustomize this environment already had: ours is an addition to the
+    # host's startup, never a replacement for it
+    try:
+        _me = os.path.dirname(os.path.abspath(__file__))
+        _saved = [p for p in sys.path]
+        sys.path[:] = [p for p in sys.path if os.path.abspath(p or ".") != _me]
+        sys.modules.pop("sitecustomize", None)
+        try:
+            import sitecustomize as _host   # noqa: F401
+        except Exception:
+            pass
+        sys.path[:] = _saved
+    except Exception:
+        pass
+    try:
+        with open(os.path.join(_DIR, "armed.%d" % os.getpid()), "w") as _fh:
+            _fh.write(sys.executable)
+    except Exception:
+        pass
     _seen = set()
 
     def _tr(frame, event, arg):
@@ -680,6 +712,101 @@ except SystemExit:
 except Exception:
     pass
 """
+
+
+def measurement_producers():
+    """{module: [artifact, ...]} -- census files naming an artifact the paper build reads.
+
+    ⛔⛔ THE 69 "NOT COLLECTED" ARE NOT ALL UNUSED UTILITIES. Round 11 traced the build
+    dependencies and found that among the 17 files holding them are `build_filter_bound.py`,
+    `negative_search.py`, `stem_equivalence.py`, `recheck.py` and `unread_notes.py` -- and that
+    `build_paper.py` refuses to build without `filter-bound.json`, `negative-search.json`,
+    `stem-equivalence.json`, `recheck-log.json` and `UNREAD-NOTES.json`. **Controls that protect
+    the production of measurements this paper reports are outside the declared audit suite.**
+    That does not make those measurements false; it makes `133/365 watched` not a statement about
+    every control involved in producing them.
+
+    ⚠️ AND THE PAPER NAMED FOUR SUCH TOOLS IN PROSE. Prose is where a list goes to fall out of
+    date -- the same defect as a hand-kept `_IDENTITY_FUNCS`, one artifact over. So the relation
+    is DERIVED: every artifact name the paper build reads, matched against every census module
+    that names it.
+
+    ⚠️ IT OVER-APPROXIMATES ON PURPOSE. A module that only READS an artifact is reported as
+    related to it too, because distinguishing read from write by static analysis is a second
+    guess and the cost of the two errors is not symmetric: naming an extra module invites a look,
+    missing one leaves a producer outside the roster silently. And if the paper build is not
+    beside this deposit, the answer is None -- *not derivable here* -- never an empty map.
+    """
+    # ⚠️ AND THE FIRST CUT NAMED ONE MACHINE'S LAYOUT. `HERE.parent.parent /
+    # "journal-submissions" / "mp-metric"` is the author tree and nothing else, so from an
+    # extracted deposit this derivation would have been unavailable and said so -- which is honest
+    # and useless. The hostile referee flagged it on the run that introduced it: *a tool that only
+    # runs on the author's disk cannot be re-run from the deposit, which is the difference between
+    # a bound and an assertion.*
+    #
+    # ⇒ THE BUILD IS LOOKED FOR, in the places a deposit can actually put it, and its absence is
+    # still `None` -- *not derivable here* -- rather than an empty map.
+    _bp = None
+    # both layouts: `../paper/` is where an extraction puts it, the last is the author tree
+    for _cand in (HERE / "build_paper.py",
+                  HERE.parent / "paper" / "build_paper.py",
+                  HERE.parent / "build_paper.py",
+                  HERE.parent.parent / "journal-submissions" / "mp-metric" / "build_paper.py"):
+        if _cand.is_file():
+            _bp = _cand
+            break
+    if _bp is None:
+        return None
+    try:
+        _src = _bp.read_text(encoding="utf-8", errors="replace")
+    except OSError:                                                       # pragma: no cover
+        return None
+    _arts = set(re.findall(r'CENSUS\s*/\s*"([^"]+)"', _src))
+    _arts |= set(re.findall(r"CENSUS\s*/\s*'([^']+)'", _src))
+    # ⚠ A DIRECTORY IS NOT AN ARTIFACT. The first cut matched `evidence`, `tables` and `.git`
+    # as well, so 31 of 32 modules "produced" something and the field said nothing. An artifact
+    # is a named FILE the build reads.
+    _arts = {a for a in _arts if re.fullmatch(r"[A-Za-z0-9_.-]+[.](json|csv|md|txt)", a)}
+    if not _arts:
+        return None
+    # ⛔⛔ AND THE FIRST CUT SAID "NAMES IT", WHICH FIRED FOR EVERYTHING. 224 of 233 survivors
+    # came back as sitting in a measurement producer, because `cells.json` is read by almost every
+    # module in this folder. **A field that is true of everything distinguishes nothing** -- the
+    # same defect as the sibling paper's 60% table threshold, in the repair written the same day.
+    #
+    # ⇒ TWO DERIVATIONS, BOTH CHECKABLE, AND WHAT NEITHER REACHES IS NAMED.
+    #   (a) THE BUILD SAYS SO. Its refusals name the tool beside the artifact -- *recheck-log.json
+    #       is missing -- run recheck.py before building* -- so the relation is read out of the
+    #       consumer rather than guessed about the producer.
+    #   (b) THE STEMS MATCH. `negative_search.py` -> `negative-search.json`, with `_` and `-`
+    #       normalised and the extension dropped. That is a convention this folder keeps, and it
+    #       is stated here so a reader can see it is a convention and not a proof.
+    # An artifact neither reaches is reported as HAVING NO DERIVABLE PRODUCER, which is a finding
+    # about this derivation and not a claim that nothing produces it.
+    def _stem(s):
+        return s.rsplit(".", 1)[0].lower().replace("-", "_")
+
+    _by_artifact = {}
+    for _a in sorted(_arts):
+        _tools = set()
+        for _m in re.finditer(re.escape(_a), _src):
+            _win = _src[max(0, _m.start() - 200):_m.end() + 400]
+            _tools |= set(re.findall(r"([a-z_][a-z0-9_]*[.]py)", _win))
+        for _p in HERE.glob("*.py"):
+            # the stem, or the stem under a `build_`-style prefix: `build_filter_bound.py`
+            # writes `filter-bound.json`, which the build's own messages do not say
+            if _stem(_p.name) == _stem(_a) or _stem(_p.name).endswith("_" + _stem(_a)):
+                _tools.add(_p.name)
+        _by_artifact[_a] = sorted(_t for _t in _tools if (HERE / _t).is_file())
+
+    out = {}
+    for _a, _tools in _by_artifact.items():
+        for _t in _tools:
+            out.setdefault(_t, []).append(_a)
+    for _t in out:
+        out[_t] = sorted(out[_t])
+    out["_no_derivable_producer"] = sorted(a for a, v in _by_artifact.items() if not v)
+    return out
 
 
 def executed_lines(scripts):
@@ -723,7 +850,19 @@ def executed_lines(scripts):
             seen |= {tuple(x) for x in _j.loads(f.read_text())}
         except (OSError, ValueError):                                    # pragma: no cover
             continue
+    # ⛔ AND THE ABSENCE OF TRACES IS NOT AN EMPTY MEASUREMENT. If no interpreter armed, every
+    # control in the corpus classifies as not having run and the audit reports its most alarming
+    # verdict about all of them, for a reason that has nothing to do with the code. The marker
+    # says whether anything measured; without one this refuses rather than reporting a set.
+    _armed = list(td.glob("armed.*"))
     shutil.rmtree(td, ignore_errors=True)
+    if not _armed:
+        raise SystemExit(
+            "%s the tracer never installed in any of the %d traced process(es), so nothing was "
+            "measured. `sitecustomize` is a process-global name: this environment may already "
+            "have one that Python imports instead, or PYTHONPATH may be filtered. Nothing is "
+            "reported from an empty trace, because an empty trace and a suite that executes "
+            "nothing look identical and are not." % (D, len(scripts)))
     return seen
 
 
@@ -1175,7 +1314,32 @@ def main():
         _hit_by_file.setdefault(_f.rsplit(chr(92), 1)[-1].rsplit("/", 1)[-1], set()).add(_n)
 
     def _scope_of(name, lo):
-        """(lo, hi) of the innermost def/class containing line `lo`, or the whole file."""
+        """(first BODY line, last line) of the innermost scope containing `lo`, or None.
+
+        ⛔⛔ THE DEF LINE IS INSIDE THE SCOPE AND IT RUNS AT IMPORT. This returned
+        `(node.lineno, node.end_lineno)`, and `node.lineno` is the `def` statement -- which
+        executes when Python imports the module, for exactly the reason the FILE test did. So the
+        scope test was satisfied by the same import side effect it was written to eliminate:
+
+            of the 130 NEVER EXECUTES:
+              scope has body lines that ran -- really exercised :  95
+              ONLY the `def` header ran                         :  25
+            apply_negative_search.py 115 in main()   executed lines in scope: [111]   <- def main():
+
+        **Twenty of the 25 are in this file**: `suite_passes()`, `_round()`, `_worker_tree()`,
+        `_deposit_generated()`, `main()` -- the audit's own controls, in functions no suite item
+        calls, reported as *no input the suite can build reaches the line at all*. The record did
+        not move between rounds 10 and 11 in any field, which is what a repair that changed the
+        boundary and not the mechanism looks like.
+
+        ⇒ THE SCOPE IS ITS BODY. The header, its decorators and its default-argument
+        expressions all evaluate at definition time and say nothing about the body being entered.
+        The span therefore starts at the first line of the first body statement.
+
+        ⇒ AND A LAMBDA IS A SCOPE. `def`/`async def`/`class` were recognised and `lambda` was
+        not, so a control inside one was attributed to module scope -- no instance in this corpus
+        today, which is why it is worth fixing now rather than when there is one.
+        """
         _src = _srcs.get(name)
         if not _src:
             return None
@@ -1186,9 +1350,17 @@ def main():
         _best = None
         for _nd in ast.walk(_tree):
             if isinstance(_nd, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                _a, _b = _nd.lineno, (_nd.end_lineno or _nd.lineno)
-                if _a <= lo <= _b and (_best is None or (_b - _a) < (_best[1] - _best[0])):
-                    _best = (_a, _b)
+                _body = getattr(_nd, "body", None) or []
+                if not _body:                                            # pragma: no cover
+                    continue
+                _a = _body[0].lineno
+            elif isinstance(_nd, ast.Lambda):
+                _a = getattr(_nd.body, "lineno", _nd.lineno)
+            else:
+                continue
+            _b = _nd.end_lineno or _nd.lineno
+            if _a <= lo <= _b and (_best is None or (_b - _a) < (_best[1] - _best[0])):
+                _best = (_a, _b)
         return _best
 
     _scope_cache = {}
@@ -1209,6 +1381,7 @@ def main():
         _a, _b = _sc
         return "NEVER EXECUTES" if any(_a <= n <= _b for n in _lines) else "NOT COLLECTED"
 
+    _producers = measurement_producers()
     by_module = {}
     for name, lo, kind, still in sorted(_results, key=lambda r: (r[0], r[1])):
         _m = by_module.setdefault(name, {"sites": 0, "watched": 0, "redundant": 0,
@@ -1245,13 +1418,40 @@ def main():
         print("      %d REDUNDANT      the line runs, and deleting it changes no verdict --"
               % len(_red))
         print("                       another control rejects the same input first")
-        print("      %d NEVER EXECUTES no input the suite can build reaches the line at all."
+        print("      %d DID NOT RUN     the line did not execute during the declared suite run,"
               % len(_never))
-        print("                       This is the half worth reading: either the branch is")
-        print("                       unreachable given the ledger, or nothing fixtures it")
+        print("                       although its enclosing scope did. That is a MEASUREMENT,")
+        print("                       not a proof of unreachability: entering a function says")
+        print("                       the function was called, never that no input could reach")
+        print("                       this branch of it. m_range() runs and several of its")
+        print("                       rejection branches do not. Read it as the half worth")
+        print("                       reading -- unreachable given the ledger, or unfixtured --")
+        print("                       and not as a claim this tracer is able to make")
+        _prod = {k: v for k, v in (_producers or {}).items() if not k.startswith("_")}
+        _none = (_producers or {}).get("_no_derivable_producer") or []
+        _in_prod = sorted({n for n, _l, _k, _s, _c in unwatched if _prod.get(n)})
+        if _none:
+            print()
+            print("      %s %d artifact(s) the paper build reads have NO derivable producer "
+                  "(%s); a survivor in whatever writes them is not reported below"
+                  % (chr(0x26A0), len(_none), ", ".join(_none[:4])))
+        if _producers is None:
+            print()
+            print("      %s the paper build is not beside this deposit, so which of these sit in "
+                  "measurement-producing modules could not be derived here" % chr(0x26A0))
+        elif _in_prod:
+            print()
+            print("      %s %d of these sit in modules that name an artifact the paper build "
+                  "reads: %s." % (chr(0x26A0), sum(1 for u in unwatched if _prod.get(u[0])),
+                                  ", ".join(_in_prod[:6])))
+            print("        A survivor there is a control protecting the production of a number")
+            print("        this paper reports, so the watched fraction below is not coverage of")
+            print("        every control involved in producing the results.")
         for name, lo, kind, line, cls in unwatched:
             print()
-            print("      %-14s %s:%d  (%s)" % (cls, name, lo, kind))
+            print("      %-14s %s:%d  (%s)%s"
+                  % (cls, name, lo, kind,
+                     ("   produces: " + ", ".join(_prod[name][:3])) if _prod.get(name) else ""))
             print("        %s" % line)
     # ⛔ THE RESULT IS RECORDED, because the manuscript must cite it and this takes ten
     # minutes -- and a figure a reader cannot find in the paper is a figure the paper is hiding,
@@ -1406,14 +1606,31 @@ def main():
            # ⇒ The full line is stored. Truncation is for PRINTING and happens where printing
            # happens. Section 8's seven "no longer in the file at all" controls were never gone:
            # they are the ones longer than the cap.
-           "survivors": [{"file": n, "line": lo, "kind": k, "source": s, "class": cls}
+           # ⇒ AND EACH SURVIVOR CARRIES WHETHER IT SITS IN A MEASUREMENT PRODUCER, derived
+           # rather than described. See `measurement_producers()`: `null` means the paper build
+           # was not beside this deposit and the relation could not be derived -- which is a
+           # different thing from "this module produces nothing".
+           "measurement_producers": _producers,
+           "survivors": [{"file": n, "line": lo, "kind": k, "source": s, "class": cls,
+                          "measurement_role": (None if _producers is None else
+                                               (_producers.get(n) or []))}
                          for n, lo, k, s, cls in unwatched],
            "_dispositions": {
                "REDUNDANT": ("the line executes during the suite and deleting it changes no "
                              "verdict: another control rejects the same input first"),
-               "NEVER EXECUTES": ("no input the suite can build reaches the line. Either the "
-                                  "branch is unreachable given this ledger, or nothing fixtures "
-                                  "the state it guards -- and those are still two things")}}
+               # ⛔ THIS SAID "no input the suite can build reaches the line", and the tracer
+               # measures whether the line EXECUTED during one declared run. Those are different
+               # claims and a round-11 reviewer named the counter-example in the archive:
+               # `m_range()` is executed while several of its rejection branches are not.
+               # Entering a function is evidence that the function was called; it is not
+               # evidence that the branch is intrinsically unreachable. The wording is now what
+               # the instrument establishes, and the two explanations it CANNOT separate are
+               # still listed rather than collapsed into one.
+               "NEVER EXECUTES": ("the line did not execute during the declared suite run, "
+                                  "although its enclosing scope did. This is a measurement of "
+                                  "one run, NOT a proof of unreachability: either the branch is "
+                                  "unreachable given this ledger, or nothing fixtures the state "
+                                  "it guards, and nothing here separates those two")}}
     # ⛔ THE FINGERPRINT BINDS THE INPUTS AND NOTHING BOUND THE CLAIMED OUTPUT. A round-20
     # reviewer ran this from a clean extraction and got a different classification set than the
     # deposited record carried, with the fingerprints agreeing -- because the record had been
