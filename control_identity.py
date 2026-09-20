@@ -146,14 +146,17 @@ UNCOMPARABLE = "uncomparable"
 # what is in front of them here too. So the count stays and the words are corrected, and both
 # counts now say WHICH characters they count instead of leaving a reader to assume.
 SPEC = (
-    "canonical-scalar-encoding/3 "
+    "canonical-scalar-encoding/4 "
     "None=None True=True False=False "
     "int=decimal float=repr-of-float-with-explicit-nan-inf "
     "str=u:<escaped-char-count>:<python-unicode_escape-of-the-text> "
     "bytes=b:<hex-char-count>:<lowercase-hex> ellipsis=... complex=c:<real>:<imag> "
     "AST=Name(field=value,...) list=[a,b,c] "
     "-- every variable-length payload is length-prefixed by the characters it WRITES, so no "
-    "payload can imitate a delimiter and a reader can skip one without decoding it"
+    "payload can imitate a delimiter and a reader can skip one without decoding it; "
+    "the renderer tag covers one value per _scalar branch, one snippet per parser feature, and "
+    "the ast.parse signature, and a record is comparable only for the FEATURES its own text uses "
+    "(node kinds AND scalar forms)"
 )
 
 
@@ -293,11 +296,84 @@ def _grammar_fingerprint():
 # every type `_scalar` handles is decided by `_scalar`'s own text, so adding one moves the source
 # hash and the tag with it. A probe that falls behind `_scalar` costs sensitivity to a patched
 # builtin; a canary list that fell behind `ast` cost a wrong verdict.
+# ⛔⛔ ROUND 13: FOUR SNIPPETS EXERCISED FOUR TYPES AND NOT THE BRANCHES BEHIND THEM.
+# `float('nan')` is a Call node, not a float constant, so `_scalar` never saw a nan; three of
+# its four float branches were unreached by the whole probe set. The string probe contained
+# nothing `unicode_escape` changes, so a patched codec that differed only in how it escapes moved
+# 222 constants in this corpus and no probe output. A reviewer replaced the module's `float` with
+# a proxy that behaved for the probed values and differently for 2.5: tag unchanged, rendering
+# changed. Sampling by TYPE where the encoder branches by VALUE is the canary defect with the
+# word changed.
+#
+# ⇒ ONE VALUE PER BRANCH, RENDERED AS A CONSTANT NODE, and the branch list is checked against
+# `_scalar`'s own source: every `isinstance(n, T)` and `n is X` test in `_scalar` must have a
+# probe value of that type, or the tag records `<probe-uncovered:T>` and every comparison against
+# it fails. A value-dependent tamper WITHIN a branch that spares every probed value is not caught
+# by a probe and cannot be; that is what the per-record feature proof (`renderer_proven`) is for,
+# and the docstring there says so rather than letting the probes claim it.
 _ENCODER_PROBES = (
-    "s = 'a,b(c)[d]=e'",           # the delimiter set, through the string encoder
-    "t = b'' + b'\\xff'",             # the bytes encoder
-    "n = [1.5, float('nan'), None, True, ...]",   # float, nan, None, bool, Ellipsis
-    "z = 1 + 2j",                                 # complex
+    None, True, False,
+    0, -7, 2 ** 70,                                        # int: zero, negative, beyond a word
+    1.5, -0.0, 1e300, 5e-324,                               # float.__repr__ on ordinary and edge values
+    float("nan"), float("inf"), float("-inf"),              # the three special-value branches
+    complex(1, 2), complex(float("nan"), float("-inf")),   # complex, recursing into the float branches
+    "", "a,b(c)[d]=e",                                      # empty; the delimiter set
+    "quote ' and \" both", "back" + chr(92) + "slash", "new" + chr(10) + "line",
+    "caf" + chr(233), chr(0x1F600), chr(0),                 # what unicode_escape actually escapes
+    b"", bytes([0xff, 0x00]) + b"x",
+    Ellipsis,
+)
+
+
+def _probe_coverage():
+    """The types `_scalar` dispatches on that no probe exercises. Empty is the only good answer."""
+    import inspect
+    try:
+        _t = ast.parse(inspect.getsource(_scalar))
+    except (OSError, TypeError, SyntaxError):                             # pragma: no cover
+        return ["<_scalar source unavailable>"]
+    _want = set()
+    for _n in ast.walk(_t):
+        if (isinstance(_n, ast.Call) and isinstance(_n.func, ast.Name) and _n.func.id == "isinstance"
+                and len(_n.args) == 2 and isinstance(_n.args[1], ast.Name)):
+            _want.add(_n.args[1].id)
+        if isinstance(_n, ast.Compare) and any(isinstance(op, ast.Is) for op in _n.ops):
+            for _c in _n.comparators:
+                if isinstance(_c, ast.Constant):
+                    _want.add(type(_c.value).__name__)
+    _have = {type(v).__name__ for v in _ENCODER_PROBES}
+    _have |= {"NoneType"} if None in _ENCODER_PROBES else set()
+    # `n is Ellipsis` compares against a Name, and `bool` is reached through True/False
+    if Ellipsis in _ENCODER_PROBES:
+        _have.add("ellipsis")
+    _missing = sorted(t for t in _want if t not in _have and t not in ("ellipsis",))
+    _floats = [v for v in _ENCODER_PROBES if isinstance(v, float)]
+    for _need, _test in (("nan", lambda v: v != v), ("inf", lambda v: v == float("inf")),
+                         ("-inf", lambda v: v == float("-inf"))):
+        if not any(_test(v) for v in _floats):
+            _missing.append("float:" + _need)
+    if not any(isinstance(v, str) and v.encode("unicode_escape").decode("ascii") != v
+               for v in _ENCODER_PROBES):
+        _missing.append("str:escaped")
+    return _missing
+
+
+# ⚠️ ROUND 13, PUSH 3: THE FINGERPRINT COVERS THE GRAMMAR'S CLASSES, AND `_render` DEPENDS ON
+# THE GRAMMAR'S INSTANCES. `ast.parse(type_comments=True)` populates a field the default parse
+# leaves None -- same classes, same `_fields`, different hash. PEP 701 changed the tree
+# f-strings parse to without touching JoinedStr or FormattedValue. The parse can move under a
+# fixed grammar, and `ast.parse`'s own signature is the enumeration of how far.
+# ⇒ THE TAG CARRIES THAT SIGNATURE AND THE RENDERING OF ONE SNIPPET PER PARSER FEATURE, parsed
+# exactly as the pipeline parses -- a parser that populates a field, or builds a different tree
+# for the same text, moves the tag. It is a sample of the parser as the probes are a sample of
+# the encoder, and it is stated as one.
+_PARSER_PROBES = (
+    "x = []  # type: list",                     # type comments: populated only if asked for
+    "f'{a!r:>{w}} {b}'",                        # f-strings: PEP 701 reshaped these in 3.12
+    "(y := 3)",                                 # walrus
+    "def g(a, /, b, *, c): pass",               # positional-only and keyword-only markers
+    "async def h():\n    return [i async for i in k]",
+    "match m:\n    case [1, *rest]: pass",
 )
 
 
@@ -322,13 +398,25 @@ def _render_source():
     """
     import inspect
     parts = [SPEC, _grammar_fingerprint()]
-    # what the renderer DOES, on fixed inputs, under this interpreter -- see `_ENCODER_PROBES`
-    for _c in _ENCODER_PROBES:
+    # what the renderer DOES, one value per encoder branch -- see `_ENCODER_PROBES`
+    for _v in _ENCODER_PROBES:
         try:
-            parts.append(_render(ast.parse(_c)))
+            parts.append(_render(ast.Constant(value=_v)))
         except Exception as _e:                                          # noqa: BLE001
             # a renderer that cannot render its own probe is not this renderer
             parts.append("<probe-failed:%s:%s>" % (type(_e).__name__, _e))
+    for _t in _probe_coverage():
+        parts.append("<probe-uncovered:%s>" % _t)
+    # what the PARSER does, one snippet per feature, and how far its signature lets it move
+    try:
+        parts.append(str(inspect.signature(ast.parse)))
+    except (TypeError, ValueError):                                       # pragma: no cover
+        parts.append("<parse-signature-unavailable>")
+    for _c in _PARSER_PROBES:
+        try:
+            parts.append(_render(ast.parse(_c)))
+        except Exception as _e:                                          # noqa: BLE001
+            parts.append("<parser-probe-failed:%s:%s>" % (type(_e).__name__, _e))
     _names = _identity_closure()
     if _names is None:                                                    # pragma: no cover
         parts.append("<closure-unavailable>")
@@ -544,23 +632,93 @@ def _render_kinds(text):
     a string literal containing `Attribute(` cannot be mistaken for an Attribute node. A regular
     expression over the same text would have no way to tell the two apart, which is the kind of
     difference that decides a verdict about whether a control still exists.
+
+    ⛔ ROUND 13: THIS ASSUMED FOREIGN TEXT FOLLOWED ITS OWN GRAMMAR. A SPEC/1 record -- an
+    unprefixed `u:` payload -- raised `ValueError` out of the first declared command, in the one
+    branch reached because the renderer is known to differ. A text this reader cannot parse is
+    the answer, not an exception: it returns None, and the caller treats None as uncomparable.
     """
-    kinds, i, n = set(), 0, len(text)
-    while i < n:
-        if text.startswith(("u:", "b:"), i):
-            j = text.index(":", i + 2)
-            i = j + 1 + int(text[i + 2:j])
-            continue
-        j = i
-        while j < n and (text[j].isalnum() or text[j] in "_."):
-            j += 1
-        if j > i:
-            if j < n and text[j] == "(" and text[i:i + 1].isupper():
-                kinds.add(text[i:j])
-            i = j
-        else:
-            i += 1
-    return kinds
+    return None if _render_features(text) is None else {f for f in _render_features(text)
+                                                          if not f.startswith("scalar:")}
+
+
+def _render_features(text):
+    """The FEATURES a recorded rendering exercises: node kinds AND scalar forms. None if unreadable.
+
+    ⛔⛔ ROUND 13: PROOF BY NODE KIND WAS STILL TOO COARSE, ONE LEVEL DOWN FROM ROUND 12. A
+    rendering is kind structure plus scalar encoding, and the second half had no representation
+    in the proven set. Change how quotes are escaped inside strings: the one record whose
+    constant contains a quote is `gone` -- *no statement of this shape remains* -- while its
+    kinds (Expr, Call, Attribute, Name, Load, Constant, Return) are all proven by the other 25.
+    The int-encoder version was caught by luck: the four records with int constants were the
+    four with Slice and Subscript. Change the correlation and the guard is gone.
+
+    ⇒ THE UNIT OF PROOF IS THE FEATURE SET A RENDERING CAN DIFFER IN: {node kinds} ∪ {scalar
+    forms exercised}, both computable from the recorded text. A record that matched proves the
+    renderer for exactly the features its own text contains; a record that matches nothing is
+    GONE only if every feature in its text was proven by some record that did match. Still a
+    sample of the encoding -- a value-dependent change that spares every recorded value is
+    invisible to any proof over recorded text -- but a sample of the WHOLE encoding rather than
+    half of it, and stated as one.
+
+    Scalar forms: scalar:None/True/False/Ellipsis; scalar:int, scalar:int:neg; scalar:float,
+    scalar:float:nan|inf|exp; scalar:str, scalar:str:empty, scalar:str:escaped (a backslash in
+    the escaped payload), scalar:str:quote; scalar:bytes, scalar:bytes:empty; scalar:complex.
+    """
+    feats, i, n = set(), 0, len(text)
+    try:
+        while i < n:
+            if text.startswith(("u:", "b:"), i) and (i == 0 or not (text[i - 1].isalnum()
+                                                                     or text[i - 1] in "_.")):
+                j = text.index(":", i + 2)
+                cnt = int(text[i + 2:j])
+                payload = text[j + 1:j + 1 + cnt]
+                if len(payload) != cnt:
+                    return None
+                if text[i] == "u":
+                    feats.add("scalar:str")
+                    if not payload:
+                        feats.add("scalar:str:empty")
+                    if chr(92) in payload:
+                        feats.add("scalar:str:escaped")
+                    if "'" in payload or '"' in payload:
+                        feats.add("scalar:str:quote")
+                else:
+                    feats.add("scalar:bytes")
+                    if not payload:
+                        feats.add("scalar:bytes:empty")
+                i = j + 1 + cnt
+                continue
+            if text.startswith("c:", i) and (i == 0 or text[i - 1] in "=,[("):
+                feats.add("scalar:complex")
+                i += 2
+                continue
+            j = i
+            while j < n and (text[j].isalnum() or text[j] in "_.+-"):
+                j += 1
+            if j > i:
+                tok = text[i:j]
+                if j < n and text[j] == "(" and tok[:1].isupper():
+                    feats.add(tok)
+                elif tok in ("None", "True", "False", "..."):
+                    feats.add("scalar:" + tok if tok != "..." else "scalar:Ellipsis")
+                elif tok in ("nan", "inf", "-inf"):
+                    feats.add("scalar:float")
+                    feats.add("scalar:float:" + tok.lstrip("-"))
+                elif tok.lstrip("-").isdigit():
+                    feats.add("scalar:int")
+                    if tok.startswith("-"):
+                        feats.add("scalar:int:neg")
+                elif tok.lstrip("-").replace(".", "", 1).replace("e", "", 1).replace("-", "", 1).isdigit() and ("." in tok or "e" in tok):
+                    feats.add("scalar:float")
+                    if "e" in tok:
+                        feats.add("scalar:float:exp")
+                i = j
+            else:
+                i += 1
+    except (ValueError, IndexError):
+        return None
+    return feats
 
 
 def renderer_proven(items):
@@ -636,14 +794,21 @@ def renderer_proven(items):
         for _sc in _scopes_:
             for _s in _statements(_sc):
                 if _render(_s) == _rr:
-                    _proven |= _render_kinds(_rr)
+                    _f = _render_features(_rr)
+                    if _f:
+                        _proven |= _f
                     break
     return _proven
 
 
 def unproven_kinds(ident, proven):
-    """The node kinds in this record's recorded rendering that `proven` does not cover."""
-    return sorted(_render_kinds(ident.get("render") or "") - set(proven or ()))
+    """The FEATURES in this record's recorded rendering that `proven` does not cover -- node
+    kinds and scalar forms alike (the name is kept for its callers). A rendering this reader
+    cannot parse is unproven in its entirety: `["<unreadable rendering>"]`."""
+    _f = _render_features(ident.get("render") or "")
+    if _f is None:
+        return ["<unreadable rendering>"]
+    return sorted(_f - set(proven or ()))
 
 
 def resolve(path, ident, recorded_line=None, comparable=()):

@@ -11,8 +11,8 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "ea3d8f7f00662e07dc89b211f9b155d62d4547469875a3add9c240ac03f60f0b",
-    "control_audit.py": "b925a0f7df00f51ffc5efcb7c53d3dae9a665f7b48a8cd590b98a27c046a4c1a",
-    "control_identity.py": "0d2b11ed6bbca33010154733301c486866ae7e684379bd93806b85d148dd0812",
+    "control_audit.py": "00942d47abbd63d4614ff59d58a03ae1f6fe878c18728fa9df324b14dc1182a3",
+    "control_identity.py": "b4f10bb5eaf315ebbe0ee526ff307f3319bb3bc69eec510e29eeb553f51e7503",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -61,8 +61,8 @@
       "test_determination.py"
     ]
   ],
-  "source_fingerprint": "5990c8301172d68a",
-  "inputs_fingerprint": "3823940d9f9047be",
+  "source_fingerprint": "e2613ab04624d4b6",
+  "inputs_fingerprint": "a5f3b3933e915c04",
   "inputs_manifest": {
     ".gitattributes": "852c5fc63199b92d7be8f8853c209345cad1f28c47322d5ab4d060cd360b84bc",
     ".gitignore": "ac1291a6a68853c2841d9b613a0208a76ce2de87ac08f7e2df8af23a5cbebaff",
@@ -80,8 +80,8 @@
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "cells.json": "9b40e3482e0ea976331e3a2808b2fb7cd3e4eacb8545d8924ca2cdc5e27580ab",
     "check_facts.py": "ea3d8f7f00662e07dc89b211f9b155d62d4547469875a3add9c240ac03f60f0b",
-    "control_audit.py": "b925a0f7df00f51ffc5efcb7c53d3dae9a665f7b48a8cd590b98a27c046a4c1a",
-    "control_identity.py": "0d2b11ed6bbca33010154733301c486866ae7e684379bd93806b85d148dd0812",
+    "control_audit.py": "00942d47abbd63d4614ff59d58a03ae1f6fe878c18728fa9df324b14dc1182a3",
+    "control_identity.py": "b4f10bb5eaf315ebbe0ee526ff307f3319bb3bc69eec510e29eeb553f51e7503",
     "CTRL.log": "b3f69d68c88be621de3ab5d7564ee9e23d9c4b8b0a6a786b607555524df86c16",
     "evidence/00d7d865dc8bf5de4a4b61adfb14060a6165aa95f874e8ab33a6b104a310f3e3.gz": "ce98bf5ff84ee65290e130844371d2d05cad0b5c8698021308c3d0e1b70e8b6a",
     "evidence/016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163.gz": "c90466a63aaceabd56e5170bfce44d4ab6ae799d2e358f805429b42a44635aac",
@@ -506,7 +506,7 @@
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
     "probes/hf_probe-2026-08-29.json": "343314224e782bc4ddc85e1872cf490651cc51b61f1459d512b9758d4a5d38ec",
     "RC.log": "52a2618baa5559e3478ffbb2fb8ab40befecf88ff42d4444a5f3e2a1ea4a6e35",
-    "REACH-CONTROLS.json": "b6332237d03a1acc2048ee5cd5341a74b405907181f6811013b689e9d7d5cb49",
+    "REACH-CONTROLS.json": "6787c7fa8b34b179e60e313c32899a05409ba6d8cf383587258a53ad3d230330",
     "reach_controls.py": "b41b94f4cd38c8a98f7264a7d7b8d606dc2abb47b88478e839192ec5ef3ee545",
     "README.md": "a79290fbf84e5d934de0042763506726922bd1f2a70e405080ad6cee732d2f84",
     "recheck-log.json": "e3b48062c0f086a7134874e73c39c5b014a49aeff21dbafd070dbc3f05617a5d",
@@ -1016,6 +1016,17 @@
       "when": "2026-09-19T18:00:11Z",
       "source_fingerprint": "5990c8301172d68a",
       "inputs_fingerprint": "3823940d9f9047be"
+    },
+    {
+      "run": 26,
+      "round": 23,
+      "controls_total": 366,
+      "watched": 107,
+      "never_executes": 116,
+      "modules": 32,
+      "when": "2026-09-20T12:35:40Z",
+      "source_fingerprint": "e2613ab04624d4b6",
+      "inputs_fingerprint": "a5f3b3933e915c04"
     }
   ],
   "history_anomalies": [],
@@ -1069,59 +1080,7 @@
   "redundant": 34,
   "never_executes": 116,
   "not_collected": 109,
-  "measurement_producers": {
-    "control_audit.py": [
-      "CONTROL-AUDIT-without-reach.json",
-      "CONTROL-AUDIT.json"
-    ],
-    "reach_controls.py": [
-      "CONTROL-AUDIT.json",
-      "REACH-CONTROLS.json"
-    ],
-    "sweep.py": [
-      "CONTROL-AUDIT.json"
-    ],
-    "test_executors.py": [
-      "CONTROL-AUDIT.json"
-    ],
-    "unread_notes.py": [
-      "UNREAD-NOTES.json"
-    ],
-    "probe_signatures.py": [
-      "axis14-signature-probe.json"
-    ],
-    "check_facts.py": [
-      "facts.json"
-    ],
-    "build_filter_bound.py": [
-      "filter-bound.json"
-    ],
-    "filter_categories.py": [
-      "filter-bound.json"
-    ],
-    "filter_diff.py": [
-      "filter-bound.json"
-    ],
-    "apply_negative_search.py": [
-      "negative-search.json"
-    ],
-    "archive_negative_search.py": [
-      "negative-search.json"
-    ],
-    "negative_search.py": [
-      "negative-search.json"
-    ],
-    "recheck.py": [
-      "recheck-log.json"
-    ],
-    "stem_equivalence.py": [
-      "stem-equivalence.json"
-    ],
-    "_no_derivable_producer": [
-      "cells.json",
-      "sweep_control.json"
-    ]
-  },
+  "measurement_producers": null,
   "survivors": [
     {
       "file": "add_evidence.py",
@@ -1129,7 +1088,7 @@
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "add_evidence.py",
@@ -1137,7 +1096,7 @@
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "add_evidence.py",
@@ -1145,7 +1104,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if bad else 0",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "add_evidence.py",
@@ -1153,7 +1112,7 @@
       "kind": "refuses with a status code",
       "source": "return 2",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "add_evidence.py",
@@ -1161,7 +1120,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "add_evidence.py",
@@ -1169,7 +1128,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "apply_negative_search.py",
@@ -1177,9 +1136,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "apply_negative_search.py",
@@ -1187,9 +1144,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "apply_pythia_addresses.py",
@@ -1197,7 +1152,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"%s could not retrieve %s -- %s\" % (D, url, why))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "apply_pythia_addresses.py",
@@ -1205,7 +1160,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"%s %s is not in the enumeration; the revision moved\" % (D, SHARD))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "apply_pythia_addresses.py",
@@ -1213,7 +1168,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"%s the retrieved bytes are not a token stream under this vocabulary; \"",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "apply_pythia_addresses.py",
@@ -1221,7 +1176,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"%s the width does not discriminate\" % D)",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_evidence.py",
@@ -1229,7 +1184,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s: not in the manifest at all\" % url)",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_evidence.py",
@@ -1237,7 +1192,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s: manifest %s, ledger %s\" % (url, m[\"sha256\"][:12], rec[\"sha256\"][:12]))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_evidence.py",
@@ -1245,7 +1200,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s: manifest says stored, %s is missing\" % (url, blob.name))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_evidence.py",
@@ -1253,7 +1208,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s: STORED BYTES HASH TO %s, ledger says %s -- the archive does not \"",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_evidence.py",
@@ -1261,7 +1216,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if bad else 0",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_evidence.py",
@@ -1269,7 +1224,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if bad else 0",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_filter_probe.py",
@@ -1277,7 +1232,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" cannot identify the subject label for %s from %r\" % (sub, found))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_filter_probe.py",
@@ -1285,7 +1240,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s start=%d is not archived\" % (sub, term, start))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_filter_probe.py",
@@ -1293,7 +1248,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s start=%d does not hash to its name\" % (sub, term, start))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_filter_probe.py",
@@ -1301,7 +1256,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s: %s\" % (sub, term, str(e)[:50]))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_filter_probe.py",
@@ -1309,7 +1264,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s: %d entries archived, header says %d\" % (sub, term, got, total))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_filter_probe.py",
@@ -1317,7 +1272,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "archive_negative_search.py",
@@ -1325,9 +1280,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s: stored bytes do not hash to the manifest digest\" % (sub, term))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "archive_negative_search.py",
@@ -1335,9 +1288,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s: not archived, and --verify fetches nothing\" % (sub, term))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "archive_negative_search.py",
@@ -1345,9 +1296,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/%s: %s\" % (sub, term, str(e)[:60]))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "archive_negative_search.py",
@@ -1355,9 +1304,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "archive_negative_search.py",
@@ -1365,9 +1312,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "axes.py",
@@ -1375,7 +1320,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"no method is registered for axis %d at all\" % axis_id",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "axes.py",
@@ -1383,7 +1328,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"unclassified method(s) %s -- classify them before relying on a bar\" % unknown",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "bind_probe_evidence.py",
@@ -1391,7 +1336,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "bind_probe_evidence.py",
@@ -1399,7 +1344,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "build_filter_bound.py",
@@ -1407,9 +1352,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "filter-bound.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "build_filter_bound.py",
@@ -1417,9 +1360,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "filter-bound.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "check_facts.py",
@@ -1427,9 +1368,7 @@
       "kind": "reports a defect",
       "source": "bad.append(name)",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "facts.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "check_facts.py",
@@ -1437,9 +1376,7 @@
       "kind": "reports a defect",
       "source": "bad.append(name)",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "facts.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "check_facts.py",
@@ -1447,9 +1384,7 @@
       "kind": "reports a defect",
       "source": "bad.append(name)",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "facts.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "check_facts.py",
@@ -1457,9 +1392,7 @@
       "kind": "reports a defect",
       "source": "bad.append(name)",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "facts.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "check_facts.py",
@@ -1467,9 +1400,7 @@
       "kind": "reports a defect",
       "source": "bad.append(name)",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "facts.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "check_facts.py",
@@ -1477,9 +1408,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if bad else 0",
       "class": "REDUNDANT",
-      "measurement_role": [
-        "facts.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
@@ -1487,246 +1416,183 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 860,
+      "line": 865,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 906,
+      "line": 911,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 989,
+      "line": 994,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 997,
+      "line": 1002,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1003,
+      "line": 1008,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1024,
+      "line": 1029,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND is missing, so this run cannot say which round it \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1030,
+      "line": 1035,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND does not hold an integer.\")",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1160,
+      "line": 1165,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1169,
+      "line": 1174,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1194,
+      "line": 1199,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1666,
+      "line": 1671,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1674,
+      "line": 1679,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1724,
+      "line": 1729,
       "kind": "reports a defect",
       "source": "drift.append(",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
-    },
-    {
-      "file": "control_audit.py",
-      "line": 1739,
-      "kind": "reports a defect",
-      "source": "drift.append(\"history has %d recorded row(s) and this run produces %d -- append-only \"",
-      "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
       "line": 1744,
       "kind": "reports a defect",
-      "source": "drift.append(\"history row %d differs from the recorded one; append-only means \"",
+      "source": "drift.append(\"history has %d recorded row(s) and this run produces %d -- append-only \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1753,
+      "line": 1749,
+      "kind": "reports a defect",
+      "source": "drift.append(\"history row %d differs from the recorded one; append-only means \"",
+      "class": "NOT COLLECTED",
+      "measurement_role": null
+    },
+    {
+      "file": "control_audit.py",
+      "line": 1758,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1757,
+      "line": 1762,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1765,
+      "line": 1770,
       "kind": "reports a defect",
       "source": "drift.append(\"suite: the record was measured over %d item(s) and this run used %d \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1771,
+      "line": 1776,
       "kind": "reports a defect",
       "source": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_audit.py",
-      "line": 1790,
+      "line": 1795,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT-without-reach.json",
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "control_identity.py",
-      "line": 792,
+      "line": 957,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"no REACH-CONTROLS.json here\")",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "control_identity.py",
-      "line": 846,
+      "line": 1011,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "fetch_artifact.py",
@@ -1734,7 +1600,7 @@
       "kind": "reports a defect",
       "source": "refused += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "fetch_artifact.py",
@@ -1742,7 +1608,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(1 if refused else 0)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "filter_categories.py",
@@ -1750,9 +1616,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(chr(0x26D4) + \" an archived category response does not hash to its \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "filter-bound.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "filter_categories.py",
@@ -1760,9 +1624,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(chr(0x26D4) + \" a category lookup is not archived and --offline was \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "filter-bound.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "filter_diff.py",
@@ -1770,9 +1632,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"cannot identify the subject label for %s from %r\" % (k, found))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "filter-bound.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "filter_diff.py",
@@ -1780,9 +1640,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" %s is not in the archive and --offline was given. Run \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "filter-bound.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1790,7 +1648,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1798,7 +1656,7 @@
       "kind": "reports a defect",
       "source": "d.append(",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1806,7 +1664,7 @@
       "kind": "reports a defect",
       "source": "d.append(",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1814,7 +1672,7 @@
       "kind": "reports a defect",
       "source": "d.append(",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1822,7 +1680,7 @@
       "kind": "reports a defect",
       "source": "d.append(\"the ledger's as_of is %r, which is not an ISO date\" % (_as,))",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1830,7 +1688,7 @@
       "kind": "reports a defect",
       "source": "d.append(\"%s/axis%s: as_of is %r, which is not an ISO date\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1838,7 +1696,7 @@
       "kind": "reports a defect",
       "source": "d.append(f\"{where}: check.method {meth!r} is registered in axes.CHECK_METHODS \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1846,7 +1704,7 @@
       "kind": "reports a defect",
       "source": "d.append(f\"{where}: bound.method {meth!r} requires `{_f}`; without it the \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1854,7 +1712,7 @@
       "kind": "reports a defect",
       "source": "d.append(f\"{where}: bound still carries the old flat `searched` list. Split it \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1862,7 +1720,7 @@
       "kind": "reports a defect",
       "source": "d.append(f\"{where}: bound with NO evidence record. The bytes searched must be \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1870,7 +1728,7 @@
       "kind": "reports a defect",
       "source": "d.append(f\"{c['subject']}/axis{c['axis']}: scored, and its subject declares no \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1878,7 +1736,7 @@
       "kind": "reports a defect",
       "source": "d.append(f\"{c['subject']}/axis{c['axis']}: cites {k}, which this subject does not \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1886,7 +1744,7 @@
       "kind": "reports a defect",
       "source": "d.append(\"axis %d/%r declares determination of kind %r; the kinds are 'method-bar' \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1894,7 +1752,7 @@
       "kind": "reports a defect",
       "source": "d.append(\"axis %d/%r is declared determined with no stated ground.\" % (_a, _k))",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1902,7 +1760,7 @@
       "kind": "reports a defect",
       "source": "d.append(\"axis %d/%r claims a method bar, but %r is not declared to lack the \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "mp_metric.py",
@@ -1910,7 +1768,7 @@
       "kind": "reports a defect",
       "source": "d.append(\"every method permitted for axis %d needs an artifact and %r has \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "negative_search.py",
@@ -1918,9 +1776,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "negative_search.py",
@@ -1928,9 +1784,7 @@
       "kind": "reports a defect",
       "source": "trunc.append(\"%s: stage2 holds %d record(s), recomputing from the candidates \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "negative_search.py",
@@ -1938,9 +1792,7 @@
       "kind": "reports a defect",
       "source": "trunc.append(\"%s: stage3 holds %d record(s), recomputing from the stored stage-2 \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "negative_search.py",
@@ -1948,9 +1800,7 @@
       "kind": "reports a defect",
       "source": "trunc.append(\"stage3_total says %s, recomputation gives %d\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "negative_search.py",
@@ -1958,9 +1808,7 @@
       "kind": "reports a defect",
       "source": "trunc.append(\"stage2_total says %s, recomputation gives %d\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "negative_search.py",
@@ -1968,9 +1816,7 @@
       "kind": "reports a defect",
       "source": "unadj.append(\"%s: positive adjudication with no evidence binding\" % sid)",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "negative_search.py",
@@ -1978,9 +1824,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if (missing or trunc or unadj) else 0",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "negative-search.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "pin_urls.py",
@@ -1988,7 +1832,7 @@
       "kind": "reports a defect",
       "source": "failed.append(url)",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "pin_urls.py",
@@ -1996,7 +1840,7 @@
       "kind": "reports a defect",
       "source": "failed.append(url)",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "pin_urls.py",
@@ -2004,7 +1848,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "pin_urls.py",
@@ -2012,7 +1856,7 @@
       "kind": "reports a defect",
       "source": "drift.append((e[\"url\"], e[\"sha256\"], got))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "pin_urls.py",
@@ -2020,7 +1864,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "probe_signatures.py",
@@ -2028,9 +1872,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" could not fetch %s@%s: %s\" % (repo, rev[:12], r.stderr[:160]))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "axis14-signature-probe.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "probe_signatures.py",
@@ -2038,9 +1880,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" %s@%s produced no commit object\" % (repo, rev[:12]))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "axis14-signature-probe.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "probe_signatures.py",
@@ -2048,9 +1888,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" %s: object is revision %s, census pins %s\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "axis14-signature-probe.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "probe_source_trees.py",
@@ -2058,7 +1896,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" %s's tree is TRUNCATED; an absent path would prove nothing \"",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "probe_source_trees.py",
@@ -2066,7 +1904,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" %s@%s does not contain %s\" % (repo, sha[:12], missing))",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2074,10 +1912,7 @@
       "kind": "reports a defect",
       "source": "lost.append((where, \"the cell %s is gone\" % info[\"cell\"]))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2085,10 +1920,7 @@
       "kind": "reports a defect",
       "source": "lost.append((where, \"no executor for this cell any more\"))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2096,10 +1928,7 @@
       "kind": "reports a defect",
       "source": "lost.append((where, \"validator mutation %r no longer reaches it\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2107,10 +1936,7 @@
       "kind": "reports a defect",
       "source": "lost.append((where, \"ledger mutation %r no longer reaches it\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2118,10 +1944,7 @@
       "kind": "reports a defect",
       "source": "lost.append((where, \"no longer reached by %r\" % info.get(\"mutation\")))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2129,10 +1952,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2140,10 +1960,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2151,10 +1968,7 @@
       "kind": "reports a defect",
       "source": "drift.append(\"targets_pinned (%s -> %s)\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2162,10 +1976,7 @@
       "kind": "reports a defect",
       "source": "drift.append(\"%d recorded control(s) not reached this run: %s\"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2173,10 +1984,7 @@
       "kind": "reports a defect",
       "source": "drift.append(\"%d recorded entr(ies) carry no source text and cannot be identified \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2184,10 +1992,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2195,10 +2000,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" the per-axis counts sum to %d but %d branches were reached. The \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2206,10 +2008,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" archive (%d) + record (%d) != reached (%d). Some branch is being \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "reach_controls.py",
@@ -2217,10 +2016,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" reached_via_archive (%d) disagrees with the `archive` axis (%d). \"",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "CONTROL-AUDIT.json",
-        "REACH-CONTROLS.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2228,9 +2024,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2238,9 +2032,7 @@
       "kind": "reports a defect",
       "source": "findings.append((url, \"unretrievable: %s\" % why, cells))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2248,9 +2040,7 @@
       "kind": "reports a defect",
       "source": "findings.append((url, \"serialisation only: parsed content identical\", cells))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2258,9 +2048,7 @@
       "kind": "reports a defect",
       "source": "findings.append((url, \"metadata drift: \" + \", \".join(_keys), cells))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2268,9 +2056,7 @@
       "kind": "reports a defect",
       "source": "drift += 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2278,9 +2064,7 @@
       "kind": "reports a defect",
       "source": "findings.append((url, \"digest moved: \" + \", \".join(_keys), cells))",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2288,9 +2072,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "recheck.py",
@@ -2298,9 +2080,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if findings else 0",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "recheck-log.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "referee.py",
@@ -2308,7 +2088,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "referee.py",
@@ -2316,7 +2096,7 @@
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2324,7 +2104,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"literal(s) too short to discriminate anything: %s (minimum %d characters)\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2332,7 +2112,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" a subject is named `_led`, which this context reserves.\")",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2340,7 +2120,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s is from %s, which this subject declares for axis %s, not for axis %d\"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2348,7 +2128,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s/axis%d rests on archived evidence and has no declared axis_documents\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2356,7 +2136,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"the cited documents are not those this subject declares for axis %d\"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2364,7 +2144,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"axis %d carries method %r; this subject declares %r for it\"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2372,7 +2152,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"axis %d declares evidence %s; the cell expects %s\"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2380,7 +2160,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"axis %d declares file %r; the cell expects %r\"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2388,7 +2168,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the ranged artifact is cited alone, so nothing in the ledger says this \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2396,7 +2176,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"archived range is %d bytes, the record claims %d\" % (len(b), want)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2404,7 +2184,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"archived bytes do not hash to the recorded digest\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2412,7 +2192,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the cell records enumeration index %d and the co-cited document \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2420,7 +2200,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the cell records no `enumerated_index`, so the url could name any of the \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2428,7 +2208,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"unknown byte_property kind %r -- the widths this executor can read are %s\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2436,7 +2216,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the range holds %d %s words; the cell records %d\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2444,7 +2224,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%d of %d words are not valid token ids below %d -- these bytes are not a \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2452,7 +2232,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"these bytes are a valid token stream read as %s AND as %s -- a width \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2460,7 +2240,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"no `expect_repo`: nothing ties this enumeration to a declared corpus\"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2468,7 +2248,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"expected exactly one pinned dataset tree response, found %d\" % len(trees)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2476,7 +2256,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the archived tree response is not JSON\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2484,7 +2264,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%d file(s) are declared non-content and are not in the enumeration (%s). \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2492,7 +2272,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%s is declared non-content and DOES carry a publisher digest. It is \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2500,7 +2280,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"this cell excludes %d file(s) as non-content and declares no \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2508,7 +2288,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"`content_pattern` is not a regular expression: %s\" % _e",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2516,7 +2296,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%s is declared non-content and matches this cell's own content \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2524,7 +2304,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%d enumerated file(s) are neither declared non-content nor matched by \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2532,7 +2312,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%d enumerated file(s) carry an `lfs.oid` that is not a sha256 digest \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2540,7 +2320,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"a bound on this method needs `expect_items_with_digest`, or the \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2548,7 +2328,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%d of %d enumerated file(s) carry a publisher digest; the cell \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2556,7 +2336,7 @@
       "kind": "rejects in an executor",
       "source": "return False, why",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2564,7 +2344,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"this is %s's evidence; the cell is scored for %s, which the ledger \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2572,7 +2352,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"expected exactly one ranged artifact, found %d\" % len(r)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2580,7 +2360,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the ranged artifact is not a pinned Hugging Face file url\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2588,7 +2368,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the range is from %s@%s, the enumeration is from %s@%s\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2596,7 +2376,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"no `expect_file`: this check block carries nothing that distinguishes one \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2604,7 +2384,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"%r is not among the %d shards this revision enumerates\" % (rfile, len(shards))",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2612,7 +2392,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"pinned_commit disagrees with the url's revision\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2620,7 +2400,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"range is %r, the cell claims %d bytes\" % (r[0].get(\"range\"), want)",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2628,7 +2408,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"archived range is %d bytes, the cell claims %d\" % (len(b), want)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2636,7 +2416,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2644,7 +2424,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"too short to carry a safetensors header\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2652,7 +2432,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the archived bytes do not begin with a safetensors header \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2660,7 +2440,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the archived bytes do not look like weight data (first bytes %r)\" % b[:16]",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2668,7 +2448,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"archived bytes do not hash to the recorded digest\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2676,7 +2456,7 @@
       "kind": "rejects in an executor",
       "source": "return False, why",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2684,7 +2464,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"this is %s's evidence; the cell is scored for %s, which the ledger \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2692,7 +2472,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"a pointer url is not a pinned Hugging Face file url\")",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2700,7 +2480,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s is from %s@%s\" % (pfile, prepo, prev[:12]))",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2708,7 +2488,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s carries no sha256 oid\" % pfile)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2716,7 +2496,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s oid does not match the ledger\" % pfile)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2724,7 +2504,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"%s archived bytes do not hash to the recorded digest\" % pfile)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2732,7 +2512,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"duplicate shard pointer(s): %s\" % dup[:3])",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2740,7 +2520,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"counted %d occurrence(s), the cell claims %d\" % (got, n)",
       "class": "NOT COLLECTED",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2748,7 +2528,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the armour has no body: nothing was packed here\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2756,7 +2536,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the armour carries no CRC-24 line, so its integrity is unstated\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2764,7 +2544,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the armour is not decodable base64\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2772,7 +2552,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2780,7 +2560,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"a query does not search for %r\" % name)",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2788,7 +2568,7 @@
       "kind": "reports a defect",
       "source": "bad.append(\"a response carries no totalResults\")",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2796,7 +2576,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"; \".join(bad[:2])",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2804,7 +2584,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"no archived response for declared term(s) %s\" % missing[:3]",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2812,7 +2592,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%d term(s) return a different total than recorded: %s. arXiv grows, so \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2820,7 +2600,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"expected exactly one pinned enumeration, found %d\" % len(recs)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2828,7 +2608,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the archived revision response is not JSON\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2836,7 +2616,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2844,7 +2624,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the archived response enumerates no files, so it settles nothing\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2852,7 +2632,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%d declared pattern(s) match NONE of the exemplars, so they cannot detect \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2860,7 +2640,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"exemplar(s) %s match no declared pattern; the probe and the search \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2868,7 +2648,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"exemplar %s is ALSO published at %s@%s. Either the publisher really ships \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2876,7 +2656,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"expected exactly one pinned repository tree response, found %d\" % len(recs)",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2884,7 +2664,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"the archived tree response is not JSON\"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2892,7 +2672,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the archived tree is TRUNCATED, so an absent path proves nothing about \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2900,7 +2680,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"%s present but under 512 bytes -- a stub is not source\" % tiny[:2])",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2908,7 +2688,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"no `expect_manifest`: source without a declared dependency manifest is \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2916,7 +2696,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"no `expect_evidence_sha256`: the evidence is unconstrained\"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2924,7 +2704,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"no `expect_committer`: the committer identity is the whole finding here \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2932,7 +2712,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"the object carries a signature and %s. A corrupted packet with an intact \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2940,7 +2720,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"no `expect_commit_subject`: what the signed commit actually DID is the \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2948,7 +2728,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"this cell claims %s is a SHARED platform key, but it signs only %d \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2956,7 +2736,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"digest %s is cited under %d different urls; the same bytes cannot \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2964,7 +2744,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"axis %d REQUIRES %s; %r is registered and permitted but does not bind \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2972,7 +2752,7 @@
       "kind": "rejects in an executor",
       "source": "return False, (\"method %r requires `%s`; without it nothing can be replayed and the \"",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2980,7 +2760,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"method %r cannot settle this axis\" % meth",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2988,7 +2768,7 @@
       "kind": "rejects in an executor",
       "source": "return False, \"method %r has no executor\" % meth",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -2996,7 +2776,7 @@
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3004,7 +2784,7 @@
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3012,7 +2792,7 @@
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3020,7 +2800,7 @@
       "kind": "reports a defect",
       "source": "bad += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3028,7 +2808,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3036,7 +2816,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3044,7 +2824,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3052,7 +2832,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3060,7 +2840,7 @@
       "kind": "reports a defect",
       "source": "unreplayable += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3068,7 +2848,7 @@
       "kind": "reports a defect",
       "source": "failed += nb_fail",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "replay.py",
@@ -3076,7 +2856,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if (failed or (strict and unreplayable)) else 0",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stem_equivalence.py",
@@ -3084,9 +2864,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "stem-equivalence.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "stem_equivalence.py",
@@ -3094,9 +2872,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "stem-equivalence.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "stem_equivalence.py",
@@ -3104,9 +2880,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "stem-equivalence.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3114,7 +2888,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3122,7 +2896,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3130,7 +2904,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3138,7 +2912,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3146,7 +2920,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3154,7 +2928,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3162,7 +2936,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" the undefined-name fixture set holds %d and is specified over at \"",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3170,7 +2944,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3178,7 +2952,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3186,7 +2960,7 @@
       "kind": "reports a defect",
       "source": "failed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "stress_test.py",
@@ -3194,7 +2968,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(1 if failed else 0)",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "test_bound_rules.py",
@@ -3202,7 +2976,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"no such cell\")",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "test_bound_rules.py",
@@ -3210,7 +2984,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "test_bound_rules.py",
@@ -3218,7 +2992,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "test_determination.py",
@@ -3226,7 +3000,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(1 if bad else 0)",
       "class": "REDUNDANT",
-      "measurement_role": []
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3234,9 +3008,7 @@
       "kind": "reports a defect",
       "source": "base_bad.append(\"%s/axis%d: %s\" % (c[\"subject\"], c[\"axis\"], why))",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3244,9 +3016,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3254,9 +3024,7 @@
       "kind": "reports a defect",
       "source": "unread.append((where, k, \"deleting it\", res))",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3264,9 +3032,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3274,9 +3040,7 @@
       "kind": "reports a defect",
       "source": "unread.append((where, k, \"corrupting it\", res2))",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3284,9 +3048,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3294,9 +3056,7 @@
       "kind": "reports a defect",
       "source": "unread.append((where, \"evidence[0].sha256\", \"repointing it\", res3))",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3304,9 +3064,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3314,9 +3072,7 @@
       "kind": "reports a defect",
       "source": "unread.append((where, \"%s's evidence\" % other[\"subject\"],",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3324,9 +3080,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3334,9 +3088,7 @@
       "kind": "reports a defect",
       "source": "unread.append((where, \"the co-cited artifacts\", \"dropping them\", res4))",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3344,9 +3096,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3354,9 +3104,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3364,9 +3112,7 @@
       "kind": "reports a defect",
       "source": "missed += 1",
       "class": "NEVER EXECUTES",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "test_executors.py",
@@ -3374,9 +3120,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if (missed or base_bad) else 0",
       "class": "REDUNDANT",
-      "measurement_role": [
-        "CONTROL-AUDIT.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "unread_notes.py",
@@ -3384,9 +3128,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "UNREAD-NOTES.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "unread_notes.py",
@@ -3394,9 +3136,7 @@
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "UNREAD-NOTES.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "unread_notes.py",
@@ -3404,9 +3144,7 @@
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" the record on disk does not match what was just computed.\")",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "UNREAD-NOTES.json"
-      ]
+      "measurement_role": null
     },
     {
       "file": "unread_notes.py",
@@ -3414,9 +3152,7 @@
       "kind": "refuses with a status code",
       "source": "return 1 if still else 0",
       "class": "NOT COLLECTED",
-      "measurement_role": [
-        "UNREAD-NOTES.json"
-      ]
+      "measurement_role": null
     }
   ],
   "_dispositions": {

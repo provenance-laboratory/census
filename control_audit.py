@@ -747,14 +747,19 @@ def measurement_producers():
     # ⇒ THE BUILD IS LOOKED FOR, in the places a deposit can actually put it, and its absence is
     # still `None` -- *not derivable here* -- rather than an empty map.
     _bp = None
-    # both layouts: `../paper/` is where an extraction puts it, the last is the author tree
-    for _cand in (HERE / "build_paper.py",
-                  HERE.parent / "paper" / "build_paper.py",
-                  HERE.parent / "build_paper.py",
-                  HERE.parent.parent / "journal-submissions" / "mp-metric" / "build_paper.py"):
-        if _cand.is_file():
-            _bp = _cand
-            break
+    # ⛔ ROUND 13: FOUR NAMED LAYOUTS, AND THE DEPOSIT'S -- `paper-A/mp-metric/build_paper.py`
+    # beside `paper-A/census/` -- WAS NOT ONE OF THEM, so the shipped derivation said *not
+    # derivable here* inside the very archive that carries the build. A list of places is the
+    # list defect. ⇒ PROJECTED: every `build_paper.py` within two levels of this folder's
+    # parent. Exactly one is the build; more than one is a refusal, not a choice.
+    _cands = [c for c in sorted(HERE.parent.glob("*/build_paper.py"))
+              + sorted(HERE.parent.glob("*/*/build_paper.py"))
+              + [HERE / "build_paper.py"] if c.is_file()]
+    _cands = sorted({c.resolve() for c in _cands})
+    if len(_cands) == 1:
+        _bp = _cands[0]
+    elif len(_cands) > 1:
+        return None
     if _bp is None:
         return None
     try:
