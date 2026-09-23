@@ -367,10 +367,27 @@ def _probe_coverage():
                         _want.add("unrecognised-dispatch:is:%s" % type(_c).__name__)
                 elif isinstance(_op, (ast.In, ast.NotIn)):
                     _want.add("unrecognised-dispatch:in")
-        if isinstance(_n, (ast.Match, ast.Subscript)) and any(
+        # ⛔ ROUND 15: a `match n: case int(): ...` dispatches on type through a MatchClass pattern
+        # and calls `type()` nowhere, so the round-14 guard -- which fired only on a literal `type(...)`
+        # inside the match -- recorded NOTHING for the most natural modern spelling. ⇒ Every case
+        # pattern is read: a class pattern with a bare name registers that name as a dispatched type;
+        # any other pattern (value, sequence, mapping, attribute class, guard) is unrecognised and
+        # recorded as such, so the tag moves and every comparison fails rather than the branch passing
+        # unseen.
+        if isinstance(_n, ast.Match):
+            for _case in _n.cases:
+                _pat = _case.pattern
+                if isinstance(_pat, ast.MatchClass) and isinstance(_pat.cls, ast.Name) and not _pat.patterns \
+                        and not _pat.kwd_patterns and _case.guard is None:
+                    _want.add(_pat.cls.id)
+                elif isinstance(_pat, ast.MatchAs) and _pat.pattern is None and _case.guard is None:
+                    pass                                   # the irrefutable `case _:` catch-all
+                else:
+                    _want.add("unrecognised-dispatch:match:%s" % type(_pat).__name__)
+        if isinstance(_n, ast.Subscript) and any(
                 isinstance(_x, ast.Call) and isinstance(_x.func, ast.Name) and _x.func.id == "type"
                 for _x in ast.walk(_n)):
-            _want.add("unrecognised-dispatch:%s" % type(_n).__name__.lower())
+            _want.add("unrecognised-dispatch:subscript")
     _have = {type(v).__name__ for v in _ENCODER_PROBES}
     _have |= {"NoneType"} if None in _ENCODER_PROBES else set()
     # `n is Ellipsis` compares against a Name, and `bool` is reached through True/False
@@ -675,6 +692,17 @@ def _render_kinds(text):
                                                           if not f.startswith("scalar:")}
 
 
+def _is_float_token(tok):
+    """Does this token spell a finite float the way `float.__repr__` spells one? Ints are not floats."""
+    if not tok or not ("." in tok or "e" in tok) or tok.lstrip("-")[:1] not in "0123456789":
+        return False
+    try:
+        float(tok)
+    except ValueError:
+        return False
+    return all(c in "0123456789.e+-" for c in tok)
+
+
 def _render_features(text):
     """The FEATURES a recorded rendering exercises: node kinds AND scalar forms. None if unreadable.
 
@@ -751,7 +779,12 @@ def _render_features(text):
                     feats.add("scalar:int")
                     if tok.startswith("-"):
                         feats.add("scalar:int:neg")
-                elif tok.lstrip("-").replace(".", "", 1).replace("e", "", 1).replace("-", "", 1).isdigit() and ("." in tok or "e" in tok):
+                # ⛔ ROUND 15: THE CHARACTER PREDICATE STRIPPED ONE `-` AND NO `+`, so `1e+300` -- in the probe
+                # set -- was not a float token at all and a record whose only scalar was one carried an
+                # EMPTY feature set: proven by any survivor, coverable by anything. ⇒ A float token is
+                # whatever the renderer wrote for a float: recognised by parsing it as one, with the
+                # forms `float.__repr__` produces (a point, or an exponent with either sign).
+                elif _is_float_token(tok):
                     feats.add("scalar:float")
                     if "e" in tok:
                         feats.add("scalar:float:exp")
