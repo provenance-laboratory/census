@@ -752,9 +752,13 @@ def measurement_producers():
     # derivable here* inside the very archive that carries the build. A list of places is the
     # list defect. ⇒ PROJECTED: every `build_paper.py` within two levels of this folder's
     # parent. Exactly one is the build; more than one is a refusal, not a choice.
-    _cands = [c for c in sorted(HERE.parent.glob("*/build_paper.py"))
-              + sorted(HERE.parent.glob("*/*/build_paper.py"))
-              + [HERE / "build_paper.py"] if c.is_file()]
+    # ⛔ ROUND 14: "within two levels" was a list of two depths -- a deposit whose build sat one
+    # level deeper returned *not derivable* with the build present, the round-13 defect one level
+    # down. ⇒ The whole deposit (this folder's parent) is searched, caches and version control
+    # excluded; the guarantee is now the one the docstring states: exactly one build anywhere in
+    # the deposit, or a refusal.
+    _cands = [c for c in sorted(HERE.parent.rglob("build_paper.py")) + [HERE / "build_paper.py"]
+              if c.is_file() and not ({".git", "__pycache__", "node_modules"} & set(c.parts))]
     _cands = sorted({c.resolve() for c in _cands})
     if len(_cands) == 1:
         _bp = _cands[0]

@@ -11,8 +11,8 @@
     "bind_probe_evidence.py": "d6ad7197bb09a37abe9b8f4aeb7984aa0550cc61445c1b8bd2c1040c945da58c",
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "check_facts.py": "ea3d8f7f00662e07dc89b211f9b155d62d4547469875a3add9c240ac03f60f0b",
-    "control_audit.py": "00942d47abbd63d4614ff59d58a03ae1f6fe878c18728fa9df324b14dc1182a3",
-    "control_identity.py": "b4f10bb5eaf315ebbe0ee526ff307f3319bb3bc69eec510e29eeb553f51e7503",
+    "control_audit.py": "508e3c4eca3f900dcb17fe321400a87b844938257f3dd802caf4276af8496358",
+    "control_identity.py": "4924c9107ac0da36b4ca864cbca223fb01a89afa5f420125e5887a96099dc235",
     "fetch_artifact.py": "e9ad4e4399c5c27c4e1faa33dbc3aa4b0b02732a0c4610c089577730b92c5932",
     "filter_categories.py": "7c4232ccf3180bbe573a5c25a76c1bb02e4ab4368bc9442791868029a7d880c6",
     "filter_diff.py": "5b2b584883aeede02444ab163b2bd7e26eed1251dd919148eb0499f2c6f50c6c",
@@ -65,8 +65,8 @@
       "--quick"
     ]
   ],
-  "source_fingerprint": "e2613ab04624d4b6",
-  "inputs_fingerprint": "a5f3b3933e915c04",
+  "source_fingerprint": "8339bdb22449068c",
+  "inputs_fingerprint": "7dbdbcbdf96971c1",
   "inputs_manifest": {
     ".gitattributes": "852c5fc63199b92d7be8f8853c209345cad1f28c47322d5ab4d060cd360b84bc",
     ".gitignore": "ac1291a6a68853c2841d9b613a0208a76ce2de87ac08f7e2df8af23a5cbebaff",
@@ -84,8 +84,8 @@
     "build_filter_bound.py": "3a840a4492df46913317340306c92a683c54658b33a5b6e7f00b27f50934b14a",
     "cells.json": "9b40e3482e0ea976331e3a2808b2fb7cd3e4eacb8545d8924ca2cdc5e27580ab",
     "check_facts.py": "ea3d8f7f00662e07dc89b211f9b155d62d4547469875a3add9c240ac03f60f0b",
-    "control_audit.py": "00942d47abbd63d4614ff59d58a03ae1f6fe878c18728fa9df324b14dc1182a3",
-    "control_identity.py": "b4f10bb5eaf315ebbe0ee526ff307f3319bb3bc69eec510e29eeb553f51e7503",
+    "control_audit.py": "508e3c4eca3f900dcb17fe321400a87b844938257f3dd802caf4276af8496358",
+    "control_identity.py": "4924c9107ac0da36b4ca864cbca223fb01a89afa5f420125e5887a96099dc235",
     "CTRL.log": "b3f69d68c88be621de3ab5d7564ee9e23d9c4b8b0a6a786b607555524df86c16",
     "evidence/00d7d865dc8bf5de4a4b61adfb14060a6165aa95f874e8ab33a6b104a310f3e3.gz": "ce98bf5ff84ee65290e130844371d2d05cad0b5c8698021308c3d0e1b70e8b6a",
     "evidence/016fa56312082c86e51d4d223ca3fe4827769255c4927c9d6c81c119d35e8163.gz": "c90466a63aaceabd56e5170bfce44d4ab6ae799d2e358f805429b42a44635aac",
@@ -510,7 +510,7 @@
     "probe_source_trees.py": "c6b2b64b90e6c28e6b7df280fa064685511dcaae5bcf3d7a832c1306bbe7ebf2",
     "probes/hf_probe-2026-08-29.json": "343314224e782bc4ddc85e1872cf490651cc51b61f1459d512b9758d4a5d38ec",
     "RC.log": "52a2618baa5559e3478ffbb2fb8ab40befecf88ff42d4444a5f3e2a1ea4a6e35",
-    "REACH-CONTROLS.json": "6787c7fa8b34b179e60e313c32899a05409ba6d8cf383587258a53ad3d230330",
+    "REACH-CONTROLS.json": "22b37ac3c7f62e7ad06d3820b549aa1e24a40d8dc7f805151c0c12887383ae50",
     "reach_controls.py": "b41b94f4cd38c8a98f7264a7d7b8d606dc2abb47b88478e839192ec5ef3ee545",
     "README.md": "a79290fbf84e5d934de0042763506726922bd1f2a70e405080ad6cee732d2f84",
     "recheck-log.json": "e3b48062c0f086a7134874e73c39c5b014a49aeff21dbafd070dbc3f05617a5d",
@@ -1256,6 +1256,17 @@
       "when": "2026-09-20T12:08:54Z",
       "source_fingerprint": "e2613ab04624d4b6",
       "inputs_fingerprint": "a5f3b3933e915c04"
+    },
+    {
+      "run": 50,
+      "round": 23,
+      "controls_total": 366,
+      "watched": 133,
+      "never_executes": 105,
+      "modules": 32,
+      "when": "2026-09-23T13:54:59Z",
+      "source_fingerprint": "8339bdb22449068c",
+      "inputs_fingerprint": "7dbdbcbdf96971c1"
     }
   ],
   "history_anomalies": [
@@ -1671,7 +1682,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 865,
+      "line": 869,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
@@ -1679,7 +1690,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 911,
+      "line": 915,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
@@ -1687,7 +1698,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 994,
+      "line": 998,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NOT COLLECTED",
@@ -1695,7 +1706,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1002,
+      "line": 1006,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NOT COLLECTED",
@@ -1703,7 +1714,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1008,
+      "line": 1012,
       "kind": "rejects in an executor",
       "source": "return False, _name",
       "class": "NOT COLLECTED",
@@ -1711,7 +1722,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1029,
+      "line": 1033,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND is missing, so this run cannot say which round it \"",
       "class": "NOT COLLECTED",
@@ -1719,7 +1730,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1035,
+      "line": 1039,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" AUDIT-ROUND does not hold an integer.\")",
       "class": "NOT COLLECTED",
@@ -1727,7 +1738,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1165,
+      "line": 1169,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --without %r names no suite item; the suite is %s\"",
       "class": "NOT COLLECTED",
@@ -1735,7 +1746,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1174,
+      "line": 1178,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(D + \" --quick audits %s and this tree has no such module. \"",
       "class": "NOT COLLECTED",
@@ -1743,7 +1754,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1199,
+      "line": 1203,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
@@ -1751,7 +1762,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1671,
+      "line": 1675,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(",
       "class": "NOT COLLECTED",
@@ -1759,7 +1770,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1679,
+      "line": 1683,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
@@ -1767,7 +1778,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1729,
+      "line": 1733,
       "kind": "reports a defect",
       "source": "drift.append(",
       "class": "NOT COLLECTED",
@@ -1775,7 +1786,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1744,
+      "line": 1748,
       "kind": "reports a defect",
       "source": "drift.append(\"history has %d recorded row(s) and this run produces %d -- append-only \"",
       "class": "NOT COLLECTED",
@@ -1783,7 +1794,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1749,
+      "line": 1753,
       "kind": "reports a defect",
       "source": "drift.append(\"history row %d differs from the recorded one; append-only means \"",
       "class": "NOT COLLECTED",
@@ -1791,7 +1802,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1758,
+      "line": 1762,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\"",
       "class": "NOT COLLECTED",
@@ -1799,7 +1810,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1762,
+      "line": 1766,
       "kind": "reports a defect",
       "source": "drift.append(\"%s: recorded %s, recomputed %s\" % (k, prev.get(k), rec.get(k)))",
       "class": "NOT COLLECTED",
@@ -1807,7 +1818,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1770,
+      "line": 1774,
       "kind": "reports a defect",
       "source": "drift.append(\"suite: the record was measured over %d item(s) and this run used %d \"",
       "class": "NOT COLLECTED",
@@ -1815,7 +1826,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1776,
+      "line": 1780,
       "kind": "reports a defect",
       "source": "drift.append(\"%d survivor record(s) recorded that this run does not \"",
       "class": "NOT COLLECTED",
@@ -1823,7 +1834,7 @@
     },
     {
       "file": "control_audit.py",
-      "line": 1795,
+      "line": 1799,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",
@@ -1831,7 +1842,7 @@
     },
     {
       "file": "control_identity.py",
-      "line": 957,
+      "line": 1003,
       "kind": "refuses to proceed",
       "source": "raise SystemExit(\"no REACH-CONTROLS.json here\")",
       "class": "NOT COLLECTED",
@@ -1839,7 +1850,7 @@
     },
     {
       "file": "control_identity.py",
-      "line": 1011,
+      "line": 1057,
       "kind": "refuses with a status code",
       "source": "return 1",
       "class": "NOT COLLECTED",

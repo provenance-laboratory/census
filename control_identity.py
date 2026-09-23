@@ -146,7 +146,7 @@ UNCOMPARABLE = "uncomparable"
 # what is in front of them here too. So the count stays and the words are corrected, and both
 # counts now say WHICH characters they count instead of leaving a reader to assume.
 SPEC = (
-    "canonical-scalar-encoding/4 "
+    "canonical-scalar-encoding/5 "
     "None=None True=True False=False "
     "int=decimal float=repr-of-float-with-explicit-nan-inf "
     "str=u:<escaped-char-count>:<python-unicode_escape-of-the-text> "
@@ -154,9 +154,11 @@ SPEC = (
     "AST=Name(field=value,...) list=[a,b,c] "
     "-- every variable-length payload is length-prefixed by the characters it WRITES, so no "
     "payload can imitate a delimiter and a reader can skip one without decoding it; "
-    "the renderer tag covers one value per _scalar branch, one snippet per parser feature, and "
-    "the ast.parse signature, and a record is comparable only for the FEATURES its own text uses "
-    "(node kinds AND scalar forms)"
+    "the renderer tag covers one value per _scalar branch (the branches read from _scalar's source; "
+    "a dispatch form the reader does not recognise is recorded as uncovered, never skipped), one "
+    "snippet per SELECTED parser feature parsed in the pipeline's own mode, and the ast.parse "
+    "signature; a record is comparable only for the features its own text uses -- node kinds and "
+    "the enumerated scalar forms, a sample of the encoding and not the whole of it"
 )
 
 
@@ -326,21 +328,49 @@ _ENCODER_PROBES = (
 
 
 def _probe_coverage():
-    """The types `_scalar` dispatches on that no probe exercises. Empty is the only good answer."""
+    """The types `_scalar` dispatches on that no probe exercises. Empty is the only good answer.
+
+    The scan reads two idioms -- `isinstance(n, T)` with a bare name, and `n is <constant>` (plus
+    `n is Ellipsis`) -- and every other dispatch form is reported as `unrecognised-dispatch:...`,
+    which no probe can satisfy, so the tag records it as uncovered. What it guarantees is stated
+    exactly: every branch of the forms it recognises has a probe, and a branch in any other form
+    fails closed rather than passing unseen."""
     import inspect
     try:
         _t = ast.parse(inspect.getsource(_scalar))
     except (OSError, TypeError, SyntaxError):                             # pragma: no cover
         return ["<_scalar source unavailable>"]
+    # ⛔ ROUND 14: THE SCAN RECOGNISED TWO IDIOMS AND SILENTLY SKIPPED EVERY OTHER. `isinstance(n, (int,
+    # bool))`, `type(n) is bytes`, a dispatch table keyed on `type(n)`, a `match`: each registered no
+    # type at all, so the promise "every branch has a probe" evaporated the moment `_scalar` was
+    # refactored into the tuple form -- the hand-kept list reproducing the defect it audits, one
+    # level down, displaced onto the auditor. ⇒ A DISPATCH THE SCAN CANNOT REDUCE TO A NAME IS
+    # RECORDED AS UNCOVERED, which moves the tag and fails every comparison, rather than skipped.
     _want = set()
     for _n in ast.walk(_t):
-        if (isinstance(_n, ast.Call) and isinstance(_n.func, ast.Name) and _n.func.id == "isinstance"
-                and len(_n.args) == 2 and isinstance(_n.args[1], ast.Name)):
-            _want.add(_n.args[1].id)
-        if isinstance(_n, ast.Compare) and any(isinstance(op, ast.Is) for op in _n.ops):
-            for _c in _n.comparators:
-                if isinstance(_c, ast.Constant):
-                    _want.add(type(_c.value).__name__)
+        if isinstance(_n, ast.Call) and isinstance(_n.func, ast.Name) and _n.func.id == "isinstance":
+            if len(_n.args) == 2 and isinstance(_n.args[1], ast.Name):
+                _want.add(_n.args[1].id)
+            else:
+                _want.add("unrecognised-dispatch:isinstance:%s"
+                          % (type(_n.args[1]).__name__ if len(_n.args) == 2 else "arity"))
+        if isinstance(_n, ast.Compare):
+            if not isinstance(_n.left, ast.Name):
+                _want.add("unrecognised-dispatch:compare-left:%s" % type(_n.left).__name__)
+            for _op, _c in zip(_n.ops, _n.comparators):
+                if isinstance(_op, (ast.Is, ast.IsNot)):
+                    if isinstance(_c, ast.Constant):
+                        _want.add(type(_c.value).__name__)
+                    elif isinstance(_c, ast.Name) and _c.id == "Ellipsis":
+                        _want.add("ellipsis")
+                    else:
+                        _want.add("unrecognised-dispatch:is:%s" % type(_c).__name__)
+                elif isinstance(_op, (ast.In, ast.NotIn)):
+                    _want.add("unrecognised-dispatch:in")
+        if isinstance(_n, (ast.Match, ast.Subscript)) and any(
+                isinstance(_x, ast.Call) and isinstance(_x.func, ast.Name) and _x.func.id == "type"
+                for _x in ast.walk(_n)):
+            _want.add("unrecognised-dispatch:%s" % type(_n).__name__.lower())
     _have = {type(v).__name__ for v in _ENCODER_PROBES}
     _have |= {"NoneType"} if None in _ENCODER_PROBES else set()
     # `n is Ellipsis` compares against a Name, and `bool` is reached through True/False
@@ -368,7 +398,10 @@ def _probe_coverage():
 # for the same text, moves the tag. It is a sample of the parser as the probes are a sample of
 # the encoder, and it is stated as one.
 _PARSER_PROBES = (
-    "x = []  # type: list",                     # type comments: populated only if asked for
+    # parsed in the PIPELINE'S mode (the default, which leaves `type_comment` None), so this
+    # snippet moves the tag only if a release starts populating the field by default; a parser
+    # asked for type comments is a different signature, which the tag also carries (round 14)
+    "x = []  # type: list",
     "f'{a!r:>{w}} {b}'",                        # f-strings: PEP 701 reshaped these in 3.12
     "(y := 3)",                                 # walrus
     "def g(a, /, b, *, c): pass",               # positional-only and keyword-only markers
@@ -662,8 +695,15 @@ def _render_features(text):
     half of it, and stated as one.
 
     Scalar forms: scalar:None/True/False/Ellipsis; scalar:int, scalar:int:neg; scalar:float,
-    scalar:float:nan|inf|exp; scalar:str, scalar:str:empty, scalar:str:escaped (a backslash in
-    the escaped payload), scalar:str:quote; scalar:bytes, scalar:bytes:empty; scalar:complex.
+    scalar:float:nan|inf|exp|neg|negzero; scalar:str, scalar:str:empty, scalar:str:escaped (a
+    backslash in the escaped payload), scalar:str:quote; scalar:bytes, scalar:bytes:empty;
+    scalar:complex.
+
+    ⛔ ROUND 14: `scalar:int:neg` existed and `scalar:float:neg` did not, so a renderer change
+    confined to negative floats was condemned-provable by any positive float while the identical
+    change for ints needed its own negative witness. Sign is a form for both numeric types now,
+    and negative zero -- a value the probe set carries and the reader could not tell from zero --
+    is its own form. Still a sample of the encoding, stated as one.
     """
     feats, i, n = set(), 0, len(text)
     try:
@@ -705,6 +745,8 @@ def _render_features(text):
                 elif tok in ("nan", "inf", "-inf"):
                     feats.add("scalar:float")
                     feats.add("scalar:float:" + tok.lstrip("-"))
+                    if tok.startswith("-"):
+                        feats.add("scalar:float:neg")
                 elif tok.lstrip("-").isdigit():
                     feats.add("scalar:int")
                     if tok.startswith("-"):
@@ -713,6 +755,10 @@ def _render_features(text):
                     feats.add("scalar:float")
                     if "e" in tok:
                         feats.add("scalar:float:exp")
+                    if tok.startswith("-"):
+                        feats.add("scalar:float:neg")
+                    if tok == "-0.0":
+                        feats.add("scalar:float:negzero")
                 i = j
             else:
                 i += 1
