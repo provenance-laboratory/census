@@ -1,7 +1,7 @@
 {
   "_readme": "Which never-executing branches an ARCHIVE mutation can reach. Reaching a check is not validating it: this shows an input exists that runs the line and that the executor refuses, not that the refusal is correct.",
   "targets": 131,
-  "source_fingerprint": "8339bdb22449068c",
+  "source_fingerprint": "b665ea019d79eed4",
   "targets_pinned": 85,
   "_targets_note": "targets_pinned is the population this measurement was FIRST made against. `targets` is what the audit reports today, which this tool changes by being in the suite -- so the two differ by design and the pinned one is the denominator to quote.",
   "reached": 26,
@@ -32,7 +32,7 @@
         "parent_hash": "c825c989fba39eeda7ecbf7ee2011e0deed25b383befad91e4feb546c3dddedc",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Expr(value=Call(func=Attribute(value=Name(id=u:1:d,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:48:%s/axis%s: as_of is %r, which is not an ISO date,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Attribute(value=Name(id=u:2:_c,ctx=Load()),attr=u:3:get,ctx=Load()),args=[Constant(value=u:7:subject,kind=None)],keywords=[]),Call(func=Attribute(value=Name(id=u:2:_c,ctx=Load()),attr=u:3:get,ctx=Load()),args=[Constant(value=u:4:axis,kind=None)],keywords=[]),Name(id=u:2:_v,ctx=Load())],ctx=Load()))],keywords=[]))",
         "parent_render": "If(test=BoolOp(op=And(),values=[Compare(left=Name(id=u:2:_v,ctx=Load()),ops=[NotIn()],comparators=[Tuple(elts=[Constant(value=None,kind=None),Constant(value=u:0:,kind=None)],ctx=Load())]),UnaryOp(op=Not(),operand=Call(func=Attribute(value=Name(id=u:7:DATE_RE,ctx=Load()),attr=u:5:match,ctx=Load()),args=[Call(func=Name(id=u:3:str,ctx=Load()),args=[Name(id=u:2:_v,ctx=Load())],keywords=[])],keywords=[]))]),body=[Expr(value=Call(func=Attribute(value=Name(id=u:1:d,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:48:%s/axis%s: as_of is %r, which is not an ISO date,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Attribute(value=Name(id=u:2:_c,ctx=Load()),attr=u:3:get,ctx=Load()),args=[Constant(value=u:7:subject,kind=None)],keywords=[]),Call(func=Attribute(value=Name(id=u:2:_c,ctx=Load()),attr=u:3:get,ctx=Load()),args=[Constant(value=u:4:axis,kind=None)],keywords=[]),Name(id=u:2:_v,ctx=Load())],ctx=Load()))],keywords=[]))],orelse=[])"
       },
@@ -52,7 +52,7 @@
         "parent_hash": "c5dd8284390d4f7ad5ffdd45255e11f651e15aea06cd25705c6d1254ba74ee26",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:98:the ranged artifact is cited alone, so nothing in the ledger says this url belongs to this subject,kind=None)],ctx=Load()))",
         "parent_render": "If(test=UnaryOp(op=Not(),operand=Name(id=u:6:others,ctx=Load())),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:98:the ranged artifact is cited alone, so nothing in the ledger says this url belongs to this subject,kind=None)],ctx=Load()))],orelse=[])"
       },
@@ -73,7 +73,7 @@
         "parent_hash": "f63ee214390e629aa3d3711fce7ac39ab07a62d194c66239eeed1ee1cad6cefa",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:48:archived range is %d bytes, the record claims %d,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),Name(id=u:4:want,ctx=Load())],ctx=Load()))],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),ops=[NotEq()],comparators=[Name(id=u:4:want,ctx=Load())]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:48:archived range is %d bytes, the record claims %d,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),Name(id=u:4:want,ctx=Load())],ctx=Load()))],ctx=Load()))],orelse=[])"
       },
@@ -94,7 +94,7 @@
         "parent_hash": "d3566d9cb23f2bc358c23c552d286f24da5fdeca16a60296273a95c45dc26785",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:49:archived bytes do not hash to the recorded digest,kind=None)],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Attribute(value=Call(func=Attribute(value=Name(id=u:7:hashlib,ctx=Load()),attr=u:6:sha256,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),attr=u:9:hexdigest,ctx=Load()),args=[],keywords=[]),ops=[NotEq()],comparators=[Subscript(value=Subscript(value=Name(id=u:1:r,ctx=Load()),slice=Constant(value=0,kind=None),ctx=Load()),slice=Constant(value=u:6:sha256,kind=None),ctx=Load())]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:49:archived bytes do not hash to the recorded digest,kind=None)],ctx=Load()))],orelse=[])"
       },
@@ -115,7 +115,7 @@
         "parent_hash": "f3f2588a8ed4151280d89b0b7cc2d9513d28cdf8c50fed41df972b6980519534",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:59:expected exactly one pinned dataset tree response, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:5:trees,ctx=Load())],keywords=[]))],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:5:trees,ctx=Load())],keywords=[]),ops=[NotEq()],comparators=[Constant(value=1,kind=None)]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:59:expected exactly one pinned dataset tree response, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:5:trees,ctx=Load())],keywords=[]))],ctx=Load()))],orelse=[])"
       },
@@ -136,7 +136,7 @@
         "parent_hash": "275ecf26260ad945534d2273d33c9cb6db0f1968202339c9074bc9817d105b87",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:38:the archived tree response is not JSON,kind=None)],ctx=Load()))",
         "parent_render": "Try(body=[Assign(targets=[Name(id=u:7:entries,ctx=Store())],value=Call(func=Attribute(value=Name(id=u:4:json,ctx=Load()),attr=u:5:loads,ctx=Load()),args=[Call(func=Attribute(value=Name(id=u:1:b,ctx=Load()),attr=u:6:decode,ctx=Load()),args=[Constant(value=u:5:utf-8,kind=None)],keywords=[])],keywords=[]),type_comment=None)],handlers=[ExceptHandler(type=Name(id=u:9:Exception,ctx=Load()),name=None,body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:38:the archived tree response is not JSON,kind=None)],ctx=Load()))])],orelse=[],finalbody=[])"
       },
@@ -157,7 +157,7 @@
         "parent_hash": "bdca1bf646de59a8af40e2db46d8f86c90299e46e51b4fb58c0f43049ba1930b",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:200:%d enumerated file(s) are neither declared non-content nor matched by the content pattern (%s). The pattern has to describe what is being counted, or it is decoration beside the exclusion it licenses.,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:10:_uncovered,ctx=Load())],keywords=[]),Call(func=Attribute(value=Constant(value=u:2:, ,kind=None),attr=u:4:join,ctx=Load()),args=[GeneratorExp(elt=Call(func=Name(id=u:3:str,ctx=Load()),args=[Name(id=u:1:x,ctx=Load())],keywords=[]),generators=[comprehension(target=Name(id=u:1:x,ctx=Store()),iter=Subscript(value=Name(id=u:10:_uncovered,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=3,kind=None),step=None),ctx=Load()),ifs=[],is_async=0)])],keywords=[])],ctx=Load()))],ctx=Load()))",
         "parent_render": "If(test=Name(id=u:10:_uncovered,ctx=Load()),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:200:%d enumerated file(s) are neither declared non-content nor matched by the content pattern (%s). The pattern has to describe what is being counted, or it is decoration beside the exclusion it licenses.,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:10:_uncovered,ctx=Load())],keywords=[]),Call(func=Attribute(value=Constant(value=u:2:, ,kind=None),attr=u:4:join,ctx=Load()),args=[GeneratorExp(elt=Call(func=Name(id=u:3:str,ctx=Load()),args=[Name(id=u:1:x,ctx=Load())],keywords=[]),generators=[comprehension(target=Name(id=u:1:x,ctx=Store()),iter=Subscript(value=Name(id=u:10:_uncovered,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=3,kind=None),step=None),ctx=Load()),ifs=[],is_async=0)])],keywords=[])],ctx=Load()))],ctx=Load()))],orelse=[])"
       },
@@ -178,7 +178,7 @@
         "parent_hash": "d28738151bf32d9eba7df4c132ef5eadd0052450b1feec45e1479fa560e8cd86",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:64:%d of %d enumerated corpus file(s) carry NO publisher digest: %s,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:7:missing,ctx=Load())],keywords=[]),Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:5:files,ctx=Load())],keywords=[]),Subscript(value=Name(id=u:7:missing,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=2,kind=None),step=None),ctx=Load())],ctx=Load()))],ctx=Load()))",
         "parent_render": "If(test=Name(id=u:7:missing,ctx=Load()),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:64:%d of %d enumerated corpus file(s) carry NO publisher digest: %s,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:7:missing,ctx=Load())],keywords=[]),Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:5:files,ctx=Load())],keywords=[]),Subscript(value=Name(id=u:7:missing,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=2,kind=None),step=None),ctx=Load())],ctx=Load()))],ctx=Load()))],orelse=[])"
       },
@@ -199,7 +199,7 @@
         "parent_hash": "8f4169d54e53e322d7b1bdeadd45390f6dc83eaae44453ae241b3259784136de",
         "ordinal": 0,
         "siblings": 2,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Name(id=u:3:why,ctx=Load())],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Name(id=u:5:ident,ctx=Load()),ops=[Is()],comparators=[Constant(value=None,kind=None)]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Name(id=u:3:why,ctx=Load())],ctx=Load()))],orelse=[])"
       },
@@ -220,7 +220,7 @@
         "parent_hash": "371510b2d51a5732a4ab5c28547d5c3453f6908b6452ef353e9fea192c4827b5",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:46:expected exactly one ranged artifact, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:r,ctx=Load())],keywords=[]))],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:r,ctx=Load())],keywords=[]),ops=[NotEq()],comparators=[Constant(value=1,kind=None)]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:46:expected exactly one ranged artifact, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:r,ctx=Load())],keywords=[]))],ctx=Load()))],orelse=[])"
       },
@@ -241,7 +241,7 @@
         "parent_hash": "9f3e1dac4d4909c75a9bba3ffab720e0a3be95daa7ba4796254ff756699ae423",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:46:archived range is %d bytes, the cell claims %d,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),Name(id=u:4:want,ctx=Load())],ctx=Load()))],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),ops=[NotEq()],comparators=[Name(id=u:4:want,ctx=Load())]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:46:archived range is %d bytes, the cell claims %d,kind=None),op=Mod(),right=Tuple(elts=[Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),Name(id=u:4:want,ctx=Load())],ctx=Load()))],ctx=Load()))],orelse=[])"
       },
@@ -262,7 +262,7 @@
         "parent_hash": "46f7b1eaaf0d237798a5308cc356421cda7511b6bb8099f56cd00b1c0323fa60",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:70:the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect,kind=None)],ctx=Load()))",
         "parent_render": "If(test=Call(func=Attribute(value=Subscript(value=Name(id=u:1:b,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=100,kind=None),step=None),ctx=Load()),attr=u:10:startswith,ctx=Load()),args=[Constant(value=b:84:76657273696f6e2068747470733a2f2f6769742d6c66732e6769746875622e636f6d2f737065632f7631,kind=None)],keywords=[]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:70:the archived 'weight range' IS A GIT-LFS POINTER -- exactly the defect,kind=None)],ctx=Load()))],orelse=[])"
       },
@@ -283,7 +283,7 @@
         "parent_hash": "e00d4b1ea3124b900dfcf96a52ed641002329dfcdffeb4b7d7528d22c7a88270",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:74:the archived bytes do not begin with a safetensors header (first bytes %r),kind=None),op=Mod(),right=Subscript(value=Name(id=u:1:b,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=16,kind=None),step=None),ctx=Load()))],ctx=Load()))",
         "parent_render": "If(test=BoolOp(op=Or(),values=[UnaryOp(op=Not(),operand=Compare(left=Constant(value=0,kind=None),ops=[Lt(),Lt()],comparators=[Name(id=u:3:hdr,ctx=Load()),BinOp(left=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),op=Mult(),right=Constant(value=4096,kind=None))])),Compare(left=Subscript(value=Name(id=u:1:b,ctx=Load()),slice=Slice(lower=Constant(value=8,kind=None),upper=Constant(value=10,kind=None),step=None),ctx=Load()),ops=[NotIn()],comparators=[Tuple(elts=[Constant(value=b:4:7b22,kind=None),Constant(value=b:4:7b7d,kind=None)],ctx=Load())])]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:74:the archived bytes do not begin with a safetensors header (first bytes %r),kind=None),op=Mod(),right=Subscript(value=Name(id=u:1:b,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=16,kind=None),step=None),ctx=Load()))],ctx=Load()))],orelse=[])"
       },
@@ -304,7 +304,7 @@
         "parent_hash": "d3566d9cb23f2bc358c23c552d286f24da5fdeca16a60296273a95c45dc26785",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:49:archived bytes do not hash to the recorded digest,kind=None)],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Attribute(value=Call(func=Attribute(value=Name(id=u:7:hashlib,ctx=Load()),attr=u:6:sha256,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),attr=u:9:hexdigest,ctx=Load()),args=[],keywords=[]),ops=[NotEq()],comparators=[Subscript(value=Subscript(value=Name(id=u:1:r,ctx=Load()),slice=Constant(value=0,kind=None),ctx=Load()),slice=Constant(value=u:6:sha256,kind=None),ctx=Load())]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:49:archived bytes do not hash to the recorded digest,kind=None)],ctx=Load()))],orelse=[])"
       },
@@ -325,7 +325,7 @@
         "parent_hash": "8f4169d54e53e322d7b1bdeadd45390f6dc83eaae44453ae241b3259784136de",
         "ordinal": 0,
         "siblings": 2,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Name(id=u:3:why,ctx=Load())],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Name(id=u:5:ident,ctx=Load()),ops=[Is()],comparators=[Constant(value=None,kind=None)]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Name(id=u:3:why,ctx=Load())],ctx=Load()))],orelse=[])"
       },
@@ -346,7 +346,7 @@
         "parent_hash": "87cf985947a68c9d107f9ecd8cab26f14520f9231c518a8ae9642570c74408de",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:24:%s carries no sha256 oid,kind=None),op=Mod(),right=Name(id=u:5:pfile,ctx=Load()))],keywords=[]))",
         "parent_render": "If(test=UnaryOp(op=Not(),operand=Name(id=u:2:mo,ctx=Load())),body=[Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:24:%s carries no sha256 oid,kind=None),op=Mod(),right=Name(id=u:5:pfile,ctx=Load()))],keywords=[]))],orelse=[If(test=Compare(left=Call(func=Attribute(value=Call(func=Attribute(value=Name(id=u:2:mo,ctx=Load()),attr=u:5:group,ctx=Load()),args=[Constant(value=1,kind=None)],keywords=[]),attr=u:6:decode,ctx=Load()),args=[],keywords=[]),ops=[NotEq()],comparators=[Subscript(value=Name(id=u:1:e,ctx=Load()),slice=Constant(value=u:7:lfs_oid,kind=None),ctx=Load())]),body=[Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:32:%s oid does not match the ledger,kind=None),op=Mod(),right=Name(id=u:5:pfile,ctx=Load()))],keywords=[]))],orelse=[])])"
       },
@@ -367,7 +367,7 @@
         "parent_hash": "66b807a71e858544799e20843ab2522e9df86f4a102dae5d32ff7bd423b49353",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:32:%s oid does not match the ledger,kind=None),op=Mod(),right=Name(id=u:5:pfile,ctx=Load()))],keywords=[]))",
         "parent_render": "If(test=Compare(left=Call(func=Attribute(value=Call(func=Attribute(value=Name(id=u:2:mo,ctx=Load()),attr=u:5:group,ctx=Load()),args=[Constant(value=1,kind=None)],keywords=[]),attr=u:6:decode,ctx=Load()),args=[],keywords=[]),ops=[NotEq()],comparators=[Subscript(value=Name(id=u:1:e,ctx=Load()),slice=Constant(value=u:7:lfs_oid,kind=None),ctx=Load())]),body=[Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:32:%s oid does not match the ledger,kind=None),op=Mod(),right=Name(id=u:5:pfile,ctx=Load()))],keywords=[]))],orelse=[])"
       },
@@ -388,7 +388,7 @@
         "parent_hash": "49fc74aef7c4434c4893bb70c2fa6442ddba99b9c638ef5e5ed6e7b4e3fcd2b1",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:52:%s archived bytes do not hash to the recorded digest,kind=None),op=Mod(),right=Name(id=u:5:pfile,ctx=Load()))],keywords=[]))",
         "parent_render": "If(test=Compare(left=Call(func=Attribute(value=Call(func=Attribute(value=Name(id=u:7:hashlib,ctx=Load()),attr=u:6:sha256,ctx=Load()),args=[Name(id=u:1:b,ctx=Load())],keywords=[]),attr=u:9:hexdigest,ctx=Load()),args=[],keywords=[]),ops=[NotEq()],comparators=[Subscript(value=Name(id=u:1:e,ctx=Load()),slice=Constant(value=u:6:sha256,kind=None),ctx=Load())]),body=[Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[BinOp(left=Constant(value=u:52:%s archived bytes do not hash to the recorded digest,kind=None),op=Mod(),right=Name(id=u:5:pfile,ctx=Load()))],keywords=[]))],orelse=[])"
       },
@@ -409,7 +409,7 @@
         "parent_hash": "7416067aaa67560b2155b0b73b824ae6e1ee00641ee38ee5a85bf74316e9055d",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[Constant(value=u:34:a response carries no totalResults,kind=None)],keywords=[]))",
         "parent_render": "If(test=UnaryOp(op=Not(),operand=Name(id=u:1:m,ctx=Load())),body=[Expr(value=Call(func=Attribute(value=Name(id=u:3:bad,ctx=Load()),attr=u:6:append,ctx=Load()),args=[Constant(value=u:34:a response carries no totalResults,kind=None)],keywords=[])),Continue()],orelse=[])"
       },
@@ -430,7 +430,7 @@
         "parent_hash": "237d9fa307cf47e7c68192e74bbb7796dc5e7d4c4a2504ad40637ee30fefeba3",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:49:expected exactly one pinned enumeration, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:4:recs,ctx=Load())],keywords=[]))],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:4:recs,ctx=Load())],keywords=[]),ops=[NotEq()],comparators=[Constant(value=1,kind=None)]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:49:expected exactly one pinned enumeration, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:4:recs,ctx=Load())],keywords=[]))],ctx=Load()))],orelse=[])"
       },
@@ -451,7 +451,7 @@
         "parent_hash": "eb679bd791dc75a28a19a49ecf4055c84e04846431f189e077f839b50cc03de6",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:42:the archived revision response is not JSON,kind=None)],ctx=Load()))",
         "parent_render": "Try(body=[Assign(targets=[Name(id=u:1:d,ctx=Store())],value=Call(func=Attribute(value=Name(id=u:4:json,ctx=Load()),attr=u:5:loads,ctx=Load()),args=[Call(func=Attribute(value=Name(id=u:1:b,ctx=Load()),attr=u:6:decode,ctx=Load()),args=[Constant(value=u:5:utf-8,kind=None)],keywords=[])],keywords=[]),type_comment=None)],handlers=[ExceptHandler(type=Name(id=u:9:Exception,ctx=Load()),name=None,body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:42:the archived revision response is not JSON,kind=None)],ctx=Load()))])],orelse=[],finalbody=[])"
       },
@@ -472,7 +472,7 @@
         "parent_hash": "f9ca0e9f0658fca00721b24d242fe24c4d70f9f3c7114d9d68d9210ade391577",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:64:the archived response enumerates no files, so it settles nothing,kind=None)],ctx=Load()))",
         "parent_render": "If(test=UnaryOp(op=Not(),operand=Name(id=u:5:files,ctx=Load())),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:64:the archived response enumerates no files, so it settles nothing,kind=None)],ctx=Load()))],orelse=[])"
       },
@@ -493,7 +493,7 @@
         "parent_hash": "c03428f8a6ce2f32aee23a2e521c602f5920c429805f96db1c2027e311d3fcba",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:106:exemplar(s) %s match no declared pattern; the probe and the search disagree about what is being looked for,kind=None),op=Mod(),right=Subscript(value=Name(id=u:9:unmatched,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=2,kind=None),step=None),ctx=Load()))],ctx=Load()))",
         "parent_render": "If(test=Name(id=u:9:unmatched,ctx=Load()),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:106:exemplar(s) %s match no declared pattern; the probe and the search disagree about what is being looked for,kind=None),op=Mod(),right=Subscript(value=Name(id=u:9:unmatched,ctx=Load()),slice=Slice(lower=None,upper=Constant(value=2,kind=None),step=None),ctx=Load()))],ctx=Load()))],orelse=[])"
       },
@@ -514,7 +514,7 @@
         "parent_hash": "49f8dd9ed6182b7666208b178ee54d831d9f2465fd2d86310f157e7c30ffabed",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:62:expected exactly one pinned repository tree response, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:4:recs,ctx=Load())],keywords=[]))],ctx=Load()))",
         "parent_render": "If(test=Compare(left=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:4:recs,ctx=Load())],keywords=[]),ops=[NotEq()],comparators=[Constant(value=1,kind=None)]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),BinOp(left=Constant(value=u:62:expected exactly one pinned repository tree response, found %d,kind=None),op=Mod(),right=Call(func=Name(id=u:3:len,ctx=Load()),args=[Name(id=u:4:recs,ctx=Load())],keywords=[]))],ctx=Load()))],orelse=[])"
       },
@@ -535,7 +535,7 @@
         "parent_hash": "e8954b366cfb46a749c3f15d5e7d8aaaec396140e39f9723e591639d62954cb4",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:38:the archived tree response is not JSON,kind=None)],ctx=Load()))",
         "parent_render": "Try(body=[Assign(targets=[Name(id=u:4:tree,ctx=Store())],value=Call(func=Attribute(value=Name(id=u:4:json,ctx=Load()),attr=u:5:loads,ctx=Load()),args=[Call(func=Attribute(value=Name(id=u:1:b,ctx=Load()),attr=u:6:decode,ctx=Load()),args=[Constant(value=u:5:utf-8,kind=None)],keywords=[])],keywords=[]),type_comment=None)],handlers=[ExceptHandler(type=Name(id=u:9:Exception,ctx=Load()),name=None,body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:38:the archived tree response is not JSON,kind=None)],ctx=Load()))])],orelse=[],finalbody=[])"
       },
@@ -556,7 +556,7 @@
         "parent_hash": "e59c045b49be5b4ccb7edfeb37fffb23f3bcb7c55384055430137011b8a26df1",
         "ordinal": 0,
         "siblings": 1,
-        "canon": "rd477db47d32d",
+        "canon": "r0af1c62f84fb",
         "render": "Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:85:the archived tree is TRUNCATED, so an absent path proves nothing about the repository,kind=None)],ctx=Load()))",
         "parent_render": "If(test=Call(func=Attribute(value=Name(id=u:4:tree,ctx=Load()),attr=u:3:get,ctx=Load()),args=[Constant(value=u:9:truncated,kind=None)],keywords=[]),body=[Return(value=Tuple(elts=[Constant(value=False,kind=None),Constant(value=u:85:the archived tree is TRUNCATED, so an absent path proves nothing about the repository,kind=None)],ctx=Load()))],orelse=[])"
       },
