@@ -193,8 +193,10 @@ def _scalar(n):
         return "b:%d:%s" % (len(_h), _h)
     if n is Ellipsis:
         return "..."
-    raise TypeError("no canonical encoding is declared for %r; add one to SPEC rather than "
-                    "letting an ambient repr() decide" % type(n).__name__)
+    # round 16: no `type(n)` here either -- the coverage scan refuses every read of the
+    # parameter's type outside the recognised dispatch idioms, and a diagnostic is not exempt
+    raise TypeError("no canonical encoding is declared for a value of this type; add one to SPEC "
+                    "rather than letting an ambient repr() decide")
 
 
 # ⛔⛔ AND THIS WAS SEVEN OF TEN, HAND-KEPT, IN A FILE WHOSE HEADER WARNS THAT A HAND-KEPT
@@ -330,70 +332,114 @@ _ENCODER_PROBES = (
 def _probe_coverage():
     """The types `_scalar` dispatches on that no probe exercises. Empty is the only good answer.
 
-    The scan reads two idioms -- `isinstance(n, T)` with a bare name, and `n is <constant>` (plus
-    `n is Ellipsis`) -- and every other dispatch form is reported as `unrecognised-dispatch:...`,
-    which no probe can satisfy, so the tag records it as uncovered. What it guarantees is stated
-    exactly: every branch of the forms it recognises has a probe, and a branch in any other form
-    fails closed rather than passing unseen."""
+    ⛔ ROUND 16: THE SCAN ENUMERATED THE DISPATCH FORMS IT REFUSED, AND FOUR COMMON SPELLINGS
+    WERE IN NEITHER LIST. `_T.get(type(n))(n)`, `_T[n.__class__](n)`, `functools.singledispatch`
+    and `issubclass(type(n), int)` registered no type and were not refused, so "recorded as
+    uncovered, never skipped" held for the spellings someone had thought of -- the hand-kept list
+    reproducing the defect it audits, for the third time at this one function.
+
+    ⇒ THE SCAN PROJECTS OVER EVERY USE OF THE PARAMETER. Each occurrence of the parameter in
+    `_scalar`'s source is classified by the node that holds it. Three uses read the value's TYPE
+    and register a probe target: `isinstance(p, T)` with a bare name, `p is <constant>` (or
+    `p is Ellipsis`), and `match p:` whose case patterns are bare class patterns. A use that only
+    READS THE VALUE -- an operand of an arithmetic or comparison operator, an argument to
+    `float()`, one of the attributes `real`, `imag`, `hex`, `encode` -- registers nothing and is
+    allowed. EVERY OTHER USE is recorded as `unrecognised-dispatch:<form>`, which no probe can
+    satisfy: a call to any other function (`type`, `issubclass`, a dispatch table's `get`), a
+    dunder or unknown attribute, a subscript, a rebinding or an assignment that could launder
+    the value into a name the scan does not follow, a nested scope, a decorator, a signature
+    other than one positional parameter. A `_scalar` in which no type dispatch is read at all is
+    refused as well, so the answer is not vacuously empty.
+
+    What this guarantees is stated exactly: every use of the parameter is a recognised dispatch
+    with a probe behind it, a value read, or refused. It does not guarantee that a probe
+    exercises every VALUE a branch distinguishes -- that remains a sample, as SPEC says.
+    """
     import inspect
     try:
         _t = ast.parse(inspect.getsource(_scalar))
     except (OSError, TypeError, SyntaxError):                             # pragma: no cover
         return ["<_scalar source unavailable>"]
-    # ⛔ ROUND 14: THE SCAN RECOGNISED TWO IDIOMS AND SILENTLY SKIPPED EVERY OTHER. `isinstance(n, (int,
-    # bool))`, `type(n) is bytes`, a dispatch table keyed on `type(n)`, a `match`: each registered no
-    # type at all, so the promise "every branch has a probe" evaporated the moment `_scalar` was
-    # refactored into the tuple form -- the hand-kept list reproducing the defect it audits, one
-    # level down, displaced onto the auditor. ⇒ A DISPATCH THE SCAN CANNOT REDUCE TO A NAME IS
-    # RECORDED AS UNCOVERED, which moves the tag and fails every comparison, rather than skipped.
-    _want = set()
-    for _n in ast.walk(_t):
-        if isinstance(_n, ast.Call) and isinstance(_n.func, ast.Name) and _n.func.id == "isinstance":
-            if len(_n.args) == 2 and isinstance(_n.args[1], ast.Name):
-                _want.add(_n.args[1].id)
+    _fn = next((x for x in ast.walk(_t) if isinstance(x, ast.FunctionDef) and x.name == "_scalar"), None)
+    if _fn is None:
+        return ["<_scalar not found>"]
+    _want, _bad = set(), set()
+    _ar = _fn.args
+    if (_fn.decorator_list or len(_ar.args) != 1 or _ar.posonlyargs or _ar.kwonlyargs or _ar.vararg
+            or _ar.kwarg or _ar.defaults):
+        _bad.add("unrecognised-dispatch:signature")
+    _p = _ar.args[0].arg if _ar.args else "n"
+    _parent = {}
+    for _node in ast.walk(_fn):
+        for _ch in ast.iter_child_nodes(_node):
+            _parent[_ch] = _node
+    _VALUE_ATTRS = {"real", "imag", "hex", "encode"}
+    _VALUE_CALLS = {"float"}
+    for _node in ast.walk(_fn):
+        if _node is not _fn and isinstance(_node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.ClassDef)):
+            _bad.add("unrecognised-dispatch:nested-scope")
+        if not (isinstance(_node, ast.Name) and _node.id == _p):
+            continue
+        if not isinstance(_node.ctx, ast.Load):
+            _bad.add("unrecognised-dispatch:rebinding")
+            continue
+        _par = _parent.get(_node)
+        if isinstance(_par, ast.Call) and _node in _par.args:
+            _f = _par.func
+            _fname = _f.id if isinstance(_f, ast.Name) else None
+            if _fname == "isinstance" and _par.args[0] is _node:
+                if len(_par.args) == 2 and isinstance(_par.args[1], ast.Name):
+                    _want.add(_par.args[1].id)
+                else:
+                    _bad.add("unrecognised-dispatch:isinstance:%s"
+                             % (type(_par.args[1]).__name__ if len(_par.args) == 2 else "arity"))
+            elif _fname in _VALUE_CALLS:
+                pass                                                 # a value read
             else:
-                _want.add("unrecognised-dispatch:isinstance:%s"
-                          % (type(_n.args[1]).__name__ if len(_n.args) == 2 else "arity"))
-        if isinstance(_n, ast.Compare):
-            if not isinstance(_n.left, ast.Name):
-                _want.add("unrecognised-dispatch:compare-left:%s" % type(_n.left).__name__)
-            for _op, _c in zip(_n.ops, _n.comparators):
+                _bad.add("unrecognised-dispatch:call:%s" % (_fname or type(_f).__name__))
+        elif isinstance(_par, ast.Compare) and _par.left is _node:
+            for _op, _c in zip(_par.ops, _par.comparators):
                 if isinstance(_op, (ast.Is, ast.IsNot)):
                     if isinstance(_c, ast.Constant):
                         _want.add(type(_c.value).__name__)
                     elif isinstance(_c, ast.Name) and _c.id == "Ellipsis":
                         _want.add("ellipsis")
                     else:
-                        _want.add("unrecognised-dispatch:is:%s" % type(_c).__name__)
+                        _bad.add("unrecognised-dispatch:is:%s" % type(_c).__name__)
                 elif isinstance(_op, (ast.In, ast.NotIn)):
-                    _want.add("unrecognised-dispatch:in")
-        # ⛔ ROUND 15: a `match n: case int(): ...` dispatches on type through a MatchClass pattern
-        # and calls `type()` nowhere, so the round-14 guard -- which fired only on a literal `type(...)`
-        # inside the match -- recorded NOTHING for the most natural modern spelling. ⇒ Every case
-        # pattern is read: a class pattern with a bare name registers that name as a dispatched type;
-        # any other pattern (value, sequence, mapping, attribute class, guard) is unrecognised and
-        # recorded as such, so the tag moves and every comparison fails rather than the branch passing
-        # unseen.
-        if isinstance(_n, ast.Match):
-            for _case in _n.cases:
+                    _bad.add("unrecognised-dispatch:in")
+                # Eq/NotEq/Lt/... read the value, not its type
+        elif isinstance(_par, ast.Compare):
+            pass                                                     # the right-hand operand: a value read
+        elif isinstance(_par, ast.Match) and _par.subject is _node:
+            for _case in _par.cases:
                 _pat = _case.pattern
                 if isinstance(_pat, ast.MatchClass) and isinstance(_pat.cls, ast.Name) and not _pat.patterns \
                         and not _pat.kwd_patterns and _case.guard is None:
                     _want.add(_pat.cls.id)
                 elif isinstance(_pat, ast.MatchAs) and _pat.pattern is None and _case.guard is None:
-                    pass                                   # the irrefutable `case _:` catch-all
+                    pass                                             # the irrefutable catch-all
                 else:
-                    _want.add("unrecognised-dispatch:match:%s" % type(_pat).__name__)
-        if isinstance(_n, ast.Subscript) and any(
-                isinstance(_x, ast.Call) and isinstance(_x.func, ast.Name) and _x.func.id == "type"
-                for _x in ast.walk(_n)):
-            _want.add("unrecognised-dispatch:subscript")
+                    _bad.add("unrecognised-dispatch:match:%s" % type(_pat).__name__)
+        elif isinstance(_par, ast.Attribute) and _par.value is _node:
+            if _par.attr not in _VALUE_ATTRS:
+                _bad.add("unrecognised-dispatch:attribute:%s" % _par.attr)
+        elif isinstance(_par, (ast.BinOp, ast.UnaryOp, ast.FormattedValue, ast.Return)):
+            pass                                                     # a value read
+        elif isinstance(_par, ast.Subscript):
+            _bad.add("unrecognised-dispatch:subscript")
+        elif isinstance(_par, (ast.Assign, ast.AugAssign, ast.NamedExpr, ast.AnnAssign)):
+            _bad.add("unrecognised-dispatch:laundering")
+        else:
+            _bad.add("unrecognised-dispatch:%s" % type(_par).__name__)
+    if not _want:
+        _bad.add("unrecognised-dispatch:no-type-dispatch-read")
     _have = {type(v).__name__ for v in _ENCODER_PROBES}
     _have |= {"NoneType"} if None in _ENCODER_PROBES else set()
-    # `n is Ellipsis` compares against a Name, and `bool` is reached through True/False
     if Ellipsis in _ENCODER_PROBES:
         _have.add("ellipsis")
     _missing = sorted(t for t in _want if t not in _have and t not in ("ellipsis",))
+    _missing += sorted(_bad)
     _floats = [v for v in _ENCODER_PROBES if isinstance(v, float)]
     for _need, _test in (("nan", lambda v: v != v), ("inf", lambda v: v == float("inf")),
                          ("-inf", lambda v: v == float("-inf"))):
@@ -800,7 +846,9 @@ def _render_features(text):
                 i += 1
     except (ValueError, IndexError):
         return None
-    return feats
+    # round 16: an EMPTY feature set is not a proven rendering; it is one the reader could not
+    # characterise, and it is compared like an unreadable one -- uncomparable, never gone
+    return feats or None
 
 
 def renderer_proven(items):
@@ -1091,6 +1139,15 @@ def main():
               "count and exiting 0 is the disposition defect it was written to remove."
               % (_unsettled, sum(counts.values())))
         return 1
+    # round 16: `--self-test` is a flag now. It was documented as one and parsed by nothing; under it
+    # every record must resolve EXACT -- a moved record is a tree that changed, which a self-test of
+    # the renderer against its own records must not accept.
+    if "--self-test" in sys.argv:
+        if counts[MOVED]:
+            print("  " + chr(0x26D4) + " self-test: %d record(s) resolved as moved; a self-test accepts exact only"
+                  % counts[MOVED])
+            return 1
+        print("  self-test: %d exact under %s" % (counts[EXACT], _canon_tag()))
     return 0
 
 
