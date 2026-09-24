@@ -697,10 +697,13 @@ def _is_float_token(tok):
     if not tok or not ("." in tok or "e" in tok) or tok.lstrip("-")[:1] not in "0123456789":
         return False
     try:
-        float(tok)
+        v = float(tok)
     except ValueError:
         return False
-    return all(c in "0123456789.e+-" for c in tok)
+    # ROUND 16: the alphabet test accepted `1.`, `00.0` and `1e1000` (an infinity spelled as a finite
+    # float); none can come out of `_scalar`, which writes `float.__repr__`, so the token must be exactly
+    # what that spelling round-trips to -- the canonical form, and nothing that merely parses
+    return float.__repr__(v) == tok
 
 
 def _render_features(text):
