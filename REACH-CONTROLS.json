@@ -1,7 +1,7 @@
 {
   "_readme": "Which never-executing branches an ARCHIVE mutation can reach. Reaching a check is not validating it: this shows an input exists that runs the line and that the executor refuses, not that the refusal is correct.",
   "targets": 131,
-  "source_fingerprint": "b665ea019d79eed4",
+  "source_fingerprint": "e9b2af44bc196958",
   "targets_pinned": 85,
   "_targets_note": "targets_pinned is the population this measurement was FIRST made against. `targets` is what the audit reports today, which this tool changes by being in the suite -- so the two differ by design and the pinned one is the denominator to quote.",
   "reached": 26,
